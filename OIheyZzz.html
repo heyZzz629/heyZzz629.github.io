@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OI 重开模拟器</title>
+    <title>  OI 重开模拟器</title>
     <style>
         * {
             box-sizing: border-box;
@@ -33,7 +33,7 @@
             margin-bottom: 10px;
         }
         
-        。game-container {
+        .game-container {
             display: grid;
             grid-template-columns: 1fr 2fr;
             gap: 20px;
@@ -53,7 +53,7 @@
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
         
-        .log-panel {
+        。log-panel {
             grid-column: 1 / -1;
             background-color: white;
             border-radius: 8px;
@@ -63,44 +63,44 @@
             overflow-y: auto;
         }
         
-        .stat-bar {
+        。stat-bar {
             margin-bottom: 10px;
         }
         
-        .stat-label {
+        。stat-label {
             display: flex;
             justify-content: space-between;
             margin-bottom: 5px;
         }
         
-        .stat-value {
+        。stat-value {
             font-weight: bold;
         }
         
-        .progress-bar {
+        。progress-bar {
             height: 10px;
             background-color: #ecf0f1;
             border-radius: 5px;
             overflow: hidden;
         }
         
-        .progress {
+        。progress {
             height: 100%;
             background-color: #3498db;
         }
         
-        .action-category {
+        。action-category {
             margin-bottom: 20px;
         }
         
-        .action-category h3 {
+        。action-category h3 {
             margin-bottom: 10px;
             color: #2c3e50;
             border-bottom: 1px solid #eee;
             padding-bottom: 5px;
         }
         
-        .action-btn {
+        。action-btn {
             display: block;
             width: 100%;
             padding: 8px 12px;
@@ -114,27 +114,27 @@
             transition: background-color 0.3s;
         }
         
-        .action-btn:hover {
+        。action-btn:hover {
             background-color: #2980b9;
         }
         
-        .action-btn:disabled {
+        。action-btn:disabled {
             background-color: #bdc3c7;
             cursor: not-allowed;
         }
         
-        .log-entry {
+        。log-entry {
             margin-bottom: 10px;
             padding-bottom: 10px;
             border-bottom: 1px dashed #eee;
         }
         
-        .log-time {
+        。log-time {
             color: #7f8c8d;
             font-size: 0.9em;
         }
         
-        .log-content {
+        。log-content {
             margin-top: 5px;
         }
         
@@ -204,7 +204,7 @@
 </head>
 <body>
     <header>
-        <h1>OIer 重开模拟器</h1>
+        <h1>  OI 重开模拟器</h1>
         <p>体验OIer的酸甜苦辣，看看你能走到哪一步！</p>
     </header>
     
@@ -583,7 +583,7 @@
             "study-string": {
                 name: "学习字符串",
                 effect: (state) => {
-                    state.string += getRandomIncrease(2, 5);
+                    state。string += getRandomIncrease(2， 5);
                     state.mentalState -= getRandomDecrease(1, 3);
                     state.physicalState -= getRandomDecrease(1, 2);
                     addLog("你花时间学习了字符串算法，相关能力有所提升。");
@@ -592,47 +592,47 @@
             "study-geometry": {
                 name: "学习计算几何",
                 effect: (state) => {
-                    state.geometry += getRandomIncrease(2, 5);
-                    state.mentalState -= getRandomDecrease(1, 3);
-                    state.physicalState -= getRandomDecrease(1, 2);
+                    state。geometry += getRandomIncrease(2， 5);
+                    state。mentalState -= getRandomDecrease(1, 3);
+                    state。physicalState -= getRandomDecrease(1， 2);
                     addLog("你花时间学习了计算几何，相关能力有所提升。");
                 }
             },
             "practice-coding": {
-                name: "练习代码能力",
+                name: "练习代码能力"，
                 effect: (state) => {
-                    state.coding += getRandomIncrease(2, 4);
+                    state.coding += getRandomIncrease(2， 4);
                     state.mentalState -= getRandomDecrease(1, 2);
-                    state.physicalState -= getRandomDecrease(1, 2);
+                    state。physicalState -= getRandomDecrease(1, 2);
                     addLog("你进行了代码练习，代码能力有所提升。");
                 }
-            },
+            }，
             "simulate-contest": {
-                name: "打模拟赛",
+                name: "打模拟赛"，
                 effect: (state) => {
-                    const skills = ["dp", "ds", "graph", "math", "string", "geometry"];
-                    const randomSkill = skills[Math.floor(Math.random() * skills.length)];
-                    state[randomSkill] += getRandomIncrease(1, 3);
+                    const skills = ["dp"， "ds"， "graph", "math"， "string", "geometry"];
+                    const randomSkill = skills[Math.floor(Math。random() * skills.length)];
+                    state[randomSkill] += getRandomIncrease(1， 3);
                     state.contestExperience += getRandomIncrease(2, 4);
                     state.mentalState -= getRandomDecrease(2, 4);
                     state.physicalState -= getRandomDecrease(1, 3);
                     addLog(`你参加了一场模拟赛，${getSkillName(randomSkill)}和比赛经验有所提升。`);
                 }
-            },
+            }，
             "cf-contest": {
-                name: "打CF比赛",
+                name: "打CF比赛"，
                 effect: (state) => {
-                    if (state.cfRating === 0) {
-                        state.cfRating = 1200;
+                    if (state。cfRating === 0) {
+                        state。cfRating = 1200;
                         addLog("你注册了Codeforces账号，初始rating为1200。");
                     } else {
                         const change = getRandomIncrease(-50, 100);
-                        state.cfRating = Math.max(0, state.cfRating + change);
+                        state。cfRating = Math。max(0， state.cfRating + change);
                         addLog(`你参加了CF比赛，rating${change >= 0 ? '增加' : '减少'}了${Math.abs(change)}点。`);
                     }
                     
-                    state.contestExperience += getRandomIncrease(3, 6);
-                    state.mentalState -= getRandomDecrease(2, 5);
+                    state。contestExperience += getRandomIncrease(3, 6);
+                    state.mentalState -= getRandomDecrease(2， 5);
                     state.physicalState -= getRandomDecrease(2, 4);
                     state.popularity += getRandomIncrease(1, 3);
                 }
@@ -641,111 +641,111 @@
                 name: "打AtCoder比赛",
                 effect: (state) => {
                     if (state.atcoderRating === 0) {
-                        state.atcoderRating = 800;
+                        state。atcoderRating = 800;
                         addLog("你注册了AtCoder账号，初始rating为800。");
                     } else {
                         const change = getRandomIncrease(-30, 80);
-                        state.atcoderRating = Math.max(0, state.atcoderRating + change);
+                        state。atcoderRating = Math.max(0, state.atcoderRating + change);
                         addLog(`你参加了AtCoder比赛，rating${change >= 0 ? '增加' : '减少'}了${Math.abs(change)}点。`);
                     }
                     
-                    state.contestExperience += getRandomIncrease(3, 6);
-                    state.mentalState -= getRandomDecrease(2, 5);
-                    state.physicalState -= getRandomDecrease(2, 4);
+                    state。contestExperience += getRandomIncrease(3， 6);
+                    state。mentalState -= getRandomDecrease(2, 5);
+                    state。physicalState -= getRandomDecrease(2， 4);
                 }
             },
             "luogu-contest": {
-                name: "打洛谷比赛",
+                name: "打洛谷比赛"，
                 effect: (state) => {
-                    state.contestExperience += getRandomIncrease(2, 5);
-                    state.mentalState -= getRandomDecrease(1, 3);
-                    state.physicalState -= getRandomDecrease(1, 3);
-                    state.popularity += getRandomIncrease(1, 2);
+                    state。contestExperience += getRandomIncrease(2, 5);
+                    state。mentalState -= getRandomDecrease(1, 3);
+                    state。physicalState -= getRandomDecrease(1, 3);
+                    state。popularity += getRandomIncrease(1, 2);
                     addLog("你参加了洛谷比赛，比赛经验和人气有所提升。");
                 }
-            },
+            }，
             "socialize": {
                 name: "社交活动",
                 effect: (state) => {
-                    state.social += getRandomIncrease(2, 5);
+                    state。social += getRandomIncrease(2， 5);
                     state.popularity += getRandomIncrease(1, 3);
                     state.mentalState += getRandomIncrease(1, 3);
-                    state.physicalState -= getRandomDecrease(1, 2);
+                    state。physicalState -= getRandomDecrease(1, 2);
                     addLog("你参加了一些社交活动，社交能力和人气有所提升。");
                 }
-            },
+            }，
             "write-blog": {
                 name: "写博客",
                 effect: (state) => {
-                    state.blogCount += 1;
-                    state.popularity += getRandomIncrease(2, 4);
+                    state。blogCount += 1;
+                    state。popularity += getRandomIncrease(2, 4);
                     const randomSkill = getRandomOIskill();
                     state[randomSkill] += getRandomIncrease(1, 2);
-                    state.mentalState -= getRandomDecrease(1, 2);
+                    state。mentalState -= getRandomDecrease(1, 2);
                     addLog(`你写了一篇关于${getSkillName(randomSkill)}的博客，人气和相关能力有所提升。`);
                 }
-            },
+            }，
             "help-others": {
                 name: "帮助他人",
                 effect: (state) => {
-                    state.social += getRandomIncrease(1, 3);
-                    state.popularity += getRandomIncrease(1, 2);
-                    state.rp += getRandomIncrease(1, 3);
-                    state.mentalState += getRandomIncrease(1, 2);
+                    state。social += getRandomIncrease(1, 3);
+                    state。popularity += getRandomIncrease(1, 2);
+                    state。rp += getRandomIncrease(1, 3);
+                    state。mentalState += getRandomIncrease(1, 2);
                     addLog("你帮助了其他OIer，社交、人气和RP有所提升。");
                 }
-            },
+            }，
             "rest": {
                 name: "休息恢复",
                 effect: (state) => {
-                    state.mentalState += getRandomIncrease(3, 6);
-                    state.physicalState += getRandomIncrease(3, 6);
+                    state。mentalState += getRandomIncrease(3， 6);
+                    state。physicalState += getRandomIncrease(3， 6);
                     addLog("你好好休息了一下，心理和身体状态有所恢复。");
                 }
-            },
+            }，
             "exercise": {
                 name: "体育锻炼",
                 effect: (state) => {
-                    state.physicalState += getRandomIncrease(2, 5);
-                    state.mentalState += getRandomIncrease(1, 3);
+                    state。physicalState += getRandomIncrease(2, 5);
+                    state。mentalState += getRandomIncrease(1, 3);
                     addLog("你进行了体育锻炼，身体和心理状态有所提升。");
                 }
             },
             "study-academic": {
                 name: "学习文化课",
                 effect: (state) => {
-                    state.academic += getRandomIncrease(2, 4);
-                    state.mentalState -= getRandomDecrease(1, 2);
-                    state.physicalState -= getRandomDecrease(1, 2);
+                    state.academic += getRandomIncrease(2， 4);
+                    state。mentalState -= getRandomDecrease(1， 2);
+                    state.physicalState -= getRandomDecrease(1， 2);
                     addLog("你花时间学习了文化课，文化课水平有所提升。");
                 }
             },
             "attend-training": {
                 name: "参加集训",
                 effect: (state) => {
-                    const skills = ["dp", "ds", "graph", "math", "string", "geometry"];
+                    const skills = ["dp", "ds"， "graph"， "math"， "string"， "geometry"];
                     for (let i = 0; i < 3; i++) {
-                        const randomSkill = skills[Math.floor(Math.random() * skills.length)];
+                        const randomSkill = skills[Math。floor(Math。random() * skills。length)];
                         state[randomSkill] += getRandomIncrease(3, 6);
                     }
                     state.contestExperience += getRandomIncrease(5, 8);
-                    state.mentalState -= getRandomDecrease(3, 6);
+                    state.mentalState -= getRandomDecrease(3， 6);
                     state.physicalState -= getRandomDecrease(3, 5);
                     addLog("你参加了一次集训，多项OI能力和比赛经验大幅提升。");
                 }
-            },
+            }，
             "formal-contest": {
                 name: "参加正式比赛",
                 effect: (state) => {
                     // 模拟比赛结果
-                    const totalSkill = state.dp + state.ds + state.graph + state.math + state.string + state.geometry;
-                    const performance = totalSkill * (0.8 + 0.4 * Math.random()) * 
+                    const totalSkill = state.dp + state。ds + state.graph + state.math + state.string + state.geometry;
+                    const performance = totalSkill * (0.8 + 0.4 * Math。random()) * 
                                        (1 + (state.mentalState - 50) / 100) * 
                                        (1 + (state.physicalState - 50) / 100) *
                                        (1 + (state.rp - 50) / 200);
                     
-                    state.contestExperience += getRandomIncrease(8, 15);
-                    state.mentalState -= getRandomDecrease(5, 10);
+                    state.contestExperience += getRandomIncrease(8， 15);
+                    state.mentalState -= getRandomDecrease(5， 10);
                     state.physicalState -= getRandomDecrease(5, 10);
                     
                     let resultText = "";
@@ -771,8 +771,8 @@
         };
 
         // 工具函数
-        function getRandomIncrease(min, max) {
-            return Math.floor(Math.random() * (max - min + 1)) + min;
+        function getRandomIncrease(min， max) {
+            return Math。floor(Math.random() * (max - min + 1)) + min;
         }
 
         function getRandomDecrease(min, max) {
@@ -781,7 +781,7 @@
 
         function getRandomOIskill() {
             const skills = ["dp", "ds", "graph", "math", "string", "geometry"];
-            return skills[Math.floor(Math.random() * skills.length)];
+            return skills[Math。floor(Math.random() * skills.length)];
         }
 
         function getSkillName(skill) {
@@ -797,29 +797,29 @@
         }
 
         function getCurrentSeason(state) {
-            return state.seasons[state.currentSeasonIndex];
+            return state。seasons[state.currentSeasonIndex];
         }
 
-        function addLog(message, type = "normal") {
+        function addLog(message， type = "normal") {
             const logContainer = document.getElementById("log-container");
             const logEntry = document.createElement("div");
-            logEntry.className = "log-entry";
+            logEntry。className = "log-entry";
             
             const timeElement = document.createElement("div");
-            timeElement.className = "log-time";
-            timeElement.textContent = `第${gameState.turn}回合`;
+            timeElement。className = "log-time";
+            timeElement。textContent = `第${gameState.turn}回合`;
             
             const contentElement = document.createElement("div");
-            contentElement.className = "log-content";
-            contentElement.textContent = message;
+            contentElement。className = "log-content";
+            contentElement。textContent = message;
             
-            if (type === "event") {
-                contentElement.classList.add("event-special");
+            if (输入 === "event") {
+                contentElement。classList。add("event-special");
             }
             
-            logEntry.appendChild(timeElement);
-            logEntry.appendChild(contentElement);
-            logContainer.appendChild(logEntry);
+            logEntry。appendChild(timeElement);
+            logEntry。appendChild(contentElement);
+            logContainer。appendChild(logEntry);
             
             // 自动滚动到底部
             logContainer.scrollTop = logContainer.scrollHeight;
@@ -827,105 +827,105 @@
 
         function updateUI() {
             // 更新回合信息
-            document.getElementById("turn-counter").textContent = gameState.turn;
+            document.getElementById("turn-counter").textContent = gameState。turn;
             document.getElementById("action-points").textContent = gameState.actionPoints;
-            document.getElementById("remaining-actions").textContent = gameState.remainingActions;
-            document.getElementById("current-season").textContent = getCurrentSeason(gameState);
+            document.getElementById("remaining-actions")。textContent = gameState.remainingActions;
+            document.getElementById("current-season")。textContent = getCurrentSeason(gameState);
             
             // 更新基本属性
-            document.getElementById("mental-state-value").textContent = gameState.mentalState;
-            document.getElementById("mental-state-bar").style.width = `${gameState.mentalState}%`;
+            document.getElementById("mental-state-value").textContent = gameState。mentalState;
+            document.getElementById("mental-state-bar")。style.width = `${gameState.mentalState}%`;
             
-            document.getElementById("physical-state-value").textContent = gameState.physicalState;
+            document.getElementById("physical-state-value")。textContent = gameState.physicalState;
             document.getElementById("physical-state-bar").style.width = `${gameState.physicalState}%`;
             
-            document.getElementById("rp-value").textContent = gameState.rp;
-            document.getElementById("rp-bar").style.width = `${gameState.rp}%`;
+            document。getElementById("rp-value")。textContent = gameState。rp;
+            document。getElementById("rp-bar")。style。width = `${gameState。rp}%`;
             
-            document.getElementById("social-value").textContent = gameState.social;
-            document.getElementById("social-bar").style.width = `${gameState.social}%`;
+            document。getElementById("social-value")。textContent = gameState。social;
+            document.getElementById("social-bar")。style.width = `${gameState.social}%`;
             
-            document.getElementById("popularity-value").textContent = gameState.popularity;
-            document.getElementById("popularity-bar").style.width = `${gameState.popularity}%`;
+            document.getElementById("popularity-value")。textContent = gameState.popularity;
+            document.getElementById("popularity-bar")。style.width = `${gameState.popularity}%`;
             
             document.getElementById("academic-value").textContent = gameState.academic;
-            document.getElementById("academic-bar").style.width = `${gameState.academic}%`;
+            document。getElementById("academic-bar")。style.width = `${gameState.academic}%`;
             
             // 更新OI水平
-            document.getElementById("dp-value").textContent = gameState.dp;
-            document.getElementById("dp-bar").style.width = `${gameState.dp}%`;
+            document。getElementById("dp-value")。textContent = gameState.dp;
+            document。getElementById("dp-bar")。style.width = `${gameState.dp}%`;
             
-            document.getElementById("ds-value").textContent = gameState.ds;
-            document.getElementById("ds-bar").style.width = `${gameState.ds}%`;
+            document。getElementById("ds-value").textContent = gameState.ds;
+            document。getElementById("ds-bar")。style.width = `${gameState。ds}%`;
             
-            document.getElementById("graph-value").textContent = gameState.graph;
-            document.getElementById("graph-bar").style.width = `${gameState.graph}%`;
+            document。getElementById("graph-value")。textContent = gameState.graph;
+            document。getElementById("graph-bar")。style.width = `${gameState.graph}%`;
             
-            document.getElementById("math-value").textContent = gameState.math;
-            document.getElementById("math-bar").style.width = `${gameState.math}%`;
+            document。getElementById("math-value")。textContent = gameState.math;
+            document。getElementById("math-bar")。style。width = `${gameState.math}%`;
             
-            document.getElementById("string-value").textContent = gameState.string;
-            document.getElementById("string-bar").style.width = `${gameState.string}%`;
+            document。getElementById("string-value")。textContent = gameState.string;
+            document。getElementById("string-bar")。style。width = `${gameState.string}%`;
             
-            document.getElementById("geometry-value").textContent = gameState.geometry;
-            document.getElementById("geometry-bar").style.width = `${gameState.geometry}%`;
+            document。getElementById("geometry-value")。textContent = gameState.geometry;
+            document。getElementById("geometry-bar")。style。width = `${gameState.geometry}%`;
             
             // 更新正式比赛按钮状态
             const formalContestBtn = document.getElementById("formal-contest-btn");
             if (isFormalContestSeason()) {
-                formalContestBtn.disabled = false;
-                formalContestBtn.title = "";
+                formalContestBtn。disabled = false;
+                formalContestBtn。title = "";
             } else {
-                formalContestBtn.disabled = true;
-                formalContestBtn.title = "当前不是正式比赛赛季";
+                formalContestBtn。disabled = true;
+                formalContestBtn。title = "当前不是正式比赛赛季";
             }
             
             // 更新行动按钮状态
-            document.querySelectorAll(".action-btn").forEach(btn => {
+            document。querySelectorAll(".action-btn")。forEach(btn => {
                 if (btn.id !== "end-turn-btn" && btn.id !== "formal-contest-btn") {
-                    btn.disabled = gameState.remainingActions < parseInt(btn.dataset.cost);
+                    btn。disabled = gameState.remainingActions < parseInt(btn.dataset。cost);
                 }
             });
         }
 
         function isFormalContestSeason() {
-            const contestSeasons = ["CSP赛季", "NOIP赛季", "省选赛季", "NOI赛季"];
+            const contestSeasons = ["CSP赛季", "NOIP赛季"， "省选赛季", "NOI赛季"];
             return contestSeasons.includes(getCurrentSeason(gameState));
         }
 
         function checkEvents() {
-            for (const [key, event] of Object.entries(events)) {
-                if (!gameState.triggeredEvents.has(key) && event.condition(gameState)) {
-                    event.effect(gameState);
-                    gameState.triggeredEvents.add(key);
+            for (const [key， event] / Object.entries(events)) {
+                if (!gameState。triggeredEvents。has(key) && event.condition(gameState)) {
+                    event。effect(gameState);
+                    gameState。triggeredEvents.add(key);
                 }
             }
         }
 
         function checkEndings() {
             // 检查是否达到回合上限
-            if (gameState.turn >= gameState.maxTurns) {
+            if (gameState。turn >= gameState.maxTurns) {
                 showEnding(9); // 默认结局：大厂搬砖工
                 return true;
             }
             
             // 检查悲惨结局
-            if (gameState.mentalState <= 0 || gameState.physicalState <= 0) {
+            if (gameState。mentalState <= 0 || gameState.physicalState <= 0) {
                 showEnding(15); // 最悲惨结局
                 return true;
             }
             
             // 检查父母支持度结局
-            if (gameState.parentSupport <= 0) {
+            if (gameState。parentSupport <= 0) {
                 showEnding(11); // 戒网瘾所
                 return true;
             }
             
             // 检查优秀结局
             const totalOISkill = gameState.dp + gameState.ds + gameState.graph + 
-                                gameState.math + gameState.string + gameState.geometry;
+                                gameState。math + gameState.string + gameState.geometry;
             
-            if (totalOISkill > 400 && gameState.contestExperience > 100) {
+            if (totalOISkill > 400 && gameState。contestExperience > 100) {
                 showEnding(1); // IOI金牌爷
                 return true;
             }
@@ -935,12 +935,12 @@
                 return true;
             }
             
-            if (gameState.popularity > 80 && gameState.blogCount > 10) {
+            if (gameState。popularity > 80 && gameState.blogCount > 10) {
                 showEnding(2); // OJ站长
                 return true;
             }
             
-            if (gameState.social > 70 && gameState.popularity > 60) {
+            if (gameState。social > 70 && gameState.popularity > 60) {
                 showEnding(13); // 传承者
                 return true;
             }
@@ -956,7 +956,7 @@
             
             const endingScreen = document.getElementById("ending-screen");
             const endingTitle = document.getElementById("ending-title");
-            const endingDescription = document.getElementById("ending-description");
+            const endingDescription = document。getElementById("ending-description");
             
             endingTitle.textContent = ending.title;
             endingDescription.textContent = ending.description;
@@ -965,7 +965,7 @@
         }
 
         function endTurn() {
-            gameState.turn++;
+            gameState。turn++;
             
             // 每4个回合切换一个赛季
             if (gameState.turn % 4 === 1) {
@@ -973,17 +973,17 @@
             }
             
             // 恢复行动点（受身心状态影响）
-            const recoveryRate = 0.5 + (gameState.mentalState + gameState.physicalState) / 200;
+            const recoveryRate = 0.5 + (gameState。mentalState + gameState.physicalState) / 200;
             gameState.actionPoints = Math.min(10, Math.floor(10 * recoveryRate));
             gameState.remainingActions = gameState.actionPoints;
             
             // 属性自然变化
             gameState.mentalState = Math.min(100, gameState.mentalState + 5);
             gameState.physicalState = Math.min(100, gameState.physicalState + 5);
-            gameState.rp = Math.max(0, Math.min(100, gameState.rp - 1));
-            gameState.academic = Math.max(0, gameState.academic - 1);
+            gameState.rp = Math.max(0, Math.min(100, gameState。rp - 1));
+            gameState。academic = Math.max(0， gameState.academic - 1);
             
-            addLog(`第${gameState.turn}回合开始。行动点恢复至${gameState.actionPoints}点。`);
+            addLog(`第${gameState。turn}回合开始。行动点恢复至${gameState.actionPoints}点。`);
             
             updateUI();
             
@@ -1035,66 +1035,66 @@
                 turn: 1,
                 actionPoints: 10,
                 remainingActions: 10,
-                mentalState: 70,
-                physicalState: 80,
-                rp: 50,
-                social: 40,
-                popularity: 30,
-                academic: 60,
-                dp: 20,
-                ds: 25,
-                graph: 15,
-                math: 30,
-                string: 10,
-                geometry: 5,
-                coding: 30,
-                thinking: 35,
-                contestExperience: 0,
-                cfRating: 0,
-                atcoderRating: 0,
-                blogCount: 0,
-                dark: 0,
-                parentSupport: 70,
-                schoolLevel: 50,
-                currentSeasonIndex: 0,
-                triggeredEvents: new Set(),
+                mentalState: 70，
+                physicalState: 80，
+                rp: 50，
+                social: 40，
+                popularity: 30，
+                academic: 60，
+                dp: 20，
+                ds: 25，
+                graph: 15，
+                math: 30，
+                string: 10，
+                geometry: 5，
+                coding: 30，
+                thinking: 35，
+                contestExperience: 0，
+                cfRating: 0，
+                atcoderRating: 0，
+                blogCount: 0，
+                dark: 0，
+                parentSupport: 70，
+                schoolLevel: 50，
+                currentSeasonIndex: 0，
+                triggeredEvents: new Set()，
                 gameOver: false
             });
             
             // 清空日志
-            document.getElementById("log-container").innerHTML = 
+            document。getElementById("log-container")。innerHTML = 
                 '<div class="log-entry"><div class="log-time">第1回合开始</div><div class="log-content">你开始了你的OI生涯，加油！</div></div>';
             
             // 隐藏结局屏幕
-            document.getElementById("ending-screen").classList.add("hidden");
+            document。getElementById("ending-screen")。classList。add("hidden");
             
             updateUI();
         }
 
         // 初始化游戏
-        document.addEventListener("DOMContentLoaded", function() {
+        document。addEventListener("DOMContentLoaded"， function() {
             updateUI();
             
             // 绑定行动按钮事件
-            document.querySelectorAll(".action-btn").forEach(btn => {
-                if (btn.id !== "end-turn-btn") {
-                    btn.addEventListener("click", function() {
-                        if (!gameState.gameOver) {
-                            performAction(this.dataset.action);
+            document。querySelectorAll(".action-btn")。forEach(btn => {
+                if (btn。id !== "end-turn-btn") {
+                    btn。addEventListener("click"， function() {
+                        if (!gameState。gameOver) {
+                            performAction(this。dataset。action);
                         }
                     });
                 }
             });
             
             // 绑定结束回合按钮事件
-            document.getElementById("end-turn-btn").addEventListener("click", function() {
-                if (!gameState.gameOver) {
+            document。getElementById("end-turn-btn")。addEventListener("click"， function() {
+                if (!gameState。gameOver) {
                     endTurn();
                 }
             });
             
             // 绑定重新开始按钮事件
-            document.getElementById("restart-btn").addEventListener("click", restartGame);
+            document。getElementById("restart-btn")。addEventListener("click"， restartGame);
         });
     </script>
 </body>
