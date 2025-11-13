@@ -1,1 +1,5 @@
-# OI 重开模拟器 [#](https://heyzzz629.github.io/OIheyZzz.html)
+# OI 重开模拟器 
+
+[界面普通](https://heyzzz629.github.io/OIheyZzz.html)
+
+[界面美化](https://heyzzz629.github.io/OI 美化版.html)
