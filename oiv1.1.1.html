@@ -1,0 +1,2256 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OI重开模拟器 - 技能树与增强交互版</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #3498db;
+            --secondary: #2ecc71;
+            --danger: #e74c3c;
+            --warning: #f39c12;
+            --dark: #2c3e50;
+            --light: #ecf0f1;
+            --gray: #95a5a6;
+            --shadow: 0 10px 20px rgba(0,0,0,0.1);
+            --transition: all 0.3s ease;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            color: #333;
+            min-height: 100vh;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1400px;
+            width: 100%;
+            margin: 0 auto;
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            padding: 30px;
+            position: relative;
+            overflow: hidden;
+            transition: var(--transition);
+        }
+        
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary), var(--warning), var(--danger));
+        }
+        
+        h1 {
+            text-align: center;
+            color: var(--dark);
+            margin-bottom: 15px;
+            font-size: 2.5rem;
+            font-weight: 700;
+            position: relative;
+            display: inline-block;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        h1::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 10%;
+            width: 80%;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--primary), transparent);
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: var(--gray);
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+        }
+        
+        .game-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        @media (max-width: 1200px) {
+            .game-container {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        
+        @media (max-width: 900px) {
+            .game-container {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .panel {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            border-top: 4px solid var(--primary);
+            height: fit-content;
+        }
+        
+        .panel-title {
+            font-size: 1.4rem;
+            color: var(--dark);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .panel-title i {
+            color: var(--primary);
+        }
+        
+        .stats-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+        
+        .stat {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 15px;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .stat:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .stat-name {
+            font-weight: bold;
+            font-size: 1.1rem;
+            color: var(--dark);
+        }
+        
+        .stat-icon {
+            font-size: 1.3rem;
+            color: var(--gray);
+        }
+        
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary);
+            transition: var(--transition);
+        }
+        
+        .stat-bar {
+            height: 8px;
+            background: #eee;
+            border-radius: 4px;
+            margin-top: 10px;
+            overflow: hidden;
+        }
+        
+        .stat-fill {
+            height: 100%;
+            border-radius: 4px;
+            background: var(--primary);
+            width: 50%;
+            transition: width 0.5s ease;
+        }
+        
+        .actions-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        
+        @media (max-width: 600px) {
+            .actions-container {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .action {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+            border: 2px solid transparent;
+        }
+        
+        .action:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+            border-color: var(--primary);
+        }
+        
+        .action.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .action.disabled:hover {
+            transform: none;
+            box-shadow: none;
+            border-color: transparent;
+        }
+        
+        .action-icon {
+            font-size: 2rem;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+        
+        .action-title {
+            font-weight: bold;
+            font-size: 1.1rem;
+            color: var(--dark);
+            margin-bottom: 5px;
+        }
+        
+        .action-desc {
+            font-size: 0.9rem;
+            color: var(--gray);
+        }
+        
+        .log-container {
+            max-height: 500px;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+        
+        .log-item {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-left: 4px solid var(--primary);
+            transition: var(--transition);
+        }
+        
+        .log-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .log-time {
+            font-size: 0.8rem;
+            color: var(--gray);
+            margin-bottom: 5px;
+        }
+        
+        .log-content {
+            font-size: 1rem;
+            color: var(--dark);
+        }
+        
+        .log-event {
+            border-left-color: var(--secondary);
+        }
+        
+        .log-action {
+            border-left-color: var(--warning);
+        }
+        
+        .log-competition {
+            border-left-color: var(--danger);
+        }
+        
+        .log-ending {
+            border-left-color: var(--danger);
+            background: rgba(231, 76, 60, 0.1);
+        }
+        
+        .log-skill {
+            border-left-color: #9b59b6;
+        }
+        
+        .event-container {
+            grid-column: 1 / -1;
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: var(--shadow);
+            min-height: 180px;
+            border: 1px solid #e9ecef;
+            transition: var(--transition);
+            position: relative;
+        }
+        
+        .event-container:hover {
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+        }
+        
+        .event-title {
+            font-size: 1.4rem;
+            color: var(--dark);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .event-title i {
+            color: var(--primary);
+        }
+        
+        .event-content {
+            font-size: 1.1rem;
+            line-height: 1.7;
+            color: #34495e;
+        }
+        
+        .event-choices {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        @media (max-width: 600px) {
+            .event-choices {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .event-choice {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 15px;
+            cursor: pointer;
+            transition: var(--transition);
+            border: 2px solid transparent;
+        }
+        
+        .event-choice:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border-color: var(--primary);
+        }
+        
+        .age-container {
+            text-align: center;
+            font-size: 1.5rem;
+            margin-bottom: 25px;
+            color: var(--dark);
+            font-weight: bold;
+            background: rgba(52, 152, 219, 0.1);
+            padding: 10px;
+            border-radius: 10px;
+            display: inline-block;
+            position: relative;
+            left: 50%;
+            transform: translateX(-50%);
+            min-width: 200px;
+        }
+        
+        .button-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        
+        button {
+            padding: 14px 30px;
+            font-size: 1.1rem;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: bold;
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 180px;
+            justify-content: center;
+        }
+        
+        #next-year {
+            background: var(--primary);
+            color: white;
+        }
+        
+        #restart {
+            background: var(--danger);
+            color: white;
+        }
+        
+        button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        button:active {
+            transform: translateY(2px);
+        }
+        
+        .ending-container {
+            display: none;
+            text-align: center;
+            padding: 30px;
+            background: white;
+            border-radius: 15px;
+            margin-top: 20px;
+            box-shadow: var(--shadow);
+            border-top: 5px solid var(--secondary);
+            animation: fadeIn 0.8s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .ending-title {
+            font-size: 2.2rem;
+            color: var(--danger);
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+        
+        .ending-content {
+            font-size: 1.2rem;
+            line-height: 1.7;
+            color: #34495e;
+            margin-bottom: 25px;
+        }
+        
+        .highlight {
+            color: var(--danger);
+            font-weight: bold;
+            background: rgba(231, 76, 60, 0.1);
+            padding: 2px 8px;
+            border-radius: 5px;
+        }
+        
+        .change-indicator {
+            position: absolute;
+            right: 15px;
+            top: 15px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            padding: 3px 10px;
+            border-radius: 20px;
+            opacity: 0;
+            transition: var(--transition);
+        }
+        
+        .positive {
+            background: rgba(46, 204, 113, 0.2);
+            color: var(--secondary);
+        }
+        
+        .negative {
+            background: rgba(231, 76, 60, 0.2);
+            color: var(--danger);
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            max-width: 600px;
+            width: 90%;
+            box-shadow: var(--shadow);
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .modal-title {
+            font-size: 1.8rem;
+            color: var(--dark);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .talent-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        
+        @media (max-width: 500px) {
+            .talent-options {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .talent-option {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            cursor: pointer;
+            transition: var(--transition);
+            border: 2px solid transparent;
+            text-align: center;
+        }
+        
+        .talent-option:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+            border-color: var(--primary);
+        }
+        
+        .talent-option.selected {
+            border-color: var(--primary);
+            background: rgba(52, 152, 219, 0.1);
+        }
+        
+        .talent-name {
+            font-weight: bold;
+            font-size: 1.2rem;
+            color: var(--dark);
+            margin-bottom: 10px;
+        }
+        
+        .talent-desc {
+            font-size: 0.9rem;
+            color: var(--gray);
+        }
+        
+        .competition-container {
+            display: none;
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 20px;
+            box-shadow: var(--shadow);
+        }
+        
+        .competition-title {
+            font-size: 1.4rem;
+            color: var(--dark);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .competition-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        
+        .competition-option {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            cursor: pointer;
+            transition: var(--transition);
+            border: 2px solid transparent;
+            text-align: center;
+        }
+        
+        .competition-option:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+            border-color: var(--primary);
+        }
+        
+        .competition-name {
+            font-weight: bold;
+            font-size: 1.1rem;
+            color: var(--dark);
+            margin-bottom: 10px;
+        }
+        
+        .competition-desc {
+            font-size: 0.9rem;
+            color: var(--gray);
+            margin-bottom: 10px;
+        }
+        
+        .competition-req {
+            font-size: 0.8rem;
+            color: var(--warning);
+        }
+        
+        .achievement-container {
+            display: none;
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 20px;
+            box-shadow: var(--shadow);
+        }
+        
+        .achievement-title {
+            font-size: 1.4rem;
+            color: var(--dark);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .achievement-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 15px;
+        }
+        
+        .achievement {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            transition: var(--transition);
+            border: 2px solid transparent;
+        }
+        
+        .achievement.earned {
+            border-color: var(--secondary);
+            background: rgba(46, 204, 113, 0.1);
+        }
+        
+        .achievement-icon {
+            font-size: 2rem;
+            color: var(--gray);
+            margin-bottom: 10px;
+        }
+        
+        .achievement.earned .achievement-icon {
+            color: var(--secondary);
+        }
+        
+        .achievement-name {
+            font-weight: bold;
+            font-size: 0.9rem;
+            color: var(--dark);
+        }
+        
+        .skill-tree-container {
+            display: none;
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 20px;
+            box-shadow: var(--shadow);
+            max-height: 500px;
+            overflow-y: auto;
+        }
+        
+        .skill-tree-title {
+            font-size: 1.4rem;
+            color: var(--dark);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .skill-tree {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        
+        .skill-category {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 15px;
+        }
+        
+        .skill-category-title {
+            font-weight: bold;
+            font-size: 1.1rem;
+            color: var(--dark);
+            margin-bottom: 10px;
+            text-align: center;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 5px;
+        }
+        
+        .skill {
+            background: white;
+            border-radius: 8px;
+            padding: 10px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: var(--transition);
+            border: 2px solid transparent;
+            position: relative;
+        }
+        
+        .skill:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .skill.learned {
+            border-color: var(--secondary);
+            background: rgba(46, 204, 113, 0.1);
+        }
+        
+        .skill.available {
+            border-color: var(--primary);
+            background: rgba(52, 152, 219, 0.1);
+        }
+        
+        .skill.unavailable {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .skill-name {
+            font-weight: bold;
+            font-size: 0.9rem;
+            color: var(--dark);
+            margin-bottom: 5px;
+        }
+        
+        .skill-desc {
+            font-size: 0.8rem;
+            color: var(--gray);
+            margin-bottom: 5px;
+        }
+        
+        .skill-cost {
+            font-size: 0.7rem;
+            color: var(--warning);
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(243, 156, 18, 0.2);
+            padding: 2px 6px;
+            border-radius: 10px;
+        }
+        
+        .skill-points {
+            text-align: center;
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            color: var(--dark);
+            font-weight: bold;
+            background: rgba(52, 152, 219, 0.1);
+            padding: 10px;
+            border-radius: 10px;
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .pulse {
+            animation: pulse 1.5s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .special-event {
+            background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
+            color: white;
+        }
+        
+        .special-event .event-title {
+            color: white;
+        }
+        
+        .special-event .event-content {
+            color: white;
+        }
+        
+        .special-event .event-choice {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+        
+        .special-event .event-choice:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        .mini-game-container {
+            display: none;
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 20px;
+            box-shadow: var(--shadow);
+            text-align: center;
+        }
+        
+        .mini-game-title {
+            font-size: 1.4rem;
+            color: var(--dark);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .mini-game-content {
+            font-size: 1.1rem;
+            line-height: 1.7;
+            color: #34495e;
+            margin-bottom: 20px;
+        }
+        
+        .mini-game-board {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin: 20px auto;
+            max-width: 300px;
+        }
+        
+        .mini-game-cell {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: var(--transition);
+            border: 2px solid transparent;
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .mini-game-cell:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+            border-color: var(--primary);
+        }
+        
+        .mini-game-cell.selected {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .mini-game-result {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 10px;
+            background: #f8f9fa;
+        }
+        
+        .mini-game-win {
+            color: var(--secondary);
+            background: rgba(46, 204, 113, 0.1);
+        }
+        
+        .mini-game-lose {
+            color: var(--danger);
+            background: rgba(231, 76, 60, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>OI重开模拟器 - 技能树与增强交互版</h1>
+        <div class="subtitle">体验一名OI选手的一生，解锁技能，挑战更多内容...</div>
+        
+        <div class="age-container">
+            <i class="fas fa-birthday-cake"></i> 年龄: <span id="age">12</span> 岁
+        </div>
+        
+        <div class="game-container">
+            <div class="panel">
+                <div class="panel-title">
+                    <i class="fas fa-chart-bar"></i> 属性面板
+                </div>
+                <div class="stats-container">
+                    <div class="stat">
+                        <div class="stat-header">
+                            <div class="stat-name">智商</div>
+                            <div class="stat-icon"><i class="fas fa-brain"></i></div>
+                        </div>
+                        <div class="stat-value" id="iq">100</div>
+                        <div class="stat-bar">
+                            <div class="stat-fill" id="iq-bar"></div>
+                        </div>
+                        <div class="change-indicator" id="iq-change"></div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-header">
+                            <div class="stat-name">运气</div>
+                            <div class="stat-icon"><i class="fas fa-clover"></i></div>
+                        </div>
+                        <div class="stat-value" id="luck">50</div>
+                        <div class="stat-bar">
+                            <div class="stat-fill" id="luck-bar"></div>
+                        </div>
+                        <div class="change-indicator" id="luck-change"></div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-header">
+                            <div class="stat-name">家境</div>
+                            <div class="stat-icon"><i class="fas fa-home"></i></div>
+                        </div>
+                        <div class="stat-value" id="family">50</div>
+                        <div class="stat-bar">
+                            <div class="stat-fill" id="family-bar"></div>
+                        </div>
+                        <div class="change-indicator" id="family-change"></div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-header">
+                            <div class="stat-name">努力</div>
+                            <div class="stat-icon"><i class="fas fa-dumbbell"></i></div>
+                        </div>
+                        <div class="stat-value" id="effort">50</div>
+                        <div class="stat-bar">
+                            <div class="stat-fill" id="effort-bar"></div>
+                        </div>
+                        <div class="change-indicator" id="effort-change"></div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-header">
+                            <div class="stat-name">算法能力</div>
+                            <div class="stat-icon"><i class="fas fa-code"></i></div>
+                        </div>
+                        <div class="stat-value" id="algorithm">30</div>
+                        <div class="stat-bar">
+                            <div class="stat-fill" id="algorithm-bar"></div>
+                        </div>
+                        <div class="change-indicator" id="algorithm-change"></div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-header">
+                            <div class="stat-name">比赛经验</div>
+                            <div class="stat-icon"><i class="fas fa-trophy"></i></div>
+                        </div>
+                        <div class="stat-value" id="experience">10</div>
+                        <div class="stat-bar">
+                            <div class="stat-fill" id="experience-bar"></div>
+                        </div>
+                        <div class="change-indicator" id="experience-change"></div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-header">
+                            <div class="stat-name">健康</div>
+                            <div class="stat-icon"><i class="fas fa-heart"></i></div>
+                        </div>
+                        <div class="stat-value" id="health">80</div>
+                        <div class="stat-bar">
+                            <div class="stat-fill" id="health-bar"></div>
+                        </div>
+                        <div class="change-indicator" id="health-change"></div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-header">
+                            <div class="stat-name">心情</div>
+                            <div class="stat-icon"><i class="fas fa-smile"></i></div>
+                        </div>
+                        <div class="stat-value" id="mood">70</div>
+                        <div class="stat-bar">
+                            <div class="stat-fill" id="mood-bar"></div>
+                        </div>
+                        <div class="change-indicator" id="mood-change"></div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-header">
+                            <div class="stat-name">技能点</div>
+                            <div class="stat-icon"><i class="fas fa-star"></i></div>
+                        </div>
+                        <div class="stat-value" id="skill-points">0</div>
+                        <div class="stat-bar">
+                            <div class="stat-fill" id="skill-points-bar"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="panel">
+                <div class="panel-title">
+                    <i class="fas fa-gamepad"></i> 操作面板
+                </div>
+                <div class="actions-container">
+                    <div class="action" id="action-train">
+                        <div class="action-icon"><i class="fas fa-book"></i></div>
+                        <div class="action-title">训练</div>
+                        <div class="action-desc">提升算法能力</div>
+                    </div>
+                    <div class="action" id="action-simulate">
+                        <div class="action-icon"><i class="fas fa-laptop-code"></i></div>
+                        <div class="action-title">模拟赛</div>
+                        <div class="action-desc">增加比赛经验</div>
+                    </div>
+                    <div class="action" id="action-compete">
+                        <div class="action-icon"><i class="fas fa-flag"></i></div>
+                        <div class="action-title">参加比赛</div>
+                        <div class="action-desc">挑战真实竞赛</div>
+                    </div>
+                    <div class="action" id="action-rest">
+                        <div class="action-icon"><i class="fas fa-bed"></i></div>
+                        <div class="action-title">休息</div>
+                        <div class="action-desc">恢复精力</div>
+                    </div>
+                    <div class="action" id="action-social">
+                        <div class="action-icon"><i class="fas fa-users"></i></div>
+                        <div class="action-title">社交活动</div>
+                        <div class="action-desc">提升心情</div>
+                    </div>
+                    <div class="action" id="action-skills">
+                        <div class="action-icon"><i class="fas fa-sitemap"></i></div>
+                        <div class="action-title">技能树</div>
+                        <div class="action-desc">学习新技能</div>
+                    </div>
+                    <div class="action" id="action-achievements">
+                        <div class="action-icon"><i class="fas fa-medal"></i></div>
+                        <div class="action-title">成就</div>
+                        <div class="action-desc">查看成就</div>
+                    </div>
+                    <div class="action" id="action-mini-game">
+                        <div class="action-icon"><i class="fas fa-puzzle-piece"></i></div>
+                        <div class="action-title">小游戏</div>
+                        <div class="action-desc">放松一下</div>
+                    </div>
+                </div>
+                
+                <div class="competition-container" id="competition-container">
+                    <div class="competition-title">
+                        <i class="fas fa-trophy"></i> 选择比赛
+                    </div>
+                    <div class="competition-options">
+                        <div class="competition-option" data-comp="csp">
+                            <div class="competition-name">CSP认证</div>
+                            <div class="competition-desc">入门级认证考试</div>
+                            <div class="competition-req">需要: 算法能力 ≥ 30</div>
+                        </div>
+                        <div class="competition-option" data-comp="noip">
+                            <div class="competition-name">NOIP</div>
+                            <div class="competition-desc">省级信息学竞赛</div>
+                            <div class="competition-req">需要: 算法能力 ≥ 50</div>
+                        </div>
+                        <div class="competition-option" data-comp="wc">
+                            <div class="competition-name">WC</div>
+                            <div class="competition-desc">全国冬令营</div>
+                            <div class="competition-req">需要: 算法能力 ≥ 70</div>
+                        </div>
+                        <div class="competition-option" data-comp="noi">
+                            <div class="competition-name">NOI</div>
+                            <div class="competition-desc">全国决赛</div>
+                            <div class="competition-req">需要: 算法能力 ≥ 90</div>
+                        </div>
+                        <div class="competition-option" data-comp="ioi">
+                            <div class="competition-name">IOI</div>
+                            <div class="competition-desc">国际信息学奥赛</div>
+                            <div class="competition-req">需要: 算法能力 ≥ 120</div>
+                        </div>
+                        <div class="competition-option" data-comp="acm">
+                            <div class="competition-name">ACM</div>
+                            <div class="competition-desc">大学生程序设计</div>
+                            <div class="competition-req">需要: 算法能力 ≥ 100</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="achievement-container" id="achievement-container">
+                    <div class="achievement-title">
+                        <i class="fas fa-medal"></i> 成就系统
+                    </div>
+                    <div class="achievement-list" id="achievement-list">
+                        <!-- 成就将通过JavaScript动态添加 -->
+                    </div>
+                </div>
+                
+                <div class="skill-tree-container" id="skill-tree-container">
+                    <div class="skill-points">
+                        <i class="fas fa-star"></i> 技能点: <span id="skill-points-display">0</span>
+                    </div>
+                    <div class="skill-tree-title">
+                        <i class="fas fa-sitemap"></i> 技能树
+                    </div>
+                    <div class="skill-tree" id="skill-tree">
+                        <!-- 技能树将通过JavaScript动态添加 -->
+                    </div>
+                </div>
+                
+                <div class="mini-game-container" id="mini-game-container">
+                    <div class="mini-game-title">
+                        <i class="fas fa-puzzle-piece"></i> 记忆翻牌小游戏
+                    </div>
+                    <div class="mini-game-content">
+                        记住卡片的位置，找出所有匹配的图案对！成功可获得技能点奖励。
+                    </div>
+                    <div class="mini-game-board" id="mini-game-board">
+                        <!-- 小游戏内容将通过JavaScript动态添加 -->
+                    </div>
+                    <div class="mini-game-result" id="mini-game-result"></div>
+                    <button id="mini-game-restart">
+                        <i class="fas fa-redo"></i> 重新开始
+                    </button>
+                </div>
+            </div>
+            
+            <div class="panel">
+                <div class="panel-title">
+                    <i class="fas fa-scroll"></i> 事件日志
+                </div>
+                <div class="log-container" id="log-container">
+                    <!-- 日志将通过JavaScript动态添加 -->
+                </div>
+            </div>
+        </div>
+        
+        <div class="event-container" id="event-container">
+            <div class="event-title">
+                <i class="fas fa-calendar-alt"></i> <span id="event-title">人生开始</span>
+            </div>
+            <div class="event-content" id="event-content">
+                你是一名12岁的初中生，偶然接触到了信息学奥林匹克竞赛(OI)。<br>
+                你对编程产生了浓厚的兴趣，决定开始你的OI之旅！
+            </div>
+            <div class="event-choices" id="event-choices">
+                <!-- 事件选择将通过JavaScript动态添加 -->
+            </div>
+        </div>
+        
+        <div class="button-container">
+            <button id="next-year">
+                <i class="fas fa-forward"></i> 进入下一年
+            </button>
+            <button id="restart">
+                <i class="fas fa-redo"></i> 重新开始
+            </button>
+        </div>
+        
+        <div class="ending-container" id="ending-container">
+            <div class="ending-title" id="ending-title">人生结局</div>
+            <div class="ending-content" id="ending-content"></div>
+            <button id="restart-ending">
+                <i class="fas fa-play-circle"></i> 再来一次
+            </button>
+        </div>
+    </div>
+
+    <!-- 天赋选择模态框 -->
+    <div class="modal" id="talent-modal">
+        <div class="modal-content">
+            <div class="modal-title">选择你的天赋</div>
+            <div class="talent-options">
+                <div class="talent-option" data-talent="smart">
+                    <div class="talent-name">天才少年</div>
+                    <div class="talent-desc">初始智商+20，算法能力+10</div>
+                </div>
+                <div class="talent-option" data-talent="lucky">
+                    <div class="talent-name">幸运之星</div>
+                    <div class="talent-desc">初始运气+30，家境+10</div>
+                </div>
+                <div class="talent-option" data-talent="hardworking">
+                    <div class="talent-name">勤奋努力</div>
+                    <div class="talent-desc">初始努力+30，比赛经验+10</div>
+                </div>
+                <div class="talent-option" data-talent="wealthy">
+                    <div class="talent-name">家境优越</div>
+                    <div class="talent-desc">初始家境+40，可以购买更多学习资源</div>
+                </div>
+                <div class="talent-option" data-talent="healthy">
+                    <div class="talent-name">健康体魄</div>
+                    <div class="talent-desc">初始健康+30，心情+20</div>
+                </div>
+                <div class="talent-option" data-talent="balanced">
+                    <div class="talent-name">全面发展</div>
+                    <div class="talent-desc">所有属性+10，均衡发展</div>
+                </div>
+            </div>
+            <button id="start-game" style="width: 100%;">
+                <i class="fas fa-play"></i> 开始游戏
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // 游戏状态
+        const gameState = {
+            age: 12,
+            iq: 100,
+            luck: 50,
+            family: 50,
+            effort: 50,
+            algorithm: 30,
+            experience: 10,
+            health: 80,
+            mood: 70,
+            skillPoints: 0,
+            talent: null,
+            isEnding: false,
+            actions: 3, // 每年可执行的操作次数
+            competitions: {
+                csp: false,
+                noip: false,
+                wc: false,
+                noi: false,
+                ioi: false,
+                acm: false
+            },
+            achievements: [],
+            learnedSkills: [],
+            log: [],
+            miniGameActive: false
+        };
+        
+        // 天赋效果
+        const talents = {
+            smart: { iq: 20, algorithm: 10 },
+            lucky: { luck: 30, family: 10 },
+            hardworking: { effort: 30, experience: 10 },
+            wealthy: { family: 40 },
+            healthy: { health: 30, mood: 20 },
+            balanced: { iq: 10, luck: 10, family: 10, effort: 10, algorithm: 10, experience: 10, health: 10, mood: 10 }
+        };
+        
+        // 技能树
+        const skillTree = {
+            "算法基础": [
+                { id: "basic_algo", name: "基础算法", desc: "掌握排序、搜索等基础算法", cost: 1, effect: { algorithm: 10 }, requirements: [] },
+                { id: "data_struct", name: "数据结构", desc: "理解数组、链表、栈、队列", cost: 1, effect: { algorithm: 10 }, requirements: ["basic_algo"] },
+                { id: "recursion", name: "递归思维", desc: "掌握递归思想和应用", cost: 1, effect: { iq: 5, algorithm: 5 }, requirements: ["basic_algo"] }
+            ],
+            "算法进阶": [
+                { id: "dp", name: "动态规划", desc: "掌握DP思想和经典问题", cost: 2, effect: { algorithm: 15, iq: 5 }, requirements: ["data_struct", "recursion"] },
+                { id: "greedy", name: "贪心算法", desc: "理解贪心思想和应用场景", cost: 2, effect: { algorithm: 10, iq: 5 }, requirements: ["basic_algo"] },
+                { id: "graph", name: "图论算法", desc: "掌握图的遍历和最短路径", cost: 2, effect: { algorithm: 15 }, requirements: ["data_struct"] }
+            ],
+            "高级算法": [
+                { id: "string_algo", name: "字符串算法", desc: "掌握KMP、Trie等算法", cost: 3, effect: { algorithm: 20 }, requirements: ["dp", "graph"] },
+                { id: "math_algo", name: "数学算法", desc: "掌握数论、组合数学", cost: 3, effect: { algorithm: 15, iq: 10 }, requirements: ["dp"] },
+                { id: "advanced_ds", name: "高级数据结构", desc: "掌握线段树、平衡树等", cost: 3, effect: { algorithm: 20 }, requirements: ["graph"] }
+            ],
+            "比赛技巧": [
+                { id: "debug_skill", name: "调试技巧", desc: "提高代码调试效率", cost: 1, effect: { experience: 10 }, requirements: [] },
+                { id: "time_manage", name: "时间管理", desc: "合理分配比赛时间", cost: 1, effect: { experience: 10, effort: 5 }, requirements: ["debug_skill"] },
+                { id: "stress_manage", name: "压力管理", desc: "应对比赛压力", cost: 2, effect: { mood: 15, experience: 10 }, requirements: ["time_manage"] }
+            ],
+            "综合能力": [
+                { id: "teamwork", name: "团队协作", desc: "提高团队合作能力", cost: 1, effect: { mood: 10, luck: 5 }, requirements: [] },
+                { id: "problem_solve", name: "问题解决", desc: "提升问题分析和解决能力", cost: 2, effect: { iq: 10, algorithm: 10 }, requirements: ["teamwork"] },
+                { id: "creative_thinking", name: "创新思维", desc: "培养创新性思考能力", cost: 3, effect: { iq: 15, algorithm: 15 }, requirements: ["problem_solve"] }
+            ]
+        };
+        
+        // 成就系统
+        const achievements = [
+            { id: "first_code", name: "初识代码", desc: "写出第一行代码", icon: "fa-code", condition: (state) => state.algorithm >= 20 },
+            { id: "csp_pass", name: "CSP认证", desc: "通过CSP认证", icon: "fa-certificate", condition: (state) => state.competitions.csp },
+            { id: "noip_winner", name: "NOIP获奖", desc: "在NOIP中获得奖项", icon: "fa-award", condition: (state) => state.competitions.noip },
+            { id: "wc_participant", name: "冬令营选手", desc: "参加全国冬令营", icon: "fa-snowflake", condition: (state) => state.competitions.wc },
+            { id: "noi_medal", name: "NOI奖牌", desc: "在NOI中获得奖牌", icon: "fa-medal", condition: (state) => state.competitions.noi },
+            { id: "ioi_competitor", name: "国际选手", desc: "参加国际信息学奥赛", icon: "fa-globe", condition: (state) => state.competitions.ioi },
+            { id: "acm_contestant", name: "ACM选手", desc: "参加ACM程序设计竞赛", icon: "fa-laptop-code", condition: (state) => state.competitions.acm },
+            { id: "algorithm_master", name: "算法大师", desc: "算法能力达到150", icon: "fa-brain", condition: (state) => state.algorithm >= 150 },
+            { id: "experience_expert", name: "经验丰富", desc: "比赛经验达到150", icon: "fa-trophy", condition: (state) => state.experience >= 150 },
+            { id: "skill_master", name: "技能大师", desc: "学会所有技能", icon: "fa-sitemap", condition: (state) => state.learnedSkills.length >= 15 },
+            { id: "oi_legend", name: "OI传奇", desc: "获得IOI金牌", icon: "fa-crown", condition: (state) => state.competitions.ioi && state.algorithm >= 150 }
+        ];
+        
+        // 事件库
+        const events = [
+            {
+                title: "初识编程",
+                content: "你在学校的计算机课上第一次接触编程，被它严谨的逻辑和无限的可能性深深吸引。",
+                effects: { iq: 5, effort: 5, algorithm: 5 },
+                type: "normal"
+            },
+            {
+                title: "加入OI社团",
+                content: "你加入了学校的OI社团，认识了一群志同道合的朋友，开始了系统的算法学习。",
+                effects: { iq: 3, effort: 8, luck: 2, algorithm: 8, mood: 5 },
+                type: "normal"
+            },
+            {
+                title: "第一次比赛",
+                content: "你参加了市级OI比赛，虽然只获得了三等奖，但这让你更加坚定了学习算法的决心。",
+                effects: { iq: 5, effort: 10, luck: -2, experience: 15, mood: -5 },
+                type: "normal"
+            },
+            {
+                title: "遇到瓶颈",
+                content: "你在学习动态规划时遇到了困难，感觉自己的进步速度明显变慢。",
+                effects: { iq: -3, effort: -5, algorithm: -5, mood: -10 },
+                type: "normal"
+            },
+            {
+                title: "名师指导",
+                content: "一位经验丰富的OI教练发现了你的潜力，开始给你针对性的指导。",
+                effects: { iq: 8, effort: 5, luck: 5, algorithm: 10, mood: 10 },
+                type: "normal"
+            },
+            {
+                title: "家庭支持",
+                content: "你的父母看到你的努力和进步，决定为你购买更好的电脑和参考书籍。",
+                effects: { family: 10, effort: 5, algorithm: 5, mood: 5 },
+                type: "normal"
+            },
+            {
+                title: "省级比赛",
+                content: "你在省级OI比赛中获得了一等奖，这让你获得了参加全国赛的资格。",
+                effects: { iq: 10, luck: 5, effort: 8, experience: 20, mood: 15 },
+                type: "normal"
+            },
+            {
+                title: "全国大赛",
+                content: "在全国OI比赛中，你遇到了来自全国各地的顶尖选手，竞争异常激烈。",
+                effects: { iq: 5, effort: 10, luck: -5, experience: 25, mood: -10, health: -5 },
+                type: "normal"
+            },
+            {
+                title: "保送机会",
+                content: "由于你在全国比赛中的优异成绩，你获得了顶尖大学的保送资格。",
+                effects: { iq: 5, luck: 10, family: 5, mood: 20 },
+                type: "normal"
+            },
+            {
+                title: "国际比赛",
+                content: "你代表国家参加国际信息学奥林匹克竞赛，与世界各地的选手同台竞技。",
+                effects: { iq: 15, effort: 10, luck: 5, experience: 30, mood: 20, health: -10 },
+                type: "normal"
+            },
+            {
+                title: "神秘大佬的指导",
+                content: "你在一次线上比赛中遇到了一位神秘大佬，他给了你一些宝贵的建议。",
+                type: "choice",
+                choices: [
+                    {
+                        text: "虚心接受指导",
+                        effects: { algorithm: 15, experience: 10, mood: 5 }
+                    },
+                    {
+                        text: "自信地拒绝，坚持自己的方法",
+                        effects: { effort: 10, mood: -5 }
+                    }
+                ]
+            },
+            {
+                title: "团队合作的机会",
+                content: "你被邀请加入一个OI团队，准备参加团体赛。",
+                type: "choice",
+                choices: [
+                    {
+                        text: "加入团队，学习合作",
+                        effects: { algorithm: 10, experience: 15, mood: 10 }
+                    },
+                    {
+                        text: "选择独自训练，保持专注",
+                        effects: { algorithm: 15, effort: 10, mood: -5 }
+                    }
+                ]
+            },
+            {
+                title: "健康危机",
+                content: "长时间的训练和比赛让你的身体出现了问题，医生建议你休息。",
+                type: "choice",
+                choices: [
+                    {
+                        text: "听从医生建议，好好休息",
+                        effects: { health: 20, mood: 5, effort: -10, algorithm: -5 }
+                    },
+                    {
+                        text: "坚持训练，不顾健康",
+                        effects: { health: -20, effort: 15, algorithm: 10, mood: -10 }
+                    }
+                ]
+            },
+            {
+                title: "意外的机会",
+                content: "你开发的一个小程序意外走红，获得了大量用户。",
+                type: "choice",
+                choices: [
+                    {
+                        text: "继续完善程序，考虑商业化",
+                        effects: { family: 20, luck: 15, mood: 20, effort: -10 }
+                    },
+                    {
+                        text: "专注于OI训练，放弃这个机会",
+                        effects: { effort: 15, algorithm: 10, mood: -5 }
+                    }
+                ]
+            },
+            {
+                title: "技能点奖励",
+                content: "你在一次特别的学习中领悟了新的知识，获得了技能点。",
+                effects: { skillPoints: 1 },
+                type: "special"
+            },
+            {
+                title: "特殊事件：黑客马拉松",
+                content: "你参加了一场48小时的黑客马拉松，与来自各地的开发者同台竞技。",
+                effects: { algorithm: 20, experience: 25, health: -15, mood: 15, skillPoints: 1 },
+                type: "special"
+            },
+            {
+                title: "特殊事件：开源贡献",
+                content: "你为一个知名的开源项目贡献了代码，获得了社区的认可。",
+                effects: { algorithm: 15, experience: 20, mood: 20, luck: 10, skillPoints: 1 },
+                type: "special"
+            }
+        ];
+        
+        // 结局库
+        const endings = [
+            {
+                title: "IOI金牌得主 - AFO",
+                condition: (state) => state.algorithm >= 150 && state.experience >= 100 && state.competitions.ioi,
+                content: "经过多年的努力，你在国际信息学奥林匹克竞赛中获得了金牌！你被世界顶尖大学争相录取。高中毕业后，你正式AFO（Away From OI），进入大学继续深造计算机科学。"
+            },
+            {
+                title: "NOI金牌 - AFO",
+                condition: (state) => state.algorithm >= 120 && state.experience >= 80 && state.competitions.noi,
+                content: "你在全国信息学奥林匹克竞赛中获得了金牌，并获得了保送资格。高中毕业后，你AFO，进入理想的大学学习计算机相关专业。"
+            },
+            {
+                title: "NOI银牌 - AFO",
+                condition: (state) => state.algorithm >= 100 && state.experience >= 70 && state.competitions.noi,
+                content: "你在NOI中获得了银牌，虽然没有得到保送资格，但通过高考进入了不错的大学。高中毕业后，你AFO，开始了大学生活。"
+            },
+            {
+                title: "省选退役",
+                condition: (state) => state.algorithm >= 80 && state.experience >= 60 && state.age >= 17,
+                content: "你在省选中表现一般，未能进入省队。高三时，你决定AFO，专心准备高考。"
+            },
+            {
+                title: "NOIP后退役",
+                condition: (state) => state.algorithm >= 60 && state.age >= 16,
+                content: "你在NOIP中获得了不错的成绩，但意识到与顶尖选手的差距。高二时，你决定AFO，把更多时间投入到文化课学习中。"
+            },
+            {
+                title: "CSP后放弃",
+                condition: (state) => state.algorithm < 60 && state.age >= 15,
+                content: "你在CSP认证中成绩不理想，发现自己并不适合OI竞赛。你决定AFO，将编程作为兴趣而非专业方向。"
+            },
+            {
+                title: "健康原因退役",
+                condition: (state) => state.health <= 20 && state.age >= 14,
+                content: "长期的训练和比赛严重影响了你的健康，医生建议你停止高强度的OI训练。你不得不AFO，专注于恢复健康。"
+            },
+            {
+                title: "心理压力退役",
+                condition: (state) => state.mood <= 20 && state.age >= 15,
+                content: "OI竞赛带来的巨大压力让你感到疲惫和焦虑，你决定AFO，寻找更轻松的生活方式。"
+            },
+            {
+                title: "意外收获",
+                condition: (state) => state.luck >= 80,
+                content: "虽然你的OI成绩一般，但你在学习过程中开发的一个小项目意外获得了成功，开启了你的创业之路。高中毕业后，你AFO，全身心投入创业。"
+            },
+            {
+                title: "早退",
+                condition: (state) => state.effort < 30 && state.age >= 14,
+                content: "由于缺乏坚持，你在接触OI不久后就放弃了。这段经历虽然短暂，但也让你对编程有了初步了解。"
+            }
+        ];
+        
+        // DOM元素
+        const ageElement = document.getElementById('age');
+        const iqElement = document.getElementById('iq');
+        const luckElement = document.getElementById('luck');
+        const familyElement = document.getElementById('family');
+        const effortElement = document.getElementById('effort');
+        const algorithmElement = document.getElementById('algorithm');
+        const experienceElement = document.getElementById('experience');
+        const healthElement = document.getElementById('health');
+        const moodElement = document.getElementById('mood');
+        const skillPointsElement = document.getElementById('skill-points');
+        const eventTitleElement = document.getElementById('event-title');
+        const eventContentElement = document.getElementById('event-content');
+        const eventChoicesElement = document.getElementById('event-choices');
+        const eventContainer = document.getElementById('event-container');
+        const endingContainer = document.getElementById('ending-container');
+        const endingTitleElement = document.getElementById('ending-title');
+        const endingContentElement = document.getElementById('ending-content');
+        const talentModal = document.getElementById('talent-modal');
+        const competitionContainer = document.getElementById('competition-container');
+        const achievementContainer = document.getElementById('achievement-container');
+        const achievementListElement = document.getElementById('achievement-list');
+        const skillTreeContainer = document.getElementById('skill-tree-container');
+        const skillTreeElement = document.getElementById('skill-tree');
+        const skillPointsDisplayElement = document.getElementById('skill-points-display');
+        const logContainer = document.getElementById('log-container');
+        const miniGameContainer = document.getElementById('mini-game-container');
+        const miniGameBoardElement = document.getElementById('mini-game-board');
+        const miniGameResultElement = document.getElementById('mini-game-result');
+        
+        // 进度条元素
+        const iqBar = document.getElementById('iq-bar');
+        const luckBar = document.getElementById('luck-bar');
+        const familyBar = document.getElementById('family-bar');
+        const effortBar = document.getElementById('effort-bar');
+        const algorithmBar = document.getElementById('algorithm-bar');
+        const experienceBar = document.getElementById('experience-bar');
+        const healthBar = document.getElementById('health-bar');
+        const moodBar = document.getElementById('mood-bar');
+        const skillPointsBar = document.getElementById('skill-points-bar');
+        
+        // 变化指示器
+        const iqChange = document.getElementById('iq-change');
+        const luckChange = document.getElementById('luck-change');
+        const familyChange = document.getElementById('family-change');
+        const effortChange = document.getElementById('effort-change');
+        const algorithmChange = document.getElementById('algorithm-change');
+        const experienceChange = document.getElementById('experience-change');
+        const healthChange = document.getElementById('health-change');
+        const moodChange = document.getElementById('mood-change');
+        
+        // 初始化游戏
+        function initGame() {
+            talentModal.style.display = 'flex';
+            
+            // 天赋选择
+            const talentOptions = document.querySelectorAll('.talent-option');
+            talentOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    talentOptions.forEach(opt => opt.classList.remove('selected'));
+                    this.classList.add('selected');
+                    gameState.talent = this.dataset.talent;
+                });
+            });
+            
+            // 开始游戏按钮
+            document.getElementById('start-game').addEventListener('click', function() {
+                if (!gameState.talent) {
+                    alert('请选择一个天赋！');
+                    return;
+                }
+                
+                // 应用天赋效果
+                const talentEffect = talents[gameState.talent];
+                for (const [stat, value] of Object.entries(talentEffect)) {
+                    gameState[stat] += value;
+                }
+                
+                // 添加初始日志
+                addLog("游戏开始", `你选择了${document.querySelector('.talent-option.selected .talent-name').textContent}天赋，开始了你的OI之旅！`, "event");
+                
+                talentModal.style.display = 'none';
+                updateUI();
+                checkAchievements();
+            });
+        }
+        
+        // 更新UI
+        function updateUI() {
+            ageElement.textContent = gameState.age;
+            iqElement.textContent = gameState.iq;
+            luckElement.textContent = gameState.luck;
+            familyElement.textContent = gameState.family;
+            effortElement.textContent = gameState.effort;
+            algorithmElement.textContent = gameState.algorithm;
+            experienceElement.textContent = gameState.experience;
+            healthElement.textContent = gameState.health;
+            moodElement.textContent = gameState.mood;
+            skillPointsElement.textContent = gameState.skillPoints;
+            skillPointsDisplayElement.textContent = gameState.skillPoints;
+            
+            // 更新进度条
+            iqBar.style.width = `${Math.min(gameState.iq, 200)}%`;
+            luckBar.style.width = `${Math.min(gameState.luck, 100)}%`;
+            familyBar.style.width = `${Math.min(gameState.family, 100)}%`;
+            effortBar.style.width = `${Math.min(gameState.effort, 100)}%`;
+            algorithmBar.style.width = `${Math.min(gameState.algorithm, 200)}%`;
+            experienceBar.style.width = `${Math.min(gameState.experience, 200)}%`;
+            healthBar.style.width = `${Math.min(gameState.health, 100)}%`;
+            moodBar.style.width = `${Math.min(gameState.mood, 100)}%`;
+            skillPointsBar.style.width = `${Math.min(gameState.skillPoints, 10) * 10}%`;
+            
+            // 添加动画效果
+            eventContainer.classList.add('fade-in');
+            setTimeout(() => {
+                eventContainer.classList.remove('fade-in');
+            }, 500);
+        }
+        
+        // 显示属性变化
+        function showChange(indicator, value) {
+            if (value === 0) return;
+            
+            indicator.textContent = value > 0 ? `+${value}` : `${value}`;
+            indicator.className = `change-indicator ${value > 0 ? 'positive' : 'negative'}`;
+            indicator.style.opacity = '1';
+            
+            setTimeout(() => {
+                indicator.style.opacity = '0';
+            }, 2000);
+        }
+        
+        // 添加日志
+        function addLog(title, content, type = "event") {
+            const logItem = document.createElement('div');
+            logItem.className = `log-item log-${type}`;
+            
+            const time = new Date().toLocaleTimeString();
+            logItem.innerHTML = `
+                <div class="log-time">${gameState.age}岁 - ${time}</div>
+                <div class="log-content"><strong>${title}</strong>: ${content}</div>
+            `;
+            
+            logContainer.prepend(logItem);
+            
+            // 保存到游戏状态
+            gameState.log.unshift({
+                age: gameState.age,
+                time: time,
+                title: title,
+                content: content,
+                type: type
+            });
+            
+            // 限制日志数量
+            if (logContainer.children.length > 20) {
+                logContainer.removeChild(logContainer.lastChild);
+            }
+        }
+        
+        // 处理操作
+        function setupActions() {
+            document.getElementById('action-train').addEventListener('click', function() {
+                if (gameState.actions <= 0 || gameState.isEnding) return;
+                
+                const algoGain = 10 + Math.floor(Math.random() * 5);
+                gameState.algorithm += algoGain;
+                gameState.effort -= 5;
+                gameState.health -= 3;
+                gameState.mood -= 2;
+                gameState.actions--;
+                
+                showChange(algorithmChange, algoGain);
+                showChange(effortChange, -5);
+                showChange(healthChange, -3);
+                showChange(moodChange, -2);
+                
+                addLog("训练", `你进行了刻苦的训练，算法能力提升了${algoGain}点，但消耗了精力和健康。`, "action");
+                
+                eventTitleElement.textContent = "训练";
+                eventContentElement.textContent = `你花了一整年时间刻苦训练，算法能力提升了${algoGain}点，但也消耗了不少精力和健康。`;
+                eventChoicesElement.innerHTML = '';
+                
+                updateUI();
+                checkAchievements();
+                checkEnding();
+            });
+            
+            document.getElementById('action-simulate').addEventListener('click', function() {
+                if (gameState.actions <= 0 || gameState.isEnding) return;
+                
+                const expGain = 15 + Math.floor(Math.random() * 5);
+                gameState.experience += expGain;
+                gameState.effort -= 3;
+                gameState.health -= 2;
+                gameState.mood -= 1;
+                gameState.actions--;
+                
+                showChange(experienceChange, expGain);
+                showChange(effortChange, -3);
+                showChange(healthChange, -2);
+                showChange(moodChange, -1);
+                
+                addLog("模拟赛", `你参加了几场模拟赛，比赛经验增加了${expGain}点。`, "action");
+                
+                eventTitleElement.textContent = "模拟赛";
+                eventContentElement.textContent = `你参加了几场高强度的模拟赛，比赛经验增加了${expGain}点，虽然有些疲惫，但积累了宝贵的比赛经验。`;
+                eventChoicesElement.innerHTML = '';
+                
+                updateUI();
+                checkAchievements();
+                checkEnding();
+            });
+            
+            document.getElementById('action-compete').addEventListener('click', function() {
+                if (gameState.actions <= 0 || gameState.isEnding) return;
+                
+                competitionContainer.style.display = 'block';
+                achievementContainer.style.display = 'none';
+                skillTreeContainer.style.display = 'none';
+                miniGameContainer.style.display = 'none';
+            });
+            
+            document.getElementById('action-rest').addEventListener('click', function() {
+                if (gameState.actions <= 0 || gameState.isEnding) return;
+                
+                gameState.effort += 20;
+                gameState.health += 15;
+                gameState.mood += 10;
+                gameState.actions--;
+                
+                showChange(effortChange, 20);
+                showChange(healthChange, 15);
+                showChange(moodChange, 10);
+                
+                addLog("休息", "你好好休息了一段时间，精力、健康和心情都得到了恢复。", "action");
+                
+                eventTitleElement.textContent = "休息";
+                eventContentElement.textContent = "你给自己放了个假，好好休息了一段时间，精力、健康和心情都得到了恢复。";
+                eventChoicesElement.innerHTML = '';
+                
+                updateUI();
+                checkEnding();
+            });
+            
+            document.getElementById('action-social').addEventListener('click', function() {
+                if (gameState.actions <= 0 || gameState.isEnding) return;
+                
+                gameState.mood += 15;
+                gameState.luck += 5;
+                gameState.health += 5;
+                gameState.actions--;
+                
+                showChange(moodChange, 15);
+                showChange(luckChange, 5);
+                showChange(healthChange, 5);
+                
+                addLog("社交活动", "你参加了一些社交活动，心情变得愉快，甚至还遇到了一些好运。", "action");
+                
+                eventTitleElement.textContent = "社交活动";
+                eventContentElement.textContent = "你参加了一些社交活动，与朋友相处让你心情变得愉快，甚至还遇到了一些好运。";
+                eventChoicesElement.innerHTML = '';
+                
+                updateUI();
+                checkEnding();
+            });
+            
+            document.getElementById('action-skills').addEventListener('click', function() {
+                if (gameState.isEnding) return;
+                
+                skillTreeContainer.style.display = 'block';
+                achievementContainer.style.display = 'none';
+                competitionContainer.style.display = 'none';
+                miniGameContainer.style.display = 'none';
+                updateSkillTreeDisplay();
+            });
+            
+            document.getElementById('action-achievements').addEventListener('click', function() {
+                if (gameState.isEnding) return;
+                
+                achievementContainer.style.display = 'block';
+                competitionContainer.style.display = 'none';
+                skillTreeContainer.style.display = 'none';
+                miniGameContainer.style.display = 'none';
+                updateAchievementsDisplay();
+            });
+            
+            document.getElementById('action-mini-game').addEventListener('click', function() {
+                if (gameState.isEnding) return;
+                
+                miniGameContainer.style.display = 'block';
+                achievementContainer.style.display = 'none';
+                competitionContainer.style.display = 'none';
+                skillTreeContainer.style.display = 'none';
+                initMiniGame();
+            });
+            
+            // 比赛选择
+            const competitionOptions = document.querySelectorAll('.competition-option');
+            competitionOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    const comp = this.dataset.comp;
+                    handleCompetition(comp);
+                });
+            });
+            
+            // 小游戏重新开始按钮
+            document.getElementById('mini-game-restart').addEventListener('click', function() {
+                initMiniGame();
+            });
+        }
+        
+        // 处理比赛
+        function handleCompetition(comp) {
+            competitionContainer.style.display = 'none';
+            gameState.actions--;
+            
+            let title = "";
+            let content = "";
+            let effects = {};
+            let success = false;
+            
+            switch(comp) {
+                case 'csp':
+                    if (gameState.algorithm < 30) {
+                        content = "你的算法能力不足，未能通过CSP认证。";
+                        effects = { experience: 5, effort: -5, mood: -10 };
+                    } else {
+                        content = "你成功通过了CSP认证，获得了入门级的认证证书！";
+                        effects = { experience: 20, algorithm: 5, luck: 5, mood: 10, skillPoints: 1 };
+                        gameState.competitions.csp = true;
+                        success = true;
+                    }
+                    title = "参加CSP认证";
+                    break;
+                    
+                case 'noip':
+                    if (gameState.algorithm < 50) {
+                        content = "你在NOIP中表现不佳，未能获得奖项。";
+                        effects = { experience: 10, effort: -8, mood: -15 };
+                    } else {
+                        content = "你在NOIP中表现出色，获得了一等奖！";
+                        effects = { experience: 30, algorithm: 10, luck: 8, mood: 15, skillPoints: 1 };
+                        gameState.competitions.noip = true;
+                        success = true;
+                    }
+                    title = "参加NOIP";
+                    break;
+                    
+                case 'wc':
+                    if (gameState.algorithm < 70) {
+                        content = "你在WC冬令营中表现一般，未能进入国家集训队。";
+                        effects = { experience: 15, effort: -10, mood: -20 };
+                    } else {
+                        content = "你在WC冬令营中表现优异，成功进入国家集训队！";
+                        effects = { experience: 40, algorithm: 15, luck: 10, mood: 20, skillPoints: 2 };
+                        gameState.competitions.wc = true;
+                        success = true;
+                    }
+                    title = "参加WC";
+                    break;
+                    
+                case 'noi':
+                    if (gameState.algorithm < 90) {
+                        content = "你在NOI全国决赛中表现平平，未能获得奖牌。";
+                        effects = { experience: 20, effort: -15, mood: -25 };
+                    } else {
+                        content = "你在NOI全国决赛中发挥出色，获得金牌！";
+                        effects = { experience: 50, algorithm: 20, luck: 15, mood: 25, skillPoints: 3 };
+                        gameState.competitions.noi = true;
+                        success = true;
+                    }
+                    title = "参加NOI";
+                    break;
+                    
+                case 'ioi':
+                    if (gameState.algorithm < 120) {
+                        content = "你在IOI国际赛中表现一般，未能获得奖牌。";
+                        effects = { experience: 25, effort: -20, mood: -30 };
+                    } else {
+                        content = "你在IOI国际赛中发挥出色，获得金牌！";
+                        effects = { experience: 60, algorithm: 25, luck: 20, mood: 30, skillPoints: 5 };
+                        gameState.competitions.ioi = true;
+                        success = true;
+                    }
+                    title = "参加IOI";
+                    break;
+                    
+                case 'acm':
+                    if (gameState.algorithm < 100) {
+                        content = "你在ACM大学生程序设计竞赛中表现不佳，未能进入决赛。";
+                        effects = { experience: 20, effort: -15, mood: -20 };
+                    } else {
+                        content = "你在ACM大学生程序设计竞赛中表现出色，获得了好成绩！";
+                        effects = { experience: 45, algorithm: 18, luck: 12, mood: 20, skillPoints: 2 };
+                        gameState.competitions.acm = true;
+                        success = true;
+                    }
+                    title = "参加ACM";
+                    break;
+            }
+            
+            // 应用效果
+            for (const [stat, value] of Object.entries(effects)) {
+                if (stat === "skillPoints") {
+                    gameState[stat] += value;
+                } else {
+                    gameState[stat] = Math.max(0, gameState[stat] + value);
+                }
+                if (value !== 0) {
+                    const indicator = document.getElementById(`${stat}-change`);
+                    if (indicator) showChange(indicator, value);
+                }
+            }
+            
+            addLog(title, content, success ? "competition" : "event");
+            
+            eventTitleElement.textContent = title;
+            eventContentElement.textContent = content;
+            eventChoicesElement.innerHTML = '';
+            
+            updateUI();
+            checkAchievements();
+            checkEnding();
+        }
+        
+        // 更新技能树显示
+        function updateSkillTreeDisplay() {
+            skillTreeElement.innerHTML = '';
+            
+            for (const [category, skills] of Object.entries(skillTree)) {
+                const categoryElement = document.createElement('div');
+                categoryElement.className = 'skill-category';
+                
+                const categoryTitle = document.createElement('div');
+                categoryTitle.className = 'skill-category-title';
+                categoryTitle.textContent = category;
+                categoryElement.appendChild(categoryTitle);
+                
+                skills.forEach(skill => {
+                    const skillElement = document.createElement('div');
+                    
+                    // 检查技能是否已学习
+                    const isLearned = gameState.learnedSkills.includes(skill.id);
+                    
+                    // 检查技能是否可用
+                    let isAvailable = false;
+                    if (!isLearned) {
+                        isAvailable = skill.requirements.every(req => gameState.learnedSkills.includes(req)) && 
+                                      gameState.skillPoints >= skill.cost;
+                    }
+                    
+                    skillElement.className = `skill ${isLearned ? 'learned' : isAvailable ? 'available' : 'unavailable'}`;
+                    skillElement.innerHTML = `
+                        <div class="skill-name">${skill.name}</div>
+                        <div class="skill-desc">${skill.desc}</div>
+                        <div class="skill-cost">${skill.cost}点</div>
+                    `;
+                    
+                    if (!isLearned && isAvailable) {
+                        skillElement.addEventListener('click', () => {
+                            learnSkill(skill);
+                        });
+                    }
+                    
+                    categoryElement.appendChild(skillElement);
+                });
+                
+                skillTreeElement.appendChild(categoryElement);
+            }
+        }
+        
+        // 学习技能
+        function learnSkill(skill) {
+            if (gameState.skillPoints < skill.cost) {
+                alert('技能点不足！');
+                return;
+            }
+            
+            gameState.skillPoints -= skill.cost;
+            gameState.learnedSkills.push(skill.id);
+            
+            // 应用技能效果
+            for (const [stat, value] of Object.entries(skill.effect)) {
+                gameState[stat] += value;
+                const indicator = document.getElementById(`${stat}-change`);
+                if (indicator) showChange(indicator, value);
+            }
+            
+            addLog("学习技能", `你学会了「${skill.name}」技能！`, "skill");
+            
+            eventTitleElement.textContent = "学习技能";
+            eventContentElement.textContent = `你花费${skill.cost}点技能点学会了「${skill.name}」技能！`;
+            eventChoicesElement.innerHTML = '';
+            
+            updateUI();
+            updateSkillTreeDisplay();
+            checkAchievements();
+        }
+        
+        // 检查成就
+        function checkAchievements() {
+            achievements.forEach(achievement => {
+                if (!gameState.achievements.includes(achievement.id) && achievement.condition(gameState)) {
+                    gameState.achievements.push(achievement.id);
+                    addLog("成就解锁", `获得了「${achievement.name}」成就：${achievement.desc}`, "event");
+                    
+                    // 显示成就提示
+                    eventTitleElement.textContent = "成就解锁";
+                    eventContentElement.textContent = `恭喜你获得了「${achievement.name}」成就：${achievement.desc}`;
+                    eventChoicesElement.innerHTML = '';
+                }
+            });
+        }
+        
+        // 更新成就显示
+        function updateAchievementsDisplay() {
+            achievementListElement.innerHTML = '';
+            
+            achievements.forEach(achievement => {
+                const achievementElement = document.createElement('div');
+                achievementElement.className = `achievement ${gameState.achievements.includes(achievement.id) ? 'earned' : ''}`;
+                
+                achievementElement.innerHTML = `
+                    <div class="achievement-icon"><i class="fas ${achievement.icon}"></i></div>
+                    <div class="achievement-name">${achievement.name}</div>
+                `;
+                
+                achievementListElement.appendChild(achievementElement);
+            });
+        }
+        
+        // 初始化小游戏
+        function initMiniGame() {
+            miniGameBoardElement.innerHTML = '';
+            miniGameResultElement.textContent = '';
+            miniGameResultElement.className = 'mini-game-result';
+            
+            const symbols = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
+            const cards = [...symbols, ...symbols];
+            
+            // 洗牌
+            for (let i = cards.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [cards[i], cards[j]] = [cards[j], cards[i]];
+            }
+            
+            let firstCard = null;
+            let secondCard = null;
+            let lockBoard = false;
+            let matchedPairs = 0;
+            
+            cards.forEach((symbol, index) => {
+                const card = document.createElement('div');
+                card.className = 'mini-game-cell';
+                card.dataset.symbol = symbol;
+                card.dataset.index = index;
+                
+                card.addEventListener('click', () => {
+                    if (lockBoard || card.classList.contains('selected') || card.classList.contains('matched')) {
+                        return;
+                    }
+                    
+                    card.textContent = symbol;
+                    card.classList.add('selected');
+                    
+                    if (!firstCard) {
+                        firstCard = card;
+                    } else {
+                        secondCard = card;
+                        lockBoard = true;
+                        
+                        if (firstCard.dataset.symbol === secondCard.dataset.symbol) {
+                            firstCard.classList.add('matched');
+                            secondCard.classList.add('matched');
+                            firstCard.classList.remove('selected');
+                            secondCard.classList.remove('selected');
+                            matchedPairs++;
+                            
+                            if (matchedPairs === symbols.length) {
+                                miniGameResultElement.textContent = '恭喜！你赢了！获得1点技能点！';
+                                miniGameResultElement.classList.add('mini-game-win');
+                                gameState.skillPoints += 1;
+                                updateUI();
+                                addLog("小游戏", "你在记忆翻牌小游戏中获胜，获得了1点技能点！", "event");
+                            }
+                            
+                            resetBoard();
+                        } else {
+                            setTimeout(() => {
+                                firstCard.textContent = '';
+                                secondCard.textContent = '';
+                                firstCard.classList.remove('selected');
+                                secondCard.classList.remove('selected');
+                                resetBoard();
+                            }, 1000);
+                        }
+                    }
+                });
+                
+                miniGameBoardElement.appendChild(card);
+            });
+            
+            function resetBoard() {
+                [firstCard, secondCard, lockBoard] = [null, null, false];
+            }
+        }
+        
+        // 处理下一年
+        function nextYear() {
+            if (gameState.isEnding) return;
+            
+            gameState.age++;
+            gameState.actions = 3; // 重置操作次数
+            
+            // 随机选择事件
+            const event = events[Math.floor(Math.random() * events.length)];
+            eventTitleElement.textContent = `${gameState.age}岁: ${event.title}`;
+            eventContentElement.textContent = event.content;
+            
+            // 设置事件容器样式
+            if (event.type === "special") {
+                eventContainer.classList.add("special-event");
+            } else {
+                eventContainer.classList.remove("special-event");
+            }
+            
+            // 处理选择型事件
+            if (event.type === "choice") {
+                eventChoicesElement.innerHTML = '';
+                event.choices.forEach((choice, index) => {
+                    const choiceElement = document.createElement('div');
+                    choiceElement.className = 'event-choice';
+                    choiceElement.textContent = choice.text;
+                    choiceElement.addEventListener('click', () => {
+                        // 应用选择效果
+                        for (const [stat, value] of Object.entries(choice.effects)) {
+                            if (stat === "skillPoints") {
+                                gameState[stat] += value;
+                            } else {
+                                gameState[stat] = Math.max(0, gameState[stat] + value);
+                            }
+                            if (value !== 0) {
+                                const indicator = document.getElementById(`${stat}-change`);
+                                if (indicator) showChange(indicator, value);
+                            }
+                        }
+                        
+                        addLog("事件选择", `你选择了：${choice.text}`, "event");
+                        
+                        eventTitleElement.textContent = `${gameState.age}岁: ${event.title}`;
+                        eventContentElement.textContent = `你选择了：${choice.text}`;
+                        eventChoicesElement.innerHTML = '';
+                        
+                        updateUI();
+                        checkEnding();
+                    });
+                    eventChoicesElement.appendChild(choiceElement);
+                });
+            } else {
+                eventChoicesElement.innerHTML = '';
+                // 应用事件效果
+                for (const [stat, value] of Object.entries(event.effects)) {
+                    if (stat === "skillPoints") {
+                        gameState[stat] += value;
+                    } else {
+                        gameState[stat] = Math.max(0, gameState[stat] + value);
+                    }
+                    if (value !== 0) {
+                        const indicator = document.getElementById(`${stat}-change`);
+                        if (indicator) showChange(indicator, value);
+                    }
+                }
+                
+                addLog("年度事件", event.content, "event");
+            }
+            
+            updateUI();
+            checkAchievements();
+            
+            // 检查是否到达结局
+            if (gameState.age >= 18) {
+                checkEnding();
+            }
+        }
+        
+        // 检查结局
+        function checkEnding() {
+            for (const ending of endings) {
+                if (ending.condition(gameState)) {
+                    showEnding(ending);
+                    return;
+                }
+            }
+        }
+        
+        // 显示结局
+        function showEnding(ending) {
+            gameState.isEnding = true;
+            endingTitleElement.textContent = ending.title;
+            endingContentElement.textContent = ending.content;
+            endingContainer.style.display = 'block';
+            
+            addLog("游戏结束", ending.content, "ending");
+            
+            // 添加一些动画效果
+            endingContainer.classList.add('pulse');
+        }
+        
+        // 重新开始游戏
+        function restartGame() {
+            gameState.age = 12;
+            gameState.iq = 100;
+            gameState.luck = 50;
+            gameState.family = 50;
+            gameState.effort = 50;
+            gameState.algorithm = 30;
+            gameState.experience = 10;
+            gameState.health = 80;
+            gameState.mood = 70;
+            gameState.skillPoints = 0;
+            gameState.talent = null;
+            gameState.isEnding = false;
+            gameState.actions = 3;
+            gameState.competitions = {
+                csp: false,
+                noip: false,
+                wc: false,
+                noi: false,
+                ioi: false,
+                acm: false
+            };
+            gameState.achievements = [];
+            gameState.learnedSkills = [];
+            gameState.log = [];
+            
+            eventTitleElement.textContent = "人生开始";
+            eventContentElement.textContent = "你是一名12岁的初中生，偶然接触到了信息学奥林匹克竞赛(OI)。你对编程产生了浓厚的兴趣，决定开始你的OI之旅！";
+            eventChoicesElement.innerHTML = '';
+            eventContainer.classList.remove("special-event");
+            
+            endingContainer.style.display = 'none';
+            endingContainer.classList.remove('pulse');
+            competitionContainer.style.display = 'none';
+            achievementContainer.style.display = 'none';
+            skillTreeContainer.style.display = 'none';
+            miniGameContainer.style.display = 'none';
+            
+            // 清空日志
+            logContainer.innerHTML = '';
+            
+            initGame();
+        }
+        
+        // 事件监听
+        document.getElementById('next-year').addEventListener('click', nextYear);
+        document.getElementById('restart').addEventListener('click', restartGame);
+        document.getElementById('restart-ending').addEventListener('click', restartGame);
+        
+        // 初始化
+        initGame();
+        setupActions();
+    </script>
+</body>
+</html>
