@@ -1,0 +1,1419 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>  OI 重开模拟器 - 美化版</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #3498db;
+            --primary-dark: #2980b9;
+            --secondary: #2c3e50;
+            --accent: #e74c3c;
+            --success: #2ecc71;
+            --warning: #f39c12;
+            --light: #ecf0f1;
+            --dark: #34495e;
+            --gray: #7f8c8d;
+            --bg-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --card-bg: rgba(255, 255, 255, 0.9);
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: var(--bg-gradient);
+            color: var(--dark);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            box-shadow: var(--shadow);
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .game-container {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 25px;
+            margin-bottom: 25px;
+        }
+
+        @media (max-width: 1100px) {
+            .game-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .panel {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .panel:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+        }
+
+        .panel-title {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--light);
+            color: var(--secondary);
+        }
+
+        .panel-title i {
+            margin-right: 10px;
+            color: var(--primary);
+        }
+
+        .turn-info {
+            display: flex;
+            justify-content: space-between;
+            background: var(--light);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .turn-item {
+            text-align: center;
+            flex: 1;
+        }
+
+        .turn-item:not(:last-child) {
+            border-right: 1px solid var(--gray);
+        }
+
+        .season-indicator {
+            color: var(--accent);
+            font-weight: bold;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+            transition: var(--transition);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+        }
+
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .stat-name {
+            font-weight: 600;
+            color: var(--secondary);
+        }
+
+        .stat-value {
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        .progress-bar {
+            height: 10px;
+            background-color: var(--light);
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .progress {
+            height: 100%;
+            border-radius: 5px;
+            transition: width 0.5s ease;
+        }
+
+        .oi-skills {
+            margin-top: 25px;
+        }
+
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 15px;
+        }
+
+        .skill-item {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .skill-name {
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+            color: var(--secondary);
+        }
+
+        .skill-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        .actions-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .action-category {
+            margin-bottom: 25px;
+        }
+
+        .category-title {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            color: var(--secondary);
+            font-size: 1.1rem;
+        }
+
+        .category-title i {
+            margin-right: 10px;
+            color: var(--primary);
+        }
+
+        .action-btn {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            padding: 12px 15px;
+            margin-bottom: 10px;
+            background: white;
+            color: var(--dark);
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            text-align: left;
+            transition: var(--transition);
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .action-btn:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-3px);
+        }
+
+        .action-btn:disabled {
+            background: var(--light);
+            color: var(--gray);
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .action-btn i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+
+        .action-cost {
+            margin-left: auto;
+            background: var(--light);
+            color: var(--dark);
+            padding: 3px 8px;
+            border-radius: 10px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .action-btn:hover .action-cost {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .end-turn-btn {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 20px;
+            width: 100%;
+        }
+
+        .end-turn-btn:hover {
+            background: #c0392b;
+            transform: translateY(-3px);
+        }
+
+        .log-panel {
+            height: 400px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .log-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .log-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 15px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .log-entry {
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px dashed var(--light);
+        }
+
+        .log-entry:last-child {
+            margin-bottom: 0;
+            border-bottom: none;
+        }
+
+        .log-time {
+            color: var(--gray);
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+        }
+
+        .log-content {
+            padding: 10px;
+            border-radius: 5px;
+            background: white;
+        }
+
+        .event-special {
+            background-color: #fff3cd;
+            border-left: 4px solid var(--warning);
+            padding: 10px;
+        }
+
+        .ending-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+        }
+
+        .ending-content {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            max-width: 600px;
+            text-align: center;
+            box-shadow: var(--shadow);
+            animation: popIn 0.5s ease;
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0.8); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .ending-title {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            color: var(--accent);
+        }
+
+        .ending-description {
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+
+        .restart-btn {
+            padding: 12px 30px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+            transition: var(--transition);
+        }
+
+        .restart-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-3px);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .rating-badge {
+            display: inline-block;
+            background: var(--primary);
+            color: white;
+            padding: 3px 8px;
+            border-radius: 10px;
+            font-size: 0.8rem;
+            margin-left: 5px;
+        }
+
+        .action-description {
+            font-size: 0.8rem;
+            color: var(--gray);
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-code"></i>  OI  重开模拟器</h1>
+            <p class="subtitle">体验OIer的酸甜苦辣，看看你能走到哪一步！</p>
+        </header>
+        
+        <div class="game-container">
+            <div class="panel stats-panel">
+                <div class="panel-title">
+                    <i class="fas fa-chart-line"></i>
+                    <h2>属性面板</h2>
+                </div>
+                
+                <div class="turn-info">
+                    <div class="turn-item">
+                        <div>回合</div>
+                        <div><span id="turn-counter">1</span>/<span id="max-turns">120</span></div>
+                    </div>
+                    <div class="turn-item">
+                        <div>行动点</div>
+                        <div><span id="action-points">10</span>/10</div>
+                    </div>
+                    <div class="turn-item season-indicator">
+                        <div>赛季</div>
+                        <div id="current-season">准备期</div>
+                    </div>
+                </div>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <span class="stat-name">心理状态</span>
+                            <span class="stat-value" id="mental-state-value">70</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress" id="mental-state-bar" style="width: 70%; background-color: #3498db;"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <span class="stat-name">身体状况</span>
+                            <span class="stat-value" id="physical-state-value">80</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress" id="physical-state-bar" style="width: 80%; background-color: #2ecc71;"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <span class="stat-name">RP</span>
+                            <span class="stat-value" id="rp-value">50</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress" id="rp-bar" style="width: 50%; background-color: #9b59b6;"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <span class="stat-name">社交</span>
+                            <span class="stat-value" id="social-value">40</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress" id="social-bar" style="width: 40%; background-color: #e67e22;"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <span class="stat-name">人气</span>
+                            <span class="stat-value" id="popularity-value">30</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress" id="popularity-bar" style="width: 30%; background-color: #e74c3c;"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <span class="stat-name">文化课水平</span>
+                            <span class="stat-value" id="academic-value">60</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress" id="academic-bar" style="width: 60%; background-color: #1abc9c;"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="oi-skills">
+                    <div class="panel-title">
+                        <i class="fas fa-laptop-code"></i>
+                        <h2>OI水平</h2>
+                    </div>
+                    
+                    <div class="skills-grid">
+                        <div class="skill-item">
+                            <div class="skill-name">动态规划</div>
+                            <div class="skill-value" id="dp-value">20</div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-name">数据结构</div>
+                            <div class="skill-value" id="ds-value">25</div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-name">图论</div>
+                            <div class="skill-value" id="graph-value">15</div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-name">数学</div>
+                            <div class="skill-value" id="math-value">30</div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-name">字符串</div>
+                            <div class="skill-value" id="string-value">10</div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-name">计算几何</div>
+                            <div class="skill-value" id="geometry-value">5</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="panel actions-panel">
+                <div class="panel-title">
+                    <i class="fas fa-tasks"></i>
+                    <h2>行动选择</h2>
+                </div>
+                
+                <p style="margin-bottom: 20px;">剩余行动点: <strong id="remaining-actions">10</strong></p>
+                
+                <div class="actions-container">
+                    <div class="action-category">
+                        <div class="category-title">
+                            <i class="fas fa-graduation-cap"></i>
+                            <h3>学习提升</h3>
+                        </div>
+                        <button class="action-btn" data-cost="1" data-action="study-dp">
+                            <i class="fas fa-project-diagram"></i>
+                            <span>学习动态规划</span>
+                            <span class="action-cost">1</span>
+                        </button>
+                        <button class="action-btn" data-cost="1" data-action="study-ds">
+                            <i class="fas fa-sitemap"></i>
+                            <span>学习数据结构</span>
+                            <span class="action-cost">1</span>
+                        </button>
+                        <button class="action-btn" data-cost="1" data-action="study-graph">
+                            <i class="fas fa-project-diagram"></i>
+                            <span>学习图论</span>
+                            <span class="action-cost">1</span>
+                        </button>
+                        <button class="action-btn" data-cost="1" data-action="study-math">
+                            <i class="fas fa-square-root-alt"></i>
+                            <span>学习数学</span>
+                            <span class="action-cost">1</span>
+                        </button>
+                        <button class="action-btn" data-cost="1" data-action="study-string">
+                            <i class="fas fa-font"></i>
+                            <span>学习字符串</span>
+                            <span class="action-cost">1</span>
+                        </button>
+                        <button class="action-btn" data-cost="1" data-action="study-geometry">
+                            <i class="fas fa-draw-polygon"></i>
+                            <span>学习计算几何</span>
+                            <span class="action-cost">1</span>
+                        </button>
+                        <button class="action-btn" data-cost="1" data-action="practice-coding">
+                            <i class="fas fa-code"></i>
+                            <span>练习代码能力</span>
+                            <span class="action-cost">1</span>
+                        </button>
+                    </div>
+                    
+                    <div class="action-category">
+                        <div class="category-title">
+                            <i class="fas fa-trophy"></i>
+                            <h3>比赛训练</h3>
+                        </div>
+                        <button class="action-btn" data-cost="2" data-action="simulate-contest">
+                            <i class="fas fa-vial"></i>
+                            <span>打模拟赛</span>
+                            <span class="action-cost">2</span>
+                        </button>
+                        <button class="action-btn" data-cost="2" data-action="cf-contest">
+                            <i class="fas fa-fire"></i>
+                            <span>打CF比赛</span>
+                            <span class="action-cost">2</span>
+                        </button>
+                        <button class="action-btn" data-cost="2" data-action="atcoder-contest">
+                            <i class="fas fa-flag"></i>
+                            <span>打AtCoder比赛</span>
+                            <span class="action-cost">2</span>
+                        </button>
+                        <button class="action-btn" data-cost="2" data-action="luogu-contest">
+                            <i class="fas fa-paw"></i>
+                            <span>打洛谷比赛</span>
+                            <span class="action-cost">2</span>
+                        </button>
+                    </div>
+                    
+                    <div class="action-category">
+                        <div class="category-title">
+                            <i class="fas fa-users"></i>
+                            <h3>社交活动</h3>
+                        </div>
+                        <button class="action-btn" data-cost="1" data-action="socialize">
+                            <i class="fas fa-comments"></i>
+                            <span>社交活动</span>
+                            <span class="action-cost">1</span>
+                        </button>
+                        <button class="action-btn" data-cost="1" data-action="write-blog">
+                            <i class="fas fa-blog"></i>
+                            <span>写博客</span>
+                            <span class="action-cost">1</span>
+                        </button>
+                        <button class="action-btn" data-cost="1" data-action="help-others">
+                            <i class="fas fa-hands-helping"></i>
+                            <span>帮助他人</span>
+                            <span class="action-cost">1</span>
+                        </button>
+                    </div>
+                    
+                    <div class="action-category">
+                        <div class="category-title">
+                            <i class="fas fa-heartbeat"></i>
+                            <h3>身心健康</h3>
+                        </div>
+                        <button class="action-btn" data-cost="1" data-action="rest">
+                            <i class="fas fa-bed"></i>
+                            <span>休息恢复</span>
+                            <span class="action-cost">1</span>
+                        </button>
+                        <button class="action-btn" data-cost="1" data-action="exercise">
+                            <i class="fas fa-running"></i>
+                            <span>体育锻炼</span>
+                            <span class="action-cost">1</span>
+                        </button>
+                        <button class="action-btn" data-cost="1" data-action="study-academic">
+                            <i class="fas fa-book"></i>
+                            <span>学习文化课</span>
+                            <span class="action-cost">1</span>
+                        </button>
+                    </div>
+                    
+                    <div class="action-category">
+                        <div class="category-title">
+                            <i class="fas fa-star"></i>
+                            <h3>特殊行动</h3>
+                        </div>
+                        <button class="action-btn" data-cost="3" data-action="attend-training">
+                            <i class="fas fa-chalkboard-teacher"></i>
+                            <span>参加集训</span>
+                            <span class="action-cost">3</span>
+                        </button>
+                        <button class="action-btn" data-cost="3" data-action="formal-contest" id="formal-contest-btn" disabled>
+                            <i class="fas fa-flag-checkered"></i>
+                            <span>参加正式比赛</span>
+                            <span class="action-cost">3</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <button id="end-turn-btn" class="end-turn-btn">
+                    <i class="fas fa-forward"></i> 结束回合
+                </button>
+            </div>
+        </div>
+        
+        <div class="panel log-panel">
+            <div class="log-header">
+                <div class="panel-title">
+                    <i class="fas fa-clipboard-list"></i>
+                    <h2>游戏日志</h2>
+                </div>
+                <div class="rating-display">
+                    <span class="rating-badge">CF: <span id="cf-rating">0</span></span>
+                    <span class="rating-badge">AT: <span id="atcoder-rating">0</span></span>
+                </div>
+            </div>
+            
+            <div class="log-container" id="log-container">
+                <div class="log-entry">
+                    <div class="log-time">第1回合开始</div>
+                    <div class="log-content">你开始了你的OI生涯，加油！</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="ending-screen" class="ending-screen hidden">
+        <div class="ending-content">
+            <h2 class="ending-title" id="ending-title">游戏结束</h2>
+            <p class="ending-description" id="ending-description"></p>
+            <button class="restart-btn" id="restart-btn">重新开始</button>
+        </div>
+    </div>
+
+    <script>
+        // 游戏状态
+        const gameState = {
+            turn: 1,
+            maxTurns: 120,
+            actionPoints: 10,
+            remainingActions: 10,
+            
+            // 基本属性
+            mentalState: 70,
+            physicalState: 80,
+            rp: 50,
+            social: 40,
+            popularity: 30,
+            academic: 60,
+            
+            // OI水平
+            dp: 20,
+            ds: 25,
+            graph: 15,
+            math: 30,
+            string: 10,
+            geometry: 5,
+            coding: 30,
+            thinking: 35,
+            
+            // 比赛经验
+            contestExperience: 0,
+            cfRating: 0,
+            atcoderRating: 0,
+            
+            // 其他
+            blogCount: 0,
+            dark: 0,
+            parentSupport: 70,
+            schoolLevel: 50,
+            
+            // 赛季
+            seasons: [
+                "准备期", "准备期", "准备期", 
+                "CSP赛季", "NOIP赛季", "冬令营赛季",
+                "省选赛季", "APIO赛季", "NOI赛季"
+            ],
+            currentSeasonIndex: 0,
+            
+            // 已触发事件
+            triggeredEvents: new Set(),
+            
+            // 游戏是否结束
+            gameOver: false
+        };
+
+        // 结局定义
+        const endings = {
+            1: {
+                title: "传说结局：IOI金牌爷",
+                description: "你以优异的成绩获得了IOI金牌，并在大学继续征战XCPC，最终在World Final中获得金牌，成为了所有人眼中的神话！"
+            },
+            2: {
+                title: "隐藏结局：OJ站长",
+                description: "你创建了自己的OJ平台，通过广告和会员制度赚取了大量收入，成为了OI圈内知名的站长。"
+            },
+            5: {
+                title: "卓越的T/P CS本科生",
+                description: "你成功进入了国家集训队，并被清华大学/北京大学计算机科学专业录取，开启了你辉煌的学术生涯。"
+            },
+            9: {
+                title: "大厂搬砖工",
+                description: "尽管OI生涯未能取得理想成绩，文化课也不突出，但你仍然凭借编程能力进入了一家互联网大厂，成为了一名普通的程序员。"
+            },
+            11: {
+                title: "隐藏悲惨结局：戒网瘾所",
+                description: "由于过于违背父母意愿，坚持搞OI，你被父母送去了戒网瘾所，你的OI生涯就此终结。"
+            },
+            13: {
+                title: "传承者",
+                description: "你最终回到了母校担任OI教练，培养新一代的OI选手，这就是传承的力量。"
+            },
+            15: {
+                title: "最悲惨结局",
+                description: "由于竞赛的连续失利，加上身体和心理状态都跌至谷底，你在某场重要比赛前结束了自己的生命。这是一个令人痛心的结局。"
+            }
+        };
+
+        // 事件定义
+        const events = {
+            "cf_ban": {
+                name: "CF账号被封",
+                description: "你因为使用多个账号刷排名被Codeforces管理员发现，所有账号都被封禁，人气大幅下降。",
+                condition: (state) => state.cfRating > 2000 && Math.random() < 0.1,
+                effect: (state) => {
+                    state.cfRating = 0;
+                    state.popularity = Math.max(0, state.popularity - 30);
+                    addLog("你的CF账号因违规操作被封禁！人气大幅下降。", "event");
+                }
+            },
+            "health_issue": {
+                name: "健康问题",
+                description: "由于长期熬夜和不规律作息，你的身体状况严重下降，需要休息恢复。",
+                condition: (state) => state.physicalState < 30 && Math.random() < 0.3,
+                effect: (state) => {
+                    state.actionPoints = Math.max(3, state.actionPoints - 3);
+                    addLog("长期不良作息导致健康问题，本回合行动点减少！", "event");
+                }
+            },
+            "mental_breakdown": {
+                name: "心理崩溃",
+                description: "连续的比赛失利让你心理压力巨大，出现了心理问题。",
+                condition: (state) => state.mentalState < 20 && Math.random() < 0.4,
+                effect: (state) => {
+                    state.mentalState = Math.max(10, state.mentalState - 10);
+                    state.actionPoints = Math.max(2, state.actionPoints - 2);
+                    addLog("心理压力过大导致崩溃，心理状态和行动点大幅下降！", "event");
+                }
+            },
+            "lucky_break": {
+                name: "幸运突破",
+                description: "你在一次模拟赛中意外解决了一道难题，获得了突破。",
+                condition: (state) => state.rp > 70 && Math.random() < 0.2,
+                effect: (state) => {
+                    const skills = ["dp", "ds", "graph", "math", "string", "geometry"];
+                    const randomSkill = skills[Math.floor(Math.random() * skills.length)];
+                    state[randomSkill] += 5;
+                    addLog(`幸运降临！你在${getSkillName(randomSkill)}方面获得了突破！`, "event");
+                }
+            },
+            "blog_popular": {
+                name: "博客走红",
+                description: "你的一篇技术博客在圈内走红，人气大幅提升。",
+                condition: (state) => state.blogCount > 5 && Math.random() < 0.15,
+                effect: (state) => {
+                    state.popularity += 20;
+                    state.blogCount += 1;
+                    addLog("你的技术博客在圈内走红，人气大幅提升！", "event");
+                }
+            }
+        };
+
+        // 行动定义
+        const actions = {
+            "study-dp": {
+                name: "学习动态规划",
+                effect: (state) => {
+                    state.dp += getRandomIncrease(2, 5);
+                    state.mentalState -= getRandomDecrease(1, 3);
+                    state.physicalState -= getRandomDecrease(1, 2);
+                    addLog("你花时间学习了动态规划，相关能力有所提升。");
+                }
+            },
+            "study-ds": {
+                name: "学习数据结构",
+                effect: (state) => {
+                    state.ds += getRandomIncrease(2, 5);
+                    state.mentalState -= getRandomDecrease(1, 3);
+                    state.physicalState -= getRandomDecrease(1, 2);
+                    addLog("你花时间学习了数据结构，相关能力有所提升。");
+                }
+            },
+            "study-graph": {
+                name: "学习图论",
+                effect: (state) => {
+                    state.graph += getRandomIncrease(2, 5);
+                    state.mentalState -= getRandomDecrease(1, 3);
+                    state.physicalState -= getRandomDecrease(1, 2);
+                    addLog("你花时间学习了图论，相关能力有所提升。");
+                }
+            },
+            "study-math": {
+                name: "学习数学",
+                effect: (state) => {
+                    state.math += getRandomIncrease(2, 5);
+                    state.mentalState -= getRandomDecrease(1, 3);
+                    state.physicalState -= getRandomDecrease(1, 2);
+                    addLog("你花时间学习了数学，相关能力有所提升。");
+                }
+            },
+            "study-string": {
+                name: "学习字符串",
+                effect: (state) => {
+                    state.string += getRandomIncrease(2, 5);
+                    state.mentalState -= getRandomDecrease(1, 3);
+                    state.physicalState -= getRandomDecrease(1, 2);
+                    addLog("你花时间学习了字符串算法，相关能力有所提升。");
+                }
+            },
+            "study-geometry": {
+                name: "学习计算几何",
+                effect: (state) => {
+                    state.geometry += getRandomIncrease(2, 5);
+                    state.mentalState -= getRandomDecrease(1, 3);
+                    state.physicalState -= getRandomDecrease(1, 2);
+                    addLog("你花时间学习了计算几何，相关能力有所提升。");
+                }
+            },
+            "practice-coding": {
+                name: "练习代码能力",
+                effect: (state) => {
+                    state.coding += getRandomIncrease(2, 4);
+                    state.mentalState -= getRandomDecrease(1, 2);
+                    state.physicalState -= getRandomDecrease(1, 2);
+                    addLog("你进行了代码练习，代码能力有所提升。");
+                }
+            },
+            "simulate-contest": {
+                name: "打模拟赛",
+                effect: (state) => {
+                    const skills = ["dp", "ds", "graph", "math", "string", "geometry"];
+                    const randomSkill = skills[Math.floor(Math.random() * skills.length)];
+                    state[randomSkill] += getRandomIncrease(1, 3);
+                    state.contestExperience += getRandomIncrease(2, 4);
+                    state.mentalState -= getRandomDecrease(2, 4);
+                    state.physicalState -= getRandomDecrease(1, 3);
+                    addLog(`你参加了一场模拟赛，${getSkillName(randomSkill)}和比赛经验有所提升。`);
+                }
+            },
+            "cf-contest": {
+                name: "打CF比赛",
+                effect: (state) => {
+                    if (state.cfRating === 0) {
+                        state.cfRating = 1200;
+                        addLog("你注册了Codeforces账号，初始rating为1200。");
+                    } else {
+                        const change = getRandomIncrease(-50, 100);
+                        state.cfRating = Math.max(0, state.cfRating + change);
+                        addLog(`你参加了CF比赛，rating${change >= 0 ? '增加' : '减少'}了${Math.abs(change)}点。`);
+                    }
+                    
+                    state.contestExperience += getRandomIncrease(3, 6);
+                    state.mentalState -= getRandomDecrease(2, 5);
+                    state.physicalState -= getRandomDecrease(2, 4);
+                    state.popularity += getRandomIncrease(1, 3);
+                }
+            },
+            "atcoder-contest": {
+                name: "打AtCoder比赛",
+                effect: (state) => {
+                    if (state.atcoderRating === 0) {
+                        state.atcoderRating = 800;
+                        addLog("你注册了AtCoder账号，初始rating为800。");
+                    } else {
+                        const change = getRandomIncrease(-30, 80);
+                        state.atcoderRating = Math.max(0, state.atcoderRating + change);
+                        addLog(`你参加了AtCoder比赛，rating${change >= 0 ? '增加' : '减少'}了${Math.abs(change)}点。`);
+                    }
+                    
+                    state.contestExperience += getRandomIncrease(3, 6);
+                    state.mentalState -= getRandomDecrease(2, 5);
+                    state.physicalState -= getRandomDecrease(2, 4);
+                }
+            },
+            "luogu-contest": {
+                name: "打洛谷比赛",
+                effect: (state) => {
+                    state.contestExperience += getRandomIncrease(2, 5);
+                    state.mentalState -= getRandomDecrease(1, 3);
+                    state.physicalState -= getRandomDecrease(1, 3);
+                    state.popularity += getRandomIncrease(1, 2);
+                    addLog("你参加了洛谷比赛，比赛经验和人气有所提升。");
+                }
+            },
+            "socialize": {
+                name: "社交活动",
+                effect: (state) => {
+                    state.social += getRandomIncrease(2, 5);
+                    state.popularity += getRandomIncrease(1, 3);
+                    state.mentalState += getRandomIncrease(1, 3);
+                    state.physicalState -= getRandomDecrease(1, 2);
+                    addLog("你参加了一些社交活动，社交能力和人气有所提升。");
+                }
+            },
+            "write-blog": {
+                name: "写博客",
+                effect: (state) => {
+                    state.blogCount += 1;
+                    state.popularity += getRandomIncrease(2, 4);
+                    const randomSkill = getRandomOIskill();
+                    state[randomSkill] += getRandomIncrease(1, 2);
+                    state.mentalState -= getRandomDecrease(1, 2);
+                    addLog(`你写了一篇关于${getSkillName(randomSkill)}的博客，人气和相关能力有所提升。`);
+                }
+            },
+            "help-others": {
+                name: "帮助他人",
+                effect: (state) => {
+                    state.social += getRandomIncrease(1, 3);
+                    state.popularity += getRandomIncrease(1, 2);
+                    state.rp += getRandomIncrease(1, 3);
+                    state.mentalState += getRandomIncrease(1, 2);
+                    addLog("你帮助了其他OIer，社交、人气和RP有所提升。");
+                }
+            },
+            "rest": {
+                name: "休息恢复",
+                effect: (state) => {
+                    state.mentalState += getRandomIncrease(3, 6);
+                    state.physicalState += getRandomIncrease(3, 6);
+                    addLog("你好好休息了一下，心理和身体状态有所恢复。");
+                }
+            },
+            "exercise": {
+                name: "体育锻炼",
+                effect: (state) => {
+                    state.physicalState += getRandomIncrease(2, 5);
+                    state.mentalState += getRandomIncrease(1, 3);
+                    addLog("你进行了体育锻炼，身体和心理状态有所提升。");
+                }
+            },
+            "study-academic": {
+                name: "学习文化课",
+                effect: (state) => {
+                    state.academic += getRandomIncrease(2, 4);
+                    state.mentalState -= getRandomDecrease(1, 2);
+                    state.physicalState -= getRandomDecrease(1, 2);
+                    addLog("你花时间学习了文化课，文化课水平有所提升。");
+                }
+            },
+            "attend-training": {
+                name: "参加集训",
+                effect: (state) => {
+                    const skills = ["dp", "ds", "graph", "math", "string", "geometry"];
+                    for (let i = 0; i < 3; i++) {
+                        const randomSkill = skills[Math.floor(Math.random() * skills.length)];
+                        state[randomSkill] += getRandomIncrease(3, 6);
+                    }
+                    state.contestExperience += getRandomIncrease(5, 8);
+                    state.mentalState -= getRandomDecrease(3, 6);
+                    state.physicalState -= getRandomDecrease(3, 5);
+                    addLog("你参加了一次集训，多项OI能力和比赛经验大幅提升。");
+                }
+            },
+            "formal-contest": {
+                name: "参加正式比赛",
+                effect: (state) => {
+                    // 模拟比赛结果
+                    const totalSkill = state.dp + state.ds + state.graph + state.math + state.string + state.geometry;
+                    const performance = totalSkill * (0.8 + 0.4 * Math.random()) * 
+                                       (1 + (state.mentalState - 50) / 100) * 
+                                       (1 + (state.physicalState - 50) / 100) *
+                                       (1 + (state.rp - 50) / 200);
+                    
+                    state.contestExperience += getRandomIncrease(8, 15);
+                    state.mentalState -= getRandomDecrease(5, 10);
+                    state.physicalState -= getRandomDecrease(5, 10);
+                    
+                    let resultText = "";
+                    if (performance > 400) {
+                        resultText = "出色表现，获得了金牌！";
+                        state.popularity += 30;
+                        state.rp += 10;
+                    } else if (performance > 300) {
+                        resultText = "良好表现，获得了银牌！";
+                        state.popularity += 20;
+                        state.rp += 5;
+                    } else if (performance > 200) {
+                        resultText = "一般表现，获得了铜牌。";
+                        state.popularity += 10;
+                    } else {
+                        resultText = "表现不佳，未能获奖。";
+                        state.mentalState -= 10;
+                    }
+                    
+                    addLog(`你参加了${getCurrentSeason(state)}，${resultText}`);
+                }
+            }
+        };
+
+        // 工具函数
+        function getRandomIncrease(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+        function getRandomDecrease(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+        function getRandomOIskill() {
+            const skills = ["dp", "ds", "graph", "math", "string", "geometry"];
+            return skills[Math.floor(Math.random() * skills.length)];
+        }
+
+        function getSkillName(skill) {
+            const skillNames = {
+                "dp": "动态规划",
+                "ds": "数据结构",
+                "graph": "图论",
+                "math": "数学",
+                "string": "字符串",
+                "geometry": "计算几何"
+            };
+            return skillNames[skill] || skill;
+        }
+
+        function getCurrentSeason(state) {
+            return state.seasons[state.currentSeasonIndex];
+        }
+
+        function addLog(message, type = "normal") {
+            const logContainer = document.getElementById("log-container");
+            const logEntry = document.createElement("div");
+            logEntry.className = "log-entry";
+            
+            const timeElement = document.createElement("div");
+            timeElement.className = "log-time";
+            timeElement.textContent = `第${gameState.turn}回合`;
+            
+            const contentElement = document.createElement("div");
+            contentElement.className = "log-content";
+            contentElement.textContent = message;
+            
+            if (type === "event") {
+                contentElement.classList.add("event-special");
+            }
+            
+            logEntry.appendChild(timeElement);
+            logEntry.appendChild(contentElement);
+            logContainer.appendChild(logEntry);
+            
+            // 自动滚动到底部
+            logContainer.scrollTop = logContainer.scrollHeight;
+        }
+
+        function updateUI() {
+            // 更新回合信息
+            document.getElementById("turn-counter").textContent = gameState.turn;
+            document.getElementById("action-points").textContent = gameState.actionPoints;
+            document.getElementById("remaining-actions").textContent = gameState.remainingActions;
+            document.getElementById("current-season").textContent = getCurrentSeason(gameState);
+            
+            // 更新基本属性
+            document.getElementById("mental-state-value").textContent = gameState.mentalState;
+            document.getElementById("mental-state-bar").style.width = `${gameState.mentalState}%`;
+            
+            document.getElementById("physical-state-value").textContent = gameState.physicalState;
+            document.getElementById("physical-state-bar").style.width = `${gameState.physicalState}%`;
+            
+            document.getElementById("rp-value").textContent = gameState.rp;
+            document.getElementById("rp-bar").style.width = `${gameState.rp}%`;
+            
+            document.getElementById("social-value").textContent = gameState.social;
+            document.getElementById("social-bar").style.width = `${gameState.social}%`;
+            
+            document.getElementById("popularity-value").textContent = gameState.popularity;
+            document.getElementById("popularity-bar").style.width = `${gameState.popularity}%`;
+            
+            document.getElementById("academic-value").textContent = gameState.academic;
+            document.getElementById("academic-bar").style.width = `${gameState.academic}%`;
+            
+            // 更新OI水平
+            document.getElementById("dp-value").textContent = gameState.dp;
+            document.getElementById("ds-value").textContent = gameState.ds;
+            document.getElementById("graph-value").textContent = gameState.graph;
+            document.getElementById("math-value").textContent = gameState.math;
+            document.getElementById("string-value").textContent = gameState.string;
+            document.getElementById("geometry-value").textContent = gameState.geometry;
+            
+            // 更新评级显示
+            document.getElementById("cf-rating").textContent = gameState.cfRating;
+            document.getElementById("atcoder-rating").textContent = gameState.atcoderRating;
+            
+            // 更新正式比赛按钮状态
+            const formalContestBtn = document.getElementById("formal-contest-btn");
+            if (isFormalContestSeason()) {
+                formalContestBtn.disabled = false;
+                formalContestBtn.title = "";
+            } else {
+                formalContestBtn.disabled = true;
+                formalContestBtn.title = "当前不是正式比赛赛季";
+            }
+            
+            // 更新行动按钮状态
+            document.querySelectorAll(".action-btn").forEach(btn => {
+                if (btn.id !== "end-turn-btn" && btn.id !== "formal-contest-btn") {
+                    btn.disabled = gameState.remainingActions < parseInt(btn.dataset.cost);
+                }
+            });
+        }
+
+        function isFormalContestSeason() {
+            const contestSeasons = ["CSP赛季", "NOIP赛季", "省选赛季", "NOI赛季"];
+            return contestSeasons.includes(getCurrentSeason(gameState));
+        }
+
+        function checkEvents() {
+            for (const [key, event] of Object.entries(events)) {
+                if (!gameState.triggeredEvents.has(key) && event.condition(gameState)) {
+                    event.effect(gameState);
+                    gameState.triggeredEvents.add(key);
+                }
+            }
+        }
+
+        function checkEndings() {
+            // 检查是否达到回合上限
+            if (gameState.turn >= gameState.maxTurns) {
+                showEnding(9); // 默认结局：大厂搬砖工
+                return true;
+            }
+            
+            // 检查悲惨结局
+            if (gameState.mentalState <= 0 || gameState.physicalState <= 0) {
+                showEnding(15); // 最悲惨结局
+                return true;
+            }
+            
+            // 检查父母支持度结局
+            if (gameState.parentSupport <= 0) {
+                showEnding(11); // 戒网瘾所
+                return true;
+            }
+            
+            // 检查优秀结局
+            const totalOISkill = gameState.dp + gameState.ds + gameState.graph + 
+                                gameState.math + gameState.string + gameState.geometry;
+            
+            if (totalOISkill > 400 && gameState.contestExperience > 100) {
+                showEnding(1); // IOI金牌爷
+                return true;
+            }
+            
+            if (totalOISkill > 300 && gameState.contestExperience > 80) {
+                showEnding(5); // 卓越的T/P CS本科生
+                return true;
+            }
+            
+            if (gameState.popularity > 80 && gameState.blogCount > 10) {
+                showEnding(2); // OJ站长
+                return true;
+            }
+            
+            if (gameState.social > 70 && gameState.popularity > 60) {
+                showEnding(13); // 传承者
+                return true;
+            }
+            
+            return false;
+        }
+
+        function showEnding(endingId) {
+            const ending = endings[endingId];
+            if (!ending) return;
+            
+            gameState.gameOver = true;
+            
+            const endingScreen = document.getElementById("ending-screen");
+            const endingTitle = document.getElementById("ending-title");
+            const endingDescription = document.getElementById("ending-description");
+            
+            endingTitle.textContent = ending.title;
+            endingDescription.textContent = ending.description;
+            
+            endingScreen.classList.remove("hidden");
+        }
+
+        function endTurn() {
+            gameState.turn++;
+            
+            // 每4个回合切换一个赛季
+            if (gameState.turn % 4 === 1) {
+                gameState.currentSeasonIndex = (gameState.currentSeasonIndex + 1) % gameState.seasons.length;
+            }
+            
+            // 恢复行动点（受身心状态影响）
+            const recoveryRate = 0.5 + (gameState.mentalState + gameState.physicalState) / 200;
+            gameState.actionPoints = Math.min(10, Math.floor(10 * recoveryRate));
+            gameState.remainingActions = gameState.actionPoints;
+            
+            // 属性自然变化
+            gameState.mentalState = Math.min(100, gameState.mentalState + 5);
+            gameState.physicalState = Math.min(100, gameState.physicalState + 5);
+            gameState.rp = Math.max(0, Math.min(100, gameState.rp - 1));
+            gameState.academic = Math.max(0, gameState.academic - 1);
+            
+            addLog(`第${gameState.turn}回合开始。行动点恢复至${gameState.actionPoints}点。`);
+            
+            updateUI();
+            
+            // 检查事件和结局
+            checkEvents();
+            if (checkEndings()) {
+                return;
+            }
+        }
+
+        function performAction(actionId) {
+            const action = actions[actionId];
+            if (!action) return;
+            
+            const cost = parseInt(document.querySelector(`[data-action="${actionId}"]`).dataset.cost);
+            
+            if (gameState.remainingActions < cost) {
+                alert("行动点不足！");
+                return;
+            }
+            
+            gameState.remainingActions -= cost;
+            action.effect(gameState);
+            
+            // 属性边界检查
+            gameState.mentalState = Math.max(0, Math.min(100, gameState.mentalState));
+            gameState.physicalState = Math.max(0, Math.min(100, gameState.physicalState));
+            gameState.rp = Math.max(0, Math.min(100, gameState.rp));
+            gameState.social = Math.max(0, Math.min(100, gameState.social));
+            gameState.popularity = Math.max(0, Math.min(100, gameState.popularity));
+            gameState.academic = Math.max(0, Math.min(100, gameState.academic));
+            
+            // OI技能边界检查
+            const oiSkills = ["dp", "ds", "graph", "math", "string", "geometry", "coding", "thinking"];
+            oiSkills.forEach(skill => {
+                gameState[skill] = Math.max(0, Math.min(100, gameState[skill]));
+            });
+            
+            updateUI();
+            
+            // 检查事件和结局
+            checkEvents();
+            checkEndings();
+        }
+
+        function restartGame() {
+            // 重置游戏状态
+            Object.assign(gameState, {
+                turn: 1,
+                actionPoints: 10,
+                remainingActions: 10,
+                mentalState: 70,
+                physicalState: 80,
+                rp: 50,
+                social: 40,
+                popularity: 30,
+                academic: 60,
+                dp: 20,
+                ds: 25,
+                graph: 15,
+                math: 30,
+                string: 10,
+                geometry: 5,
+                coding: 30,
+                thinking: 35,
+                contestExperience: 0,
+                cfRating: 0,
+                atcoderRating: 0,
+                blogCount: 0,
+                dark: 0,
+                parentSupport: 70,
+                schoolLevel: 50,
+                currentSeasonIndex: 0,
+                triggeredEvents: new Set(),
+                gameOver: false
+            });
+            
+            // 清空日志
+            document.getElementById("log-container").innerHTML = 
+                '<div class="log-entry"><div class="log-time">第1回合开始</div><div class="log-content">你开始了你的OI生涯，加油！</div></div>';
+            
+            // 隐藏结局屏幕
+            document.getElementById("ending-screen").classList.add("hidden");
+            
+            updateUI();
+        }
+
+        // 初始化游戏
+        document.addEventListener("DOMContentLoaded", function() {
+            updateUI();
+            
+            // 绑定行动按钮事件
+            document.querySelectorAll(".action-btn").forEach(btn => {
+                if (btn.id !== "end-turn-btn") {
+                    btn.addEventListener("click", function() {
+                        if (!gameState.gameOver) {
+                            performAction(this.dataset.action);
+                        }
+                    });
+                }
+            });
+            
+            // 绑定结束回合按钮事件
+            document.getElementById("end-turn-btn").addEventListener("click", function() {
+                if (!gameState.gameOver) {
+                    endTurn();
+                }
+            });
+            
+            // 绑定重新开始按钮事件
+            document.getElementById("restart-btn").addEventListener("click", restartGame);
+        });
+    </script>
+</body>
+</html>
