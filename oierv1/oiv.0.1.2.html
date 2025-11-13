@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OI重开模拟器</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #3498db;
+            --secondary: #2ecc71;
+            --danger: #e74c3c;
+            --warning: #f39c12;
+            --dark: #2c3e50;
+            --light: #ecf0f1;
+            --gray: #95a5a6;
+            --shadow: 0 10px 20px rgba(0,0,0,0.1);
+            --transition: all 0.3s ease;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            color: #333;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 900px;
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            padding: 30px;
+            position: relative;
+            overflow: hidden;
+            transition: var(--transition);
+        }
+        
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary), var(--warning), var(--danger));
+        }
+        
+        h1 {
+            text-align: center;
+            color: var(--dark);
+            margin-bottom: 15px;
+            font-size: 2.5rem;
+            font-weight: 700;
+            position: relative;
+            display: inline-block;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        h1::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 10%;
+            width: 80%;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--primary), transparent);
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: var(--gray);
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+        }
+        
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            border-top: 4px solid var(--primary);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .stat:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 25px rgba(0, 0, 0, 0.15);
+        }
+        
+        .stat:nth-child(2) {
+            border-top-color: var(--danger);
+        }
+        
+        .stat:nth-child(3) {
+            border-top-color: var(--secondary);
+        }
+        
+        .stat:nth-child(4) {
+            border-top-color: var(--warning);
+        }
+        
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .stat-name {
+            font-weight: bold;
+            font-size: 1.1rem;
+            color: var(--dark);
+        }
+        
+        .stat-icon {
+            font-size: 1.5rem;
+            color: var(--gray);
+        }
+        
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--primary);
+            transition: var(--transition);
+        }
+        
+        .stat-bar {
+            height: 8px;
+            background: #eee;
+            border-radius: 4px;
+            margin-top: 10px;
+            overflow: hidden;
+        }
+        
+        .stat-fill {
+            height: 100%;
+            border-radius: 4px;
+            background: var(--primary);
+            width: 50%;
+            transition: width 0.5s ease;
+        }
+        
+        .stat:nth-child(2) .stat-fill {
+            background: var(--danger);
+        }
+        
+        .stat:nth-child(3) .stat-fill {
+            background: var(--secondary);
+        }
+        
+        .stat:nth-child(4) .stat-fill {
+            background: var(--warning);
+        }
+        
+        .event-container {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: var(--shadow);
+            min-height: 180px;
+            border: 1px solid #e9ecef;
+            transition: var(--transition);
+            position: relative;
+        }
+        
+        .event-container:hover {
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+        }
+        
+        .event-title {
+            font-size: 1.4rem;
+            color: var(--dark);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .event-title i {
+            color: var(--primary);
+        }
+        
+        .event-content {
+            font-size: 1.1rem;
+            line-height: 1.7;
+            color: #34495e;
+        }
+        
+        .age-container {
+            text-align: center;
+            font-size: 1.5rem;
+            margin-bottom: 25px;
+            color: var(--dark);
+            font-weight: bold;
+            background: rgba(52, 152, 219, 0.1);
+            padding: 10px;
+            border-radius: 10px;
+            display: inline-block;
+            position: relative;
+            left: 50%;
+            transform: translateX(-50%);
+            min-width: 200px;
+        }
+        
+        .button-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        
+        button {
+            padding: 14px 30px;
+            font-size: 1.1rem;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: bold;
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 180px;
+            justify-content: center;
+        }
+        
+        #next-year {
+            background: var(--primary);
+            color: white;
+        }
+        
+        #restart {
+            background: var(--danger);
+            color: white;
+        }
+        
+        button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        button:active {
+            transform: translateY(2px);
+        }
+        
+        .ending-container {
+            display: none;
+            text-align: center;
+            padding: 30px;
+            background: white;
+            border-radius: 15px;
+            margin-top: 20px;
+            box-shadow: var(--shadow);
+            border-top: 5px solid var(--secondary);
+            animation: fadeIn 0.8s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .ending-title {
+            font-size: 2.2rem;
+            color: var(--danger);
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+        
+        .ending-content {
+            font-size: 1.2rem;
+            line-height: 1.7;
+            color: #34495e;
+            margin-bottom: 25px;
+        }
+        
+        .highlight {
+            color: var(--danger);
+            font-weight: bold;
+            background: rgba(231, 76, 60, 0.1);
+            padding: 2px 8px;
+            border-radius: 5px;
+        }
+        
+        .change-indicator {
+            position: absolute;
+            right: 15px;
+            top: 15px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            padding: 3px 10px;
+            border-radius: 20px;
+            opacity: 0;
+            transition: var(--transition);
+        }
+        
+        .positive {
+            background: rgba(46, 204, 113, 0.2);
+            color: var(--secondary);
+        }
+        
+        .negative {
+            background: rgba(231, 76, 60, 0.2);
+            color: var(--danger);
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .stats-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .button-container {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            button {
+                width: 100%;
+                max-width: 300px;
+            }
+            
+            .event-container {
+                padding: 20px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            .stat {
+                padding: 15px;
+            }
+            
+            .event-title {
+                font-size: 1.2rem;
+            }
+            
+            .event-content {
+                font-size: 1rem;
+            }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .pulse {
+            animation: pulse 1.5s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>OI重开模拟器</h1>
+        <div class="subtitle">体验一名OI选手的一生，看看你能走多远...</div>
+        
+        <div class="age-container">
+            <i class="fas fa-birthday-cake"></i> 年龄: <span id="age">12</span> 岁
+        </div>
+        
+        <div class="stats-container">
+            <div class="stat">
+                <div class="stat-header">
+                    <div class="stat-name">智商</div>
+                    <div class="stat-icon"><i class="fas fa-brain"></i></div>
+                </div>
+                <div class="stat-value" id="iq">100</div>
+                <div class="stat-bar">
+                    <div class="stat-fill" id="iq-bar"></div>
+                </div>
+                <div class="change-indicator" id="iq-change"></div>
+            </div>
+            <div class="stat">
+                <div class="stat-header">
+                    <div class="stat-name">运气</div>
+                    <div class="stat-icon"><i class="fas fa-clover"></i></div>
+                </div>
+                <div class="stat-value" id="luck">50</div>
+                <div class="stat-bar">
+                    <div class="stat-fill" id="luck-bar"></div>
+                </div>
+                <div class="change-indicator" id="luck-change"></div>
+            </div>
+            <div class="stat">
+                <div class="stat-header">
+                    <div class="stat-name">家境</div>
+                    <div class="stat-icon"><i class="fas fa-home"></i></div>
+                </div>
+                <div class="stat-value" id="family">50</div>
+                <div class="stat-bar">
+                    <div class="stat-fill" id="family-bar"></div>
+                </div>
+                <div class="change-indicator" id="family-change"></div>
+            </div>
+            <div class="stat">
+                <div class="stat-header">
+                    <div class="stat-name">努力</div>
+                    <div class="stat-icon"><i class="fas fa-dumbbell"></i></div>
+                </div>
+                <div class="stat-value" id="effort">50</div>
+                <div class="stat-bar">
+                    <div class="stat-fill" id="effort-bar"></div>
+                </div>
+                <div class="change-indicator" id="effort-change"></div>
+            </div>
+        </div>
+        
+        <div class="event-container">
+            <div class="event-title">
+                <i class="fas fa-calendar-alt"></i> <span id="event-title">人生开始</span>
+            </div>
+            <div class="event-content" id="event-content">
+                你是一名12岁的初中生，偶然接触到了信息学奥林匹克竞赛(OI)。<br>
+                你对编程产生了浓厚的兴趣，决定开始你的OI之旅！
+            </div>
+        </div>
+        
+        <div class="button-container">
+            <button id="next-year">
+                <i class="fas fa-forward"></i> 进入下一年
+            </button>
+            <button id="restart">
+                <i class="fas fa-redo"></i> 重新开始
+            </button>
+        </div>
+        
+        <div class="ending-container" id="ending-container">
+            <div class="ending-title" id="ending-title">人生结局</div>
+            <div class="ending-content" id="ending-content"></div>
+            <button id="restart-ending">
+                <i class="fas fa-play-circle"></i> 再来一次
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // 游戏状态
+        const gameState = {
+            age: 12,
+            iq: 100,
+            luck: 50,
+            family: 50,
+            effort: 50,
+            isEnding: false
+        };
+        
+        // 事件库
+        const events = [
+            {
+                title: "初识编程",
+                content: "你在学校的计算机课上第一次接触编程，被它严谨的逻辑和无限的可能性深深吸引。",
+                effects: { iq: 5, effort: 5 }
+            },
+            {
+                title: "加入OI社团",
+                content: "你加入了学校的OI社团，认识了一群志同道合的朋友，开始了系统的算法学习。",
+                effects: { iq: 3, effort: 8, luck: 2 }
+            },
+            {
+                title: "第一次比赛",
+                content: "你参加了市级OI比赛，虽然只获得了三等奖，但这让你更加坚定了学习算法的决心。",
+                effects: { iq: 5, effort: 10, luck: -2 }
+            },
+            {
+                title: "遇到瓶颈",
+                content: "你在学习动态规划时遇到了困难，感觉自己的进步速度明显变慢。",
+                effects: { iq: -3, effort: -5 }
+            },
+            {
+                title: "名师指导",
+                content: "一位经验丰富的OI教练发现了你的潜力，开始给你针对性的指导。",
+                effects: { iq: 8, effort: 5, luck: 5 }
+            },
+            {
+                title: "家庭支持",
+                content: "你的父母看到你的努力和进步，决定为你购买更好的电脑和参考书籍。",
+                effects: { family: 10, effort: 5 }
+            },
+            {
+                title: "省级比赛",
+                content: "你在省级OI比赛中获得了一等奖，这让你获得了参加全国赛的资格。",
+                effects: { iq: 10, luck: 5, effort: 8 }
+            },
+            {
+                title: "全国大赛",
+                content: "在全国OI比赛中，你遇到了来自全国各地的顶尖选手，竞争异常激烈。",
+                effects: { iq: 5, effort: 10, luck: -5 }
+            },
+            {
+                title: "保送机会",
+                content: "由于你在全国比赛中的优异成绩，你获得了顶尖大学的保送资格。",
+                effects: { iq: 5, luck: 10, family: 5 }
+            },
+            {
+                title: "国际比赛",
+                content: "你代表国家参加国际信息学奥林匹克竞赛，与世界各地的选手同台竞技。",
+                effects: { iq: 15, effort: 10, luck: 5 }
+            }
+        ];
+        
+        // 结局库
+        const endings = [
+            {
+                title: "IOI金牌得主",
+                condition: (state) => state.iq >= 150 && state.effort >= 80,
+                content: "经过多年的努力，你在国际信息学奥林匹克竞赛中获得了金牌！你被世界顶尖大学争相录取，未来一片光明。"
+            },
+            {
+                title: "优秀OI选手",
+                condition: (state) => state.iq >= 120 && state.effort >= 70,
+                content: "你成为了一名优秀的OI选手，在全国比赛中多次获奖。你顺利进入了理想的大学，继续在计算机领域深造。"
+            },
+            {
+                title: "普通程序员",
+                condition: (state) => state.iq >= 100 && state.effort >= 60,
+                content: "你的OI生涯虽然没有达到顶尖水平，但这段经历让你掌握了扎实的编程能力。你成为了一名优秀的软件工程师。"
+            },
+            {
+                title: "转行发展",
+                condition: (state) => state.iq >= 90 && state.effort < 50,
+                content: "在OI学习过程中，你发现自己对其他领域更感兴趣。你决定转行发展，但编程思维对你帮助很大。"
+            },
+            {
+                title: "放弃OI",
+                condition: (state) => state.effort < 40,
+                content: "由于缺乏坚持，你逐渐放弃了OI学习。这段经历虽然短暂，但也让你对编程有了初步了解。"
+            },
+            {
+                title: "意外收获",
+                condition: (state) => state.luck >= 80,
+                content: "虽然你的OI成绩一般，但你在学习过程中开发的一个小项目意外获得了成功，开启了你的创业之路。"
+            }
+        ];
+        
+        // DOM元素
+        const ageElement = document.getElementById('age');
+        const iqElement = document.getElementById('iq');
+        const luckElement = document.getElementById('luck');
+        const familyElement = document.getElementById('family');
+        const effortElement = document.getElementById('effort');
+        const eventTitleElement = document.getElementById('event-title');
+        const eventContentElement = document.getElementById('event-content');
+        const endingContainer = document.getElementById('ending-container');
+        const endingTitleElement = document.getElementById('ending-title');
+        const endingContentElement = document.getElementById('ending-content');
+        
+        // 进度条元素
+        const iqBar = document.getElementById('iq-bar');
+        const luckBar = document.getElementById('luck-bar');
+        const familyBar = document.getElementById('family-bar');
+        const effortBar = document.getElementById('effort-bar');
+        
+        // 变化指示器
+        const iqChange = document.getElementById('iq-change');
+        const luckChange = document.getElementById('luck-change');
+        const familyChange = document.getElementById('family-change');
+        const effortChange = document.getElementById('effort-change');
+        
+        // 更新UI
+        function updateUI() {
+            ageElement.textContent = gameState.age;
+            iqElement.textContent = gameState.iq;
+            luckElement.textContent = gameState.luck;
+            familyElement.textContent = gameState.family;
+            effortElement.textContent = gameState.effort;
+            
+            // 更新进度条
+            iqBar.style.width = `${Math.min(gameState.iq, 100)}%`;
+            luckBar.style.width = `${Math.min(gameState.luck, 100)}%`;
+            familyBar.style.width = `${Math.min(gameState.family, 100)}%`;
+            effortBar.style.width = `${Math.min(gameState.effort, 100)}%`;
+            
+            // 添加动画效果
+            document.querySelector('.event-container').classList.add('fade-in');
+            setTimeout(() => {
+                document.querySelector('.event-container').classList.remove('fade-in');
+            }, 500);
+        }
+        
+        // 显示属性变化
+        function showChange(indicator, value) {
+            if (value === 0) return;
+            
+            indicator.textContent = value > 0 ? `+${value}` : `${value}`;
+            indicator.className = `change-indicator ${value > 0 ? 'positive' : 'negative'}`;
+            indicator.style.opacity = '1';
+            
+            setTimeout(() => {
+                indicator.style.opacity = '0';
+            }, 2000);
+        }
+        
+        // 处理下一年
+        function nextYear() {
+            if (gameState.isEnding) return;
+            
+            gameState.age++;
+            
+            // 随机选择事件
+            const event = events[Math.floor(Math.random() * events.length)];
+            eventTitleElement.textContent = `${gameState.age}岁: ${event.title}`;
+            eventContentElement.textContent = event.content;
+            
+            // 应用事件效果
+            const changes = {};
+            if (event.effects.iq) {
+                changes.iq = event.effects.iq;
+                gameState.iq = Math.max(0, Math.min(200, gameState.iq + event.effects.iq));
+                showChange(iqChange, event.effects.iq);
+            }
+            if (event.effects.luck) {
+                changes.luck = event.effects.luck;
+                gameState.luck = Math.max(0, Math.min(100, gameState.luck + event.effects.luck));
+                showChange(luckChange, event.effects.luck);
+            }
+            if (event.effects.family) {
+                changes.family = event.effects.family;
+                gameState.family = Math.max(0, Math.min(100, gameState.family + event.effects.family));
+                showChange(familyChange, event.effects.family);
+            }
+            if (event.effects.effort) {
+                changes.effort = event.effects.effort;
+                gameState.effort = Math.max(0, Math.min(100, gameState.effort + event.effects.effort));
+                showChange(effortChange, event.effects.effort);
+            }
+            
+            updateUI();
+            
+            // 检查是否到达结局
+            if (gameState.age >= 22) {
+                checkEnding();
+            }
+        }
+        
+        // 检查结局
+        function checkEnding() {
+            for (const ending of endings) {
+                if (ending.condition(gameState)) {
+                    showEnding(ending);
+                    return;
+                }
+            }
+            
+            // 默认结局
+            showEnding({
+                title: "平凡人生",
+                content: "你的OI生涯平平淡淡，没有取得特别突出的成绩。但这段经历丰富了你的中学生活，为你未来的发展奠定了基础。"
+            });
+        }
+        
+        // 显示结局
+        function showEnding(ending) {
+            gameState.isEnding = true;
+            endingTitleElement.textContent = ending.title;
+            endingContentElement.textContent = ending.content;
+            endingContainer.style.display = 'block';
+            
+            // 添加一些动画效果
+            endingContainer.classList.add('pulse');
+        }
+        
+        // 重新开始游戏
+        function restartGame() {
+            gameState.age = 12;
+            gameState.iq = 100;
+            gameState.luck = 50;
+            gameState.family = 50;
+            gameState.effort = 50;
+            gameState.isEnding = false;
+            
+            eventTitleElement.textContent = "人生开始";
+            eventContentElement.textContent = "你是一名12岁的初中生，偶然接触到了信息学奥林匹克竞赛(OI)。你对编程产生了浓厚的兴趣，决定开始你的OI之旅！";
+            
+            endingContainer.style.display = 'none';
+            endingContainer.classList.remove('pulse');
+            
+            updateUI();
+        }
+        
+        // 事件监听
+        document.getElementById('next-year').addEventListener('click', nextYear);
+        document.getElementById('restart').addEventListener('click', restartGame);
+        document.getElementById('restart-ending').addEventListener('click', restartGame);
+        
+        // 初始化
+        updateUI();
+    </script>
+</body>
+</html>
