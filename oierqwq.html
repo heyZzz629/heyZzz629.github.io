@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>抽象OIER大冒险</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0a0a28, #1a1a40);
+            color: #e0e0ff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+        
+        。container {
+            max-width: 900px;
+            width: 100%;
+            text-align: center;
+        }
+        
+        header {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: rgba(30, 30, 70, 0.7);
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(100, 60, 200, 0.5);
+            border: 1px solid #3a3a8a;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        header::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(120, 40, 200, 0.1) 0%, transparent 70%);
+            z-index: -1;
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            background: linear-gradient(90deg, #ff00cc, #3333ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 10px rgba(255, 0, 204, 0.3);
+        }
+        
+        。subtitle {
+            font-size: 1.2rem;
+            color: #a0a0ff;
+            margin-bottom: 15px;
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin: 15px 0;
+            background: rgba(20, 20, 50, 0.6);
+            padding: 10px;
+            border-radius: 10px;
+        }
+        
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #4aff4a;
+        }
+        
+        .game-area {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+        
+        .game-container {
+            flex: 1;
+            min-width: 300px;
+            background: rgba(20, 20, 50, 0.7);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 0 25px rgba(80, 40, 180, 0.4);
+            border: 1px solid #4a4aaa;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .game-container::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #ff00cc, #3333ff);
+        }
+        
+        #gameCanvas {
+            background: #0f0f2a;
+            border-radius: 10px;
+            display: block;
+            margin: 0 auto;
+            border: 2px solid #3a3a8a;
+        }
+        
+        .controls {
+            flex: 1;
+            min-width: 300px;
+            background: rgba(20, 20, 50, 0.7);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 0 25px rgba(80, 40, 180, 0.4);
+            border: 1px solid #4a4aaa;
+        }
+        
+        h2 {
+            color: #7a7aff;
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+        
+        .control-item {
+            margin: 15px 0;
+            text-align: left;
+            padding: 10px;
+            background: rgba(30, 30, 70, 0.5);
+            border-radius: 8px;
+        }
+        
+        .key {
+            display: inline-block;
+            padding: 5px 10px;
+            background: #333366;
+            border-radius: 5px;
+            margin: 0 5px;
+            font-family: monospace;
+            border: 1px solid #5555aa;
+            box-shadow: 0 2px 0 #222244;
+        }
+        
+        .rules {
+            background: rgba(20, 20, 50, 0.7);
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 20px;
+            box-shadow: 0 0 25px rgba(80, 40, 180, 0.4);
+            border: 1px solid #4a4aaa;
+            text-align: left;
+        }
+        
+        .rules h2 {
+            text-align: center;
+        }
+        
+        .rules ul {
+            margin: 15px 0;
+            padding-left: 20px;
+        }
+        
+        .rules li {
+            margin: 10px 0;
+            line-height: 1.5;
+        }
+        
+        .highlight {
+            color: #4aff4a;
+            font-weight: bold;
+        }
+        
+        .warning {
+            color: #ff5555;
+            font-weight: bold;
+        }
+        
+        .accepted {
+            color: #ffcc00;
+            font-weight: bold;
+        }
+        
+        .btn {
+            background: linear-gradient(90deg, #ff00cc, #3333ff);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            margin: 10px;
+            transition: all 0.3s;
+            box-shadow: 0 4px 0 #3a1a6a;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 0 #3a1a6a;
+        }
+        
+        .btn:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 #3a1a6a;
+        }
+        
+        .footer {
+            margin-top: 30px;
+            color: #7a7aff;
+            font-size: 0.9rem;
+            text-align: center;
+        }
+        
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .glow {
+            text-shadow: 0 0 10px rgba(100, 100, 255, 0.7);
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .game-area {
+                flex-direction: column;
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1 class="pulse">抽象OIER大冒险</h1>
+            <p class="subtitle">在算法的迷宫中寻找<span class="accepted"> Accepted </span>的真理！</p>
+            
+            <div class="stats">
+                <div class="stat-item">
+                    <span>得分</span>
+                    <span class="stat-value" id="score">0</span>
+                </div>
+                <div class="stat-item">
+                    <span>时间</span>
+                    <span class="stat-value" id="time">60</span>
+                </div>
+                <div class="stat-item">
+                    <span>生命</span>
+                    <span class="stat-value" id="lives">3</span>
+                </div>
+            </div>
+        </header>
+        
+        <div class="game-area">
+            <div class="game-container">
+                <canvas id="gameCanvas" width="600" height="400"></canvas>
+            </div>
+            
+            <div class="controls">
+                <h2>游戏控制</h2>
+                
+                <div class="control-item">
+                    <p>移动角色：<span class="key">W</span><span class="key">A</span><span class="key">S</span><span class="key">D</span></p>
+                </div>
+                
+                <div class="control-item">
+                    <p>收集 <span class="accepted">AC</span> 标志增加分数</p>
+                </div>
+                
+                <div class="control-item">
+                    <p>躲避 <span class="warning">TLE</span> 和 <span class="warning">WA</span> 敌人</p>
+                </div>
+                
+                <div class="control-item">
+                    <p>收集 <span class="highlight">STL</span> 获得特殊能力</p>
+                </div>
+                
+                <button class="btn" id="startBtn">开始游戏</button>
+                <button class="btn" id="resetBtn">重新开始</button>
+            </div>
+        </div>
+        
+        <div class="rules">
+            <h2>游戏规则</h2>
+            <ul>
+                <li>控制你的 <span class="highlight">OIER</span> 角色在算法迷宫中移动</li>
+                <li>收集 <span class="accepted">AC</span>（Accepted）标志获得 <span class="highlight">10分</span></li>
+                <li>避开 <span class="warning">TLE</span>（Time Limit Exceeded）和 <span class="warning">WA</span>（Wrong Answer）敌人</li>
+                <li>收集 <span class="highlight">STL</span>（Standard Template Library）获得 <span class="highlight">5秒无敌时间</span></li>
+                <li>游戏时间60秒，尽可能获得高分！</li>
+                <li>每被敌人击中一次，失去一条生命，生命为0时游戏结束</li>
+            </ul>
+            <p class="glow">只有真正的OIER才能理解这抽象的快乐！</p>
+        </div>
+        
+        <div class="footer">
+            <p>抽象OIER大冒险 &copy; 2023 | 献给所有奋战在算法竞赛前线的战士们</p>
+        </div>
+    </div>
+
+    <script>
+        // 获取Canvas元素和上下文
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        // 游戏状态
+        let gameStarted = false;
+        let score = 0;
+        let timeLeft = 60;
+        let lives = 3;
+        let gameInterval;
+        let timeInterval;
+        
+        // 玩家角色
+        const player = {
+            x: canvas.width / 2,
+            y: canvas.height / 2,
+            radius: 15,
+            speed: 5,
+            color: '#4aff4a',
+            invincible: false,
+            invincibleTimer: 0
+        };
+        
+        // AC标志
+        let acItems = [];
+        
+        // 敌人
+        let enemies = [];
+        
+        // STL道具
+        let powerUps = [];
+        
+        // 按键状态
+        const keys = {
+            w: false,
+            a: false,
+            s: false,
+            d: false
+        };
+        
+        // 初始化游戏
+        function initGame() {
+            score = 0;
+            timeLeft = 60;
+            lives = 3;
+            acItems = [];
+            enemies = [];
+            powerUps = [];
+            
+            player.x = canvas.width / 2;
+            player.y = canvas.height / 2;
+            player.invincible = false;
+            player.invincibleTimer = 0;
+            
+            // 创建初始AC标志
+            for (let i = 0; i < 5; i++) {
+                createACItem();
+            }
+            
+            // 创建初始敌人
+            for (let i = 0; i < 3; i++) {
+                createEnemy();
+            }
+            
+            // 创建初始道具
+            createPowerUp();
+            
+            updateStats();
+        }
+        
+        // 创建AC标志
+        function createACItem() {
+            acItems.push({
+                x: Math.random() * (canvas.width - 40) + 20,
+                y: Math.random() * (canvas.height - 40) + 20,
+                radius: 12,
+                color: '#ffcc00'
+            });
+        }
+        
+        // 创建敌人
+        function createEnemy() {
+            const enemyTypes = [
+                { type: 'TLE', color: '#ff5555', speed: 2 },
+                { type: 'WA', color: '#ffaa00', speed: 3 }
+            ];
+            
+            const enemyType = enemyTypes[Math.floor(Math.random() * enemyTypes.length)];
+            
+            // 决定敌人从哪个边缘出现
+            const side = Math.floor(Math.random() * 4);
+            let x, y;
+            
+            switch(side) {
+                case 0: // 上边
+                    x = Math.random() * canvas.width;
+                    y = -20;
+                    break;
+                case 1: // 右边
+                    x = canvas.width + 20;
+                    y = Math.random() * canvas.height;
+                    break;
+                case 2: // 下边
+                    x = Math.random() * canvas.width;
+                    y = canvas.height + 20;
+                    break;
+                case 3: // 左边
+                    x = -20;
+                    y = Math.random() * canvas.height;
+                    break;
+            }
+            
+            enemies.push({
+                x: x,
+                y: y,
+                radius: 15,
+                color: enemyType.color,
+                speed: enemyType.speed,
+                type: enemyType.type
+            });
+        }
+        
+        // 创建STL道具
+        function createPowerUp() {
+            powerUps.push({
+                x: Math.random() * (canvas.width - 30) + 15,
+                y: Math.random() * (canvas.height - 30) + 15,
+                radius: 10,
+                color: '#66aaff',
+                active: true
+            });
+        }
+        
+        // 更新游戏状态
+        function updateGame() {
+            // 移动玩家
+            if (keys.w && player.y - player.radius > 0) player.y -= player.speed;
+            if (keys.s && player.y + player.radius < canvas.height) player.y += player.speed;
+            if (keys.a && player.x - player.radius > 0) player.x -= player.speed;
+            if (keys.d && player.x + player.radius < canvas.width) player.x += player.speed;
+            
+            // 更新无敌状态
+            if (player.invincible) {
+                player.invincibleTimer--;
+                if (player.invincibleTimer <= 0) {
+                    player.invincible = false;
+                }
+            }
+            
+            // 检查AC标志碰撞
+            for (let i = acItems.length - 1; i >= 0; i--) {
+                const ac = acItems[i];
+                const dx = player.x - ac.x;
+                const dy = player.y - ac.y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+                
+                if (distance < player.radius + ac.radius) {
+                    // 收集AC标志
+                    acItems.splice(i, 1);
+                    score += 10;
+                    createACItem(); // 生成新的AC标志
+                    updateStats();
+                }
+            }
+            
+            // 更新敌人
+            for (let i = enemies.length - 1; i >= 0; i--) {
+                const enemy = enemies[i];
+                
+                // 移动敌人朝向玩家
+                const dx = player.x - enemy.x;
+                const dy = player.y - enemy.y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+                
+                enemy.x += (dx / distance) * enemy.speed;
+                enemy.y += (dy / distance) * enemy.speed;
+                
+                // 检查敌人碰撞
+                if (!player.invincible) {
+                    const playerDx = player.x - enemy.x;
+                    const playerDy = player.y - enemy.y;
+                    const playerDistance = Math.sqrt(playerDx * playerDx + playerDy * playerDy);
+                    
+                    if (playerDistance < player.radius + enemy.radius) {
+                        // 被敌人击中
+                        enemies.splice(i, 1);
+                        lives--;
+                        updateStats();
+                        
+                        if (lives <= 0) {
+                            endGame();
+                            return;
+                        }
+                        
+                        createEnemy(); // 生成新的敌人
+                    }
+                }
+                
+                // 移除超出屏幕的敌人
+                if (enemy.x < -50 || enemy.x > canvas.width + 50 || 
+                    enemy.y < -50 || enemy.y > canvas.height + 50) {
+                    enemies.splice(i, 1);
+                    createEnemy(); // 生成新的敌人
+                }
+            }
+            
+            // 检查STL道具碰撞
+            for (let i = powerUps.length - 1; i >= 0; i--) {
+                const powerUp = powerUps[i];
+                
+                if (powerUp.active) {
+                    const dx = player.x - powerUp.x;
+                    const dy = player.y - powerUp.y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+                    
+                    if (distance < player.radius + powerUp.radius) {
+                        // 收集STL道具
+                        powerUp.active = false;
+                        player.invincible = true;
+                        player.invincibleTimer = 300; // 5秒无敌时间 (60fps * 5)
+                        powerUps.splice(i, 1);
+                        
+                        // 稍后生成新的道具
+                        setTimeout(createPowerUp, 5000);
+                    }
+                }
+            }
+            
+            // 随机生成新敌人
+            if (Math.random() < 0.01) {
+                createEnemy();
+            }
+            
+            drawGame();
+        }
+        
+        // 绘制游戏
+        function drawGame() {
+            // 清除画布
+            ctx.fillStyle = '#0f0f2a';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // 绘制网格背景
+            ctx.strokeStyle = '#1a1a3a';
+            ctx.lineWidth = 1;
+            
+            for (let x = 0; x < canvas.width; x += 40) {
+                ctx.beginPath();
+                ctx.moveTo(x, 0);
+                ctx.lineTo(x, canvas.height);
+                ctx.stroke();
+            }
+            
+            for (let y = 0; y < canvas.height; y += 40) {
+                ctx.beginPath();
+                ctx.moveTo(0, y);
+                ctx.lineTo(canvas.width, y);
+                ctx.stroke();
+            }
+            
+            // 绘制AC标志
+            for (const ac of acItems) {
+                ctx.fillStyle = ac.color;
+                ctx.beginPath();
+                ctx.arc(ac.x, ac.y, ac.radius, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // 绘制AC文字
+                ctx.fillStyle = '#000';
+                ctx.font = 'bold 12px Arial';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText('AC', ac.x, ac.y);
+            }
+            
+            // 绘制敌人
+            for (const enemy of enemies) {
+                ctx.fillStyle = enemy.color;
+                ctx.beginPath();
+                ctx.arc(enemy.x, enemy.y, enemy.radius, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // 绘制敌人文字
+                ctx.fillStyle = '#000';
+                ctx.font = 'bold 12px Arial';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(enemy.type, enemy.x, enemy.y);
+            }
+            
+            // 绘制STL道具
+            for (const powerUp of powerUps) {
+                if (powerUp.active) {
+                    ctx.fillStyle = powerUp.color;
+                    ctx.beginPath();
+                    ctx.arc(powerUp.x, powerUp.y, powerUp.radius, 0, Math.PI * 2);
+                    ctx.fill();
+                    
+                    // 绘制STL文字
+                    ctx.fillStyle = '#000';
+                    ctx.font = 'bold 10px Arial';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    ctx.fillText('STL', powerUp.x, powerUp.y);
+                }
+            }
+            
+            // 绘制玩家
+            if (player.invincible && Math.floor(player.invincibleTimer / 5) % 2 === 0) {
+                // 无敌时闪烁
+                ctx.fillStyle = '#ffffff';
+            } else {
+                ctx.fillStyle = player.color;
+            }
+            
+            ctx.beginPath();
+            ctx.arc(player.x, player.y, player.radius, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // 绘制玩家文字
+            ctx.fillStyle = '#000';
+            ctx.font = 'bold 12px Arial';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('OI', player.x, player.y);
+            
+            // 绘制无敌状态指示器
+            if (player.invincible) {
+                ctx.strokeStyle = '#ffffff';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.arc(player.x, player.y, player.radius + 5, 0, Math.PI * 2);
+                ctx.stroke();
+            }
+        }
+        
+        // 更新统计信息
+        function updateStats() {
+            document.getElementById('score').textContent = score;
+            document.getElementById('time').textContent = timeLeft;
+            document.getElementById('lives').textContent = lives;
+        }
+        
+        // 开始游戏
+        function startGame() {
+            if (gameStarted) return;
+            
+            gameStarted = true;
+            initGame();
+            
+            // 开始游戏循环
+            gameInterval = setInterval(updateGame, 1000 / 60);
+            
+            // 开始计时器
+            timeInterval = setInterval(() => {
+                timeLeft--;
+                updateStats();
+                
+                if (timeLeft <= 0) {
+                    endGame();
+                }
+            }, 1000);
+            
+            document.getElementById('startBtn').disabled = true;
+        }
+        
+        // 结束游戏
+        function endGame() {
+            gameStarted = false;
+            clearInterval(gameInterval);
+            clearInterval(timeInterval);
+            
+            // 显示游戏结束信息
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            ctx.fillStyle = '#ffffff';
+            ctx.font = 'bold 36px Arial';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('游戏结束!', canvas.width / 2, canvas.height / 2 - 40);
+            
+            ctx.font = '24px Arial';
+            ctx.fillText(`最终得分: ${score}`, canvas.width / 2, canvas.height / 2 + 10);
+            
+            document.getElementById('startBtn').disabled = false;
+        }
+        
+        // 重置游戏
+        function resetGame() {
+            if (gameStarted) {
+                clearInterval(gameInterval);
+                clearInterval(timeInterval);
+            }
+            gameStarted = false;
+            initGame();
+            drawGame();
+            document.getElementById('startBtn').disabled = false;
+        }
+        
+        // 事件监听
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'w' || e.key === 'W') keys.w = true;
+            if (e.key === 'a' || e.key === 'A') keys.a = true;
+            if (e.key === 's' || e.key === 'S') keys.s = true;
+            if (e.key === 'd' || e.key === 'D') keys.d = true;
+        });
+        
+        document.addEventListener('keyup', (e) => {
+            if (e.key === 'w' || e.key === 'W') keys.w = false;
+            if (e.key === 'a' || e.key === 'A') keys.a = false;
+            if (e.key === 's' || e.key === 'S') keys.s = false;
+            if (e.key === 'd' || e.key === 'D') keys.d = false;
+        });
+        
+        document.getElementById('startBtn').addEventListener('click', startGame);
+        document.getElementById('resetBtn').addEventListener('click', resetGame);
+        
+        // 初始绘制
+        drawGame();
+    </script>
+</body>
+</html>
