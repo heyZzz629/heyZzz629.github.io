@@ -234,334 +234,387 @@ class LocalSearch {
   }
 }
 
-window.addEventListener('load', () => {
-// Search
-  const { path, top_n_per_article, unescape, languages, pagination } = GLOBAL_CONFIG.localSearch
-  const enablePagination = pagination && pagination.enable
-  const localSearch = new LocalSearch({
-    path,
-    top_n_per_article,
-    unescape
-  })
-
-  const input = document.querySelector('.local-search-input input')
-  const statsItem = document.getElementById('local-search-stats')
-  const $loadingStatus = document.getElementById('loading-status')
-  const isXml = !path.endsWith('json')
-
-  // Pagination variables (only initialize if pagination is enabled)
-  let currentPage = 0
-  const hitsPerPage = pagination.hitsPerPage || 10
-
-  let currentResultItems = []
-
-  if (!enablePagination) {
-    // If pagination is disabled, we don't need these variables
-    currentPage = undefined
-    currentResultItems = undefined
-  }
-
-  // Cache frequently used elements
-  const elements = {
-    get pagination () { return document.getElementById('local-search-pagination') },
-    get paginationList () { return document.querySelector('#local-search-pagination .ais-Pagination-list') }
-  }
-
-  // Show/hide search results area
-  const toggleResultsVisibility = hasResults => {
-    if (enablePagination) {
-      elements.pagination.style.display = hasResults ? '' : 'none'
-    } else {
-      elements.pagination.style.display = 'none'
-    }
-  }
-
-  // Render search results for current page
-  const renderResults = (searchText, resultItems) => {
-    const container = document.getElementById('local-search-results')
-
-    // Determine items to display based on pagination mode
-    const itemsToDisplay = enablePagination
-      ? currentResultItems.slice(currentPage * hitsPerPage, (currentPage + 1) * hitsPerPage)
-      : resultItems
-
-    // Handle empty page in pagination mode
-    if (enablePagination && itemsToDisplay.length === 0 && currentResultItems.length > 0) {
-      currentPage = 0
-      renderResults(searchText, resultItems)
-      return
-    }
-
-    // Add numbering to items
-    const numberedItems = itemsToDisplay.map((result, index) => {
-      const itemNumber = enablePagination
-        ? currentPage * hitsPerPage + index + 1
-        : index + 1
-      return result.item.replace(
-        '<li class="local-search-hit-item">',
-        `<li class="local-search-hit-item" value="${itemNumber}">`
-      )
+// 核心修复1：等待DOM完全加载后再执行所有逻辑
+document.addEventListener('DOMContentLoaded', () => {
+  window.addEventListener('load', () => {
+  // Search
+  // 修复后：所有字段加默认值，彻底避免undefined
+    const { 
+      path = 'search.xml', 
+      top_n_per_article = 10, 
+      unescape = false, 
+      languages = {}, 
+      pagination = false 
+    } = GLOBAL_CONFIG.localSearch || {};
+    const enablePagination = pagination && pagination.enable
+    const localSearch = new LocalSearch({
+      path,
+      top_n_per_article,
+      unescape
     })
 
-    container.innerHTML = `<ol class="search-result-list">${numberedItems.join('')}</ol>`
+    // 核心修复2：所有DOM元素获取都加容错判断
+    const input = document.querySelector('.local-search-input input') || {}
+    const statsItem = document.getElementById('local-search-stats') || {}
+    const $loadingStatus = document.getElementById('loading-status') || {}
+    const isXml = !path.endsWith('json')
 
-    // Update stats
-    const displayCount = enablePagination ? currentResultItems.length : resultItems.length
-    const stats = languages.hits_stats.replace(/\$\{hits}/, displayCount)
-    statsItem.innerHTML = `<hr><div class="search-result-stats">${stats}</div>`
+    // Pagination variables (only initialize if pagination is enabled)
+    let currentPage = 0
+    const hitsPerPage = pagination.hitsPerPage || 10
 
-    // Handle pagination
-    if (enablePagination) {
-      const nbPages = Math.ceil(currentResultItems.length / hitsPerPage)
-      renderPagination(currentPage, nbPages, searchText)
+    let currentResultItems = []
+
+    if (!enablePagination) {
+      // If pagination is disabled, we don't need these variables
+      currentPage = undefined
+      currentResultItems = undefined
     }
 
-    const hasResults = resultItems.length > 0
-    toggleResultsVisibility(hasResults)
-
-    window.pjax && window.pjax.refresh(container)
-  }
-
-  // Render pagination
-  const renderPagination = (page, nbPages, query) => {
-    if (nbPages <= 1) {
-      elements.pagination.style.display = 'none'
-      elements.paginationList.innerHTML = ''
-      return
+    // Cache frequently used elements (加容错)
+    const elements = {
+      get pagination () { return document.getElementById('local-search-pagination') || {} },
+      get paginationList () { return document.querySelector('#local-search-pagination .ais-Pagination-list') || {} }
     }
 
-    elements.pagination.style.display = 'block'
-
-    const isFirstPage = page === 0
-    const isLastPage = page === nbPages - 1
-
-    // Responsive page display
-    const isMobile = window.innerWidth < 768
-    const maxVisiblePages = isMobile ? 3 : 5
-    let startPage = Math.max(0, page - Math.floor(maxVisiblePages / 2))
-    const endPage = Math.min(nbPages - 1, startPage + maxVisiblePages - 1)
-
-    // Adjust starting page to maintain max visible pages
-    if (endPage - startPage + 1 < maxVisiblePages) {
-      startPage = Math.max(0, endPage - maxVisiblePages + 1)
-    }
-
-    let pagesHTML = ''
-
-    // Only add ellipsis and first page when there are many pages
-    if (nbPages > maxVisiblePages && startPage > 0) {
-      pagesHTML += `
-        <li class="ais-Pagination-item ais-Pagination-item--page">
-          <a class="ais-Pagination-link" aria-label="Page 1" href="#" data-page="0">1</a>
-        </li>`
-      if (startPage > 1) {
-        pagesHTML += `
-          <li class="ais-Pagination-item ais-Pagination-item--ellipsis">
-            <span class="ais-Pagination-link">...</span>
-          </li>`
+    // Show/hide search results area
+    const toggleResultsVisibility = hasResults => {
+      if (enablePagination && elements.pagination.style) {
+        elements.pagination.style.display = hasResults ? '' : 'none'
+      } else if (elements.pagination.style) {
+        elements.pagination.style.display = 'none'
       }
     }
 
-    // Add middle page numbers
-    for (let i = startPage; i <= endPage; i++) {
-      const isSelected = i === page
-      if (isSelected) {
-        pagesHTML += `
-          <li class="ais-Pagination-item ais-Pagination-item--page ais-Pagination-item--selected">
-            <span class="ais-Pagination-link" aria-label="Page ${i + 1}">${i + 1}</span>
-          </li>`
-      } else {
+    // Render search results for current page
+    const renderResults = (searchText, resultItems) => {
+      // 加容错：容器不存在直接返回
+      const container = document.getElementById('local-search-results')
+      if (!container) return
+
+      // Determine items to display based on pagination mode
+      const itemsToDisplay = enablePagination
+        ? currentResultItems.slice(currentPage * hitsPerPage, (currentPage + 1) * hitsPerPage)
+        : resultItems
+
+      // Handle empty page in pagination mode
+      if (enablePagination && itemsToDisplay.length === 0 && currentResultItems.length > 0) {
+        currentPage = 0
+        renderResults(searchText, resultItems)
+        return
+      }
+
+      // Add numbering to items
+      const numberedItems = itemsToDisplay.map((result, index) => {
+        const itemNumber = enablePagination
+          ? currentPage * hitsPerPage + index + 1
+          : index + 1
+        return result.item.replace(
+          '<li class="local-search-hit-item">',
+          `<li class="local-search-hit-item" value="${itemNumber}">`
+        )
+      })
+
+      container.innerHTML = `<ol class="search-result-list">${numberedItems.join('')}</ol>`
+
+      // Update stats (加容错)
+      if (statsItem && languages.hits_stats) {
+        const displayCount = enablePagination ? currentResultItems.length : resultItems.length
+        const stats = languages.hits_stats.replace(/\$\{hits}/, displayCount)
+        statsItem.innerHTML = `<hr><div class="search-result-stats">${stats}</div>`
+      }
+
+      // Handle pagination
+      if (enablePagination) {
+        const nbPages = Math.ceil(currentResultItems.length / hitsPerPage)
+        renderPagination(currentPage, nbPages, searchText)
+      }
+
+      const hasResults = resultItems.length > 0
+      toggleResultsVisibility(hasResults)
+
+      window.pjax && window.pjax.refresh(container)
+    }
+
+    // Render pagination (加容错)
+    const renderPagination = (page, nbPages, query) => {
+      if (!elements.pagination || !elements.paginationList) return
+      
+      if (nbPages <= 1) {
+        elements.pagination.style.display = 'none'
+        elements.paginationList.innerHTML = ''
+        return
+      }
+
+      elements.pagination.style.display = 'block'
+
+      const isFirstPage = page === 0
+      const isLastPage = page === nbPages - 1
+
+      // Responsive page display
+      const isMobile = window.innerWidth < 768
+      const maxVisiblePages = isMobile ? 3 : 5
+      let startPage = Math.max(0, page - Math.floor(maxVisiblePages / 2))
+      const endPage = Math.min(nbPages - 1, startPage + maxVisiblePages - 1)
+
+      // Adjust starting page to maintain max visible pages
+      if (endPage - startPage + 1 < maxVisiblePages) {
+        startPage = Math.max(0, endPage - maxVisiblePages + 1)
+      }
+
+      let pagesHTML = ''
+
+      // Only add ellipsis and first page when there are many pages
+      if (nbPages > maxVisiblePages && startPage > 0) {
         pagesHTML += `
           <li class="ais-Pagination-item ais-Pagination-item--page">
-            <a class="ais-Pagination-link" aria-label="Page ${i + 1}" href="#" data-page="${i}">${i + 1}</a>
+            <a class="ais-Pagination-link" aria-label="Page 1" href="#" data-page="0">1</a>
           </li>`
-      }
-    }
-
-    // Only add ellipsis and last page when there are many pages
-    if (nbPages > maxVisiblePages && endPage < nbPages - 1) {
-      if (endPage < nbPages - 2) {
-        pagesHTML += `
-          <li class="ais-Pagination-item ais-Pagination-item--ellipsis">
-            <span class="ais-Pagination-link">...</span>
-          </li>`
-      }
-      pagesHTML += `
-        <li class="ais-Pagination-item ais-Pagination-item--page">
-          <a class="ais-Pagination-link" aria-label="Page ${nbPages}" href="#" data-page="${nbPages - 1}">${nbPages}</a>
-        </li>`
-    }
-
-    if (nbPages > 1) {
-      elements.paginationList.innerHTML = `
-            <li class="ais-Pagination-item ais-Pagination-item--previousPage ${isFirstPage ? 'ais-Pagination-item--disabled' : ''}">
-              ${isFirstPage
-                ? '<span class="ais-Pagination-link ais-Pagination-link--disabled" aria-label="Previous Page"><i class="fas fa-angle-left"></i></span>'
-                : `<a class="ais-Pagination-link" aria-label="Previous Page" href="#" data-page="${page - 1}"><i class="fas fa-angle-left"></i></a>`
-              }
-            </li>
-            ${pagesHTML}
-            <li class="ais-Pagination-item ais-Pagination-item--nextPage ${isLastPage ? 'ais-Pagination-item--disabled' : ''}">
-              ${isLastPage
-                ? '<span class="ais-Pagination-link ais-Pagination-link--disabled" aria-label="Next Page"><i class="fas fa-angle-right"></i></span>'
-                : `<a class="ais-Pagination-link" aria-label="Next Page" href="#" data-page="${page + 1}"><i class="fas fa-angle-right"></i></a>`
-              }
+        if (startPage > 1) {
+          pagesHTML += `
+            <li class="ais-Pagination-item ais-Pagination-item--ellipsis">
+              <span class="ais-Pagination-link">...</span>
             </li>`
-    } else {
-      elements.pagination.style.display = 'none'
-    }
-  }
-
-  // Clear search results and stats
-  const clearSearchResults = () => {
-    const container = document.getElementById('local-search-results')
-    container.textContent = ''
-    statsItem.textContent = ''
-    toggleResultsVisibility(false)
-    if (enablePagination) {
-      currentResultItems = []
-      currentPage = 0
-    }
-  }
-
-  // Show no results message
-  const showNoResults = searchText => {
-    const container = document.getElementById('local-search-results')
-    container.textContent = ''
-    const statsDiv = document.createElement('div')
-    statsDiv.className = 'search-result-stats'
-    statsDiv.textContent = languages.hits_empty.replace(/\$\{query}/, searchText)
-    statsItem.innerHTML = statsDiv.outerHTML
-    toggleResultsVisibility(false)
-    if (enablePagination) {
-      currentResultItems = []
-      currentPage = 0
-    }
-  }
-
-  const inputEventFunction = () => {
-    if (!localSearch.isfetched) return
-    let searchText = input.value.trim().toLowerCase()
-    isXml && (searchText = searchText.replace(/</g, '&lt;').replace(/>/g, '&gt;'))
-
-    if (searchText !== '') $loadingStatus.hidden = false
-
-    const keywords = searchText.split(/[-\s]+/)
-    let resultItems = []
-
-    if (searchText.length > 0) {
-      resultItems = localSearch.getResultItems(keywords)
-    }
-
-    if (keywords.length === 1 && keywords[0] === '') {
-      clearSearchResults()
-    } else if (resultItems.length === 0) {
-      showNoResults(searchText)
-    } else {
-      // Sort results by relevance
-      resultItems.sort((left, right) => {
-        if (left.includedCount !== right.includedCount) {
-          return right.includedCount - left.includedCount
-        } else if (left.hitCount !== right.hitCount) {
-          return right.hitCount - left.hitCount
         }
-        return right.id - left.id
-      })
+      }
 
+      // Add middle page numbers
+      for (let i = startPage; i <= endPage; i++) {
+        const isSelected = i === page
+        if (isSelected) {
+          pagesHTML += `
+            <li class="ais-Pagination-item ais-Pagination-item--page ais-Pagination-item--selected">
+              <span class="ais-Pagination-link" aria-label="Page ${i + 1}">${i + 1}</span>
+            </li>`
+        } else {
+          pagesHTML += `
+            <li class="ais-Pagination-item ais-Pagination-item--page">
+              <a class="ais-Pagination-link" aria-label="Page ${i + 1}" href="#" data-page="${i}">${i + 1}</a>
+            </li>`
+        }
+      }
+
+      // Only add ellipsis and last page when there are many pages
+      if (nbPages > maxVisiblePages && endPage < nbPages - 1) {
+        if (endPage < nbPages - 2) {
+          pagesHTML += `
+            <li class="ais-Pagination-item ais-Pagination-item--ellipsis">
+              <span class="ais-Pagination-link">...</span>
+            </li>`
+        }
+        pagesHTML += `
+          <li class="ais-Pagination-item ais-Pagination-item--page">
+            <a class="ais-Pagination-link" aria-label="Page ${nbPages}" href="#" data-page="${nbPages - 1}">${nbPages}</a>
+          </li>`
+      }
+
+      if (nbPages > 1) {
+        elements.paginationList.innerHTML = `
+              <li class="ais-Pagination-item ais-Pagination-item--previousPage ${isFirstPage ? 'ais-Pagination-item--disabled' : ''}">
+                ${isFirstPage
+                  ? '<span class="ais-Pagination-link ais-Pagination-link--disabled" aria-label="Previous Page"><i class="fas fa-angle-left"></i></span>'
+                  : `<a class="ais-Pagination-link" aria-label="Previous Page" href="#" data-page="${page - 1}"><i class="fas fa-angle-left"></i></a>`
+                }
+              </li>
+              ${pagesHTML}
+              <li class="ais-Pagination-item ais-Pagination-item--nextPage ${isLastPage ? 'ais-Pagination-item--disabled' : ''}">
+                ${isLastPage
+                  ? '<span class="ais-Pagination-link ais-Pagination-link--disabled" aria-label="Next Page"><i class="fas fa-angle-right"></i></span>'
+                  : `<a class="ais-Pagination-link" aria-label="Next Page" href="#" data-page="${page + 1}"><i class="fas fa-angle-right"></i></a>`
+                }
+              </li>`
+      } else {
+        elements.pagination.style.display = 'none'
+      }
+    }
+
+    // Clear search results and stats (加容错)
+    const clearSearchResults = () => {
+      const container = document.getElementById('local-search-results')
+      if (container) container.textContent = ''
+      if (statsItem) statsItem.textContent = ''
+      toggleResultsVisibility(false)
       if (enablePagination) {
-        currentResultItems = resultItems
+        currentResultItems = []
         currentPage = 0
       }
-      renderResults(searchText, resultItems)
     }
 
-    $loadingStatus.hidden = true
-  }
-
-  let loadFlag = false
-  const $searchMask = document.getElementById('search-mask')
-  const $searchDialog = document.querySelector('#local-search .search-dialog')
-
-  // fix safari
-  const fixSafariHeight = () => {
-    if (window.innerWidth < 768) {
-      $searchDialog.style.setProperty('--search-height', window.innerHeight + 'px')
+    // Show no results message (加容错)
+    const showNoResults = searchText => {
+      const container = document.getElementById('local-search-results')
+      if (!container || !statsItem || !languages.hits_empty) return
+      
+      container.textContent = ''
+      const statsDiv = document.createElement('div')
+      statsDiv.className = 'search-result-stats'
+      statsDiv.textContent = languages.hits_empty.replace(/\$\{query}/, searchText)
+      statsItem.innerHTML = statsDiv.outerHTML
+      toggleResultsVisibility(false)
+      if (enablePagination) {
+        currentResultItems = []
+        currentPage = 0
+      }
     }
-  }
 
-  const openSearch = () => {
-    btf.overflowPaddingR.add()
-    btf.animateIn($searchMask, 'to_show 0.5s')
-    btf.animateIn($searchDialog, 'titleScale 0.5s')
-    setTimeout(() => { input.focus() }, 300)
-    if (!loadFlag) {
-      !localSearch.isfetched && localSearch.fetchData()
-      input.addEventListener('input', inputEventFunction)
-      loadFlag = true
+    const inputEventFunction = () => {
+      if (!localSearch.isfetched) return
+      let searchText = input.value ? input.value.trim().toLowerCase() : ''
+      isXml && (searchText = searchText.replace(/</g, '&lt;').replace(/>/g, '&gt;'))
+
+      if (searchText !== '' && $loadingStatus) $loadingStatus.hidden = false
+
+      const keywords = searchText.split(/[-\s]+/)
+      let resultItems = []
+
+      if (searchText.length > 0) {
+        resultItems = localSearch.getResultItems(keywords)
+      }
+
+      if (keywords.length === 1 && keywords[0] === '') {
+        clearSearchResults()
+      } else if (resultItems.length === 0) {
+        showNoResults(searchText)
+      } else {
+        // Sort results by relevance
+        resultItems.sort((left, right) => {
+          if (left.includedCount !== right.includedCount) {
+            return right.includedCount - left.includedCount
+          } else if (left.hitCount !== right.hitCount) {
+            return right.hitCount - left.hitCount
+          }
+          return right.id - left.id
+        })
+
+        if (enablePagination) {
+          currentResultItems = resultItems
+          currentPage = 0
+        }
+        renderResults(searchText, resultItems)
+      }
+
+      if ($loadingStatus) $loadingStatus.hidden = true
     }
-    // shortcut: ESC
-    document.addEventListener('keydown', function f (event) {
-      if (event.code === 'Escape') {
-        closeSearch()
-        document.removeEventListener('keydown', f)
+
+    let loadFlag = false
+    const $searchMask = document.getElementById('search-mask') || {}
+    const $searchDialog = document.querySelector('#local-search .search-dialog') || {}
+
+    // fix safari
+    const fixSafariHeight = () => {
+      if (window.innerWidth < 768 && $searchDialog.style) {
+        $searchDialog.style.setProperty('--search-height', window.innerHeight + 'px')
+      }
+    }
+
+    const openSearch = () => {
+      if (btf && btf.overflowPaddingR) {
+        btf.overflowPaddingR.add()
+      }
+      if (btf && $searchMask) {
+        btf.animateIn($searchMask, 'to_show 0.5s')
+      }
+      if (btf && $searchDialog) {
+        btf.animateIn($searchDialog, 'titleScale 0.5s')
+      }
+      setTimeout(() => { input && input.focus && input.focus() }, 300)
+      if (!loadFlag) {
+        !localSearch.isfetched && localSearch.fetchData()
+        input && input.addEventListener('input', inputEventFunction)
+        loadFlag = true
+      }
+      // shortcut: ESC
+      document.addEventListener('keydown', function f (event) {
+        if (event.code === 'Escape') {
+          closeSearch()
+          document.removeEventListener('keydown', f)
+        }
+      })
+
+      fixSafariHeight()
+      window.addEventListener('resize', fixSafariHeight)
+    }
+
+    const closeSearch = () => {
+      if (btf && btf.overflowPaddingR) {
+        btf.overflowPaddingR.remove()
+      }
+      if (btf && $searchDialog) {
+        btf.animateOut($searchDialog, 'search_close .5s')
+      }
+      if (btf && $searchMask) {
+        btf.animateOut($searchMask, 'to_hide 0.5s')
+      }
+      window.removeEventListener('resize', fixSafariHeight)
+    }
+
+    // 核心修复3：searchClickFn加元素存在判断
+    const searchClickFn = () => {
+      const searchButton = document.querySelector('#search-button > .search')
+      if (btf && btf.addEventListenerPjax && searchButton) {
+        btf.addEventListenerPjax(searchButton, 'click', openSearch)
+      }
+    }
+
+    // 核心修复4：searchFnOnce加所有元素容错
+    const searchFnOnce = () => {
+      // 关闭按钮加容错
+      const closeButton = document.querySelector('#local-search .search-close-button')
+      if (closeButton) {
+        closeButton.addEventListener('click', closeSearch)
+      }
+      // 遮罩层加容错
+      if ($searchMask && $searchMask.addEventListener) {
+        $searchMask.addEventListener('click', closeSearch)
+      }
+      // 预加载加容错
+      if (GLOBAL_CONFIG.localSearch?.preload) {
+        localSearch.fetchData()
+      }
+      // 高亮加容错
+      const articleContainer = document.getElementById('article-container')
+      if (articleContainer) {
+        localSearch.highlightSearchWords(articleContainer)
+      }
+
+      // Pagination event delegation - only add if pagination is enabled
+      if (enablePagination && elements.pagination) {
+        elements.pagination.addEventListener('click', e => {
+          e.preventDefault()
+          const link = e.target.closest('a[data-page]')
+          if (link) {
+            const page = parseInt(link.dataset.page, 10)
+            if (!isNaN(page) && currentResultItems.length > 0) {
+              currentPage = page
+              renderResults(input.value ? input.value.trim().toLowerCase() : '', currentResultItems)
+            }
+          }
+        })
+      }
+
+      // Initial state
+      toggleResultsVisibility(false)
+    }
+
+    window.addEventListener('search:loaded', () => {
+      const $loadDataItem = document.getElementById('loading-database')
+      if ($loadDataItem && $loadDataItem.nextElementSibling) {
+        $loadDataItem.nextElementSibling.style.visibility = 'visible'
+        $loadDataItem.remove()
       }
     })
 
-    fixSafariHeight()
-    window.addEventListener('resize', fixSafariHeight)
-  }
-
-  const closeSearch = () => {
-    btf.overflowPaddingR.remove()
-    btf.animateOut($searchDialog, 'search_close .5s')
-    btf.animateOut($searchMask, 'to_hide 0.5s')
-    window.removeEventListener('resize', fixSafariHeight)
-  }
-
-  const searchClickFn = () => {
-    btf.addEventListenerPjax(document.querySelector('#search-button > .search'), 'click', openSearch)
-  }
-
-  const searchFnOnce = () => {
-    document.querySelector('#local-search .search-close-button').addEventListener('click', closeSearch)
-    $searchMask.addEventListener('click', closeSearch)
-    if (GLOBAL_CONFIG.localSearch.preload) {
-      localSearch.fetchData()
-    }
-    localSearch.highlightSearchWords(document.getElementById('article-container'))
-
-    // Pagination event delegation - only add if pagination is enabled
-    if (enablePagination) {
-      elements.pagination.addEventListener('click', e => {
-        e.preventDefault()
-        const link = e.target.closest('a[data-page]')
-        if (link) {
-          const page = parseInt(link.dataset.page, 10)
-          if (!isNaN(page) && currentResultItems.length > 0) {
-            currentPage = page
-            renderResults(input.value.trim().toLowerCase(), currentResultItems)
-          }
-        }
-      })
-    }
-
-    // Initial state
-    toggleResultsVisibility(false)
-  }
-
-  window.addEventListener('search:loaded', () => {
-    const $loadDataItem = document.getElementById('loading-database')
-    $loadDataItem.nextElementSibling.style.visibility = 'visible'
-    $loadDataItem.remove()
-  })
-
-  searchClickFn()
-  searchFnOnce()
-
-  // pjax
-  window.addEventListener('pjax:complete', () => {
-    !btf.isHidden($searchMask) && closeSearch()
-    localSearch.highlightSearchWords(document.getElementById('article-container'))
     searchClickFn()
+    searchFnOnce()
+
+    // pjax
+    window.addEventListener('pjax:complete', () => {
+      if ($searchMask && !btf.isHidden($searchMask)) closeSearch()
+      const articleContainer = document.getElementById('article-container')
+      if (articleContainer) {
+        localSearch.highlightSearchWords(articleContainer)
+      }
+      searchClickFn()
+    })
   })
 })
