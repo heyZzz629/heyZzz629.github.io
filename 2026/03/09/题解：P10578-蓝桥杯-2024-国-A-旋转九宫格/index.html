@@ -1,0 +1,331 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>题解：P10578 [蓝桥杯 2024 国 A] 旋转九宫格  | heyZzz's OI Blog</title><meta name="author" content="heyZzz"><meta name="copyright" content="heyZzz"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="用 BFS。 思路  我们可以使用一个长度为                    #mjx-4cffde3{         display:contents;         mjx-assistive-mml {           user-select: text !important;           clip: auto !important;           color:">
+<meta property="og:type" content="article">
+<meta property="og:title" content="题解：P10578 [蓝桥杯 2024 国 A] 旋转九宫格 ">
+<meta property="og:url" content="https://heyzzz629.github.io/2026/03/09/%E9%A2%98%E8%A7%A3%EF%BC%9AP10578-%E8%93%9D%E6%A1%A5%E6%9D%AF-2024-%E5%9B%BD-A-%E6%97%8B%E8%BD%AC%E4%B9%9D%E5%AE%AB%E6%A0%BC/index.html">
+<meta property="og:site_name" content="heyZzz&#39;s OI Blog">
+<meta property="og:description" content="用 BFS。 思路  我们可以使用一个长度为                    #mjx-4cffde3{         display:contents;         mjx-assistive-mml {           user-select: text !important;           clip: auto !important;           color:">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://heyzzz629.github.io/img/butterfly-icon.png">
+<meta property="article:published_time" content="2026-03-09T12:19:37.000Z">
+<meta property="article:modified_time" content="2026-03-09T12:25:40.707Z">
+<meta property="article:author" content="heyZzz">
+<meta property="article:tag" content="题解">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://heyzzz629.github.io/img/butterfly-icon.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "题解：P10578 [蓝桥杯 2024 国 A] 旋转九宫格 ",
+  "url": "https://heyzzz629.github.io/2026/03/09/%E9%A2%98%E8%A7%A3%EF%BC%9AP10578-%E8%93%9D%E6%A1%A5%E6%9D%AF-2024-%E5%9B%BD-A-%E6%97%8B%E8%BD%AC%E4%B9%9D%E5%AE%AB%E6%A0%BC/",
+  "image": "https://heyzzz629.github.io/img/butterfly-icon.png",
+  "datePublished": "2026-03-09T12:19:37.000Z",
+  "dateModified": "2026-03-09T12:25:40.707Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "heyZzz",
+      "url": "https://heyzzz629.github.io"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/butterfly-icon.png"><link rel="canonical" href="https://heyzzz629.github.io/2026/03/09/%E9%A2%98%E8%A7%A3%EF%BC%9AP10578-%E8%93%9D%E6%A1%A5%E6%9D%AF-2024-%E5%9B%BD-A-%E6%97%8B%E8%BD%AC%E4%B9%9D%E5%AE%AB%E6%A0%BC/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.4"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'undefined')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'undefined')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '题解：P10578 [蓝桥杯 2024 国 A] 旋转九宫格 ',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="icon" href="https://cdn.jsdelivr.net/gh/jerryc127/hexo-theme-butterfly@latest/source/img/butterfly-icon.png" type="image/png"><meta name="generator" content="Hexo 8.1.1"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/butterfly-icon.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">27</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">5</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/search/"><i class="fa-fw fas fa-search"></i><span> 搜索</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-user"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">heyZzz's OI Blog</span></a><a class="nav-page-title" href="/"><span class="site-name">题解：P10578 [蓝桥杯 2024 国 A] 旋转九宫格 </span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/search/"><i class="fa-fw fas fa-search"></i><span> 搜索</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-user"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">题解：P10578 [蓝桥杯 2024 国 A] 旋转九宫格 </h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-03-09T12:19:37.000Z" title="发表于 2026-03-09 20:19:37">2026-03-09</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-03-09T12:25:40.707Z" title="更新于 2026-03-09 20:25:40">2026-03-09</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E9%A2%98%E8%A7%A3/">题解</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><p>用 BFS。</p>
+<h2 id="思路">思路</h2>
+<ul>
+<li>我们可以使用一个长度为 
+    <span id="mjx-4cffde3">
+      <style>
+      #mjx-4cffde3{
+        display:contents;
+        mjx-assistive-mml {
+          user-select: text !important;
+          clip: auto !important;
+          color: rgba(0,0,0,0);
+        }
+        
+mjx-container[jax="SVG"] {
+  direction: ltr;
+}
+
+mjx-container[jax="SVG"] > svg {
+  overflow: visible;
+  min-height: 1px;
+  min-width: 1px;
+}
+
+mjx-container[jax="SVG"] > svg a {
+  fill: blue;
+  stroke: blue;
+}
+
+mjx-assistive-mml {
+  position: absolute !important;
+  top: 0px;
+  left: 0px;
+  clip: rect(1px, 1px, 1px, 1px);
+  padding: 1px 0px 0px 0px !important;
+  border: 0px !important;
+  display: block !important;
+  width: auto !important;
+  overflow: hidden !important;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+mjx-assistive-mml[display="block"] {
+  width: 100% !important;
+}
+
+mjx-container[jax="SVG"][display="true"] {
+  display: block;
+  text-align: center;
+  margin: 1em 0;
+}
+
+mjx-container[jax="SVG"][display="true"][width="full"] {
+  display: flex;
+}
+
+mjx-container[jax="SVG"][justify="left"] {
+  text-align: left;
+}
+
+mjx-container[jax="SVG"][justify="right"] {
+  text-align: right;
+}
+
+g[data-mml-node="merror"] > g {
+  fill: red;
+  stroke: red;
+}
+
+g[data-mml-node="merror"] > rect[data-background] {
+  fill: yellow;
+  stroke: none;
+}
+
+g[data-mml-node="mtable"] > line[data-line], svg[data-table] > g > line[data-line] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > rect[data-frame], svg[data-table] > g > rect[data-frame] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > .mjx-dashed, svg[data-table] > g > .mjx-dashed {
+  stroke-dasharray: 140;
+}
+
+g[data-mml-node="mtable"] > .mjx-dotted, svg[data-table] > g > .mjx-dotted {
+  stroke-linecap: round;
+  stroke-dasharray: 0,140;
+}
+
+g[data-mml-node="mtable"] > g > svg {
+  overflow: visible;
+}
+
+[jax="SVG"] mjx-tool {
+  display: inline-block;
+  position: relative;
+  width: 0;
+  height: 0;
+}
+
+[jax="SVG"] mjx-tool > mjx-tip {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+mjx-tool > mjx-tip {
+  display: inline-block;
+  padding: .2em;
+  border: 1px solid #888;
+  font-size: 70%;
+  background-color: #F8F8F8;
+  color: black;
+  box-shadow: 2px 2px 5px #AAAAAA;
+}
+
+g[data-mml-node="maction"][data-toggle] {
+  cursor: pointer;
+}
+
+mjx-status {
+  display: block;
+  position: fixed;
+  left: 1em;
+  bottom: 1em;
+  min-width: 25%;
+  padding: .2em .4em;
+  border: 1px solid #888;
+  font-size: 90%;
+  background-color: #F8F8F8;
+  color: black;
+}
+
+foreignObject[data-mjx-xml] {
+  font-family: initial;
+  line-height: normal;
+  overflow: visible;
+}
+
+mjx-container[jax="SVG"] path[data-c], mjx-container[jax="SVG"] use[data-c] {
+  stroke-width: 3;
+}
+
+g[data-mml-node="xypic"] path {
+  stroke-width: inherit;
+}
+
+.MathJax g[data-mml-node="xypic"] path {
+  stroke-width: inherit;
+}
+
+      }
+      </style>
+      <mjx-container class="MathJax" jax="SVG" style="position: relative;"><svg style="vertical-align: -0.05ex;" xmlns="http://www.w3.org/2000/svg" width="5.028ex" height="1.554ex" role="img" focusable="false" viewBox="0 -665 2222.4 687" aria-hidden="true"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="mn"><path data-c="33" d="M127 463Q100 463 85 480T69 524Q69 579 117 622T233 665Q268 665 277 664Q351 652 390 611T430 522Q430 470 396 421T302 350L299 348Q299 347 308 345T337 336T375 315Q457 262 457 175Q457 96 395 37T238 -22Q158 -22 100 21T42 130Q42 158 60 175T105 193Q133 193 151 175T169 130Q169 119 166 110T159 94T148 82T136 74T126 70T118 67L114 66Q165 21 238 21Q293 21 321 74Q338 107 338 175V195Q338 290 274 322Q259 328 213 329L171 330L168 332Q166 335 166 348Q166 366 174 366Q202 366 232 371Q266 376 294 413T322 525V533Q322 590 287 612Q265 626 240 626Q208 626 181 615T143 592T132 580H135Q138 579 143 578T153 573T165 566T175 555T183 540T186 520Q186 498 172 481T127 463Z"></path></g><g data-mml-node="mo" transform="translate(722.2,0)"><path data-c="D7" d="M630 29Q630 9 609 9Q604 9 587 25T493 118L389 222L284 117Q178 13 175 11Q171 9 168 9Q160 9 154 15T147 29Q147 36 161 51T255 146L359 250L255 354Q174 435 161 449T147 471Q147 480 153 485T168 490Q173 490 175 489Q178 487 284 383L389 278L493 382Q570 459 587 475T609 491Q630 491 630 471Q630 464 620 453T522 355L418 250L522 145Q606 61 618 48T630 29Z"></path></g><g data-mml-node="mn" transform="translate(1722.4,0)"><path data-c="33" d="M127 463Q100 463 85 480T69 524Q69 579 117 622T233 665Q268 665 277 664Q351 652 390 611T430 522Q430 470 396 421T302 350L299 348Q299 347 308 345T337 336T375 315Q457 262 457 175Q457 96 395 37T238 -22Q158 -22 100 21T42 130Q42 158 60 175T105 193Q133 193 151 175T169 130Q169 119 166 110T159 94T148 82T136 74T126 70T118 67L114 66Q165 21 238 21Q293 21 321 74Q338 107 338 175V195Q338 290 274 322Q259 328 213 329L171 330L168 332Q166 335 166 348Q166 366 174 366Q202 366 232 371Q266 376 294 413T322 525V533Q322 590 287 612Q265 626 240 626Q208 626 181 615T143 592T132 580H135Q138 579 143 578T153 573T165 566T175 555T183 540T186 520Q186 498 172 481T127 463Z"></path></g></g></g></svg><mjx-assistive-mml unselectable="on" display="inline"><math xmlns="http://www.w3.org/1998/Math/MathML"><mn>3</mn><mo>×</mo><mn>3</mn></math></mjx-assistive-mml></mjx-container>
+    </span>
+   的 <code>string</code> 来表示状态，每一种状态可以进行旋转（左上，右上，左下，右下）。</li>
+<li>我们可以用 map 来记录状态。</li>
+<li>预处理一下即可。</li>
+</ul>
+<h2 id="代码：">代码：</h2>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> int long long</span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line">map&lt;string,<span class="type">int</span>&gt; mp; <span class="type">int</span> T,n; <span class="type">char</span> c;</span><br><span class="line"><span class="function"><span class="type">signed</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">	cin&gt;&gt;T; queue&lt;string&gt; q; <span class="comment">//bfs</span></span><br><span class="line">	q.<span class="built_in">push</span>(<span class="string">&quot;123456789&quot;</span>),mp[<span class="string">&quot;123456789&quot;</span>]=<span class="number">1</span>;</span><br><span class="line">	<span class="keyword">while</span>(q.<span class="built_in">size</span>())&#123;</span><br><span class="line">		string u=q.<span class="built_in">front</span>(),v[<span class="number">4</span>]=&#123;u,u,u,u&#125;; q.<span class="built_in">pop</span>();</span><br><span class="line">		v[<span class="number">3</span>][<span class="number">4</span>]=u[<span class="number">5</span>],v[<span class="number">3</span>][<span class="number">5</span>]=u[<span class="number">8</span>],v[<span class="number">3</span>][<span class="number">7</span>]=u[<span class="number">4</span>],v[<span class="number">3</span>][<span class="number">8</span>]=u[<span class="number">7</span>];</span><br><span class="line">		v[<span class="number">2</span>][<span class="number">3</span>]=u[<span class="number">4</span>],v[<span class="number">2</span>][<span class="number">4</span>]=u[<span class="number">7</span>],v[<span class="number">2</span>][<span class="number">6</span>]=u[<span class="number">3</span>],v[<span class="number">2</span>][<span class="number">7</span>]=u[<span class="number">6</span>];</span><br><span class="line">		v[<span class="number">1</span>][<span class="number">1</span>]=u[<span class="number">2</span>],v[<span class="number">1</span>][<span class="number">2</span>]=u[<span class="number">5</span>],v[<span class="number">1</span>][<span class="number">4</span>]=u[<span class="number">1</span>],v[<span class="number">1</span>][<span class="number">5</span>]=u[<span class="number">4</span>];</span><br><span class="line">		v[<span class="number">0</span>][<span class="number">0</span>]=u[<span class="number">1</span>],v[<span class="number">0</span>][<span class="number">1</span>]=u[<span class="number">4</span>],v[<span class="number">0</span>][<span class="number">3</span>]=u[<span class="number">0</span>],v[<span class="number">0</span>][<span class="number">4</span>]=u[<span class="number">3</span>];</span><br><span class="line">		<span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">0</span>;i&lt;<span class="number">4</span>;i++) <span class="keyword">if</span>(!mp[v[i]])&#123;</span><br><span class="line">			mp[v[i]]=mp[u]<span class="number">+1</span>;<span class="keyword">if</span>(v[i]==<span class="string">&quot;0123456789&quot;</span>)<span class="keyword">break</span>;q.<span class="built_in">push</span>(v[i]);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;<span class="keyword">while</span>(T--)&#123;</span><br><span class="line">		string s;</span><br><span class="line">		<span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">0</span>;i&lt;<span class="number">9</span>;i++) cin&gt;&gt;c,s+=c;</span><br><span class="line">		cout&lt;&lt;mp[s]<span class="number">-1</span>&lt;&lt;<span class="string">&#x27;\n&#x27;</span>;</span><br><span class="line">	&#125;<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://heyzzz629.github.io">heyZzz</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://heyzzz629.github.io/2026/03/09/%E9%A2%98%E8%A7%A3%EF%BC%9AP10578-%E8%93%9D%E6%A1%A5%E6%9D%AF-2024-%E5%9B%BD-A-%E6%97%8B%E8%BD%AC%E4%B9%9D%E5%AE%AB%E6%A0%BC/">https://heyzzz629.github.io/2026/03/09/%E9%A2%98%E8%A7%A3%EF%BC%9AP10578-%E8%93%9D%E6%A1%A5%E6%9D%AF-2024-%E5%9B%BD-A-%E6%97%8B%E8%BD%AC%E4%B9%9D%E5%AE%AB%E6%A0%BC/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://heyzzz629.github.io" target="_blank">heyZzz's OI Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E9%A2%98%E8%A7%A3/">题解</a></div><div class="post-share"><div class="social-share" data-image="/img/butterfly-icon.png" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/2026/03/09/%E9%A2%98%E8%A7%A3%EF%BC%9AP12131-%E8%93%9D%E6%A1%A5%E6%9D%AF-2025-%E7%9C%81-B-%E5%AE%A2%E6%B5%81%E9%87%8F%E4%B8%8A%E9%99%90/" title="题解：P12131 [蓝桥杯 2025 省 B] 客流量上限 "><div class="cover" style="background: var(--default-bg-color)"></div><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">题解：P12131 [蓝桥杯 2025 省 B] 客流量上限 </div></div><div class="info-2"><div class="info-item-1">思路 因为对于任意分店                    #mjx-c9bd93e8{         display:contents;         mjx-assistive-mml {           user-select: text !important;           clip: auto !important;           color: rgba(0,0,0,0);         }          mjx-container[jax="SVG"] {   direction: ltr; }  mjx-container[jax="SVG"] > svg {   overflow: visible;   min-height: 1px;   min-width: 1px; }  mjx-container[jax="SVG"] > svg a {   fill: blue;   stroke: blue; }  mjx-assistive-mml {   position: absolute !important;   top: 0px...</div></div></div></a><a class="pagination-related" href="/2026/03/09/%E9%A2%98%E8%A7%A3%EF%BC%9AP14358-CSP-J-2025-%E5%BA%A7%E4%BD%8D-seat%EF%BC%88%E6%B0%91%E9%97%B4%E6%95%B0%E6%8D%AE%EF%BC%89/" title="题解：P14358 [CSP-J 2025] 座位 / seat（民间数据）"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">题解：P14358 [CSP-J 2025] 座位 / seat（民间数据）</div></div><div class="info-2"><div class="info-item-1">前言 作者是 xxs，考不了 CSP。 做法 照题意模拟即可。 就是将所有人的成绩和序号放在一个结构体中，再排序。 再求出第                    #mjx-783312b8{         display:contents;         mjx-assistive-mml {           user-select: text !important;           clip: auto !important;           color: rgba(0,0,0,0);         }          mjx-container[jax="SVG"] {   direction: ltr; }  mjx-container[jax="SVG"] > svg {   overflow: visible;   min-height: 1px;   min-width: 1px; }  mjx-container[jax="SVG"] > svg a {   fill: blue;   stroke: blue; }  mjx-assistiv...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/2026/03/09/%E9%A2%98%E8%A7%A3%EF%BC%9AP10161-DTCPC-2024-%E5%B0%8F%E6%96%B9%E7%9A%84%E7%96%91%E6%83%91-10/" title="题解：P10161 [DTCPC 2024] 小方的疑惑 10 "><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-03-09</div><div class="info-item-2">题解：P10161 [DTCPC 2024] 小方的疑惑 10 </div></div><div class="info-2"><div class="info-item-1">思路 我们注意到答案串一定是若干个可以变成一个可以做出                    #mjx-b0a597{         display:contents;         mjx-assistive-mml {           user-select: text !important;           clip: auto !important;           color: rgba(0,0,0,0);         }          mjx-container[jax="SVG"] {   direction: ltr; }  mjx-container[jax="SVG"] > svg {   overflow: visible;   min-height: 1px;   min-width: 1px; }  mjx-container[jax="SVG"] > svg a {   fill: blue;   stroke: blue; }  mjx-assistive-mml {   position: absolute !importa...</div></div></div></a><a class="pagination-related" href="/2026/03/09/%E9%A2%98%E8%A7%A3%EF%BC%9AP14358-CSP-J-2025-%E5%BA%A7%E4%BD%8D-seat%EF%BC%88%E6%B0%91%E9%97%B4%E6%95%B0%E6%8D%AE%EF%BC%89/" title="题解：P14358 [CSP-J 2025] 座位 &#x2F; seat（民间数据）"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-03-09</div><div class="info-item-2">题解：P14358 [CSP-J 2025] 座位 &#x2F; seat（民间数据）</div></div><div class="info-2"><div class="info-item-1">前言 作者是 xxs，考不了 CSP。 做法 照题意模拟即可。 就是将所有人的成绩和序号放在一个结构体中，再排序。 再求出第                    #mjx-783312b8{         display:contents;         mjx-assistive-mml {           user-select: text !important;           clip: auto !important;           color: rgba(0,0,0,0);         }          mjx-container[jax="SVG"] {   direction: ltr; }  mjx-container[jax="SVG"] > svg {   overflow: visible;   min-height: 1px;   min-width: 1px; }  mjx-container[jax="SVG"] > svg a {   fill: blue;   stroke: blue; }  mjx-assistiv...</div></div></div></a><a class="pagination-related" href="/2026/03/09/%E9%A2%98%E8%A7%A3%EF%BC%9ACF2086C-Disappearing-Permutation/" title="题解：CF2086C Disappearing Permutation"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-03-09</div><div class="info-item-2">题解：CF2086C Disappearing Permutation</div></div><div class="info-2"><div class="info-item-1">题意 给定两个排列                    #mjx-953b1ed{         display:contents;         mjx-assistive-mml {           user-select: text !important;           clip: auto !important;           color: rgba(0,0,0,0);         }          mjx-container[jax="SVG"] {   direction: ltr; }  mjx-container[jax="SVG"] > svg {   overflow: visible;   min-height: 1px;   min-width: 1px; }  mjx-container[jax="SVG"] > svg a {   fill: blue;   stroke: blue; }  mjx-assistive-mml {   position: absolute !important;   top: 0px;  ...</div></div></div></a><a class="pagination-related" href="/2026/03/09/%E9%A2%98%E8%A7%A3%EF%BC%9AP10414-%E8%93%9D%E6%A1%A5%E6%9D%AF-2023-%E5%9B%BD-A-2023-%E6%AC%A1%E6%96%B9/" title="题解：P10414 [蓝桥杯 2023 国 A] 2023 次方 "><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-03-09</div><div class="info-item-2">题解：P10414 [蓝桥杯 2023 国 A] 2023 次方 </div></div><div class="info-2"><div class="info-item-1">前言 这个应该小学生都可以看懂吧（本题解没有用到任何较难的知识）。 好像我也是小学生唉。 前置小知识                    #mjx-4bf38b7{         display:contents;         mjx-assistive-mml {           user-select: text !important;           clip: auto !important;           color: rgba(0,0,0,0);         }          mjx-container[jax="SVG"] {   direction: ltr; }  mjx-container[jax="SVG"] > svg {   overflow: visible;   min-height: 1px;   min-width: 1px; }  mjx-container[jax="SVG"] > svg a {   fill: blue;   stroke: blue; }  mjx-assistive-mml {   pos...</div></div></div></a><a class="pagination-related" href="/2026/03/09/%E9%A2%98%E8%A7%A3%EF%BC%9ACF1598D-Training-Session/" title="题解：CF1598D Training Session"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-03-09</div><div class="info-item-2">题解：CF1598D Training Session</div></div><div class="info-2"><div class="info-item-1">题目翻译： 给定                    #mjx-156bcab8{         display:contents;         mjx-assistive-mml {           user-select: text !important;           clip: auto !important;           color: rgba(0,0,0,0);         }          mjx-container[jax="SVG"] {   direction: ltr; }  mjx-container[jax="SVG"] > svg {   overflow: visible;   min-height: 1px;   min-width: 1px; }  mjx-container[jax="SVG"] > svg a {   fill: blue;   stroke: blue; }  mjx-assistive-mml {   position: absolute !important;   top: 0px;  ...</div></div></div></a><a class="pagination-related" href="/2026/03/09/%E9%A2%98%E8%A7%A3%EF%BC%9AP12131-%E8%93%9D%E6%A1%A5%E6%9D%AF-2025-%E7%9C%81-B-%E5%AE%A2%E6%B5%81%E9%87%8F%E4%B8%8A%E9%99%90/" title="题解：P12131 [蓝桥杯 2025 省 B] 客流量上限 "><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-03-09</div><div class="info-item-2">题解：P12131 [蓝桥杯 2025 省 B] 客流量上限 </div></div><div class="info-2"><div class="info-item-1">思路 因为对于任意分店                    #mjx-c9bd93e8{         display:contents;         mjx-assistive-mml {           user-select: text !important;           clip: auto !important;           color: rgba(0,0,0,0);         }          mjx-container[jax="SVG"] {   direction: ltr; }  mjx-container[jax="SVG"] > svg {   overflow: visible;   min-height: 1px;   min-width: 1px; }  mjx-container[jax="SVG"] > svg a {   fill: blue;   stroke: blue; }  mjx-assistive-mml {   position: absolute !important;   top: 0px...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/butterfly-icon.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">heyZzz</div><div class="author-info-description">OI | C++ | luogu/Codeforces/atcoder</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">27</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">5</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%9D%E8%B7%AF"><span class="toc-number">1.</span> <span class="toc-text">思路</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%EF%BC%9A"><span class="toc-number">2.</span> <span class="toc-text">代码：</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/03/09/%E9%A2%98%E8%A7%A3%EF%BC%9ACF1598D-Training-Session/" title="题解：CF1598D Training Session">题解：CF1598D Training Session</a><time datetime="2026-03-09T12:19:45.000Z" title="发表于 2026-03-09 20:19:45">2026-03-09</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/03/09/%E9%A2%98%E8%A7%A3%EF%BC%9ACF333B-Chips/" title="题解：CF333B Chips">题解：CF333B Chips</a><time datetime="2026-03-09T12:19:45.000Z" title="发表于 2026-03-09 20:19:45">2026-03-09</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/03/09/%E9%A2%98%E8%A7%A3%EF%BC%9AP10928-%E8%B5%B0%E5%BB%8A%E6%B3%BC%E6%B0%B4%E8%8A%82/" title="题解：P10928 走廊泼水节">题解：P10928 走廊泼水节</a><time datetime="2026-03-09T12:19:45.000Z" title="发表于 2026-03-09 20:19:45">2026-03-09</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/03/09/%E9%A2%98%E8%A7%A3%EF%BC%9ACF1109A-Sasha-and-a-Bit-of-Relax/" title="题解：CF1109A Sasha and a Bit of Relax">题解：CF1109A Sasha and a Bit of Relax</a><time datetime="2026-03-09T12:19:44.000Z" title="发表于 2026-03-09 20:19:44">2026-03-09</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/03/09/%E9%A2%98%E8%A7%A3%EF%BC%9AUVA1366-Martian-Mining/" title="题解：UVA1366 Martian Mining">题解：UVA1366 Martian Mining</a><time datetime="2026-03-09T12:19:44.000Z" title="发表于 2026-03-09 20:19:44">2026-03-09</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By heyZzz</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 8.1.1</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.4</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.4"></script><script src="/js/main.js?v=5.5.4"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
