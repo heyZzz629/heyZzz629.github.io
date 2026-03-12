@@ -1,0 +1,53 @@
+# 纯净版 Hexo 配置（仅保留核心，适配 Butterfly）
+title: heyZzz's OI Blog
+subtitle: OIer 的刷题记录
+description: OI | C++ | luogu/Codeforces/atcoder
+author: heyZzz
+language: zh-CN
+timezone: Asia/Shanghai
+
+url: https://heyzzz629.github.io
+permalink: :year/:month/:day/:title/
+permalink_defaults:
+pretty_urls:
+  trailing_index: true
+  trailing_html: true
+
+theme: butterfly
+
+deploy:
+  type: git
+  repo: git@github.com:heyZzz629/heyZzz629.github.io.git
+  branch: main
+
+# # Markdown 渲染器兼容 MathJax 配置
+# markdown:
+#   render:
+#     html: true
+#     xhtmlOut: false
+#     breaks: true
+#     linkify: true
+#     typographer: true
+#   plugins:
+#     - markdown-it-mathjax3  # 适配 MathJax v3
+#   anchors:
+#     level: 2
+#     collisionSuffix: 'v'
+#     permalink: false
+
+search:
+  enable: true
+  path: search.xml
+  field: post
+  format: xml
+  limit: 10000
+  ignore_invalid: false
+
+math:
+  enable: true
+  # 选 KaTeX 或 MathJax，不要同时开两个（同时开会重影！）
+  katex:
+    enable: true
+    per_page: false
+  mathjax:
+    enable: false  # 确保这个是 false，不要和 KaTeX 同时开

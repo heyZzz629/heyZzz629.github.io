@@ -1,0 +1,219 @@
+# ===================== Butterfly 主题 OIer 专属配置（灰白色调） =====================
+# 核心说明：所有缩进为 2 个空格，无 Tab 键；特殊字符（如单引号）已转义；无超长行避免解析错误
+
+# 1. 全局视觉（高级灰白色调，无紫色）
+theme_color:
+  enable: true
+  main: '#e5e5e5'          # 主色（浅灰白）
+  second: '#333333'        # 辅助色（深灰，用于文字/强调）
+  gradient: true           # 开启渐变（灰白渐变）
+  gradient_start: '#f8f8f8'
+  gradient_end: '#e5e5e5'
+
+# 2. 全局样式（圆角+柔和阴影，适配灰白）
+style:
+  border_radius: 12px
+  box_shadow:
+    enable: true
+    main: '0 4px 12px rgba(0,0,0,0.05)'  # 更淡的阴影，适配灰白
+    card: '0 6px 16px rgba(0,0,0,0.08)'
+    hover: '0 8px 24px rgba(0,0,0,0.12)'
+
+# 3. 暗黑模式（灰白适配，不刺眼）
+dark_mode:
+  enable: true
+  default: auto            # 跟随系统
+  dark_theme_color:
+    main: '#2a2a2a'        # 暗黑主色（深灰）
+    second: '#e0e0e0'      # 暗黑辅助色（浅灰）
+  dark_background:
+    enable: true
+    color: '#1a1a1a'       # 暗黑背景（纯深灰）
+    img: false
+
+# 4. 交互增强（平滑滚动+自定义光标）
+scrolling:
+  enable: true
+  smooth: true
+  anchor: true
+  anchor_smooth: true
+
+post_card:
+  enable: true
+  hover_effect: true
+  hover_transform: 'translateY(-5px)'
+  hover_transition: 'all 0.3s ease'
+
+cursor:
+  enable: true
+  default:
+    enable: true
+    size: 8px
+    color: '#333333'       # 光标颜色（深灰）
+  click:
+    enable: true
+    size: 20px
+    color: '#666666'       # 点击光标（中灰）
+    opacity: 0.6
+  link:
+    enable: true
+    icon: 'fas fa-link'
+    color: '#555555'       # 链接光标（中灰）
+
+# 5. 代码块增强（OI题解专属）
+code:
+  highlight:
+    enable: true
+    line_number: true
+    auto_copy: true
+    copy_btn:
+      enable: true
+      style: 'flat'
+      icon: 'fas fa-copy'
+      color: '#333333'
+      hover_color: '#555555'
+      success_text: '已复制'
+      success_color: '#333333'
+    background:
+      light: '#fafafa'
+      dark: '#222222'
+    language:
+      enable: true
+      default: 'cpp'
+      color: '#333333'
+    fold:
+      enable: true
+      height: 300  # 超过300px自动折叠
+  border: true
+  border_color: '#e0e0e0'
+
+# 6. 文章目录（右侧悬浮+自动高亮）
+toc:
+  enable: true
+  position: right
+  fixed: true
+  highlight: true
+  highlight_color: '#333333' # 目录高亮（深灰）
+  expand: true
+  scroll_top: true
+
+# 7. 图片美化（圆角+阴影+OI水印，灰白适配）
+img_style:
+  enable: true
+  rounded: 8px
+  shadow: true
+  border: true
+  border_color: '#eeeeee'  # 图片边框（极浅灰）
+  lazyload: true
+  watermark:
+    enable: true
+    text: 'heyZzz''s OI Blog'  # 单引号转义：''
+    font: '14px Noto Sans SC'
+    color: 'rgba(51,51,51,0.2)' # 水印颜色（深灰透明）
+    position: 'bottom right'
+
+# 8. 鼠标点击特效（OI专属文字）
+click_effect:
+  enable: true
+  type: text
+  text: ['IAKIOI','QwQ','AC','WA','TLE','C++','~~~']
+  color: '#333333'         # 点击文字颜色（深灰）
+  font_size: 16px
+
+# 9. 侧边栏（OIer信息卡+OJ链接）
+aside:
+  enable: true
+  avatar:
+    img: /img/avatar.png   # 头像放 source/img/ 目录
+    effect: true           # 旋转特效
+    border: true
+    border_color: '#333333' # 头像边框（深灰）
+    shadow: true
+  author:
+    enable: true
+    name: heyZzz
+    sayhi: '「OIer | 刷题ing | 目标AC」'
+    typewriter:
+      enable: true
+      text: ['只是一只可爱的小猫啦～','支持互关，条件/paste/tltf8qb8','加油！']
+      speed: 100
+  custom_button:
+    enable: true
+    list:
+      - name: 洛谷
+        icon: 'fas fa-code'
+        url: https://www.luogu.com.cn/
+        color: '#ff7200'    # 洛谷橙（保留特色）
+      - name: Codeforces
+        icon: 'fas fa-globe'
+        url: https://codeforces.com/
+        color: '#4479a1'    # CF蓝（保留特色）
+
+# 10. 访问统计（不蒜子，灰白适配）
+busuanzi:
+  enable: true
+  pv: true
+  uv: true
+
+# 11. 页脚美化（OI标语）
+footer:
+  enable: true
+  copyright:
+    enable: true
+    text: 'heyZzz'
+    since: 2026
+  background:
+    enable: true
+    gradient: true
+    gradient_start: '#f8f8f8' # 页脚渐变（浅灰→中灰）
+    gradient_end: '#e5e5e5'
+  text:
+    enable: true
+    content: '「以赛促学，以题练技」'
+
+# 12. 数学公式（MathJax 支持高级LaTeX，适配OI题解）
+math:
+  enable: true
+  katex:
+    enable: false
+  mathjax:
+    enable: true
+    per_page: false
+    cdn:
+      # 国内加速CDN，避免超时
+      js: https://cdn.bootcdn.net/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js
+    options:
+      tex:
+        inlineMath: [ ['$','$'], ['\\(','\\)'] ]
+        displayMath: [ ['$$','$$'], ['\\[','\\]'] ]
+        packages: {'[+]': ['amsmath', 'amssymb', 'amsfonts', 'boldsymbol', 'color']}
+        tags: 'ams'
+      svg:
+        fontCache: 'global'
+      startup:
+        typeset: true
+
+# 13. 注入配置（极简，无格式错误）
+
+inject:
+  head:
+    - <link rel="icon" href="https://cdn.jsdelivr.net/gh/jerryc127/hexo-theme-butterfly@latest/source/img/butterfly-icon.png" type="image/png">
+  bottom:
+
+# 14. 搜索配置（适配Hexo 8.1.1，无解析错误）
+search:
+  enable: true
+  type: local
+  path: search.xml
+
+# 15. 网站图标（本地路径，无外网依赖）
+favicon: /img/butterfly-icon.png
+
+# 16. 导航栏菜单（含搜索入口）
+menu:
+  首页: / || fas fa-home
+  归档: /archives/ || fas fa-archive
+  标签: /tags/ || fas fa-tags
+  分类: /categories/ || fas fa-folder-open
+  搜索: /search/ || fas fa-search
+  关于: /about/ || fas fa-user
