@@ -172,33 +172,59 @@ footer:
     content: '「以赛促学，以题练技」'
 
 # 12. 数学公式（MathJax 支持高级LaTeX，适配OI题解）
-math:
-  enable: true
-  katex:
-    enable: false
-  mathjax:
-    enable: true
-    per_page: false
-    cdn:
-      # 国内加速CDN，避免超时
-      js: https://cdn.bootcdn.net/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js
-    options:
-      tex:
-        inlineMath: [ ['$','$'], ['\\(','\\)'] ]
-        displayMath: [ ['$$','$$'], ['\\[','\\]'] ]
-        packages: {'[+]': ['amsmath', 'amssymb', 'amsfonts', 'boldsymbol', 'color']}
-        tags: 'ams'
-      svg:
-        fontCache: 'global'
-      startup:
-        typeset: true
-
+mathjax:
+  enable: false   # 必须设为 false，因为我们手动注入了
+  per_page: false
+  version: 3.2.2
+# 【重要】把之前 inject 里手动注入的 MathJax 配置全删掉！清空 inject 的 head 和 bottom
 # 13. 注入配置（极简，无格式错误）
-
 inject:
   head:
-    - <link rel="icon" href="https://cdn.jsdelivr.net/gh/jerryc127/hexo-theme-butterfly@latest/source/img/butterfly-icon.png" type="image/png">
+    # 我们手动引入完整版的 MathJax 3.x，并写好超强配置
+    - |
+      <script>
+        window.MathJax = {
+          tex: {
+            packages: {'[+]': ['noerrors', 'noundefined', 'ams', 'boldsymbol', 'color', 'mathtools']},
+            inlineMath: [['$', '$'], ['\\(', '\\)']],
+            displayMath: [['$$', '$$'], ['\\[', '\\]']],
+            processEscapes: true,
+            processEnvironments: true,
+            processRefs: true,
+            tags: 'ams', // 开启公式自动编号
+            tagSide: 'right',
+            tagIndent: '0.8em',
+            multlineWidth: '85%',
+            maxMacros: 10000,
+            maxBuffer: 5 * 1024 * 1024,
+            // 容错：就算有语法错误也尽量渲染，不报错
+            noerrors: {
+              disabled: false,
+              multiLine: true,
+              inline: false,
+              style: {
+                'color': 'red',
+                'font-style': 'italic',
+                'background-color': '#FFEEEE',
+                'padding': '2px',
+                'border-radius': '2px'
+              }
+            }
+          },
+          options: {
+            skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            ignoreHtmlClass: 'tex2jax_ignore',
+            processHtmlClass: 'tex2jax_process'
+          },
+          startup: {
+            typeset: true
+          }
+        };
+      </script>
+    # 引入 MathJax 3.x 核心库（用 CDN 加速）
+    - <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.js"></script>
   bottom:
+
 
 # 14. 搜索配置（适配Hexo 8.1.1，无解析错误）
 search:

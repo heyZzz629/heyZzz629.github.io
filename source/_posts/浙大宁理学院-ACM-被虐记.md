@@ -15,7 +15,7 @@ sticky: 100
 
 ## 开考！
 
-T1 乱搞，橙题，但是因为行末输出了空格挂了好久。 $\Large \boxed{压力 \color{orange}中}$
+T1 乱搞，橙题，但是因为行末输出了空格挂了好久。 压力 <span style="color: orange;">中</span>
 
 T2 看 ybw 没做，先放着。
 
@@ -25,7 +25,7 @@ T4 LCA 模版，调了一会儿，过了。但是别人都跳了这题。
 
 T5 看 ybw 没做，先放着。
 
-T6 小模拟，心态有点炸。 $\Large \boxed{压力 \color{red}高}$
+T6 小模拟，心态有点炸。 压力 <span style="color: red;">高</span>
 
 T7 水题，不用管。
 
@@ -35,7 +35,7 @@ T9 水题，不用管。
 
 T10 没人做，超极大模拟，先放着。
 
-又做 T2，发现单调栈忘了，死磕 ST 表，错了，心态爆炸。 $\Large \boxed{压力 \color{red}超高}$
+又做 T2，发现单调栈忘了，死磕 ST 表，错了，心态爆炸。 压力 <span style="color: red;">超高</span>
 
 T8 继续调无果。
 
@@ -43,6 +43,6 @@ T8 继续调无果。
 
 |T1 |T2 |T3 |T4 |T5 |T6 |T7 |T8        |T9 |T10|
 |:-:|:-:|:-:|:-:|:-:|:-:|:-:|:--------:|:-:|:-:|
-|过  |$\color{red}单调栈$|过  |过  |$\color{red}分层图$|过  |过  |$\color{red}忘特判 r-l+1=2$。|过  |$\color{red}大模拟$|
+|过  |<span style="color: red;">单调栈|过  |过  |<span style="color: red;">分层图|过  |过  |<span style="color: red;">忘特判 r-l+1=2。|过  |<span style="color: red;">大模拟|
 
 第六名。
