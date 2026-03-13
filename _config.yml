@@ -1,0 +1,50 @@
+title: heyZzz's OI Blog
+subtitle: My Blog
+description: OI | C++ | luogu/Codeforces/atcoder
+author: heyZzz
+language: zh-CN
+timezone: Asia/Shanghai
+
+url: https://heyzzz629.github.io
+permalink: :year/:month/:day/:title/
+
+theme: butterfly
+
+deploy:
+  type: git
+  repo: https://github.com/heyZzz629/heyZzz629.github.io.git
+  branch: main  # 注意：如果你的 GitHub Pages 配置的是 gh-pages 分支，要改成 gh-pages
+
+# Markdown-it 渲染器配置
+markdown:
+  render:
+    html: true         # 允许 HTML，必须开
+    xhtmlOut: false
+    breaks: true       # 换行自动转 <br>
+    linkify: true      # 自动识别链接
+    typographer: true
+    quotes: “”‘’
+  plugins:
+    - markdown-it-abbr
+    - markdown-it-footnote
+    - markdown-it-ins
+    - markdown-it-mark
+    - markdown-it-sub
+    - markdown-it-sup
+  anchors:
+    level: 2
+    collisionSuffix: ''
+    permalink: false
+    permalinkClass: 'header-anchor'
+    permalinkSide: 'left'
+    permalinkSymbol: ''
+    case: 0
+    separator: '-'
+
+highlight:
+  enable: false
+prismjs:
+  enable: true
+  preprocess: true
+  line_number: true
+  tab_replace: ''
