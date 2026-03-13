@@ -1,112 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>OI 校园生活模拟器</title>
-    <url>/2026/03/08/OI-%E6%A0%A1%E5%9B%AD%E7%94%9F%E6%B4%BB%E6%A8%A1%E6%8B%9F%E5%99%A8/</url>
-    <content><![CDATA[<p>食用方法，打开<a href="https://page.xo.je/heyZzz/game.html">这个</a>玩即可</p>
-<h2 id="🎯-游戏目标">🎯 游戏目标</h2>
-<p>扮演一名信息学竞赛选手（OIer），在<strong>3年高中生活</strong>中：</p>
-<ul>
-<li>提升算法能力，争取在 NOIP 拿到省一/国集资格</li>
-<li>平衡文化课、心态、体力、人际关系</li>
-<li>解锁成就，书写你的 OI 故事</li>
-</ul>
-<hr>
-<h2 id="📊-状态面板说明">📊 状态面板说明</h2>
-<table>
-<thead>
-<tr>
-<th>属性</th>
-<th>含义</th>
-<th>注意事项</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>💻 算法能力</td>
-<td>你的 OI 水平，决定比赛成绩</td>
-<td>&gt;85 可冲省选，&gt;95 有望国集</td>
-</tr>
-<tr>
-<td>📚 文化课</td>
-<td>学业成绩，避免班主任谈话</td>
-<td>&lt;40 会触发&quot;班主任谈话&quot;事件</td>
-</tr>
-<tr>
-<td>🧠 心态</td>
-<td>心理状态，影响发挥稳定性</td>
-<td>&lt;20 会触发&quot;RE/MLE 崩溃&quot;事件</td>
-</tr>
-<tr>
-<td>💪 体力</td>
-<td>身体状态，归零会强制住院</td>
-<td>每回合自动 -2，注意休息</td>
-</tr>
-<tr>
-<td>👥 人际关系</td>
-<td>与同学/学长的关系</td>
-<td>影响随机事件和求助成功率</td>
-</tr>
-<tr>
-<td>💰 零花钱</td>
-<td>购买书籍、饮料等道具</td>
-<td>可通过兼职赚取</td>
-</tr>
-</tbody>
-</table>
-<hr>
-<h2 id="🎮-如何操作">🎮 如何操作</h2>
-<h3 id="基础操作">基础操作</h3>
-<ol>
-<li><strong>选择行动</strong>：点击下方 4 个行动按钮之一</li>
-<li><strong>查看日志</strong>：在&quot;游戏日志&quot;标签查看剧情发展</li>
-<li><strong>切换标签</strong>：点击顶部标签切换【日志/事件/日记/统计】</li>
-</ol>
-<h3 id="快捷键-⚡">快捷键 ⚡</h3>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">数字键 1-4 → 快速选择对应行动</span><br></pre></td></tr></table></figure>
-<h3 id="行动类型示例">行动类型示例</h3>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">🔹 刷模板题 → 稳定提升算法，消耗少量体力</span><br><span class="line">🔹 挑战难题 → 高风险高回报，可能 AC 也可能 WA</span><br><span class="line">🔹 参加模拟赛 → 检验实力，获得声望</span><br><span class="line">🔹 上文化课 → 提升文化课，避免班主任谈话</span><br><span class="line">🔹 休息放松 → 恢复体力和心态</span><br><span class="line">🔹 帮助同学 → 提升人际，巩固知识</span><br><span class="line">🔹 购买道具 → 使用金钱获得增益</span><br><span class="line">🔹 通宵学习 → 极限提升算法，但极度消耗体力</span><br></pre></td></tr></table></figure>
-<hr>
-<h2 id="⚙️-游戏机制">⚙️ 游戏机制</h2>
-<h3 id="时间系统">时间系统</h3>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">第 X 年 → 第 Y 月 → 第 Z 周 → 白天/夜晚</span><br></pre></td></tr></table></figure>
-<ul>
-<li>每选择一次行动 = 推进半回合</li>
-<li>白天→夜晚→白天 = 推进一周</li>
-<li>12 个月 = 推进一年，共 3 年游戏时间</li>
-</ul>
-<h3 id="随机事件-🎲">随机事件 🎲</h3>
-<p>游戏会随机触发 OI 特色事件：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">🐛 Bug 之夜：深夜调试，可能找到 Bug 也可能心态崩</span><br><span class="line">👨‍🏫 班主任突袭：文化课太低会被谈话</span><br><span class="line">🏆 AC 时刻：首次 AC 难题，获得成就感</span><br><span class="line">🍜 食堂惊喜：吃到好吃的，恢复状态</span><br><span class="line">⚡ 停电了：代码没保存，损失进度</span><br></pre></td></tr></table></figure>
-<h3 id="成就系统-🏆">成就系统 🏆</h3>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">✅ 初次 AC：第一次成功 AC</span><br><span class="line">👑 机房之王：模拟赛获得第一名</span><br><span class="line">💻 算法高手：算法能力达到 80</span><br><span class="line">🌟 传奇 OIer：算法能力达到 100</span><br><span class="line">⬡ 六边形战士：全属性 80+</span><br></pre></td></tr></table></figure>
-<hr>
-<h2 id="💡-新手攻略">💡 新手攻略</h2>
-<h3 id="🌱-前期（第-1-年）">🌱 前期（第 1 年）</h3>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">1. 优先刷「模板题」稳定提升算法</span><br><span class="line">2. 偶尔上文化课，保持学术 &gt;40</span><br><span class="line">3. 多「帮助同学」积累人际</span><br><span class="line">4. 体力&lt;30 时及时「休息」</span><br></pre></td></tr></table></figure>
-<h3 id="🚀-中期（第-2-年）">🚀 中期（第 2 年）</h3>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">1. 尝试「挑战难题」快速提升</span><br><span class="line">2. 参加「模拟赛」检验实力</span><br><span class="line">3. 购买「算法书」突破瓶颈</span><br><span class="line">4. 注意心态管理，避免崩溃</span><br></pre></td></tr></table></figure>
-<h3 id="🏁-后期（第-3-年）">🏁 后期（第 3 年）</h3>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">1. 算法&gt;85 冲刺省一</span><br><span class="line">2. 平衡各项属性争取完美结局</span><br><span class="line">3. 解锁剩余成就</span><br></pre></td></tr></table></figure>
-<hr>
-<h2 id="⚠️-注意事项">⚠️ 注意事项</h2>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">❗ 体力 = 0 → 强制住院一回合，无法行动</span><br><span class="line">❗ 文化课 &lt; 40 → 班主任谈话，心态 -10</span><br><span class="line">❗ 心态 &lt; 20 → RE/MLE 崩溃，算法 -5</span><br><span class="line">❗ 行动前检查消耗，避免属性归零</span><br></pre></td></tr></table></figure>
-<hr>
-<h2 id="🎁-小技巧">🎁 小技巧</h2>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">✨ 夜晚学习效率更高，但消耗更大</span><br><span class="line">✨ 人际关系高时，请教大佬成功率提升</span><br><span class="line">✨ 购买「机械键盘」等装备有永久增益</span><br><span class="line">✨ 写题解博客既能提升算法又能涨声望</span><br><span class="line">✨ 适当「冥想」可以快速恢复心态</span><br></pre></td></tr></table></figure>
-<hr>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">// 温馨提示：如果按钮没反应，请确保页面完全加载，</span><br><span class="line">// 或尝试刷新页面。游戏已修复模态框点击问题 ✨</span><br></pre></td></tr></table></figure>
-<p>用 Qwen 写的，我保证我的贡献小于 AI。</p>
-]]></content>
-      <categories>
-        <category>科技·工程</category>
-      </categories>
-      <tags>
-        <tag>OI</tag>
-        <tag>模拟器</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>12.19~12.31写题报告</title>
     <url>/2026/03/10/12-19-12-31%E5%86%99%E9%A2%98%E6%8A%A5%E5%91%8A/</url>
     <content><![CDATA[<p><a href="https://www.luogu.com.cn/paste/dxzda6nw">题目</a></p>
@@ -245,6 +139,55 @@ $(S(fib(1))+S(fib(2))+S(fib(3))+…+S(fib(n))) % 9=(fib(1)+fib(2)+fib(3)+…+fid
 ]]></content>
   </entry>
   <entry>
+    <title>CSP 考场易错点</title>
+    <url>/2026/03/09/CSP-%E8%80%83%E5%9C%BA%E6%98%93%E9%94%99%E7%82%B9/</url>
+    <content><![CDATA[<h2 id="UB（未定义行为）">UB（未定义行为）</h2>
+<p>未定义行为就是你的代码出现了语言标准没有预料到的代码时，你的代码就会出现一些奇怪的错。</p>
+<p>有时你的评测是对的，而这种错误会在 CCF <s>垃圾</s>的评测环境中暴露出来，没注意到就会爆零。</p>
+<h3 id="printf">printf</h3>
+<p>你<strong>一定</strong>要看好你输出的和 <code>printf</code> 中的类型是否一样，不然程序会错。</p>
+<h3 id="有符号整数溢出也是未定义行为。">有符号整数溢出也是未定义行为。</h3>
+<h3 id="返回值非-void-函数一定要有返回！">返回值非 void 函数一定要有返回！</h3>
+<p>错误示范：</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">x</span><span class="params">(<span class="type">int</span> a)</span></span>&#123;cout&lt;&lt;a;&#125;</span><br></pre></td></tr></table></figure>
+<p>正确示范：</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">x</span><span class="params">(<span class="type">int</span> a)</span></span>&#123;cout&lt;&lt;a; <span class="keyword">return</span> <span class="number">1</span>；&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="数据结构-RE">数据结构 RE</h3>
+<p>vector 下标越界。</p>
+<p>vector、queue、deque、stack 等为空时进行 pop。</p>
+<h3 id="其它">其它</h3>
+<p>int,long long 除以 $0$ 或模 $0$ 也是未定义行为。</p>
+<h2 id="文件读写">文件读写</h2>
+<p><s>都是可以进迷惑行为大赏的。</s></p>
+<p>freopen：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">freopen(&quot;题目名.in&quot;,&quot;r&quot;,stdin);</span><br><span class="line">freopen(&quot;题目名.out&quot;,&quot;w&quot;,stdout);</span><br></pre></td></tr></table></figure>
+<p><code>&quot;r&quot;</code> 一定要用双引号！</p>
+<p>文件夹：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">|----- 考号</span><br><span class="line">  ｜----- T1名字</span><br><span class="line">    ｜----- T1名字.cpp</span><br><span class="line">  ｜----- T2名字</span><br><span class="line">    ｜----- T2名字.cpp</span><br><span class="line">  ｜----- T3名字</span><br><span class="line">    ｜----- T3名字.cpp</span><br><span class="line">  ｜----- T4名字</span><br><span class="line">    ｜----- T4名字.cpp</span><br></pre></td></tr></table></figure>
+<p>另外你需要注意文件的后缀名：</p>
+<p><img src="https://cdn.luogu.com.cn/upload/image_hosting/c9na8ao1.png" alt=""></p>
+<p>这里引用一些 @chenxi2009 的图，我是用 mac 的，拍不了。</p>
+<p>不然就可能出现 <code>duel.cpp.cpp</code> 的情况。</p>
+<p>还有文件名一定要检查是否跟题目一模一样！</p>
+<h2 id="define-int-long-long">#define int long long</h2>
+<p>是可以的<s>因为我用过</s>。</p>
+<p>CCF 下发的 pdf 文件中提到：主函数返回类型只能是 int。</p>
+<p>所以 signed main 行吗？</p>
+<p>但是 <code>signed=int=signed int</code>，可以的<s>因为我用过</s>。</p>
+<p>虽然可以用，但是有可能空间爆炸。</p>
+<h2 id="读入">读入</h2>
+<p>习惯用 <code>cin/cout</code> 的可以用 <code>ios::sync_with_stdio(false),cin.tie(0),cout.tie(0);</code></p>
+<p>爱用 <code>scanf/printf</code> 也可以，但是要注意类型是否正确。</p>
+]]></content>
+      <categories>
+        <category>算法·理论</category>
+      </categories>
+      <tags>
+        <tag>CSP</tag>
+        <tag>理论</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>ST表</title>
     <url>/2026/03/09/ST%E8%A1%A8/</url>
     <content><![CDATA[<h2 id="ST表">ST表</h2>
@@ -269,6 +212,112 @@ $(S(fib(1))+S(fib(2))+S(fib(3))+…+S(fib(n))) % 9=(fib(1)+fib(2)+fib(3)+…+fid
         <tag>ST 表</tag>
         <tag>RMQ 问题</tag>
         <tag>算法</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>OI 校园生活模拟器</title>
+    <url>/2026/03/08/OI-%E6%A0%A1%E5%9B%AD%E7%94%9F%E6%B4%BB%E6%A8%A1%E6%8B%9F%E5%99%A8/</url>
+    <content><![CDATA[<p>食用方法，打开<a href="https://page.xo.je/heyZzz/game.html">这个</a>玩即可</p>
+<h2 id="🎯-游戏目标">🎯 游戏目标</h2>
+<p>扮演一名信息学竞赛选手（OIer），在<strong>3年高中生活</strong>中：</p>
+<ul>
+<li>提升算法能力，争取在 NOIP 拿到省一/国集资格</li>
+<li>平衡文化课、心态、体力、人际关系</li>
+<li>解锁成就，书写你的 OI 故事</li>
+</ul>
+<hr>
+<h2 id="📊-状态面板说明">📊 状态面板说明</h2>
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>含义</th>
+<th>注意事项</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>💻 算法能力</td>
+<td>你的 OI 水平，决定比赛成绩</td>
+<td>&gt;85 可冲省选，&gt;95 有望国集</td>
+</tr>
+<tr>
+<td>📚 文化课</td>
+<td>学业成绩，避免班主任谈话</td>
+<td>&lt;40 会触发&quot;班主任谈话&quot;事件</td>
+</tr>
+<tr>
+<td>🧠 心态</td>
+<td>心理状态，影响发挥稳定性</td>
+<td>&lt;20 会触发&quot;RE/MLE 崩溃&quot;事件</td>
+</tr>
+<tr>
+<td>💪 体力</td>
+<td>身体状态，归零会强制住院</td>
+<td>每回合自动 -2，注意休息</td>
+</tr>
+<tr>
+<td>👥 人际关系</td>
+<td>与同学/学长的关系</td>
+<td>影响随机事件和求助成功率</td>
+</tr>
+<tr>
+<td>💰 零花钱</td>
+<td>购买书籍、饮料等道具</td>
+<td>可通过兼职赚取</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="🎮-如何操作">🎮 如何操作</h2>
+<h3 id="基础操作">基础操作</h3>
+<ol>
+<li><strong>选择行动</strong>：点击下方 4 个行动按钮之一</li>
+<li><strong>查看日志</strong>：在&quot;游戏日志&quot;标签查看剧情发展</li>
+<li><strong>切换标签</strong>：点击顶部标签切换【日志/事件/日记/统计】</li>
+</ol>
+<h3 id="快捷键-⚡">快捷键 ⚡</h3>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">数字键 1-4 → 快速选择对应行动</span><br></pre></td></tr></table></figure>
+<h3 id="行动类型示例">行动类型示例</h3>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">🔹 刷模板题 → 稳定提升算法，消耗少量体力</span><br><span class="line">🔹 挑战难题 → 高风险高回报，可能 AC 也可能 WA</span><br><span class="line">🔹 参加模拟赛 → 检验实力，获得声望</span><br><span class="line">🔹 上文化课 → 提升文化课，避免班主任谈话</span><br><span class="line">🔹 休息放松 → 恢复体力和心态</span><br><span class="line">🔹 帮助同学 → 提升人际，巩固知识</span><br><span class="line">🔹 购买道具 → 使用金钱获得增益</span><br><span class="line">🔹 通宵学习 → 极限提升算法，但极度消耗体力</span><br></pre></td></tr></table></figure>
+<hr>
+<h2 id="⚙️-游戏机制">⚙️ 游戏机制</h2>
+<h3 id="时间系统">时间系统</h3>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">第 X 年 → 第 Y 月 → 第 Z 周 → 白天/夜晚</span><br></pre></td></tr></table></figure>
+<ul>
+<li>每选择一次行动 = 推进半回合</li>
+<li>白天→夜晚→白天 = 推进一周</li>
+<li>12 个月 = 推进一年，共 3 年游戏时间</li>
+</ul>
+<h3 id="随机事件-🎲">随机事件 🎲</h3>
+<p>游戏会随机触发 OI 特色事件：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">🐛 Bug 之夜：深夜调试，可能找到 Bug 也可能心态崩</span><br><span class="line">👨‍🏫 班主任突袭：文化课太低会被谈话</span><br><span class="line">🏆 AC 时刻：首次 AC 难题，获得成就感</span><br><span class="line">🍜 食堂惊喜：吃到好吃的，恢复状态</span><br><span class="line">⚡ 停电了：代码没保存，损失进度</span><br></pre></td></tr></table></figure>
+<h3 id="成就系统-🏆">成就系统 🏆</h3>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">✅ 初次 AC：第一次成功 AC</span><br><span class="line">👑 机房之王：模拟赛获得第一名</span><br><span class="line">💻 算法高手：算法能力达到 80</span><br><span class="line">🌟 传奇 OIer：算法能力达到 100</span><br><span class="line">⬡ 六边形战士：全属性 80+</span><br></pre></td></tr></table></figure>
+<hr>
+<h2 id="💡-新手攻略">💡 新手攻略</h2>
+<h3 id="🌱-前期（第-1-年）">🌱 前期（第 1 年）</h3>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">1. 优先刷「模板题」稳定提升算法</span><br><span class="line">2. 偶尔上文化课，保持学术 &gt;40</span><br><span class="line">3. 多「帮助同学」积累人际</span><br><span class="line">4. 体力&lt;30 时及时「休息」</span><br></pre></td></tr></table></figure>
+<h3 id="🚀-中期（第-2-年）">🚀 中期（第 2 年）</h3>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">1. 尝试「挑战难题」快速提升</span><br><span class="line">2. 参加「模拟赛」检验实力</span><br><span class="line">3. 购买「算法书」突破瓶颈</span><br><span class="line">4. 注意心态管理，避免崩溃</span><br></pre></td></tr></table></figure>
+<h3 id="🏁-后期（第-3-年）">🏁 后期（第 3 年）</h3>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">1. 算法&gt;85 冲刺省一</span><br><span class="line">2. 平衡各项属性争取完美结局</span><br><span class="line">3. 解锁剩余成就</span><br></pre></td></tr></table></figure>
+<hr>
+<h2 id="⚠️-注意事项">⚠️ 注意事项</h2>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">❗ 体力 = 0 → 强制住院一回合，无法行动</span><br><span class="line">❗ 文化课 &lt; 40 → 班主任谈话，心态 -10</span><br><span class="line">❗ 心态 &lt; 20 → RE/MLE 崩溃，算法 -5</span><br><span class="line">❗ 行动前检查消耗，避免属性归零</span><br></pre></td></tr></table></figure>
+<hr>
+<h2 id="🎁-小技巧">🎁 小技巧</h2>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">✨ 夜晚学习效率更高，但消耗更大</span><br><span class="line">✨ 人际关系高时，请教大佬成功率提升</span><br><span class="line">✨ 购买「机械键盘」等装备有永久增益</span><br><span class="line">✨ 写题解博客既能提升算法又能涨声望</span><br><span class="line">✨ 适当「冥想」可以快速恢复心态</span><br></pre></td></tr></table></figure>
+<hr>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">// 温馨提示：如果按钮没反应，请确保页面完全加载，</span><br><span class="line">// 或尝试刷新页面。游戏已修复模态框点击问题 ✨</span><br></pre></td></tr></table></figure>
+<p>用 Qwen 写的，我保证我的贡献小于 AI。</p>
+]]></content>
+      <categories>
+        <category>科技·工程</category>
+      </categories>
+      <tags>
+        <tag>OI</tag>
+        <tag>模拟器</tag>
       </tags>
   </entry>
   <entry>
@@ -387,151 +436,6 @@ $(S(fib(1))+S(fib(2))+S(fib(3))+…+S(fib(n))) % 9=(fib(1)+fib(2)+fib(3)+…+fid
       <tags>
         <tag>算法</tag>
         <tag>哈夫曼树与哈夫曼编码</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>搞笑</title>
-    <url>/2026/03/10/%E6%90%9E%E7%AC%91/</url>
-    <content><![CDATA[<p>家长直呼太暴力！这些算法可能会被删除</p>
-<p>近日，洛谷网络科技有限公司多位用户家长向 @kkksc03 反映，部分算法存在血腥、暴力等不利于青少年儿童的因素出现，要求对相关算法进行整改或被删除。 洛谷网络科技有限公司题目组管理员在接受采访时说道，在最近几天内，洛谷收到了数十条家长来信，声称网站教授的部分算法存在“血腥”、“暴力”等内容。“他们说这些东西会教坏他们家的孩子，要求我们整改这些算法，把这些对小朋友不太好的东西删掉，或者直接把算法删除。”</p>
-<p>随着国庆的到来，很多家长直接来到洛谷反映情况。记者在现场随机采访了几位家长，询问他们对这些算法的看法。</p>
-<p>刘女士的儿子正在洛谷学习普及组内容。在采访中刘女士告诉记者，希望洛谷停开匈牙利算法。“我看里面讲的都是些一一匹配啊、二分图啊之类的匹配问题，这不是教孩子怎么找npy么？那他以后岂不是学会早恋了？”王先生也有类似的想法。他要求洛谷整改月赛内容。“听说课程里面有‘选妹子’，要是小朋友被女拳打了该怎么办？太危险了！”</p>
-<p>认为数据结构太危险、容易伤到孩子，是很多家长的共同心声。王大爷今年已经六十多岁了，却依然专程跑到学校，高呼停止教授Splay树和Treap树。他说，自家的孙子很小的时候撞到树上过，他担心这两棵树会给孩子造成心理阴影。 此外，最大流、费用流等算法也遭到了部分家长的抵制。“主要还是玩水安全嘛”，陈女士说，“孩子们看到这些流啊、流量啊、回家就很可能会下水去游泳，我们当家长的还是不放心嘛。”而张先生的态度则更为坚决：“现在就敢玩水，将来敢玩什么，我都不敢想了！”</p>
-<p>同样作为算法，《深入浅出程序设计竞赛》受到抵制的理由则有很大不同。吴先生告诉记者：“主要是，这个（深入浅出程序设计竞赛的教材）太厚了，得有好几斤重，网上小孩子如果嬉戏打闹，拿着这本书到处乱甩（的话），非常危险。要是碰到头的话，那肯定会把头磕破的，你说这个责任由谁来承担？”</p>
-<p>在众多算法中，家长抵制呼声最高的则是图论算法。在家长看来，有的算法要找环，会绕晕到孩子；画图用的笔可能会戳伤手指；很多算法在搜索的时候可能会把系统栈用爆；有些算法写错了要输中量参解改很久，可能会累到小朋友，“把我家小孩累死了该怎么办？”</p>
-<p>除了担心孩子们的安全外，对孩子生活习惯的影响也成为了家长们抵制课程的要素之一。叶女士告诉记者，她希望洛谷整改全部英语题面。叶女士的儿子才考普及组，却已经学会了sh*t，fk等高级词汇。“孩子现在出口就是这种词，影响很不好，肯定是洛谷的题面教的。”叶女士说。</p>
-<p>同样，李先生对于洛谷的bfs, dfs, bdfs算法也颇有微词。“我们还是想给孩子营造一个健康的成长环境嘛，我看课上，居然让小朋友们去暴力遍历图啊、暴力找答案啊，这不是教小朋友们暴力么？平时打打杀杀的动画片我都不让自家小孩看，更不要说动手去做这些了。”</p>
-<p>此外，一些非盈利机构也遭到了家长的抵制。很多家长认为，玩电脑是影响自家小孩学习的关键原因，因此强烈要求洛谷取缔 F ，并取消相关竞赛。 N**P 首当其冲，周先生接受采访时说道：“听说这门课要学生们自己学习算法，要是真把算法学好了，不就会有更多小朋友沉迷电脑么？如果他们不学算法的话，我们的小孩就不会这么贪玩电脑了。”同样，一些家长也对浏览器表示不满：“没有浏览器，小朋友们自然就不会沉迷上网了。”</p>
-<p>让记者感到惊奇的是，很多家长对一些计算机基础数学内容也有较大的意见。部分家长要求下架《组合数学》 《混凝土数学》等课程。在问及原因时，家长告诉记者，文中的感叹号很像一根棍子，会引发小朋友的暴力倾向。</p>
-<p>针对此事，记者尝试联络洛谷网络科技有限公司的管理员。管理员回复称，@kkksc03 校长正在忙于建设世界一流 OJ，暂未就此事件给予答复。</p>
-<p>不过，也有少数家长对一些算法表示支持。一位家长告诉记者，希望学校着力建设《编程语言基础》课程。“孩子如果在学校学好语言这些东西的话，回让他搬砖的时候应该能更好一些。”</p>
-]]></content>
-      <categories>
-        <category>休闲·娱乐</category>
-      </categories>
-      <tags>
-        <tag>娱乐</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>浙大宁理学院 ACM 被虐记</title>
-    <url>/2026/03/08/%E6%B5%99%E5%A4%A7%E5%AE%81%E7%90%86%E5%AD%A6%E9%99%A2-ACM-%E8%A2%AB%E8%99%90%E8%AE%B0/</url>
-    <content><![CDATA[<p>收到 SH 的邀请，我去了浙大宁理学院打 ACM。</p>
-<h2 id="考前">考前</h2>
-<p>找了同为 XXS 的 ybw，zhw，xzh。</p>
-<h2 id="开考！">开考！</h2>
-<p>T1 乱搞，橙题，但是因为行末输出了空格挂了好久。 压力 <span style="color: orange;">中</span></p>
-<p>T2 看 ybw 没做，先放着。</p>
-<p>T3 水题，不用管。</p>
-<p>T4 LCA 模版，调了一会儿，过了。但是别人都跳了这题。</p>
-<p>T5 看 ybw 没做，先放着。</p>
-<p>T6 小模拟，心态有点炸。 压力 <span style="color: red;">高</span></p>
-<p>T7 水题，不用管。</p>
-<p>T8 一眼结论题，但是又调炸了（<strong>伏笔</strong>）。</p>
-<p>T9 水题，不用管。</p>
-<p>T10 没人做，超极大模拟，先放着。</p>
-<p>又做 T2，发现单调栈忘了，死磕 ST 表，错了，心态爆炸。 压力 <span style="color: red;">超高</span></p>
-<p>T8 继续调无果。</p>
-<h2 id="赛后">赛后</h2>
-<table>
-<thead>
-<tr>
-<th style="text-align:center">T1</th>
-<th style="text-align:center">T2</th>
-<th style="text-align:center">T3</th>
-<th style="text-align:center">T4</th>
-<th style="text-align:center">T5</th>
-<th style="text-align:center">T6</th>
-<th style="text-align:center">T7</th>
-<th style="text-align:center">T8</th>
-<th style="text-align:center">T9</th>
-<th style="text-align:center">T10</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center">过</td>
-<td style="text-align:center"><span style="color: red;">单调栈</td>
-<td style="text-align:center">过</td>
-<td style="text-align:center">过</td>
-<td style="text-align:center"><span style="color: red;">分层图</td>
-<td style="text-align:center">过</td>
-<td style="text-align:center">过</td>
-<td style="text-align:center"><span style="color: red;">忘特判 r-l+1=2。</td>
-<td style="text-align:center">过</td>
-<td style="text-align:center"><span style="color: red;">大模拟</td>
-</tr>
-</tbody>
-</table>
-<p>第六名。</p>
-]]></content>
-      <categories>
-        <category>生活·游记</category>
-      </categories>
-      <tags>
-        <tag>ACM</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>树状数组</title>
-    <url>/2026/03/08/%E6%A0%91%E7%8A%B6%E6%95%B0%E7%BB%84/</url>
-    <content><![CDATA[<h2 id="习题"><a href="https://www.luogu.com.cn/problem/P3374">习题</a></h2>
-<h3 id="首先：">首先：</h3>
-<p>要说树状数组，就必须要说 $\operatorname{lowbit}$。</p>
-<p>那 $\operatorname{lowbit}$ 是什么呢？</p>
-<p>是一个数的二进制从右往左第一个 $1$ 的值。</p>
-<p>例如，$\operatorname{lowbit}(14)$ 是 $2$，$\operatorname{lowbit}(16)$ 是 $16$。</p>
-<p>那应该怎么求呢？</p>
-<p>是 $n \And (-n)$，众所周知 $-n$ 是 $n$ 的补码，就是 $n$ 按位取反再加 $1$。</p>
-<p>神奇的是，$n$ 这样一取反前面的 $0$ 都成 $1$ 了，再加一，$1$ 又变成 $0$ 了，但取反后第一个 $0$ 就成 $1$ 了，竟跟取反前一模一样！</p>
-<p>这样一来，只要第一个 $1$ 剩下来了。</p>
-<p>我们在举个栗子：</p>
-<p>$6$ 的二进制是 $110$，补码是 $010$，$\operatorname{lowbit}(6)$ 就是 $2$。</p>
-<p>$24$ 的二进制是 $11000$，补码是 $01000$，$\operatorname{lowbit}(6)$ 就是 $8$。</p>
-<h3 id="之后（进入正题）：">之后（进入正题）：</h3>
-<p>我们有一个数列（随便写的）：</p>
-<p>$$a{8}={1,1,4,3,7,9,2,5}$$</p>
-<p>再写一个表，每个数为下面的两数之和：</p>
-<p><code>          32          </code></p>
-<p><code>     9    </code> <code>     23   </code></p>
-<p><code>  2 </code> <code>  7 </code> <code> 16 </code> <code>  7 </code></p>
-<p><code>1</code> <code>1</code> <code>4</code> <code>3</code> <code>7</code> <code>9</code> <code>2</code> <code>5</code></p>
-<p>我们要实现的是：</p>
-<ol>
-<li>单点修改。</li>
-<li>询问区间。</li>
-</ol>
-<p>但我们可以做出优化：</p>
-<p>我们发现，如下的点会被用过</p>
-<p><code>          32          </code></p>
-<p><code>     9    </code> <code>        </code></p>
-<p><code>  2 </code> <code>  </code> <code> 16 </code> <code>  </code></p>
-<p><code>1</code> <code> </code> <code>4</code> <code> </code> <code>7</code> <code> </code> <code>2</code> <code> </code></p>
-<p>标号：</p>
-<p>$~~~~~~~~~~~~~~~~~~~t_8$</p>
-<p><code>          32          </code></p>
-<p>$~~~~~~~~~t_4$</p>
-<p><code>     9    </code> <code>        </code></p>
-<p>$<s><s>t_2</s></s>~~~~~~~~~~~~~t_6$</p>
-<p><code>  2 </code> <code>  </code> <code> 16 </code> <code>  </code></p>
-<p>$<sub>t_1</sub><s><s><s>t_3</s></s></s><s>t_5</s>~~~~~~t_7$</p>
-<p><code>1</code> <code> </code> <code>4</code> <code> </code> <code>7</code> <code> </code> <code>2</code> <code> </code></p>
-<p>显然：若 $i$ 为奇数，$t_i$ 等于 $a_i$。</p>
-<p>观察可得 $t_i=a_i+a_{i+1}+…+a_{\operatorname{lowbit}(i)+i-1}$。</p>
-<p>所以每次跳过 $\operatorname{lowbit}(i)$ 即可。</p>
-<p>建树：</p>
-<p>每次都把包含 $x$ 的区间（即每次跳过 $\operatorname{lowbit}(x)$）加上 $k$。</p>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">add</span><span class="params">(<span class="type">int</span> x,<span class="type">int</span> k)</span></span>&#123;</span><br><span class="line">    <span class="keyword">while</span>(x&lt;=n) t[x]+=k,x+=<span class="built_in">lb</span>(x);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>查询：</p>
-<p>与上面同理。</p>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">sum</span><span class="params">(<span class="type">int</span> x)</span></span>&#123;</span><br><span class="line">    <span class="type">int</span> ans=<span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span>(x) ans+=t[x],x-=<span class="built_in">lb</span>(x);</span><br><span class="line">    <span class="keyword">return</span> ans;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><s>码字不易，求赞</s></p>
-]]></content>
-      <categories>
-        <category>算法·理论</category>
-      </categories>
-      <tags>
-        <tag>树状数组</tag>
       </tags>
   </entry>
   <entry>
@@ -663,6 +567,151 @@ $(S(fib(1))+S(fib(2))+S(fib(3))+…+S(fib(n))) % 9=(fib(1)+fib(2)+fib(3)+…+fid
       </tags>
   </entry>
   <entry>
+    <title>搞笑</title>
+    <url>/2026/03/10/%E6%90%9E%E7%AC%91/</url>
+    <content><![CDATA[<p>家长直呼太暴力！这些算法可能会被删除</p>
+<p>近日，洛谷网络科技有限公司多位用户家长向 @kkksc03 反映，部分算法存在血腥、暴力等不利于青少年儿童的因素出现，要求对相关算法进行整改或被删除。 洛谷网络科技有限公司题目组管理员在接受采访时说道，在最近几天内，洛谷收到了数十条家长来信，声称网站教授的部分算法存在“血腥”、“暴力”等内容。“他们说这些东西会教坏他们家的孩子，要求我们整改这些算法，把这些对小朋友不太好的东西删掉，或者直接把算法删除。”</p>
+<p>随着国庆的到来，很多家长直接来到洛谷反映情况。记者在现场随机采访了几位家长，询问他们对这些算法的看法。</p>
+<p>刘女士的儿子正在洛谷学习普及组内容。在采访中刘女士告诉记者，希望洛谷停开匈牙利算法。“我看里面讲的都是些一一匹配啊、二分图啊之类的匹配问题，这不是教孩子怎么找npy么？那他以后岂不是学会早恋了？”王先生也有类似的想法。他要求洛谷整改月赛内容。“听说课程里面有‘选妹子’，要是小朋友被女拳打了该怎么办？太危险了！”</p>
+<p>认为数据结构太危险、容易伤到孩子，是很多家长的共同心声。王大爷今年已经六十多岁了，却依然专程跑到学校，高呼停止教授Splay树和Treap树。他说，自家的孙子很小的时候撞到树上过，他担心这两棵树会给孩子造成心理阴影。 此外，最大流、费用流等算法也遭到了部分家长的抵制。“主要还是玩水安全嘛”，陈女士说，“孩子们看到这些流啊、流量啊、回家就很可能会下水去游泳，我们当家长的还是不放心嘛。”而张先生的态度则更为坚决：“现在就敢玩水，将来敢玩什么，我都不敢想了！”</p>
+<p>同样作为算法，《深入浅出程序设计竞赛》受到抵制的理由则有很大不同。吴先生告诉记者：“主要是，这个（深入浅出程序设计竞赛的教材）太厚了，得有好几斤重，网上小孩子如果嬉戏打闹，拿着这本书到处乱甩（的话），非常危险。要是碰到头的话，那肯定会把头磕破的，你说这个责任由谁来承担？”</p>
+<p>在众多算法中，家长抵制呼声最高的则是图论算法。在家长看来，有的算法要找环，会绕晕到孩子；画图用的笔可能会戳伤手指；很多算法在搜索的时候可能会把系统栈用爆；有些算法写错了要输中量参解改很久，可能会累到小朋友，“把我家小孩累死了该怎么办？”</p>
+<p>除了担心孩子们的安全外，对孩子生活习惯的影响也成为了家长们抵制课程的要素之一。叶女士告诉记者，她希望洛谷整改全部英语题面。叶女士的儿子才考普及组，却已经学会了sh*t，fk等高级词汇。“孩子现在出口就是这种词，影响很不好，肯定是洛谷的题面教的。”叶女士说。</p>
+<p>同样，李先生对于洛谷的bfs, dfs, bdfs算法也颇有微词。“我们还是想给孩子营造一个健康的成长环境嘛，我看课上，居然让小朋友们去暴力遍历图啊、暴力找答案啊，这不是教小朋友们暴力么？平时打打杀杀的动画片我都不让自家小孩看，更不要说动手去做这些了。”</p>
+<p>此外，一些非盈利机构也遭到了家长的抵制。很多家长认为，玩电脑是影响自家小孩学习的关键原因，因此强烈要求洛谷取缔 F ，并取消相关竞赛。 N**P 首当其冲，周先生接受采访时说道：“听说这门课要学生们自己学习算法，要是真把算法学好了，不就会有更多小朋友沉迷电脑么？如果他们不学算法的话，我们的小孩就不会这么贪玩电脑了。”同样，一些家长也对浏览器表示不满：“没有浏览器，小朋友们自然就不会沉迷上网了。”</p>
+<p>让记者感到惊奇的是，很多家长对一些计算机基础数学内容也有较大的意见。部分家长要求下架《组合数学》 《混凝土数学》等课程。在问及原因时，家长告诉记者，文中的感叹号很像一根棍子，会引发小朋友的暴力倾向。</p>
+<p>针对此事，记者尝试联络洛谷网络科技有限公司的管理员。管理员回复称，@kkksc03 校长正在忙于建设世界一流 OJ，暂未就此事件给予答复。</p>
+<p>不过，也有少数家长对一些算法表示支持。一位家长告诉记者，希望学校着力建设《编程语言基础》课程。“孩子如果在学校学好语言这些东西的话，回让他搬砖的时候应该能更好一些。”</p>
+]]></content>
+      <categories>
+        <category>休闲·娱乐</category>
+      </categories>
+      <tags>
+        <tag>娱乐</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>树状数组</title>
+    <url>/2026/03/08/%E6%A0%91%E7%8A%B6%E6%95%B0%E7%BB%84/</url>
+    <content><![CDATA[<h2 id="习题"><a href="https://www.luogu.com.cn/problem/P3374">习题</a></h2>
+<h3 id="首先：">首先：</h3>
+<p>要说树状数组，就必须要说 $\operatorname{lowbit}$。</p>
+<p>那 $\operatorname{lowbit}$ 是什么呢？</p>
+<p>是一个数的二进制从右往左第一个 $1$ 的值。</p>
+<p>例如，$\operatorname{lowbit}(14)$ 是 $2$，$\operatorname{lowbit}(16)$ 是 $16$。</p>
+<p>那应该怎么求呢？</p>
+<p>是 $n \And (-n)$，众所周知 $-n$ 是 $n$ 的补码，就是 $n$ 按位取反再加 $1$。</p>
+<p>神奇的是，$n$ 这样一取反前面的 $0$ 都成 $1$ 了，再加一，$1$ 又变成 $0$ 了，但取反后第一个 $0$ 就成 $1$ 了，竟跟取反前一模一样！</p>
+<p>这样一来，只要第一个 $1$ 剩下来了。</p>
+<p>我们在举个栗子：</p>
+<p>$6$ 的二进制是 $110$，补码是 $010$，$\operatorname{lowbit}(6)$ 就是 $2$。</p>
+<p>$24$ 的二进制是 $11000$，补码是 $01000$，$\operatorname{lowbit}(6)$ 就是 $8$。</p>
+<h3 id="之后（进入正题）：">之后（进入正题）：</h3>
+<p>我们有一个数列（随便写的）：</p>
+<p>$$a{8}={1,1,4,3,7,9,2,5}$$</p>
+<p>再写一个表，每个数为下面的两数之和：</p>
+<p><code>          32          </code></p>
+<p><code>     9    </code> <code>     23   </code></p>
+<p><code>  2 </code> <code>  7 </code> <code> 16 </code> <code>  7 </code></p>
+<p><code>1</code> <code>1</code> <code>4</code> <code>3</code> <code>7</code> <code>9</code> <code>2</code> <code>5</code></p>
+<p>我们要实现的是：</p>
+<ol>
+<li>单点修改。</li>
+<li>询问区间。</li>
+</ol>
+<p>但我们可以做出优化：</p>
+<p>我们发现，如下的点会被用过</p>
+<p><code>          32          </code></p>
+<p><code>     9    </code> <code>        </code></p>
+<p><code>  2 </code> <code>  </code> <code> 16 </code> <code>  </code></p>
+<p><code>1</code> <code> </code> <code>4</code> <code> </code> <code>7</code> <code> </code> <code>2</code> <code> </code></p>
+<p>标号：</p>
+<p>$~~~~~~~~~~~~~~~~~~~t_8$</p>
+<p><code>          32          </code></p>
+<p>$~~~~~~~~~t_4$</p>
+<p><code>     9    </code> <code>        </code></p>
+<p>$<s><s>t_2</s></s>~~~~~~~~~~~~~t_6$</p>
+<p><code>  2 </code> <code>  </code> <code> 16 </code> <code>  </code></p>
+<p>$<sub>t_1</sub><s><s><s>t_3</s></s></s><s>t_5</s>~~~~~~t_7$</p>
+<p><code>1</code> <code> </code> <code>4</code> <code> </code> <code>7</code> <code> </code> <code>2</code> <code> </code></p>
+<p>显然：若 $i$ 为奇数，$t_i$ 等于 $a_i$。</p>
+<p>观察可得 $t_i=a_i+a_{i+1}+…+a_{\operatorname{lowbit}(i)+i-1}$。</p>
+<p>所以每次跳过 $\operatorname{lowbit}(i)$ 即可。</p>
+<p>建树：</p>
+<p>每次都把包含 $x$ 的区间（即每次跳过 $\operatorname{lowbit}(x)$）加上 $k$。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">add</span><span class="params">(<span class="type">int</span> x,<span class="type">int</span> k)</span></span>&#123;</span><br><span class="line">    <span class="keyword">while</span>(x&lt;=n) t[x]+=k,x+=<span class="built_in">lb</span>(x);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>查询：</p>
+<p>与上面同理。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">sum</span><span class="params">(<span class="type">int</span> x)</span></span>&#123;</span><br><span class="line">    <span class="type">int</span> ans=<span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span>(x) ans+=t[x],x-=<span class="built_in">lb</span>(x);</span><br><span class="line">    <span class="keyword">return</span> ans;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><s>码字不易，求赞</s></p>
+]]></content>
+      <categories>
+        <category>算法·理论</category>
+      </categories>
+      <tags>
+        <tag>树状数组</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>浙大宁理学院 ACM 被虐记</title>
+    <url>/2026/03/08/%E6%B5%99%E5%A4%A7%E5%AE%81%E7%90%86%E5%AD%A6%E9%99%A2-ACM-%E8%A2%AB%E8%99%90%E8%AE%B0/</url>
+    <content><![CDATA[<p>收到 SH 的邀请，我去了浙大宁理学院打 ACM。</p>
+<h2 id="考前">考前</h2>
+<p>找了同为 XXS 的 ybw，zhw，xzh。</p>
+<h2 id="开考！">开考！</h2>
+<p>T1 乱搞，橙题，但是因为行末输出了空格挂了好久。 压力 <span style="color: orange;">中</span></p>
+<p>T2 看 ybw 没做，先放着。</p>
+<p>T3 水题，不用管。</p>
+<p>T4 LCA 模版，调了一会儿，过了。但是别人都跳了这题。</p>
+<p>T5 看 ybw 没做，先放着。</p>
+<p>T6 小模拟，心态有点炸。 压力 <span style="color: red;">高</span></p>
+<p>T7 水题，不用管。</p>
+<p>T8 一眼结论题，但是又调炸了（<strong>伏笔</strong>）。</p>
+<p>T9 水题，不用管。</p>
+<p>T10 没人做，超极大模拟，先放着。</p>
+<p>又做 T2，发现单调栈忘了，死磕 ST 表，错了，心态爆炸。 压力 <span style="color: red;">超高</span></p>
+<p>T8 继续调无果。</p>
+<h2 id="赛后">赛后</h2>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">T1</th>
+<th style="text-align:center">T2</th>
+<th style="text-align:center">T3</th>
+<th style="text-align:center">T4</th>
+<th style="text-align:center">T5</th>
+<th style="text-align:center">T6</th>
+<th style="text-align:center">T7</th>
+<th style="text-align:center">T8</th>
+<th style="text-align:center">T9</th>
+<th style="text-align:center">T10</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">过</td>
+<td style="text-align:center"><span style="color: red;">单调栈</td>
+<td style="text-align:center">过</td>
+<td style="text-align:center">过</td>
+<td style="text-align:center"><span style="color: red;">分层图</td>
+<td style="text-align:center">过</td>
+<td style="text-align:center">过</td>
+<td style="text-align:center"><span style="color: red;">忘特判 r-l+1=2。</td>
+<td style="text-align:center">过</td>
+<td style="text-align:center"><span style="color: red;">大模拟</td>
+</tr>
+</tbody>
+</table>
+<p>第六名。</p>
+]]></content>
+      <categories>
+        <category>生活·游记</category>
+      </categories>
+      <tags>
+        <tag>ACM</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>矩阵加速递推</title>
     <url>/2026/03/09/%E7%9F%A9%E9%98%B5%E5%8A%A0%E9%80%9F%E9%80%92%E6%8E%A8/</url>
     <content><![CDATA[<p>PS：本文章因篇幅有限，就不讲矩阵乘法和快速幂了。</p>
@@ -692,6 +741,17 @@ $(S(fib(1))+S(fib(2))+S(fib(3))+…+S(fib(n))) % 9=(fib(1)+fib(2)+fib(3)+…+fid
       </tags>
   </entry>
   <entry>
+    <title>题解：CF1109A Sasha and a Bit of Relax</title>
+    <url>/2026/03/09/%E9%A2%98%E8%A7%A3%EF%BC%9ACF1109A-Sasha-and-a-Bit-of-Relax/</url>
+    <content><![CDATA[<p>翻译：</p>
+<p>求有多少个区间内的数异或值为 $0$。</p>
+<p>思路：</p>
+<p>处理出前缀异或数组 $q$。</p>
+<p>如果 $q_i=q_j$，则区间是存在的。</p>
+<p>代码楼上楼下都已经写的很明白了，我就不在赘述了。</p>
+]]></content>
+  </entry>
+  <entry>
     <title>题解：CF1598D Training Session</title>
     <url>/2026/03/09/%E9%A2%98%E8%A7%A3%EF%BC%9ACF1598D-Training-Session/</url>
     <content><![CDATA[<p>题目翻译：</p>
@@ -705,84 +765,6 @@ $(S(fib(1))+S(fib(2))+S(fib(3))+…+S(fib(n))) % 9=(fib(1)+fib(2)+fib(3)+…+fid
 <p>一共有 $(x_{a_i}-1) \times (y_{b_i}-1)$。</p>
 <p>代码楼上楼下都已经写的很明白了，我就不在赘述了。</p>
 ]]></content>
-      <categories>
-        <category>题解</category>
-      </categories>
-      <tags>
-        <tag>题解</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>题解：CF1109A Sasha and a Bit of Relax</title>
-    <url>/2026/03/09/%E9%A2%98%E8%A7%A3%EF%BC%9ACF1109A-Sasha-and-a-Bit-of-Relax/</url>
-    <content><![CDATA[<p>翻译：</p>
-<p>求有多少个区间内的数异或值为 $0$。</p>
-<p>思路：</p>
-<p>处理出前缀异或数组 $q$。</p>
-<p>如果 $q_i=q_j$，则区间是存在的。</p>
-<p>代码楼上楼下都已经写的很明白了，我就不在赘述了。</p>
-]]></content>
-  </entry>
-  <entry>
-    <title>CSP 考场易错点</title>
-    <url>/2026/03/09/CSP-%E8%80%83%E5%9C%BA%E6%98%93%E9%94%99%E7%82%B9/</url>
-    <content><![CDATA[<h2 id="UB（未定义行为）">UB（未定义行为）</h2>
-<p>未定义行为就是你的代码出现了语言标准没有预料到的代码时，你的代码就会出现一些奇怪的错。</p>
-<p>有时你的评测是对的，而这种错误会在 CCF <s>垃圾</s>的评测环境中暴露出来，没注意到就会爆零。</p>
-<h3 id="printf">printf</h3>
-<p>你<strong>一定</strong>要看好你输出的和 <code>printf</code> 中的类型是否一样，不然程序会错。</p>
-<h3 id="有符号整数溢出也是未定义行为。">有符号整数溢出也是未定义行为。</h3>
-<h3 id="返回值非-void-函数一定要有返回！">返回值非 void 函数一定要有返回！</h3>
-<p>错误示范：</p>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">x</span><span class="params">(<span class="type">int</span> a)</span></span>&#123;cout&lt;&lt;a;&#125;</span><br></pre></td></tr></table></figure>
-<p>正确示范：</p>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">x</span><span class="params">(<span class="type">int</span> a)</span></span>&#123;cout&lt;&lt;a; <span class="keyword">return</span> <span class="number">1</span>；&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="数据结构-RE">数据结构 RE</h3>
-<p>vector 下标越界。</p>
-<p>vector、queue、deque、stack 等为空时进行 pop。</p>
-<h3 id="其它">其它</h3>
-<p>int,long long 除以 $0$ 或模 $0$ 也是未定义行为。</p>
-<h2 id="文件读写">文件读写</h2>
-<p><s>都是可以进迷惑行为大赏的。</s></p>
-<p>freopen：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">freopen(&quot;题目名.in&quot;,&quot;r&quot;,stdin);</span><br><span class="line">freopen(&quot;题目名.out&quot;,&quot;w&quot;,stdout);</span><br></pre></td></tr></table></figure>
-<p><code>&quot;r&quot;</code> 一定要用双引号！</p>
-<p>文件夹：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">|----- 考号</span><br><span class="line">  ｜----- T1名字</span><br><span class="line">    ｜----- T1名字.cpp</span><br><span class="line">  ｜----- T2名字</span><br><span class="line">    ｜----- T2名字.cpp</span><br><span class="line">  ｜----- T3名字</span><br><span class="line">    ｜----- T3名字.cpp</span><br><span class="line">  ｜----- T4名字</span><br><span class="line">    ｜----- T4名字.cpp</span><br></pre></td></tr></table></figure>
-<p>另外你需要注意文件的后缀名：</p>
-<p><img src="https://cdn.luogu.com.cn/upload/image_hosting/c9na8ao1.png" alt=""></p>
-<p>这里引用一些 @chenxi2009 的图，我是用 mac 的，拍不了。</p>
-<p>不然就可能出现 <code>duel.cpp.cpp</code> 的情况。</p>
-<p>还有文件名一定要检查是否跟题目一模一样！</p>
-<h2 id="define-int-long-long">#define int long long</h2>
-<p>是可以的<s>因为我用过</s>。</p>
-<p>CCF 下发的 pdf 文件中提到：主函数返回类型只能是 int。</p>
-<p>所以 signed main 行吗？</p>
-<p>但是 <code>signed=int=signed int</code>，可以的<s>因为我用过</s>。</p>
-<p>虽然可以用，但是有可能空间爆炸。</p>
-<h2 id="读入">读入</h2>
-<p>习惯用 <code>cin/cout</code> 的可以用 <code>ios::sync_with_stdio(false),cin.tie(0),cout.tie(0);</code></p>
-<p>爱用 <code>scanf/printf</code> 也可以，但是要注意类型是否正确。</p>
-]]></content>
-      <categories>
-        <category>算法·理论</category>
-      </categories>
-      <tags>
-        <tag>CSP</tag>
-        <tag>理论</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>题解：CF2086C Disappearing Permutation</title>
-    <url>/2026/03/09/%E9%A2%98%E8%A7%A3%EF%BC%9ACF2086C-Disappearing-Permutation/</url>
-    <content><![CDATA[<h2 id="题意">题意</h2>
-<p>给定两个排列 $p$ 和 $d$，第 $1 \le i \le n$ 次将 $p_{d_i}$  设为 0。</p>
-<p>然后进行操作，一次操作定义为指定一个 $i$，将 $a_i = i$，问最少多少次操作能将它复原为一个排列（可能与原排列相同）。</p>
-<h2 id="思路">思路</h2>
-<p>我一看，每次 $p_{i}$ 一定要做一次操作 $p_i=i$，那么 $p_{p_i}$ 也要操作，以此类推，直到 $p_k$ 等于 $k$。</p>
-<p>那就好办了，每次讲 $p_i$ 和 $i$ 连在一起，分成几个联通块，每次的答案就是联通块的大小。</p>
-<h2 id="code">code</h2>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> int long long</span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="type">int</span> T,n,p[<span class="number">100005</span>],d[<span class="number">100005</span>],f[<span class="number">100005</span>],sz[<span class="number">100005</span>],fg[<span class="number">100005</span>],ans;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">fd</span><span class="params">(<span class="type">int</span> x)</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(f[x]==x) <span class="keyword">return</span> x;</span><br><span class="line">    <span class="keyword">return</span> f[x]=<span class="built_in">fd</span>(f[x]);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">signed</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    cin&gt;&gt;T;</span><br><span class="line">    <span class="keyword">while</span>(T--)&#123;</span><br><span class="line">        cin&gt;&gt;n,ans=<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">1</span>;i&lt;=n;i++) f[i]=i,sz[i]=<span class="number">1</span>,fg[i]=<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">1</span>;i&lt;=n;i++)&#123;</span><br><span class="line">            cin&gt;&gt;p[i];</span><br><span class="line">            <span class="keyword">if</span>(<span class="built_in">fd</span>(p[i])!=<span class="built_in">fd</span>(i))</span><br><span class="line">                sz[<span class="built_in">fd</span>(i)]+=sz[<span class="built_in">fd</span>(p[i])],f[<span class="built_in">fd</span>(p[i])]=<span class="built_in">fd</span>(i);</span><br><span class="line">        &#125;<span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">1</span>;i&lt;=n;i++)&#123;</span><br><span class="line">            cin&gt;&gt;d[i];</span><br><span class="line">            <span class="keyword">if</span>(!fg[<span class="built_in">fd</span>(d[i])]) fg[<span class="built_in">fd</span>(d[i])]=<span class="number">1</span>,ans+=sz[<span class="built_in">fd</span>(d[i])];</span><br><span class="line">            cout&lt;&lt;ans&lt;&lt;<span class="string">&#x27; &#x27;</span>;</span><br><span class="line">        &#125;cout&lt;&lt;<span class="string">&#x27;\n&#x27;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>]]></content>
       <categories>
         <category>题解</category>
       </categories>
@@ -813,58 +795,39 @@ $(S(fib(1))+S(fib(2))+S(fib(3))+…+S(fib(n))) % 9=(fib(1)+fib(2)+fib(3)+…+fid
       </tags>
   </entry>
   <entry>
-    <title>题解：CF73C LionAge II</title>
-    <url>/2026/03/09/%E9%A2%98%E8%A7%A3%EF%BC%9ACF73C-LionAge-II/</url>
-    <content><![CDATA[<p>思路：</p>
-<p>$dp_{i,j,c}$ 它表示在前 $i$ 个字符中使用了 $j$ 次更改操作。</p>
-<p>并且最后一个字符是 $c$ 的情况下所能达到的最大美丽度。</p>
-<p>状态转移方程：</p>
-<p>如果 $m=s[i-1]- \texttt a $：$ dp_{i,j,m}=\max{dp_{i,j,m},dp_{i-1,j,q}+c_{q,m}}$</p>
-<p>如果 $m \ne s[i-1]-\texttt a$：$dp_{i,j,m}=\max{dp_{i,j,m},dp_{i-1,j-1,q}+c_{q,m}}$。</p>
-<p>代码：</p>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> int long long</span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="type">int</span> c[<span class="number">26</span>][<span class="number">26</span>],dp[<span class="number">105</span>][<span class="number">105</span>][<span class="number">26</span>],k,n,p,ans=INT_MIN;</span><br><span class="line">string s;</span><br><span class="line"><span class="type">char</span> x,y;</span><br><span class="line"><span class="function"><span class="type">signed</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">	cin&gt;&gt;s&gt;&gt;k&gt;&gt;n;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">1</span>;i&lt;=n;i++)&#123;</span><br><span class="line">		cin&gt;&gt;x&gt;&gt;y&gt;&gt;p;</span><br><span class="line">		c[x-<span class="string">&#x27;a&#x27;</span>][y-<span class="string">&#x27;a&#x27;</span>]=p;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">1</span>;i&lt;=s.<span class="built_in">size</span>();i++)</span><br><span class="line">		<span class="keyword">for</span>(<span class="type">int</span> m=<span class="number">0</span>;m&lt;<span class="number">26</span>;m++) dp[i][<span class="number">0</span>][m]=<span class="number">-1e9</span>;</span><br><span class="line">	dp[<span class="number">1</span>][<span class="number">0</span>][s[<span class="number">0</span>]-<span class="string">&#x27;a&#x27;</span>]=<span class="number">0</span>;</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">2</span>;i&lt;=s.<span class="built_in">size</span>();i++)</span><br><span class="line">		<span class="keyword">for</span>(<span class="type">int</span> j=<span class="number">0</span>;j&lt;=k;j++)</span><br><span class="line">			<span class="keyword">for</span>(<span class="type">int</span> m=<span class="number">0</span>;m&lt;<span class="number">26</span>;m++)</span><br><span class="line">				<span class="keyword">if</span>(m==s[i<span class="number">-1</span>]-<span class="string">&#x27;a&#x27;</span>)</span><br><span class="line">					<span class="keyword">for</span>(<span class="type">int</span> q=<span class="number">0</span>;q&lt;<span class="number">26</span>;q++) dp[i][j][m]=<span class="built_in">max</span>(dp[i][j][m],dp[i<span class="number">-1</span>][j][q]+c[q][m]);	</span><br><span class="line">				<span class="keyword">else</span> <span class="keyword">if</span>(j)</span><br><span class="line">					<span class="keyword">for</span>(<span class="type">int</span> q=<span class="number">0</span>;q&lt;<span class="number">26</span>;q++) dp[i][j][m]=<span class="built_in">max</span>(dp[i][j][m],dp[i<span class="number">-1</span>][j<span class="number">-1</span>][q]+c[q][m]);</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> m=<span class="number">0</span>;m&lt;<span class="number">26</span>;m++) ans=<span class="built_in">max</span>(ans,dp[s.<span class="built_in">size</span>()][k][m]);</span><br><span class="line">    cout&lt;&lt;ans&lt;&lt;endl;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>]]></content>
+    <title>题解：CF1526C1 Potions (Easy Version)</title>
+    <url>/2026/03/09/%E9%A2%98%E8%A7%A3%EF%BC%9ACF1526C1-Potions-Easy-Version/</url>
+    <content><![CDATA[<p>思路 1：</p>
+<p>使用动态规划算法，$f_i$ 是表示喝 $i$ 瓶药的最大值。</p>
+<p>可以得出：$f_j=\max(f_j,f_{j-1}+a_j)$。</p>
+<p>关键代码：</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">1</span>;i&lt;=n;i++)</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> j=i;j;j--)</span><br><span class="line">        <span class="keyword">if</span>(f[j<span class="number">-1</span>]+a[i]&gt;=<span class="number">0</span>)</span><br><span class="line">             f[j]=<span class="built_in">max</span>(f[j],f[j<span class="number">-1</span>]+a[i]);</span><br></pre></td></tr></table></figure>
+<p>时间复杂度：$O(n^2)$。</p>
+<p>思路 2：</p>
+<p>使用贪心算法+优先队列。</p>
+<p>先拼劲全力去喝，如果在这道题中喝药喝死了，我们就要将他把药吐出来。</p>
+<p>关键代码：</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">1</span>;i&lt;=n;i++)&#123;</span><br><span class="line">    sum+=f[i],q.<span class="built_in">push</span>(-f[i]);</span><br><span class="line">    <span class="keyword">if</span>(sum&lt;<span class="number">0</span>)&#123;</span><br><span class="line">        p=q.<span class="built_in">top</span>(),q.<span class="built_in">pop</span>();</span><br><span class="line">        p=-p,sum-=p,t++;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>时间复杂度：$O(n \log_2 n)$。</p>
+]]></content>
   </entry>
   <entry>
-    <title>题解：P10043 [CCPC 2023 北京市赛] 广播 </title>
-    <url>/2026/03/09/%E9%A2%98%E8%A7%A3%EF%BC%9AP10043-CCPC-2023-%E5%8C%97%E4%BA%AC%E5%B8%82%E8%B5%9B-%E5%B9%BF%E6%92%AD/</url>
-    <content><![CDATA[<p>线性 DP。</p>
-<p>不难想到 $dp_{i,j}$ 代表在 $a$ 中前 $i$ 个数和 $b$ 中前 $j$ 个数满足要求。</p>
-<p>状态转移方程是：</p>
-<p>边界：</p>
-<ol>
-<li>如果 $i=m$，$dp_{i,j+1}=\min{dp_{i,j}}$。</li>
-<li>如果 $j=n$，$dp_{i+1,j}=\min{dp_{i,j}}$。</li>
-</ol>
-<p>之后：</p>
-<ol>
-<li>$a_{i+1}=b_{j+1}$ 或者 $a_{i+1}=1$ 或者 $b_{j+1}=1$，$dp_{i+1,j+1}=\min{dp_{i,j}}$。</li>
-</ol>
-<p>最后 $dp_{i+1,j}=\min{dp_{i,j}+1},dp_{i,j+1}=\min{dp_{i,j}+1}$。</p>
-<p>代码楼上楼下都已经写的很明白了，我就不在赘述了。</p>
-]]></content>
+    <title>题解：CF2086C Disappearing Permutation</title>
+    <url>/2026/03/09/%E9%A2%98%E8%A7%A3%EF%BC%9ACF2086C-Disappearing-Permutation/</url>
+    <content><![CDATA[<h2 id="题意">题意</h2>
+<p>给定两个排列 $p$ 和 $d$，第 $1 \le i \le n$ 次将 $p_{d_i}$  设为 0。</p>
+<p>然后进行操作，一次操作定义为指定一个 $i$，将 $a_i = i$，问最少多少次操作能将它复原为一个排列（可能与原排列相同）。</p>
+<h2 id="思路">思路</h2>
+<p>我一看，每次 $p_{i}$ 一定要做一次操作 $p_i=i$，那么 $p_{p_i}$ 也要操作，以此类推，直到 $p_k$ 等于 $k$。</p>
+<p>那就好办了，每次讲 $p_i$ 和 $i$ 连在一起，分成几个联通块，每次的答案就是联通块的大小。</p>
+<h2 id="code">code</h2>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> int long long</span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="type">int</span> T,n,p[<span class="number">100005</span>],d[<span class="number">100005</span>],f[<span class="number">100005</span>],sz[<span class="number">100005</span>],fg[<span class="number">100005</span>],ans;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">fd</span><span class="params">(<span class="type">int</span> x)</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(f[x]==x) <span class="keyword">return</span> x;</span><br><span class="line">    <span class="keyword">return</span> f[x]=<span class="built_in">fd</span>(f[x]);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">signed</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    cin&gt;&gt;T;</span><br><span class="line">    <span class="keyword">while</span>(T--)&#123;</span><br><span class="line">        cin&gt;&gt;n,ans=<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">1</span>;i&lt;=n;i++) f[i]=i,sz[i]=<span class="number">1</span>,fg[i]=<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">1</span>;i&lt;=n;i++)&#123;</span><br><span class="line">            cin&gt;&gt;p[i];</span><br><span class="line">            <span class="keyword">if</span>(<span class="built_in">fd</span>(p[i])!=<span class="built_in">fd</span>(i))</span><br><span class="line">                sz[<span class="built_in">fd</span>(i)]+=sz[<span class="built_in">fd</span>(p[i])],f[<span class="built_in">fd</span>(p[i])]=<span class="built_in">fd</span>(i);</span><br><span class="line">        &#125;<span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">1</span>;i&lt;=n;i++)&#123;</span><br><span class="line">            cin&gt;&gt;d[i];</span><br><span class="line">            <span class="keyword">if</span>(!fg[<span class="built_in">fd</span>(d[i])]) fg[<span class="built_in">fd</span>(d[i])]=<span class="number">1</span>,ans+=sz[<span class="built_in">fd</span>(d[i])];</span><br><span class="line">            cout&lt;&lt;ans&lt;&lt;<span class="string">&#x27; &#x27;</span>;</span><br><span class="line">        &#125;cout&lt;&lt;<span class="string">&#x27;\n&#x27;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>]]></content>
       <categories>
         <category>题解</category>
       </categories>
       <tags>
         <tag>题解</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>题解：P10091 [ROIR 2022 Day 2] 分数排序 </title>
-    <url>/2026/03/09/%E9%A2%98%E8%A7%A3%EF%BC%9AP10091-ROIR-2022-Day-2-%E5%88%86%E6%95%B0%E6%8E%92%E5%BA%8F/</url>
-    <content><![CDATA[<p>思路：</p>
-<p>使用二分答案。</p>
-<p>二分答案分为两部分：<code>check</code> 函数和二分。</p>
-<p>二分楼上楼下都讲的很清楚了。</p>
-<p>本题解只讲 <code>check</code> 函数。</p>
-<p>首先：</p>
-<ol>
-<li>先给 $a,b$ 数组排序。</li>
-<li>总共有 $\Large \frac{a_i}{b_j}$ $&gt;$ $\Large \frac{a_i}{b_{j+1}}$ 和 $\Large \frac{a_i}{b_j}$ $&lt;$ $\Large \frac{a_i+1}{b_{j}}$。</li>
-<li>最后双指针维护即可。</li>
-</ol>
-<p>下放部分代码：</p>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">bool</span> <span class="title">check</span><span class="params">(<span class="type">double</span> k)</span></span>&#123;</span><br><span class="line">    <span class="type">int</span> j=<span class="number">0</span>,sum=<span class="number">0</span>;</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">1</span>;i&lt;=n;i++)&#123;</span><br><span class="line">		<span class="keyword">while</span>(a[j<span class="number">+1</span>]&lt;k*b[i]&amp;&amp;j&lt;n)j++;</span><br><span class="line">		sum+=j;</span><br><span class="line">	&#125;<span class="keyword">return</span> sum&gt;=q;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>]]></content>
   </entry>
   <entry>
     <title>题解：CF333B Chips</title>
@@ -941,21 +904,71 @@ $(S(fib(1))+S(fib(2))+S(fib(3))+…+S(fib(n))) % 9=(fib(1)+fib(2)+fib(3)+…+fid
       </tags>
   </entry>
   <entry>
-    <title>题解：CF1526C1 Potions (Easy Version)</title>
-    <url>/2026/03/09/%E9%A2%98%E8%A7%A3%EF%BC%9ACF1526C1-Potions-Easy-Version/</url>
-    <content><![CDATA[<p>思路 1：</p>
-<p>使用动态规划算法，$f_i$ 是表示喝 $i$ 瓶药的最大值。</p>
-<p>可以得出：$f_j=\max(f_j,f_{j-1}+a_j)$。</p>
-<p>关键代码：</p>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">1</span>;i&lt;=n;i++)</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> j=i;j;j--)</span><br><span class="line">        <span class="keyword">if</span>(f[j<span class="number">-1</span>]+a[i]&gt;=<span class="number">0</span>)</span><br><span class="line">             f[j]=<span class="built_in">max</span>(f[j],f[j<span class="number">-1</span>]+a[i]);</span><br></pre></td></tr></table></figure>
-<p>时间复杂度：$O(n^2)$。</p>
-<p>思路 2：</p>
-<p>使用贪心算法+优先队列。</p>
-<p>先拼劲全力去喝，如果在这道题中喝药喝死了，我们就要将他把药吐出来。</p>
-<p>关键代码：</p>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">1</span>;i&lt;=n;i++)&#123;</span><br><span class="line">    sum+=f[i],q.<span class="built_in">push</span>(-f[i]);</span><br><span class="line">    <span class="keyword">if</span>(sum&lt;<span class="number">0</span>)&#123;</span><br><span class="line">        p=q.<span class="built_in">top</span>(),q.<span class="built_in">pop</span>();</span><br><span class="line">        p=-p,sum-=p,t++;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>时间复杂度：$O(n \log_2 n)$。</p>
+    <title>题解：CF73C LionAge II</title>
+    <url>/2026/03/09/%E9%A2%98%E8%A7%A3%EF%BC%9ACF73C-LionAge-II/</url>
+    <content><![CDATA[<p>思路：</p>
+<p>$dp_{i,j,c}$ 它表示在前 $i$ 个字符中使用了 $j$ 次更改操作。</p>
+<p>并且最后一个字符是 $c$ 的情况下所能达到的最大美丽度。</p>
+<p>状态转移方程：</p>
+<p>如果 $m=s[i-1]- \texttt a $：$ dp_{i,j,m}=\max{dp_{i,j,m},dp_{i-1,j,q}+c_{q,m}}$</p>
+<p>如果 $m \ne s[i-1]-\texttt a$：$dp_{i,j,m}=\max{dp_{i,j,m},dp_{i-1,j-1,q}+c_{q,m}}$。</p>
+<p>代码：</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> int long long</span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="type">int</span> c[<span class="number">26</span>][<span class="number">26</span>],dp[<span class="number">105</span>][<span class="number">105</span>][<span class="number">26</span>],k,n,p,ans=INT_MIN;</span><br><span class="line">string s;</span><br><span class="line"><span class="type">char</span> x,y;</span><br><span class="line"><span class="function"><span class="type">signed</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">	cin&gt;&gt;s&gt;&gt;k&gt;&gt;n;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">1</span>;i&lt;=n;i++)&#123;</span><br><span class="line">		cin&gt;&gt;x&gt;&gt;y&gt;&gt;p;</span><br><span class="line">		c[x-<span class="string">&#x27;a&#x27;</span>][y-<span class="string">&#x27;a&#x27;</span>]=p;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">1</span>;i&lt;=s.<span class="built_in">size</span>();i++)</span><br><span class="line">		<span class="keyword">for</span>(<span class="type">int</span> m=<span class="number">0</span>;m&lt;<span class="number">26</span>;m++) dp[i][<span class="number">0</span>][m]=<span class="number">-1e9</span>;</span><br><span class="line">	dp[<span class="number">1</span>][<span class="number">0</span>][s[<span class="number">0</span>]-<span class="string">&#x27;a&#x27;</span>]=<span class="number">0</span>;</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">2</span>;i&lt;=s.<span class="built_in">size</span>();i++)</span><br><span class="line">		<span class="keyword">for</span>(<span class="type">int</span> j=<span class="number">0</span>;j&lt;=k;j++)</span><br><span class="line">			<span class="keyword">for</span>(<span class="type">int</span> m=<span class="number">0</span>;m&lt;<span class="number">26</span>;m++)</span><br><span class="line">				<span class="keyword">if</span>(m==s[i<span class="number">-1</span>]-<span class="string">&#x27;a&#x27;</span>)</span><br><span class="line">					<span class="keyword">for</span>(<span class="type">int</span> q=<span class="number">0</span>;q&lt;<span class="number">26</span>;q++) dp[i][j][m]=<span class="built_in">max</span>(dp[i][j][m],dp[i<span class="number">-1</span>][j][q]+c[q][m]);	</span><br><span class="line">				<span class="keyword">else</span> <span class="keyword">if</span>(j)</span><br><span class="line">					<span class="keyword">for</span>(<span class="type">int</span> q=<span class="number">0</span>;q&lt;<span class="number">26</span>;q++) dp[i][j][m]=<span class="built_in">max</span>(dp[i][j][m],dp[i<span class="number">-1</span>][j<span class="number">-1</span>][q]+c[q][m]);</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> m=<span class="number">0</span>;m&lt;<span class="number">26</span>;m++) ans=<span class="built_in">max</span>(ans,dp[s.<span class="built_in">size</span>()][k][m]);</span><br><span class="line">    cout&lt;&lt;ans&lt;&lt;endl;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>]]></content>
+  </entry>
+  <entry>
+    <title>题解：CF992B Nastya Studies Informatics</title>
+    <url>/2026/03/09/%E9%A2%98%E8%A7%A3%EF%BC%9ACF992B-Nastya-Studies-Informatics/</url>
+    <content><![CDATA[<p>首先，我们知道 $\operatorname{lcm}(x,y) \times \gcd(x,y)=a \times b$。</p>
+<p>之后，就可以构造了：</p>
+<p>因为 $a$ 一定要整除 $\operatorname{lcm}(a,b)$。</p>
+<p>再枚举 $\operatorname{lcm}(a,b)$ 的因数。</p>
+<p>每个因数就判断一下，加入答案。</p>
+<p>判断的代码：</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">bool</span> <span class="title">check</span><span class="params">(<span class="type">int</span> a)</span></span>&#123;</span><br><span class="line">	<span class="type">int</span> b=x*y/a;</span><br><span class="line">    <span class="keyword">return</span> !(a&lt;l||a&gt;r||b&lt;l||b&gt;r||__gcd(a,b)!=x);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>代码楼上楼下都已经写的很明白了，我就不在赘述了。</p>
 ]]></content>
+  </entry>
+  <entry>
+    <title>题解：P10043 [CCPC 2023 北京市赛] 广播 </title>
+    <url>/2026/03/09/%E9%A2%98%E8%A7%A3%EF%BC%9AP10043-CCPC-2023-%E5%8C%97%E4%BA%AC%E5%B8%82%E8%B5%9B-%E5%B9%BF%E6%92%AD/</url>
+    <content><![CDATA[<p>线性 DP。</p>
+<p>不难想到 $dp_{i,j}$ 代表在 $a$ 中前 $i$ 个数和 $b$ 中前 $j$ 个数满足要求。</p>
+<p>状态转移方程是：</p>
+<p>边界：</p>
+<ol>
+<li>如果 $i=m$，$dp_{i,j+1}=\min{dp_{i,j}}$。</li>
+<li>如果 $j=n$，$dp_{i+1,j}=\min{dp_{i,j}}$。</li>
+</ol>
+<p>之后：</p>
+<ol>
+<li>$a_{i+1}=b_{j+1}$ 或者 $a_{i+1}=1$ 或者 $b_{j+1}=1$，$dp_{i+1,j+1}=\min{dp_{i,j}}$。</li>
+</ol>
+<p>最后 $dp_{i+1,j}=\min{dp_{i,j}+1},dp_{i,j+1}=\min{dp_{i,j}+1}$。</p>
+<p>代码楼上楼下都已经写的很明白了，我就不在赘述了。</p>
+]]></content>
+      <categories>
+        <category>题解</category>
+      </categories>
+      <tags>
+        <tag>题解</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>题解：P10091 [ROIR 2022 Day 2] 分数排序 </title>
+    <url>/2026/03/09/%E9%A2%98%E8%A7%A3%EF%BC%9AP10091-ROIR-2022-Day-2-%E5%88%86%E6%95%B0%E6%8E%92%E5%BA%8F/</url>
+    <content><![CDATA[<p>思路：</p>
+<p>使用二分答案。</p>
+<p>二分答案分为两部分：<code>check</code> 函数和二分。</p>
+<p>二分楼上楼下都讲的很清楚了。</p>
+<p>本题解只讲 <code>check</code> 函数。</p>
+<p>首先：</p>
+<ol>
+<li>先给 $a,b$ 数组排序。</li>
+<li>总共有 $\Large \frac{a_i}{b_j}$ $&gt;$ $\Large \frac{a_i}{b_{j+1}}$ 和 $\Large \frac{a_i}{b_j}$ $&lt;$ $\Large \frac{a_i+1}{b_{j}}$。</li>
+<li>最后双指针维护即可。</li>
+</ol>
+<p>下放部分代码：</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">bool</span> <span class="title">check</span><span class="params">(<span class="type">double</span> k)</span></span>&#123;</span><br><span class="line">    <span class="type">int</span> j=<span class="number">0</span>,sum=<span class="number">0</span>;</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">1</span>;i&lt;=n;i++)&#123;</span><br><span class="line">		<span class="keyword">while</span>(a[j<span class="number">+1</span>]&lt;k*b[i]&amp;&amp;j&lt;n)j++;</span><br><span class="line">		sum+=j;</span><br><span class="line">	&#125;<span class="keyword">return</span> sum&gt;=q;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>]]></content>
   </entry>
   <entry>
     <title>题解：P10161 [DTCPC 2024] 小方的疑惑 10 </title>
@@ -976,19 +989,6 @@ $(S(fib(1))+S(fib(2))+S(fib(3))+…+S(fib(n))) % 9=(fib(1)+fib(2)+fib(3)+…+fid
       <tags>
         <tag>题解</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>题解：CF992B Nastya Studies Informatics</title>
-    <url>/2026/03/09/%E9%A2%98%E8%A7%A3%EF%BC%9ACF992B-Nastya-Studies-Informatics/</url>
-    <content><![CDATA[<p>首先，我们知道 $\operatorname{lcm}(x,y) \times \gcd(x,y)=a \times b$。</p>
-<p>之后，就可以构造了：</p>
-<p>因为 $a$ 一定要整除 $\operatorname{lcm}(a,b)$。</p>
-<p>再枚举 $\operatorname{lcm}(a,b)$ 的因数。</p>
-<p>每个因数就判断一下，加入答案。</p>
-<p>判断的代码：</p>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">bool</span> <span class="title">check</span><span class="params">(<span class="type">int</span> a)</span></span>&#123;</span><br><span class="line">	<span class="type">int</span> b=x*y/a;</span><br><span class="line">    <span class="keyword">return</span> !(a&lt;l||a&gt;r||b&lt;l||b&gt;r||__gcd(a,b)!=x);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>代码楼上楼下都已经写的很明白了，我就不在赘述了。</p>
-]]></content>
   </entry>
   <entry>
     <title>题解：P10414 [蓝桥杯 2023 国 A] 2023 次方 </title>
@@ -1016,6 +1016,30 @@ $(S(fib(1))+S(fib(2))+S(fib(3))+…+S(fib(n))) % 9=(fib(1)+fib(2)+fib(3)+…+fid
 <p>然后又用程序跑一遍，得出 $2^{273} \bmod =869$。</p>
 <p>所以答案是 $869$。</p>
 ]]></content>
+      <categories>
+        <category>题解</category>
+      </categories>
+      <tags>
+        <tag>题解</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>题解：P10492 Weather Forecast</title>
+    <url>/2026/03/09/%E9%A2%98%E8%A7%A3%EF%BC%9AP10492-Weather-Forecast/</url>
+    <content><![CDATA[<p>记忆化搜索+剪枝。</p>
+<p>记忆化，记录：</p>
+<ul>
+<li>目前到的点 $(x,y)$。</li>
+<li>天数 $day$。</li>
+<li>四个角的降雨量。</li>
+</ul>
+<p>剪枝：</p>
+<ol>
+<li>如果活动时下雨，直接剪掉。</li>
+<li>如果四个角没有下雨 $\ge 7$ 天，直接剪掉。因为四个角地方被覆盖的情况是最少的。</li>
+</ol>
+<p>代码:</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="type">int</span> n,a[<span class="number">405</span>][<span class="number">5</span>][<span class="number">5</span>],f[<span class="number">5</span>][<span class="number">5</span>][<span class="number">405</span>][<span class="number">8</span>][<span class="number">8</span>][<span class="number">8</span>][<span class="number">8</span>];</span><br><span class="line"><span class="type">int</span> dx[]=&#123;<span class="number">-1</span>,<span class="number">0</span>,<span class="number">-2</span>,<span class="number">0</span>,<span class="number">2</span>,<span class="number">0</span>,<span class="number">1</span>,<span class="number">0</span>,<span class="number">0</span>&#125;,dy[]=&#123;<span class="number">0</span>,<span class="number">-1</span>,<span class="number">0</span>,<span class="number">-2</span>,<span class="number">0</span>,<span class="number">2</span>,<span class="number">0</span>,<span class="number">1</span>,<span class="number">0</span>&#125;;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">dfs</span><span class="params">(<span class="type">int</span> x,<span class="type">int</span> y,<span class="type">int</span> day,<span class="type">int</span> ex,<span class="type">int</span> sx,<span class="type">int</span> ey,<span class="type">int</span> sy)</span></span>&#123;</span><br><span class="line">	<span class="keyword">if</span>(f[x][y][day][ex][sx][ey][sy]!=<span class="number">-1</span>)</span><br><span class="line">		<span class="keyword">return</span> f[x][y][day][ex][sx][ey][sy];</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i=x;i&lt;=x<span class="number">+1</span>;i++) <span class="keyword">for</span>(<span class="type">int</span> j=y;j&lt;=y<span class="number">+1</span>;j++)</span><br><span class="line">			<span class="keyword">if</span>(a[day][i][j]==<span class="number">1</span>) <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">	<span class="keyword">if</span>(ex&gt;=<span class="number">7</span>||sx&gt;=<span class="number">7</span>||ey&gt;=<span class="number">7</span>||sy&gt;=<span class="number">7</span>) <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">	<span class="keyword">if</span>(day==n) <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">	<span class="type">int</span> ans=<span class="number">0</span>;</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">0</span>;i&lt;<span class="number">9</span>;i++)&#123;</span><br><span class="line">		<span class="type">int</span> tx=x+dx[i],ty=y+dy[i];</span><br><span class="line">		<span class="keyword">if</span>(<span class="number">1</span>&lt;=tx&amp;&amp;tx&lt;=<span class="number">3</span>&amp;&amp;<span class="number">1</span>&lt;=ty&amp;&amp;ty&lt;=<span class="number">3</span>)&#123;</span><br><span class="line">			<span class="type">int</span> a,b,c,d;</span><br><span class="line">			<span class="keyword">if</span>(tx==<span class="number">1</span>&amp;&amp;ty==<span class="number">1</span>)a=<span class="number">0</span>;<span class="keyword">else</span> a=ex<span class="number">+1</span>;</span><br><span class="line">			<span class="keyword">if</span>(tx==<span class="number">3</span>&amp;&amp;ty==<span class="number">1</span>)b=<span class="number">0</span>;<span class="keyword">else</span> b=sx<span class="number">+1</span>;</span><br><span class="line">			<span class="keyword">if</span>(tx==<span class="number">1</span>&amp;&amp;ty==<span class="number">3</span>)c=<span class="number">0</span>;<span class="keyword">else</span> c=ey<span class="number">+1</span>;</span><br><span class="line">			<span class="keyword">if</span>(tx==<span class="number">3</span>&amp;&amp;ty==<span class="number">3</span>)d=<span class="number">0</span>;<span class="keyword">else</span> d=sy<span class="number">+1</span>;</span><br><span class="line">			ans|=<span class="built_in">dfs</span>(tx,ty,day<span class="number">+1</span>,a,b,c,d);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;<span class="keyword">if</span>(f[x][y][day][ex][sx][ey][sy]==<span class="number">-1</span>)</span><br><span class="line">		f[x][y][day][ex][sx][ey][sy]=ans;</span><br><span class="line">	<span class="keyword">return</span> ans;</span><br><span class="line">&#125;<span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">	<span class="keyword">while</span>(<span class="number">1</span>)&#123;</span><br><span class="line">		<span class="built_in">memset</span>(f,<span class="number">-1</span>,<span class="built_in">sizeof</span>(f)),cin&gt;&gt;n;</span><br><span class="line">		<span class="keyword">if</span>(n==<span class="number">0</span>) <span class="keyword">break</span>;</span><br><span class="line">		<span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">1</span>;i&lt;=n;i++) <span class="keyword">for</span>(<span class="type">int</span> j=<span class="number">1</span>;j&lt;=<span class="number">4</span>;j++)</span><br><span class="line">			<span class="keyword">for</span>(<span class="type">int</span> k=<span class="number">1</span>;k&lt;=<span class="number">4</span>;k++) cin&gt;&gt;a[i][j][k];</span><br><span class="line">		cout&lt;&lt;<span class="built_in">dfs</span>(<span class="number">2</span>,<span class="number">2</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>)&lt;&lt;<span class="string">&#x27;\n&#x27;</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>]]></content>
       <categories>
         <category>题解</category>
       </categories>
@@ -1053,6 +1077,32 @@ $(S(fib(1))+S(fib(2))+S(fib(3))+…+S(fib(n))) % 9=(fib(1)+fib(2)+fib(3)+…+fid
 <p>我们定义 $s_i$ 是点 $i$ 的老大的小弟数，$w$ 是 $a$ 到 $b$ 的边权。</p>
 <p>贡献和为：$(s_A×s_B−1) \times (w+1)$。</p>
 <p>代码楼上楼下都已经写的很明白了，我就不在赘述了。</p>
+]]></content>
+      <categories>
+        <category>题解</category>
+      </categories>
+      <tags>
+        <tag>题解</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>题解：P12131 [蓝桥杯 2025 省 B] 客流量上限 </title>
+    <url>/2026/03/09/%E9%A2%98%E8%A7%A3%EF%BC%9AP12131-%E8%93%9D%E6%A1%A5%E6%9D%AF-2025-%E7%9C%81-B-%E5%AE%A2%E6%B5%81%E9%87%8F%E4%B8%8A%E9%99%90/</url>
+    <content><![CDATA[<h2 id="思路">思路</h2>
+<p>因为对于任意分店 $i$ 和 $j(1\le i,j\le2025)$，它们的客流量上限 $A_i$ 和 $A_j$ 的乘积不得超过 $ij+2025$。</p>
+<p>所以，对于任意分店 $i$，$A_i\le\sqrt{i^2+2025}$。</p>
+<p>我们直接打表：</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">1</span>;i&lt;=<span class="number">2025</span>;i++) cout&lt;&lt;(<span class="type">int</span>)<span class="built_in">sqrt</span>(i*i<span class="number">+2025</span>)&lt;&lt;<span class="string">&#x27; &#x27;</span>;</span><br></pre></td></tr></table></figure>
+<p>发现在 $i\ge1013$ 时 $A_i \le i$。</p>
+<p>那么当 $1\le i&lt;1013\le j\le2025$ 时，$A_iA_j=A_ij,A_iA_j\le ij+2025$。</p>
+<p>两边同除 $j$：$A_i\le i+\frac{2025}{j}$。</p>
+<p>发现：$A_i\le i+\lfloor\frac{2025}{j}\rfloor$。</p>
+<p>由于 $1013\le j\le2025$，所以，$A_i\in[1,i+1]$。</p>
+<p>所以我们可以得出：</p>
+<p>$A_1$ 有 $2$ 种选择；</p>
+<p>$A_k$ 为了不与 $A_1$~$A_{k-1}$ 选的重复，总是有 $i+1-(i-1)=2$ 种选择。</p>
+<p>所以答案就是 $2^{1012}$。</p>
+<p>然后就是算了，快速幂和枚举都行。</p>
 ]]></content>
       <categories>
         <category>题解</category>
@@ -1130,6 +1180,26 @@ $(S(fib(1))+S(fib(2))+S(fib(3))+…+S(fib(n))) % 9=(fib(1)+fib(2)+fib(3)+…+fid
       </tags>
   </entry>
   <entry>
+    <title>题解：P6123 [NEERC2016] Hard Refactoring </title>
+    <url>/2026/03/09/%E9%A2%98%E8%A7%A3%EF%BC%9AP6123-NEERC2016-Hard-Refactoring/</url>
+    <content><![CDATA[<p>题意：</p>
+<p>把给定的区间合并成<strong>最简</strong>的形式。</p>
+<p>思路：</p>
+<p>可以用<strong>贪心</strong>的思想解此题：</p>
+<ol>
+<li>将所有给出的区间按小值的值从小到大排序。</li>
+<li>如果一个区间可以与上一个区间合并的，合并区间。</li>
+</ol>
+<p>特判：</p>
+<ol>
+<li>如一个区间为 $[-2<sup>{15},2</sup>{15}]$ 则输出 <code>true</code>。</li>
+<li>如没有合法的区间（即第一个数 $&gt;$ 第一个数）则输出 <code>false</code>。</li>
+<li>输出时，省略补全的数字。</li>
+</ol>
+<p>代码楼上楼下都已经写的很明白了，我就不赘述了。</p>
+]]></content>
+  </entry>
+  <entry>
     <title>题解：P14358 [CSP-J 2025] 座位 / seat（民间数据）</title>
     <url>/2026/03/09/%E9%A2%98%E8%A7%A3%EF%BC%9AP14358-CSP-J-2025-%E5%BA%A7%E4%BD%8D-seat%EF%BC%88%E6%B0%91%E9%97%B4%E6%95%B0%E6%8D%AE%EF%BC%89/</url>
     <content><![CDATA[<h2 id="前言">前言</h2>
@@ -1198,26 +1268,6 @@ $(S(fib(1))+S(fib(2))+S(fib(3))+…+S(fib(n))) % 9=(fib(1)+fib(2)+fib(3)+…+fid
 ]]></content>
   </entry>
   <entry>
-    <title>题解：P6123 [NEERC2016] Hard Refactoring </title>
-    <url>/2026/03/09/%E9%A2%98%E8%A7%A3%EF%BC%9AP6123-NEERC2016-Hard-Refactoring/</url>
-    <content><![CDATA[<p>题意：</p>
-<p>把给定的区间合并成<strong>最简</strong>的形式。</p>
-<p>思路：</p>
-<p>可以用<strong>贪心</strong>的思想解此题：</p>
-<ol>
-<li>将所有给出的区间按小值的值从小到大排序。</li>
-<li>如果一个区间可以与上一个区间合并的，合并区间。</li>
-</ol>
-<p>特判：</p>
-<ol>
-<li>如一个区间为 $[-2<sup>{15},2</sup>{15}]$ 则输出 <code>true</code>。</li>
-<li>如没有合法的区间（即第一个数 $&gt;$ 第一个数）则输出 <code>false</code>。</li>
-<li>输出时，省略补全的数字。</li>
-</ol>
-<p>代码楼上楼下都已经写的很明白了，我就不赘述了。</p>
-]]></content>
-  </entry>
-  <entry>
     <title>题解：P7900 [COCI 2006/2007 #2] SJECIŠTA </title>
     <url>/2026/03/09/%E9%A2%98%E8%A7%A3%EF%BC%9AP7900-COCI-2006-2007-2-SJECISTA/</url>
     <content><![CDATA[<h2 id="题意：">题意：</h2>
@@ -1231,30 +1281,6 @@ $(S(fib(1))+S(fib(2))+S(fib(3))+…+S(fib(n))) % 9=(fib(1)+fib(2)+fib(3)+…+fid
 <p>即在 $n$ 个点中<strong>选</strong> $4$ 个点。</p>
 <p>所以答案就是 $C^4_n$。</p>
 ]]></content>
-      <categories>
-        <category>题解</category>
-      </categories>
-      <tags>
-        <tag>题解</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>题解：P10492 Weather Forecast</title>
-    <url>/2026/03/09/%E9%A2%98%E8%A7%A3%EF%BC%9AP10492-Weather-Forecast/</url>
-    <content><![CDATA[<p>记忆化搜索+剪枝。</p>
-<p>记忆化，记录：</p>
-<ul>
-<li>目前到的点 $(x,y)$。</li>
-<li>天数 $day$。</li>
-<li>四个角的降雨量。</li>
-</ul>
-<p>剪枝：</p>
-<ol>
-<li>如果活动时下雨，直接剪掉。</li>
-<li>如果四个角没有下雨 $\ge 7$ 天，直接剪掉。因为四个角地方被覆盖的情况是最少的。</li>
-</ol>
-<p>代码:</p>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="type">int</span> n,a[<span class="number">405</span>][<span class="number">5</span>][<span class="number">5</span>],f[<span class="number">5</span>][<span class="number">5</span>][<span class="number">405</span>][<span class="number">8</span>][<span class="number">8</span>][<span class="number">8</span>][<span class="number">8</span>];</span><br><span class="line"><span class="type">int</span> dx[]=&#123;<span class="number">-1</span>,<span class="number">0</span>,<span class="number">-2</span>,<span class="number">0</span>,<span class="number">2</span>,<span class="number">0</span>,<span class="number">1</span>,<span class="number">0</span>,<span class="number">0</span>&#125;,dy[]=&#123;<span class="number">0</span>,<span class="number">-1</span>,<span class="number">0</span>,<span class="number">-2</span>,<span class="number">0</span>,<span class="number">2</span>,<span class="number">0</span>,<span class="number">1</span>,<span class="number">0</span>&#125;;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">dfs</span><span class="params">(<span class="type">int</span> x,<span class="type">int</span> y,<span class="type">int</span> day,<span class="type">int</span> ex,<span class="type">int</span> sx,<span class="type">int</span> ey,<span class="type">int</span> sy)</span></span>&#123;</span><br><span class="line">	<span class="keyword">if</span>(f[x][y][day][ex][sx][ey][sy]!=<span class="number">-1</span>)</span><br><span class="line">		<span class="keyword">return</span> f[x][y][day][ex][sx][ey][sy];</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i=x;i&lt;=x<span class="number">+1</span>;i++) <span class="keyword">for</span>(<span class="type">int</span> j=y;j&lt;=y<span class="number">+1</span>;j++)</span><br><span class="line">			<span class="keyword">if</span>(a[day][i][j]==<span class="number">1</span>) <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">	<span class="keyword">if</span>(ex&gt;=<span class="number">7</span>||sx&gt;=<span class="number">7</span>||ey&gt;=<span class="number">7</span>||sy&gt;=<span class="number">7</span>) <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">	<span class="keyword">if</span>(day==n) <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">	<span class="type">int</span> ans=<span class="number">0</span>;</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">0</span>;i&lt;<span class="number">9</span>;i++)&#123;</span><br><span class="line">		<span class="type">int</span> tx=x+dx[i],ty=y+dy[i];</span><br><span class="line">		<span class="keyword">if</span>(<span class="number">1</span>&lt;=tx&amp;&amp;tx&lt;=<span class="number">3</span>&amp;&amp;<span class="number">1</span>&lt;=ty&amp;&amp;ty&lt;=<span class="number">3</span>)&#123;</span><br><span class="line">			<span class="type">int</span> a,b,c,d;</span><br><span class="line">			<span class="keyword">if</span>(tx==<span class="number">1</span>&amp;&amp;ty==<span class="number">1</span>)a=<span class="number">0</span>;<span class="keyword">else</span> a=ex<span class="number">+1</span>;</span><br><span class="line">			<span class="keyword">if</span>(tx==<span class="number">3</span>&amp;&amp;ty==<span class="number">1</span>)b=<span class="number">0</span>;<span class="keyword">else</span> b=sx<span class="number">+1</span>;</span><br><span class="line">			<span class="keyword">if</span>(tx==<span class="number">1</span>&amp;&amp;ty==<span class="number">3</span>)c=<span class="number">0</span>;<span class="keyword">else</span> c=ey<span class="number">+1</span>;</span><br><span class="line">			<span class="keyword">if</span>(tx==<span class="number">3</span>&amp;&amp;ty==<span class="number">3</span>)d=<span class="number">0</span>;<span class="keyword">else</span> d=sy<span class="number">+1</span>;</span><br><span class="line">			ans|=<span class="built_in">dfs</span>(tx,ty,day<span class="number">+1</span>,a,b,c,d);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;<span class="keyword">if</span>(f[x][y][day][ex][sx][ey][sy]==<span class="number">-1</span>)</span><br><span class="line">		f[x][y][day][ex][sx][ey][sy]=ans;</span><br><span class="line">	<span class="keyword">return</span> ans;</span><br><span class="line">&#125;<span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">	<span class="keyword">while</span>(<span class="number">1</span>)&#123;</span><br><span class="line">		<span class="built_in">memset</span>(f,<span class="number">-1</span>,<span class="built_in">sizeof</span>(f)),cin&gt;&gt;n;</span><br><span class="line">		<span class="keyword">if</span>(n==<span class="number">0</span>) <span class="keyword">break</span>;</span><br><span class="line">		<span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">1</span>;i&lt;=n;i++) <span class="keyword">for</span>(<span class="type">int</span> j=<span class="number">1</span>;j&lt;=<span class="number">4</span>;j++)</span><br><span class="line">			<span class="keyword">for</span>(<span class="type">int</span> k=<span class="number">1</span>;k&lt;=<span class="number">4</span>;k++) cin&gt;&gt;a[i][j][k];</span><br><span class="line">		cout&lt;&lt;<span class="built_in">dfs</span>(<span class="number">2</span>,<span class="number">2</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>)&lt;&lt;<span class="string">&#x27;\n&#x27;</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>]]></content>
       <categories>
         <category>题解</category>
       </categories>
@@ -1283,31 +1309,5 @@ $(S(fib(1))+S(fib(2))+S(fib(3))+…+S(fib(n))) % 9=(fib(1)+fib(2)+fib(3)+…+fid
 <p>维护两个前缀和数组 $a,b$ (具体是什么见代码），$f_{i,j}=\max(f_{i-1,j}+a_{i,j},f_{i,j-1}+b_{i,j})$。</p>
 <p>代码：</p>
 <figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> int long long</span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="type">int</span> n,m,a[<span class="number">505</span>][<span class="number">505</span>],b[<span class="number">505</span>][<span class="number">505</span>],f[<span class="number">505</span>][<span class="number">505</span>];</span><br><span class="line"><span class="function"><span class="type">signed</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">	<span class="keyword">while</span>(<span class="number">1</span>)&#123;</span><br><span class="line">		cin&gt;&gt;n&gt;&gt;m;</span><br><span class="line">		<span class="keyword">if</span>(n==<span class="number">0</span>&amp;&amp;m==<span class="number">0</span>) <span class="keyword">break</span>;</span><br><span class="line">		<span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">1</span>;i&lt;=n;i++)</span><br><span class="line">			<span class="keyword">for</span>(<span class="type">int</span> j=<span class="number">1</span>;j&lt;=m;j++)</span><br><span class="line">				cin&gt;&gt;a[i][j],a[i][j]+=a[i][j<span class="number">-1</span>]; <span class="comment">//前缀和数组 a</span></span><br><span class="line">		<span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">1</span>;i&lt;=n;i++)</span><br><span class="line">			<span class="keyword">for</span>(<span class="type">int</span> j=<span class="number">1</span>;j&lt;=m;j++)</span><br><span class="line">				cin&gt;&gt;b[i][j],b[i][j]+=b[i<span class="number">-1</span>][j]; <span class="comment">//前缀和数组 b</span></span><br><span class="line">		<span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">1</span>;i&lt;=n;i++)</span><br><span class="line">			<span class="keyword">for</span>(<span class="type">int</span> j=<span class="number">1</span>;j&lt;=m;j++)</span><br><span class="line">				f[i][j]=<span class="built_in">max</span>(f[i<span class="number">-1</span>][j]+a[i][j],f[i][j<span class="number">-1</span>]+b[i][j]);</span><br><span class="line">		cout&lt;&lt;f[n][m]&lt;&lt;<span class="string">&#x27;\n&#x27;</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>]]></content>
-  </entry>
-  <entry>
-    <title>题解：P12131 [蓝桥杯 2025 省 B] 客流量上限 </title>
-    <url>/2026/03/09/%E9%A2%98%E8%A7%A3%EF%BC%9AP12131-%E8%93%9D%E6%A1%A5%E6%9D%AF-2025-%E7%9C%81-B-%E5%AE%A2%E6%B5%81%E9%87%8F%E4%B8%8A%E9%99%90/</url>
-    <content><![CDATA[<h2 id="思路">思路</h2>
-<p>因为对于任意分店 $i$ 和 $j(1\le i,j\le2025)$，它们的客流量上限 $A_i$ 和 $A_j$ 的乘积不得超过 $ij+2025$。</p>
-<p>所以，对于任意分店 $i$，$A_i\le\sqrt{i^2+2025}$。</p>
-<p>我们直接打表：</p>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">1</span>;i&lt;=<span class="number">2025</span>;i++) cout&lt;&lt;(<span class="type">int</span>)<span class="built_in">sqrt</span>(i*i<span class="number">+2025</span>)&lt;&lt;<span class="string">&#x27; &#x27;</span>;</span><br></pre></td></tr></table></figure>
-<p>发现在 $i\ge1013$ 时 $A_i \le i$。</p>
-<p>那么当 $1\le i&lt;1013\le j\le2025$ 时，$A_iA_j=A_ij,A_iA_j\le ij+2025$。</p>
-<p>两边同除 $j$：$A_i\le i+\frac{2025}{j}$。</p>
-<p>发现：$A_i\le i+\lfloor\frac{2025}{j}\rfloor$。</p>
-<p>由于 $1013\le j\le2025$，所以，$A_i\in[1,i+1]$。</p>
-<p>所以我们可以得出：</p>
-<p>$A_1$ 有 $2$ 种选择；</p>
-<p>$A_k$ 为了不与 $A_1$~$A_{k-1}$ 选的重复，总是有 $i+1-(i-1)=2$ 种选择。</p>
-<p>所以答案就是 $2^{1012}$。</p>
-<p>然后就是算了，快速幂和枚举都行。</p>
-]]></content>
-      <categories>
-        <category>题解</category>
-      </categories>
-      <tags>
-        <tag>题解</tag>
-      </tags>
   </entry>
 </search>
