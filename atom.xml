@@ -1,0 +1,432 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <author>
+    <name>heyZzz</name>
+  </author>
+  <generator uri="https://hexo.io/">Hexo</generator>
+  <id>https://heyzzz629.github.io/</id>
+  <link href="https://heyzzz629.github.io/" rel="alternate"/>
+  <link href="https://heyzzz629.github.io/atom.xml" rel="self"/>
+  <rights>All rights reserved 2026, heyZzz</rights>
+  <subtitle>My Blog</subtitle>
+  <title>heyZzz's OI Blog</title>
+  <updated>2026-03-13T13:50:53.537Z</updated>
+  <entry>
+    <author>
+      <name>heyZzz</name>
+    </author>
+    <content>
+      <![CDATA[<p><a href="https://www.luogu.com.cn/paste/dxzda6nw">题目</a></p><h2 id="T-1">T 1</h2><p>最小生成树。</p><h3 id="刚开始的解法">刚开始的解法</h3><p>忽略 $tol_a+tol_b$，零分。</p><h3 id="之后">之后</h3><p>设 $tol_x$ 为最小，向所有点建边。</p><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> axx=<span class="built_in">min_element</span>(tol<span class="number">+1</span>,tol+n<span class="number">+1</span>)-tol,tot2=<span class="number">0</span>;</span><br><span class="line"><span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">1</span>;i&lt;=n;i++) <span class="keyword">if</span>(i!=axx)&#123;</span><br><span class="line">    <span class="keyword">if</span>(mp[i*<span class="number">1000000</span>+axx]) tot2+=<span class="built_in">min</span>(tol[i]+tol[axx],mp[i*<span class="number">1000000</span>+axx]);</span><br><span class="line">    <span class="keyword">else</span> tot2+=tol[i]+tol[axx];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><h3 id="最后">最后</h3><p>要给整个图建如上的虚拟边：</p><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> axx=<span class="built_in">min_element</span>(tol<span class="number">+1</span>,tol+n<span class="number">+1</span>)-tol;</span><br><span class="line"><span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">1</span>;i&lt;=n;i++) <span class="keyword">if</span>(i!=axx)</span><br><span class="line">    a[++m]=&#123;i,axx,tol[i]+tol[axx]&#125;;</span><br></pre></td></tr></table></figure><p>只要跑个 kruskal 就行了。</p><h2 id="T-2">T 2</h2><p>暴力跑 dfs 回溯。</p><p>选择出这 $n$ 架飞机的降落顺序。</p><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">dfs</span><span class="params">(<span class="type">int</span> d)</span></span>&#123;</span><br><span class="line"><span class="keyword">if</span>(f) <span class="keyword">return</span>;</span><br><span class="line"><span class="keyword">if</span>(d&gt;n)&#123;</span><br><span class="line"><span class="type">int</span> ls=b[<span class="number">1</span>].t+b[<span class="number">1</span>].l,fg=<span class="number">1</span>;</span><br><span class="line"><span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">2</span>;i&lt;=n;i++)</span><br><span class="line"><span class="keyword">if</span>(ls&gt;b[i].d+b[i].t) fg=<span class="number">0</span>;</span><br><span class="line"><span class="keyword">else</span> <span class="keyword">if</span>(ls&gt;b[i].t) ls+=b[i].l;</span><br><span class="line"><span class="keyword">else</span> ls=b[i].l+b[i].t;</span><br><span class="line"><span class="keyword">if</span>(fg) f=<span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">1</span>;i&lt;=n;i++) <span class="keyword">if</span>(!vis[i]) vis[i]=<span class="number">1</span>,b[d]=a[i],<span class="built_in">dfs</span>(d<span class="number">+1</span>),vis[i]=<span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><h2 id="T-3">T 3</h2><p>因为 $0&lt;x\le1$，当 $N$ 到一定值时 $\sum_{i=1}<sup>{N}\frac{x</sup>{i}}{i}\le0.0001$。</p><p>经过粗略估计，$N\le10^5$。</p><p>所以当 $N\ge 10^5$ 时，就可以不算了。</p><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">n=<span class="built_in">min</span>(<span class="number">100000ll</span>,n);</span><br></pre></td></tr></table></figure><h2 id="T-4">T 4</h2><p>辗转相除。</p><p>如果 $y=0$ ，$\texttt{Ollie}$ 赢。</p><p>如果 $x / y \neq1$ ，$\texttt{Stan}$ 赢。</p><p>每一次跟辗转相除一样 $(y,x-y)$。</p><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">bool</span> <span class="title">ans</span><span class="params">(<span class="type">int</span> x,<span class="type">int</span> y)</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(!y) <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line"><span class="keyword">if</span>(x/y!=<span class="number">1</span>) <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line"><span class="keyword">return</span> !<span class="built_in">ans</span>(y,x-y);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><h2 id="T-5">T 5</h2><p>并查集。</p><p>Fd 函数寻找环的长度，更新最小值。</p><p>如果不是环，将 $f_i$ 更新为 $a_i$（加入环中）。</p><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">fd</span><span class="params">(<span class="type">int</span> x)</span></span>&#123;</span><br><span class="line">    cnt++;</span><br><span class="line">    <span class="keyword">if</span>(x==f[x]) <span class="keyword">return</span> x;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">fd</span>(f[x]);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(<span class="built_in">fd</span>(a[i])==i) ans=<span class="built_in">min</span>(ans,cnt);</span><br><span class="line"><span class="keyword">else</span> f[i]=a[i];</span><br></pre></td></tr></table></figure><h2 id="T-6">T 6</h2><p>深度为偶数判红，奇数判蓝，其他为灰色。</p><p>用 dfs 遍历即可。</p><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">dfs</span><span class="params">(<span class="type">int</span> x,<span class="type">int</span> dep)</span></span>&#123;</span><br><span class="line">vis[x]=<span class="number">1</span>;</span><br><span class="line"><span class="keyword">for</span>(<span class="type">int</span> y:v[x])&#123;</span><br><span class="line"><span class="keyword">if</span>(vis[y]) <span class="keyword">continue</span>;</span><br><span class="line">ma[<span class="built_in">make_pair</span>(<span class="built_in">max</span>(x,y),<span class="built_in">min</span>(x,y))]=(dep&amp;<span class="number">1</span>)<span class="number">+1</span>;</span><br><span class="line"><span class="built_in">dfs</span>(y,dep<span class="number">+1</span>);</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><h2 id="T-7">T 7</h2><p>首先横着和竖着是一定要切的。</p><p>在选横竖中最小的一个就行了：</p><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">1</span>;i&lt;n;i++)</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> j=<span class="number">1</span>;j&lt;m;j++)</span><br><span class="line">        ans+=<span class="built_in">min</span>(a[i],b[j]);</span><br></pre></td></tr></table></figure><h2 id="T-8">T 8</h2><p>每一次单行/列修改只有对角线的真正改了。</p><p>只要统计 $i=j$ 的情况就行了。</p><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(i==j) ans=(ans+t)&amp;<span class="number">1</span>;</span><br></pre></td></tr></table></figure><h2 id="T-9">T 9</h2><p>打表。</p><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(i/<span class="number">1</span>%<span class="number">10</span>==<span class="number">4</span>) i+=<span class="number">5</span>;</span><br><span class="line"><span class="keyword">if</span>(i/<span class="number">10</span>%<span class="number">10</span>==<span class="number">4</span>) i+=<span class="number">59</span>;</span><br><span class="line"><span class="keyword">if</span>(i/<span class="number">100</span>%<span class="number">10</span>==<span class="number">4</span>) i+=<span class="number">599</span>;</span><br><span class="line"><span class="keyword">if</span>(i/<span class="number">1000</span>%<span class="number">10</span>==<span class="number">4</span>) i+=<span class="number">5999</span>;</span><br><span class="line"><span class="keyword">if</span>(i/<span class="number">10000</span>%<span class="number">10</span>==<span class="number">4</span>) i+=<span class="number">59999</span>;</span><br><span class="line"><span class="keyword">if</span>(i/<span class="number">100000</span>%<span class="number">10</span>==<span class="number">4</span>) i+=<span class="number">599999</span>;</span><br><span class="line"><span class="keyword">if</span>(i/<span class="number">1000000</span>%<span class="number">10</span>==<span class="number">4</span>) i+=<span class="number">5999999</span>;</span><br><span class="line"><span class="keyword">if</span>(i/<span class="number">10000000</span>%<span class="number">10</span>==<span class="number">4</span>) i+=<span class="number">59999999</span>;</span><br><span class="line"><span class="keyword">if</span>(i/<span class="number">100000000</span>%<span class="number">10</span>==<span class="number">4</span>) i+=<span class="number">599999999</span>;</span><br></pre></td></tr></table></figure><p>统计 $i^2$，$i$，判断 $S(i^2)$ 是否等于 $S(i)^2$。</p><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> a=<span class="number">0</span>,b=<span class="number">0</span>,c=i,d=i*i;</span><br><span class="line"><span class="keyword">while</span>(c&gt;<span class="number">0</span>) a+=c%<span class="number">10</span>,c/=<span class="number">10</span>;</span><br><span class="line">a=a*a;</span><br><span class="line"><span class="keyword">while</span>(d&gt;<span class="number">0</span>) b+=d%<span class="number">10</span>,d/=<span class="number">10</span>;</span><br><span class="line"><span class="keyword">if</span>(a==b) ans++;</span><br></pre></td></tr></table></figure><h2 id="T-10">T 10</h2><p>经过分析可得：</p><p>当 $\min{p_1,p_2…p_n} \le 300$：</p><p>就用普通的背包即可。</p><p>当 $\min{p_1,p_2…p_n} &gt; 300$：</p><p>剩下的不需要循环到 $W$，只用到 $W/\max{p_1,p_2…p_n}$ 即可。</p><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">1</span>;i&lt;=n;i++) mx=<span class="built_in">max</span>(v[i],mx),mn=<span class="built_in">min</span>(mn,v[i]);</span><br><span class="line"><span class="keyword">if</span>(mn&lt;=<span class="number">300</span>)&#123;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">1</span>;i&lt;=n;i++)</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> j=w;j&gt;=v[i];j--) f[j]=<span class="built_in">max</span>(f[j],f[j-v[i]]+p[i]);</span><br><span class="line">    cout&lt;&lt;f[w];</span><br><span class="line">&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">1</span>;i&lt;=n;i++)</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> j=w/mx;j&gt;=<span class="number">1</span>;j--) f[j]=<span class="built_in">max</span>(f[j],f[j<span class="number">-1</span>]+p[i]);</span><br><span class="line">    cout&lt;&lt;f[w/mx];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><h2 id="T-11">T 11</h2><p>约束条件：</p><p>一式：$x_a&lt;x_b&lt;x_c&lt;x_d$</p><p>二式：$x_b−x_a=2*(x_d−x_c)$</p><p>三式：$x_b−x_a&lt;(x_c−x_b)/3$</p><h3 id="暴力">暴力</h3><h3 id="枚举，-O-n-4">枚举，$O(n^4)$</h3><p>枚举 $x_a,x_b,x_c,x_d$</p><h3 id="加一点优化，-O-n-3">加一点优化，$O(n^3):$</h3><p>通过二式：枚举 $x_a,x_c,(x_d-x_c)$</p><p>可得 $x_d=(x_d-x_c)+x_c,x_b=2*(x_d−x_c)+x_a$</p><h3 id="正解">正解</h3><p>将二式代入三式：$2*(x_d-x_c)&lt;(x_c-x_b)/3$</p><p>移项：$6*(x_d-x_c)&lt;x_c-x_d$</p><p>得到：$6*(x_d-x_c)+k=x_c-x_d$</p><p>成下图：</p><p><img src="https://i.loli.net/2018/08/01/5b61a76bf30ff.png" alt=""></p><p>其中：$a≤1,d≤n$</p><p>而 $a-d=9t+1$，</p><p>所以：$9t+1≤n$, 得到 $t≤(n-1)/9$</p><p>观察到在其他条件不变的情况下，</p><p>只要 $c$ 和 $b$ 满足 $x_c−x_b&gt;6t$,</p><p>那么这个魔法阵就一定成立。</p><p>所以当 $(a_1&lt;a_2,b_1&lt;b_2)$ 时，</p><p>只要 $a_1$ 和 $b_2$ 能够和 $c,d$ 组成魔法阵，</p><p>$a_1,b_1$ 也一定能和 $c,d$ 组成魔法阵，所以可以使用前缀和优化</p><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">1</span>;i&lt;=n/<span class="number">9</span>;i++)&#123;</span><br><span class="line">    x=<span class="number">1</span><span class="number">+9</span>*i,y=<span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> j=<span class="number">2</span><span class="number">+9</span>*i;j&lt;=n;j++) y+=w[j-x]*w[j-x+i+i],d[j]+=y*w[j-i],c[j-i]+=y*w[j];</span><br><span class="line">    x=<span class="number">8</span>*i<span class="number">+1</span>,y=<span class="number">0</span>;  </span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> j=n<span class="number">-9</span>*i<span class="number">-1</span>;j&gt;=<span class="number">1</span>;j--) y+=w[j+x]*w[j+x+i],a[j]+=y*w[j+i+i],b[j+i+i]+=y*w[j];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><h2 id="T-12">T 12</h2><p>难点：需要用滚动数组优化。</p><p>定义 $dp_j$ 为当前猴子爬前 $j$ 棵树所消耗的最小能量值</p><p>$dp_j=\min{dp_j,dp_{j-1}}+|a_i-b_j|$</p><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(j==<span class="number">1</span>) dp[j]=dp[j]+<span class="built_in">abs</span>(a[i]-b[j]);</span><br><span class="line"><span class="keyword">else</span> <span class="keyword">if</span>(i==j) dp[j]=dp[j<span class="number">-1</span>]+<span class="built_in">abs</span>(a[i]-b[j]);</span><br><span class="line"><span class="keyword">else</span> dp[j]=<span class="built_in">min</span>(dp[j],dp[j<span class="number">-1</span>])+<span class="built_in">abs</span>(a[i]-b[j]);</span><br></pre></td></tr></table></figure><h2 id="T-13">T 13</h2><p>难点：排序。</p><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">stu</span>&#123; <span class="type">int</span> a,b,c; &#125;a[<span class="number">100005</span>];</span><br><span class="line"><span class="function"><span class="type">bool</span> <span class="title">cmp</span><span class="params">(stu x,stu y)</span></span>&#123; <span class="keyword">return</span> -y.b*x.c&gt;-x.b*y.c; &#125;</span><br></pre></td></tr></table></figure><p>之后一个 01 背包就行了。</p><h2 id="T-14">T 14</h2><p>模拟，差分。</p><p>分两段，从站 $x$ 到站 $n$ 再从站 $1$ 到站 $y$。</p><p>注：$s_i$ 是差分数组。</p><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(b&lt;e) s[b]+=p,s[e]-=p;</span><br><span class="line"><span class="keyword">else</span> s[b]+=p,s[<span class="number">1</span>]+=p,s[e]-=p;</span><br></pre></td></tr></table></figure><p>之后查一下 $\left\lceil\dfrac{s_i}{36}\right\rceil$。</p><h2 id="T-15">T 15</h2><p>我们发现 $S(fib(x))%9=fib(x)%9$</p><p>所以<br>$(S(fib(1))+S(fib(2))+S(fib(3))+…+S(fib(n))) % 9=(fib(1)+fib(2)+fib(3)+…+fid(n)) % 9$<br>代码：</p><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> int long long</span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="type">int</span> f[<span class="number">1000005</span>]=&#123;<span class="number">0</span>,<span class="number">1</span>,<span class="number">1</span>&#125;,ans[<span class="number">1000005</span>]=&#123;<span class="number">0</span>,<span class="number">1</span>,<span class="number">2</span>&#125;,t,n;</span><br><span class="line"><span class="function"><span class="type">signed</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line"><span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">3</span>;i&lt;=<span class="number">1000000</span>;i++)&#123;</span><br><span class="line">f[i]=(f[i<span class="number">-1</span>]+f[i<span class="number">-2</span>])%<span class="number">9</span>;</span><br><span class="line">ans[i]=(ans[i<span class="number">-1</span>]+f[i])%<span class="number">9</span>;</span><br><span class="line">&#125;</span><br><span class="line">cin&gt;&gt;t;</span><br><span class="line"><span class="keyword">while</span>(t--) cin&gt;&gt;n,cout&lt;&lt;ans[n]&lt;&lt;<span class="string">&#x27;\n&#x27;</span>;</span><br><span class="line"><span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><h2 id="T-15-2">T 15</h2><ol><li>把  $a_i$ 排序，方便从小到大扫</li><li>用栈进行操作，如果一个位置k上面有数 $a_i=k$，那么就把所有 $=k$  的数字入栈。再把栈顶出栈，填到这个位置上，记录下 $dis=pop−push$</li><li>对 dis 进行小到大排序，把 b 数组进行大到小排序，算出答案是 $\sum dis×b_i$</li></ol><h2 id="T-16">T 16</h2><p>因为我们要这个正整数尽量大，所以我们要把花瓣变成从 $1$ 开始的连续正整数，且长度尽量大。</p><p>如果这些选中的堆拿出花瓣的和已经超过了需要的个数或选中的堆拿出花瓣的和加上未选堆花瓣的和还不够组成新堆，都是不行的。</p><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sort</span>(a<span class="number">+1</span>,a+n<span class="number">+1</span>);</span><br><span class="line"><span class="type">int</span> cnt1=<span class="number">0</span>,cnt=<span class="number">0</span>,v=<span class="number">1</span>;</span><br><span class="line"><span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">1</span>;i&lt;=n;i++)&#123;</span><br><span class="line"><span class="keyword">if</span>(a[i]&lt;v)&#123;</span><br><span class="line">cnt1=cnt1+(a[i]<span class="number">-1</span>);</span><br><span class="line"><span class="keyword">continue</span>;</span><br><span class="line">&#125;</span><br><span class="line">cnt+=(a[i]-v),v++;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">if</span>(cnt&gt;v) cout&lt;&lt;v&lt;&lt;<span class="string">&#x27;\n&#x27;</span>;</span><br><span class="line"><span class="keyword">else</span> <span class="keyword">if</span>(cnt+cnt1&gt;=v) cout&lt;&lt;v<span class="number">+1</span>&lt;&lt;<span class="string">&#x27;\n&#x27;</span>;</span><br><span class="line"><span class="keyword">else</span> cout&lt;&lt;v&lt;&lt;<span class="string">&#x27;\n&#x27;</span>;</span><br></pre></td></tr></table></figure><h2 id="T-17">T 17</h2><p>逆序对。</p><h2 id="T-18">T 18</h2><p>模拟。</p><h2 id="T-19">T 19</h2><p>求拓扑序。</p><p>注意一个点不算环。</p><h2 id="T-20">T 20</h2><p>双指针+前缀和。</p><h2 id="T-21">T 21</h2><p>若当前这只蚂蚁左边的蚂蚁数量等于右边的蚂蚁数量，答案即为这两数之和。</p><p>若左边的蚂蚁数量大于右边的蚂蚁数量时，且当前这只蚂蚁面向左，答案为右边蚂蚁数的两倍，否则多一只。</p><p>若左边的蚂蚁数量小于右边的蚂蚁数量，且当前这只蚂蚁面向右，答案为左边蚂蚁数量的两倍，否则多一只。</p><h2 id="T-22">T 22</h2><p>逆序对。</p><h2 id="T-23">T 23</h2><p>线段树。</p><p>主墓碑就是 $[1,1]$ 。</p>]]>
+    </content>
+    <id>https://heyzzz629.github.io/2026/03/10/12-19-12-31%E5%86%99%E9%A2%98%E6%8A%A5%E5%91%8A/</id>
+    <link href="https://heyzzz629.github.io/2026/03/10/12-19-12-31%E5%86%99%E9%A2%98%E6%8A%A5%E5%91%8A/"/>
+    <published>2026-03-10T08:19:55.000Z</published>
+    <summary>
+      <![CDATA[<p><a href="https://www.luogu.com.cn/paste/dxzda6nw">题目</a></p>
+<h2 id="T-1">T 1</h2>
+<p>最小生成树。</p>
+<h3 id="刚开始的解法">刚开始的解法</h3>
+<p>忽略 $tol_a]]>
+    </summary>
+    <title>12.19~12.31写题报告</title>
+    <updated>2026-03-13T13:50:53.537Z</updated>
+  </entry>
+  <entry>
+    <author>
+      <name>heyZzz</name>
+    </author>
+    <category term="休闲·娱乐" scheme="https://heyzzz629.github.io/categories/%E4%BC%91%E9%97%B2%C2%B7%E5%A8%B1%E4%B9%90/"/>
+    <category term="娱乐" scheme="https://heyzzz629.github.io/tags/%E5%A8%B1%E4%B9%90/"/>
+    <content>
+      <![CDATA[<p>家长直呼太暴力！这些算法可能会被删除</p><p>近日，洛谷网络科技有限公司多位用户家长向 @kkksc03 反映，部分算法存在血腥、暴力等不利于青少年儿童的因素出现，要求对相关算法进行整改或被删除。 洛谷网络科技有限公司题目组管理员在接受采访时说道，在最近几天内，洛谷收到了数十条家长来信，声称网站教授的部分算法存在“血腥”、“暴力”等内容。“他们说这些东西会教坏他们家的孩子，要求我们整改这些算法，把这些对小朋友不太好的东西删掉，或者直接把算法删除。”</p><p>随着国庆的到来，很多家长直接来到洛谷反映情况。记者在现场随机采访了几位家长，询问他们对这些算法的看法。</p><p>刘女士的儿子正在洛谷学习普及组内容。在采访中刘女士告诉记者，希望洛谷停开匈牙利算法。“我看里面讲的都是些一一匹配啊、二分图啊之类的匹配问题，这不是教孩子怎么找npy么？那他以后岂不是学会早恋了？”王先生也有类似的想法。他要求洛谷整改月赛内容。“听说课程里面有‘选妹子’，要是小朋友被女拳打了该怎么办？太危险了！”</p><p>认为数据结构太危险、容易伤到孩子，是很多家长的共同心声。王大爷今年已经六十多岁了，却依然专程跑到学校，高呼停止教授Splay树和Treap树。他说，自家的孙子很小的时候撞到树上过，他担心这两棵树会给孩子造成心理阴影。 此外，最大流、费用流等算法也遭到了部分家长的抵制。“主要还是玩水安全嘛”，陈女士说，“孩子们看到这些流啊、流量啊、回家就很可能会下水去游泳，我们当家长的还是不放心嘛。”而张先生的态度则更为坚决：“现在就敢玩水，将来敢玩什么，我都不敢想了！”</p><p>同样作为算法，《深入浅出程序设计竞赛》受到抵制的理由则有很大不同。吴先生告诉记者：“主要是，这个（深入浅出程序设计竞赛的教材）太厚了，得有好几斤重，网上小孩子如果嬉戏打闹，拿着这本书到处乱甩（的话），非常危险。要是碰到头的话，那肯定会把头磕破的，你说这个责任由谁来承担？”</p><p>在众多算法中，家长抵制呼声最高的则是图论算法。在家长看来，有的算法要找环，会绕晕到孩子；画图用的笔可能会戳伤手指；很多算法在搜索的时候可能会把系统栈用爆；有些算法写错了要输中量参解改很久，可能会累到小朋友，“把我家小孩累死了该怎么办？”</p><p>除了担心孩子们的安全外，对孩子生活习惯的影响也成为了家长们抵制课程的要素之一。叶女士告诉记者，她希望洛谷整改全部英语题面。叶女士的儿子才考普及组，却已经学会了sh*t，fk等高级词汇。“孩子现在出口就是这种词，影响很不好，肯定是洛谷的题面教的。”叶女士说。</p><p>同样，李先生对于洛谷的bfs, dfs, bdfs算法也颇有微词。“我们还是想给孩子营造一个健康的成长环境嘛，我看课上，居然让小朋友们去暴力遍历图啊、暴力找答案啊，这不是教小朋友们暴力么？平时打打杀杀的动画片我都不让自家小孩看，更不要说动手去做这些了。”</p><p>此外，一些非盈利机构也遭到了家长的抵制。很多家长认为，玩电脑是影响自家小孩学习的关键原因，因此强烈要求洛谷取缔 F ，并取消相关竞赛。 N**P 首当其冲，周先生接受采访时说道：“听说这门课要学生们自己学习算法，要是真把算法学好了，不就会有更多小朋友沉迷电脑么？如果他们不学算法的话，我们的小孩就不会这么贪玩电脑了。”同样，一些家长也对浏览器表示不满：“没有浏览器，小朋友们自然就不会沉迷上网了。”</p><p>让记者感到惊奇的是，很多家长对一些计算机基础数学内容也有较大的意见。部分家长要求下架《组合数学》 《混凝土数学》等课程。在问及原因时，家长告诉记者，文中的感叹号很像一根棍子，会引发小朋友的暴力倾向。</p><p>针对此事，记者尝试联络洛谷网络科技有限公司的管理员。管理员回复称，@kkksc03 校长正在忙于建设世界一流 OJ，暂未就此事件给予答复。</p><p>不过，也有少数家长对一些算法表示支持。一位家长告诉记者，希望学校着力建设《编程语言基础》课程。“孩子如果在学校学好语言这些东西的话，回让他搬砖的时候应该能更好一些。”</p>]]>
+    </content>
+    <id>https://heyzzz629.github.io/2026/03/10/%E6%90%9E%E7%AC%91/</id>
+    <link href="https://heyzzz629.github.io/2026/03/10/%E6%90%9E%E7%AC%91/"/>
+    <published>2026-03-10T08:09:04.000Z</published>
+    <summary>
+      <![CDATA[<p>家长直呼太暴力！这些算法可能会被删除</p>
+<p>近日，洛谷网络科技有限公司多位用户家长向 @kkksc03 反映，部分算法存在血腥、暴力等不利于青少年儿童的因素出现，要求对相关算法进行整改或被删除。 洛谷网络科技有限公司题目组管理员在接受采访时说道，在最近几天内，洛谷收]]>
+    </summary>
+    <title>搞笑</title>
+    <updated>2026-03-13T13:50:53.539Z</updated>
+  </entry>
+  <entry>
+    <author>
+      <name>heyZzz</name>
+    </author>
+    <category term="算法·理论" scheme="https://heyzzz629.github.io/categories/%E7%AE%97%E6%B3%95%C2%B7%E7%90%86%E8%AE%BA/"/>
+    <category term="ST 表" scheme="https://heyzzz629.github.io/tags/ST-%E8%A1%A8/"/>
+    <category term="RMQ 问题" scheme="https://heyzzz629.github.io/tags/RMQ-%E9%97%AE%E9%A2%98/"/>
+    <category term="算法" scheme="https://heyzzz629.github.io/tags/%E7%AE%97%E6%B3%95/"/>
+    <content>
+      <![CDATA[<h2 id="ST表">ST表</h2><p>ST表它是解决 RMQ 问题（区间最值问题）的一种强有力的工具。</p><p>时间复杂度为 $O(n \log n+Q)$。</p><h3 id="实现过程">实现过程</h3><p>PS：以下讨论的是最大值，最小值同理。</p><p>建立一个 $dp$ 数组 $dp_{i,j}$ 表示从 $i$ 开始 $2^j$ 个数中的最大值。</p><p>边界为 $dp_{i,0}=a_i$，即从 $i$ 点开始 $2^0$ 个数中的最大值。</p><p>我们不难发现 $\max{\max{a_1 … a_{\frac{n}{2}}},\max{a_{\frac{n}{2}} … a_n}}}=\max{a_1…a_n}$。</p><p>那状态转移方程为：</p><p>$dp_{i,j}=\max{dp_{i,j-1},dp_{i+2^{j-1},j-1}}$。</p><p>其中 $dp_{i,j-1}$ 是前面一段，$dp_{i+2^{j-1},j-1}$ 是后面一段。</p><h2 id="求最值">求最值</h2><p>将该区间分成两个ST表，然后直接维护的小区间，然后二者求最值即可。</p><p>就是：$\max{f_{l,k},f[r−(2^k)+1][k]}$。</p>]]>
+    </content>
+    <id>https://heyzzz629.github.io/2026/03/09/ST%E8%A1%A8/</id>
+    <link href="https://heyzzz629.github.io/2026/03/09/ST%E8%A1%A8/"/>
+    <published>2026-03-09T12:44:44.000Z</published>
+    <summary>
+      <![CDATA[<h2 id="ST表">ST表</h2>
+<p>ST表它是解决 RMQ 问题（区间最值问题）的一种强有力的工具。</p>
+<p>时间复杂度为 $O(n \log n+Q)$。</p>
+<h3 id="实现过程">实现过程</h3>
+<p>PS：以下讨论的是最大值，最小值同理。<]]>
+    </summary>
+    <title>ST表</title>
+    <updated>2026-03-13T13:50:53.539Z</updated>
+  </entry>
+  <entry>
+    <author>
+      <name>heyZzz</name>
+    </author>
+    <category term="算法·理论" scheme="https://heyzzz629.github.io/categories/%E7%AE%97%E6%B3%95%C2%B7%E7%90%86%E8%AE%BA/"/>
+    <category term="算法" scheme="https://heyzzz629.github.io/tags/%E7%AE%97%E6%B3%95/"/>
+    <category term="哈夫曼树与哈夫曼编码" scheme="https://heyzzz629.github.io/tags/%E5%93%88%E5%A4%AB%E6%9B%BC%E6%A0%91%E4%B8%8E%E5%93%88%E5%A4%AB%E6%9B%BC%E7%BC%96%E7%A0%81/"/>
+    <content>
+      <![CDATA[<h1>哈夫曼树：</h1><p>哈夫曼树可由如下方式构造：</p><ol><li>由给定的 $n$ 个权值构造 $n$ 棵仅含有一个根结点的二叉树，记作集合 $F$。</li><li>从集合 $F$ 中选取根结点权值最小的两棵二叉树 $T1$，$T2$ 作为左右子树构造新的二叉树 $T3$，新二叉树的根结点为 $T1$，$T2$ 根结点的权值和。</li><li>从集合 $F$ 中删除 $T1$，$T2$，将 $T3$ 加入 $F$ 中。</li><li>直到 $F$ 中只剩下唯一一棵二叉树为止，这棵树即为哈夫曼树。</li></ol><p>建树：</p><table><thead><tr><th style="text-align:center">字符</th><th style="text-align:center">频率</th><th style="text-align:center">编码</th><th style="text-align:center">长度</th></tr></thead><tbody><tr><td style="text-align:center">A</td><td style="text-align:center">35</td><td style="text-align:center">11</td><td style="text-align:center">2</td></tr><tr><td style="text-align:center">B</td><td style="text-align:center">25</td><td style="text-align:center">00</td><td style="text-align:center">2</td></tr><tr><td style="text-align:center">C</td><td style="text-align:center">15</td><td style="text-align:center">01</td><td style="text-align:center">2</td></tr><tr><td style="text-align:center">D</td><td style="text-align:center">15</td><td style="text-align:center">101</td><td style="text-align:center">3</td></tr><tr><td style="text-align:center">E</td><td style="text-align:center">10</td><td style="text-align:center">100</td><td style="text-align:center">3</td></tr></tbody></table><p><img src="https://cdn.luogu.com.cn/upload/image_hosting/avfymu9b.png" alt=""></p><h1>哈夫曼编码：</h1><p>哈夫曼编码根据字符在数据中出现的频率来分配不同长度的编码，频率<strong>高</strong>的字符分配较<strong>短</strong>的编码，频率<strong>低</strong>的字符分配较<strong>长</strong>的编码，从而实现压缩数据的目的，是一种<strong>贪心思想</strong>。</p><p>哈夫曼编码是一种<strong>前缀编码</strong>，即任一编码都不是其他任何一个编码的前缀。哈夫曼编码即为前缀编码中<strong>最短</strong>的。</p><h2 id="带权路径长度-WPL-。">带权路径长度(WPL)。</h2><p>WPL 是每个编码的长度 $\times$ 频率。</p><table><thead><tr><th style="text-align:center">字符</th><th style="text-align:center">频率</th><th style="text-align:center">编码</th><th style="text-align:center">长度</th><th style="text-align:center">WPL(单个的)</th></tr></thead><tbody><tr><td style="text-align:center">A</td><td style="text-align:center">35</td><td style="text-align:center">11</td><td style="text-align:center">2</td><td style="text-align:center">70</td></tr><tr><td style="text-align:center">B</td><td style="text-align:center">25</td><td style="text-align:center">00</td><td style="text-align:center">2</td><td style="text-align:center">50</td></tr><tr><td style="text-align:center">C</td><td style="text-align:center">15</td><td style="text-align:center">01</td><td style="text-align:center">2</td><td style="text-align:center">30</td></tr><tr><td style="text-align:center">D</td><td style="text-align:center">15</td><td style="text-align:center">101</td><td style="text-align:center">3</td><td style="text-align:center">45</td></tr><tr><td style="text-align:center">E</td><td style="text-align:center">10</td><td style="text-align:center">100</td><td style="text-align:center">3</td><td style="text-align:center">30</td></tr></tbody></table><p>WPL（总共的）$=70+50+30+45+30=225$。</p>]]>
+    </content>
+    <id>https://heyzzz629.github.io/2026/03/09/%E5%93%88%E5%A4%AB%E6%9B%BC%E6%A0%91%E4%B8%8E%E5%93%88%E5%A4%AB%E6%9B%BC%E7%BC%96%E7%A0%81/</id>
+    <link href="https://heyzzz629.github.io/2026/03/09/%E5%93%88%E5%A4%AB%E6%9B%BC%E6%A0%91%E4%B8%8E%E5%93%88%E5%A4%AB%E6%9B%BC%E7%BC%96%E7%A0%81/"/>
+    <published>2026-03-09T12:44:44.000Z</published>
+    <summary>
+      <![CDATA[<h1>哈夫曼树：</h1>
+<p>哈夫曼树可由如下方式构造：</p>
+<ol>
+<li>由给定的 $n$ 个权值构造 $n$ 棵仅含有一个根结点的二叉树，记作集合 $F$。</li>
+<li>从集合 $F$ 中选取根结点权值最小的两棵二叉树 $T1$，$T2$ 作为左右子树构造]]>
+    </summary>
+    <title>哈夫曼树与哈夫曼编码</title>
+    <updated>2026-03-13T13:50:53.539Z</updated>
+  </entry>
+  <entry>
+    <author>
+      <name>heyZzz</name>
+    </author>
+    <category term="算法·理论" scheme="https://heyzzz629.github.io/categories/%E7%AE%97%E6%B3%95%C2%B7%E7%90%86%E8%AE%BA/"/>
+    <category term="算法" scheme="https://heyzzz629.github.io/tags/%E7%AE%97%E6%B3%95/"/>
+    <category term="排序 sort" scheme="https://heyzzz629.github.io/tags/%E6%8E%92%E5%BA%8F-sort/"/>
+    <content>
+      <![CDATA[<h1>排序的稳定性</h1><table><thead><tr><th style="text-align:center">排序算法</th><th style="text-align:center">平均时间复杂度</th><th style="text-align:center">最好时间复杂度</th><th style="text-align:center">最坏时间复杂度</th><th style="text-align:center">空间复杂度</th><th style="text-align:center">是否稳定</th></tr></thead><tbody><tr><td style="text-align:center">冒泡排序</td><td style="text-align:center">$O(n^2)$</td><td style="text-align:center">$O(n)$</td><td style="text-align:center">$O(n^2)$</td><td style="text-align:center">$O(1)$</td><td style="text-align:center">$T$</td></tr><tr><td style="text-align:center">选择排序</td><td style="text-align:center">$O(n^2)$</td><td style="text-align:center">$O(n^2)$</td><td style="text-align:center">$O(n^2)$</td><td style="text-align:center">$O(1)$</td><td style="text-align:center">$F$</td></tr><tr><td style="text-align:center">插入排序</td><td style="text-align:center">$O(n^2)$</td><td style="text-align:center">$O(n)$</td><td style="text-align:center">$O(n^2)$</td><td style="text-align:center">$O(1)$</td><td style="text-align:center">$T$</td></tr><tr><td style="text-align:center">归并排序</td><td style="text-align:center">$O(n<sub>log</sub>n)$</td><td style="text-align:center">$O(n<sub>log</sub>n)$</td><td style="text-align:center">$O(n<sub>log</sub>n)$</td><td style="text-align:center">$O(n)$</td><td style="text-align:center">$T$</td></tr><tr><td style="text-align:center">快速排序</td><td style="text-align:center">$O(n<sub>log</sub>n)$</td><td style="text-align:center">$O(n<sub>log</sub>n)$</td><td style="text-align:center">$O(n^2)$</td><td style="text-align:center">$O(log~n)$</td><td style="text-align:center">$F$</td></tr><tr><td style="text-align:center">堆排序</td><td style="text-align:center">$O(n<sub>log</sub>n)$</td><td style="text-align:center">$O(n<sub>log</sub>n)$</td><td style="text-align:center">$O(n<sub>log</sub>n)$</td><td style="text-align:center">$O(1)$</td><td style="text-align:center">$F$</td></tr><tr><td style="text-align:center">希尔排序</td><td style="text-align:center">$O(n<sub>log</sub>n)$</td><td style="text-align:center">$O(n)$</td><td style="text-align:center">$O(n^2)$</td><td style="text-align:center">$O(1)$</td><td style="text-align:center">$F$</td></tr><tr><td style="text-align:center">计数排序</td><td style="text-align:center">$O(n+k)$</td><td style="text-align:center">$O(n+k)$</td><td style="text-align:center">$O(n+k)$</td><td style="text-align:center">$O(n+k)$</td><td style="text-align:center">$T$</td></tr><tr><td style="text-align:center">基数排序</td><td style="text-align:center">$O(n \times m)$</td><td style="text-align:center">$O(n \times m)$</td><td style="text-align:center">$O(n \times m)$</td><td style="text-align:center">$O(m)$</td><td style="text-align:center">$T$</td></tr></tbody></table><h1>排序的描述：</h1><h2 id="一-冒泡排序">一.冒泡排序</h2><p>基本思想：</p><p>两个数比较大小，较大的数下沉，较小的数冒起来。</p><h2 id="二-选择排序">二.选择排序</h2><p>基本思想：</p><p>在长度为N的无序数组中，第一次遍历n-1个数，找到最小的数值与第一个元素交换；</p><p>第二次遍历n-2个数，找到最小的数值与第二个元素交换；<br>第n-1次遍历，找到最小的数值与第n-1个元素交换，排序完成。</p><h2 id="三-插入排序">三.插入排序</h2><p>基本思想：</p><p>在要排序的一组数中，假定前n-1个数已经排好序，现在将第n个数插到前面的有序数列中，使得这n个数也是排好顺序的。如此反复循环，直到全部排好顺序。</p><h2 id="四-希尔排序">四.希尔排序</h2><p>基本思想：</p><p>在要排序的一组数中，根据某一增量分为若干子序列，并对子序列分别进行插入排序。</p><p>然后逐渐将增量减小,并重复上述过程。直至增量为1,此时数据序列基本有序,最后进行插入排序。</p><h2 id="五-快速排序（分治思想）">五.快速排序（分治思想）</h2><p>基本思想：</p><p>先从数列中取出一个数作为key值；</p><p>将比这个数小的数全部放在它的左边，大于或等于它的数全部放在它的右边；</p><p>对左右两个小数列重复第二步，直至各区间只有1个数。</p><h2 id="六-归并排序">六.归并排序</h2><p>基本思想：</p><p>归并排序是建立在归并操作上的一种有效的排序算法。该算法是采用分治法的一个非常典型的应用。</p><p>首先考虑下如何将2个有序数列合并。这个非常简单，只要从比较2个数列的第一个数，谁小就先取谁，取了后就在对应数列中删除这个数。然后再进行比较，如果有数列为空，那直接将另一个数列的数据依次取出即可。</p><h1>排序稳定性</h1><p>稳定排序有：插入排序、冒泡排序、归并排序。</p><p>不稳定排序：希尔排序、快速排序、选择排序、堆排序。</p><p>口诀，不稳定的排序：快（快排）些（希尔）选（选择）一堆（堆排）。</p>]]>
+    </content>
+    <id>https://heyzzz629.github.io/2026/03/09/%E6%8E%92%E5%BA%8F%E7%9A%84%E7%A8%B3%E5%AE%9A%E6%80%A7/</id>
+    <link href="https://heyzzz629.github.io/2026/03/09/%E6%8E%92%E5%BA%8F%E7%9A%84%E7%A8%B3%E5%AE%9A%E6%80%A7/"/>
+    <published>2026-03-09T12:44:44.000Z</published>
+    <summary>
+      <![CDATA[<h1>排序的稳定性</h1>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">排序算法</th>
+<th style="text-align:center">平均时间复杂度</th>
+<th style="text-alig]]>
+    </summary>
+    <title>排序的稳定性</title>
+    <updated>2026-03-13T13:50:53.539Z</updated>
+  </entry>
+  <entry>
+    <author>
+      <name>heyZzz</name>
+    </author>
+    <category term="算法·理论" scheme="https://heyzzz629.github.io/categories/%E7%AE%97%E6%B3%95%C2%B7%E7%90%86%E8%AE%BA/"/>
+    <category term="算法" scheme="https://heyzzz629.github.io/tags/%E7%AE%97%E6%B3%95/"/>
+    <category term="矩阵" scheme="https://heyzzz629.github.io/tags/%E7%9F%A9%E9%98%B5/"/>
+    <content>
+      <![CDATA[<p>PS：本文章因篇幅有限，就不讲矩阵乘法和快速幂了。</p><p>题目：</p><p>$$F_n = \left{\begin{aligned} 1 \space (n \le 2) \ F_{n-1}+F_{n-2} \space (n\ge 3) \end{aligned}\right.$$</p><p>求 $F_n$。</p><p>定义一个矩阵$[Base]$，使：</p><p>$$\begin{bmatrix}F_n,F_{n+1}\end{bmatrix}\times\begin{bmatrix}Base\end{bmatrix}=\begin{bmatrix}F_{n+1},F_{n+2}\end{bmatrix}$$</p><p>那：</p><p>$$\begin{bmatrix}F_n,F_{n+1}\end{bmatrix}\times\begin{bmatrix}Base\end{bmatrix}^2=\begin{bmatrix}F_{n+2},F_{n+3}\end{bmatrix}$$</p><p>$$\begin{bmatrix}F_n,F_{n+1}\end{bmatrix}\times\begin{bmatrix}Base\end{bmatrix}^M=\begin{bmatrix}F_{n+M},F_{n+M+1}\end{bmatrix}$$</p><p>所以：</p><p>$$\begin{bmatrix}F_1,F_{2}\end{bmatrix}\times\begin{bmatrix}Base\end{bmatrix}^{n-1}=\begin{bmatrix}F_{n},F_{n+1}\end{bmatrix}$$</p><p>那我们只要找出 $\begin{bmatrix}Base\end{bmatrix}$ 就行了。</p><p>经过构造：</p><p>$$\begin{bmatrix}Base\end{bmatrix}=\begin{bmatrix}1,1\1,0\end{bmatrix}$$</p><p>$F_n$ 就是：</p><p>$$\begin{bmatrix}1,1\end{bmatrix}\times\begin{bmatrix}1,1\1,0\end{bmatrix}^{n-1}$$</p><p>我们只要得到了递推的公式，就可以找到 $[Base]$，从而加速递推。</p>]]>
+    </content>
+    <id>https://heyzzz629.github.io/2026/03/09/%E7%9F%A9%E9%98%B5%E5%8A%A0%E9%80%9F%E9%80%92%E6%8E%A8/</id>
+    <link href="https://heyzzz629.github.io/2026/03/09/%E7%9F%A9%E9%98%B5%E5%8A%A0%E9%80%9F%E9%80%92%E6%8E%A8/"/>
+    <published>2026-03-09T12:44:43.000Z</published>
+    <summary>
+      <![CDATA[<p>PS：本文章因篇幅有限，就不讲矩阵乘法和快速幂了。</p>
+<p>题目：</p>
+<p>$$F_n = \left{\begin{aligned} 1 \space (n \le 2) \ F_{n-1}+F_{n-2} \space (n\ge 3) \end{align]]>
+    </summary>
+    <title>矩阵加速递推</title>
+    <updated>2026-03-13T13:50:53.541Z</updated>
+  </entry>
+  <entry>
+    <author>
+      <name>heyZzz</name>
+    </author>
+    <category term="算法·理论" scheme="https://heyzzz629.github.io/categories/%E7%AE%97%E6%B3%95%C2%B7%E7%90%86%E8%AE%BA/"/>
+    <category term="CSP" scheme="https://heyzzz629.github.io/tags/CSP/"/>
+    <category term="理论" scheme="https://heyzzz629.github.io/tags/%E7%90%86%E8%AE%BA/"/>
+    <content>
+      <![CDATA[<h2 id="UB（未定义行为）">UB（未定义行为）</h2><p>未定义行为就是你的代码出现了语言标准没有预料到的代码时，你的代码就会出现一些奇怪的错。</p><p>有时你的评测是对的，而这种错误会在 CCF <s>垃圾</s>的评测环境中暴露出来，没注意到就会爆零。</p><h3 id="printf">printf</h3><p>你<strong>一定</strong>要看好你输出的和 <code>printf</code> 中的类型是否一样，不然程序会错。</p><h3 id="有符号整数溢出也是未定义行为。">有符号整数溢出也是未定义行为。</h3><h3 id="返回值非-void-函数一定要有返回！">返回值非 void 函数一定要有返回！</h3><p>错误示范：</p><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">x</span><span class="params">(<span class="type">int</span> a)</span></span>&#123;cout&lt;&lt;a;&#125;</span><br></pre></td></tr></table></figure><p>正确示范：</p><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">x</span><span class="params">(<span class="type">int</span> a)</span></span>&#123;cout&lt;&lt;a; <span class="keyword">return</span> <span class="number">1</span>；&#125;</span><br></pre></td></tr></table></figure><h3 id="数据结构-RE">数据结构 RE</h3><p>vector 下标越界。</p><p>vector、queue、deque、stack 等为空时进行 pop。</p><h3 id="其它">其它</h3><p>int,long long 除以 $0$ 或模 $0$ 也是未定义行为。</p><h2 id="文件读写">文件读写</h2><p><s>都是可以进迷惑行为大赏的。</s></p><p>freopen：</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">freopen(&quot;题目名.in&quot;,&quot;r&quot;,stdin);</span><br><span class="line">freopen(&quot;题目名.out&quot;,&quot;w&quot;,stdout);</span><br></pre></td></tr></table></figure><p><code>&quot;r&quot;</code> 一定要用双引号！</p><p>文件夹：</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">|----- 考号</span><br><span class="line">  ｜----- T1名字</span><br><span class="line">    ｜----- T1名字.cpp</span><br><span class="line">  ｜----- T2名字</span><br><span class="line">    ｜----- T2名字.cpp</span><br><span class="line">  ｜----- T3名字</span><br><span class="line">    ｜----- T3名字.cpp</span><br><span class="line">  ｜----- T4名字</span><br><span class="line">    ｜----- T4名字.cpp</span><br></pre></td></tr></table></figure><p>另外你需要注意文件的后缀名：</p><p><img src="https://cdn.luogu.com.cn/upload/image_hosting/c9na8ao1.png" alt=""></p><p>这里引用一些 @chenxi2009 的图，我是用 mac 的，拍不了。</p><p>不然就可能出现 <code>duel.cpp.cpp</code> 的情况。</p><p>还有文件名一定要检查是否跟题目一模一样！</p><h2 id="define-int-long-long">#define int long long</h2><p>是可以的<s>因为我用过</s>。</p><p>CCF 下发的 pdf 文件中提到：主函数返回类型只能是 int。</p><p>所以 signed main 行吗？</p><p>但是 <code>signed=int=signed int</code>，可以的<s>因为我用过</s>。</p><p>虽然可以用，但是有可能空间爆炸。</p><h2 id="读入">读入</h2><p>习惯用 <code>cin/cout</code> 的可以用 <code>ios::sync_with_stdio(false),cin.tie(0),cout.tie(0);</code></p><p>爱用 <code>scanf/printf</code> 也可以，但是要注意类型是否正确。</p>]]>
+    </content>
+    <id>https://heyzzz629.github.io/2026/03/09/CSP-%E8%80%83%E5%9C%BA%E6%98%93%E9%94%99%E7%82%B9/</id>
+    <link href="https://heyzzz629.github.io/2026/03/09/CSP-%E8%80%83%E5%9C%BA%E6%98%93%E9%94%99%E7%82%B9/"/>
+    <published>2026-03-09T12:44:42.000Z</published>
+    <summary>
+      <![CDATA[<h2 id="UB（未定义行为）">UB（未定义行为）</h2>
+<p>未定义行为就是你的代码出现了语言标准没有预料到的代码时，你的代码就会出现一些奇怪的错。</p>
+<p>有时你的评测是对的，而这种错误会在 CCF <s>垃圾</s>的评测环境中暴露出来，没注意到就会爆零。<]]>
+    </summary>
+    <title>CSP 考场易错点</title>
+    <updated>2026-03-13T13:50:53.537Z</updated>
+  </entry>
+  <entry>
+    <author>
+      <name>heyZzz</name>
+    </author>
+    <category term="题解" scheme="https://heyzzz629.github.io/categories/%E9%A2%98%E8%A7%A3/"/>
+    <category term="题解" scheme="https://heyzzz629.github.io/tags/%E9%A2%98%E8%A7%A3/"/>
+    <content>
+      <![CDATA[<p><a href="https://codeforces.com/problemset/problem/333/B">原题</a><a href="https://www.luogu.com.cn/problem/CF333B">传送门</a></p><h2 id="题目大意：">题目大意：</h2><p>有一个 $n \times n$ 的棋盘，$m$ 个格子是障碍物，然后移动芯片使它们返回到初始对边位置，不能经过障碍物、重叠或交换位置。问最多可以放置多少个芯片完成游戏。</p><h2 id="思路：">思路：</h2><p>本题直接按题意<strong>模拟</strong>即可：</p><ol><li><p><strong>使用桶记录障碍</strong>，$a_i$ 代表第 $i$ 行的芯片个数，同理 $b_i$ 代表第 $i$ 列的芯片个数。</p></li><li><p>如果第 $i$ 行或第 $j$ 没有芯片，$cnt+1$。</p></li><li><p>如果相遇，就是 $n$ 为奇数且中间行且列有值，$cnt-1$。</p></li></ol><p>下面是样例 $3$ 的解释：</p><table><thead><tr><th style="text-align:center"></th><th style="text-align:center">列1</th><th style="text-align:center">列2</th><th style="text-align:center">列3</th><th style="text-align:center">列4</th></tr></thead><tbody><tr><td style="text-align:center"><strong>行1</strong></td><td style="text-align:center">无芯片</td><td style="text-align:center">可放芯片</td><td style="text-align:center">可放芯片</td><td style="text-align:center">无芯片</td></tr><tr><td style="text-align:center"><strong>行2</strong></td><td style="text-align:center"><strong>放芯片</strong></td><td style="text-align:center">______</td><td style="text-align:center">______</td><td style="text-align:center"><strong>放芯片</strong></td></tr><tr><td style="text-align:center"><strong>行3</strong></td><td style="text-align:center">障碍物</td><td style="text-align:center">障碍物</td><td style="text-align:center">障碍物</td><td style="text-align:center">可放芯片</td></tr><tr><td style="text-align:center"><strong>行4</strong></td><td style="text-align:center">无芯片</td><td style="text-align:center">可放芯片</td><td style="text-align:center">可放芯片</td><td style="text-align:center">无芯片</td></tr></tbody></table><p>行2的两个芯片可以连通，$cnt=1$。</p><p>没有相遇情况，输出 $1$。</p><h2 id="上代码：">上代码：</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="type">int</span> n,m,x,y,a[<span class="number">100005</span>],b[<span class="number">100005</span>],cnt;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    cin&gt;&gt;n&gt;&gt;m;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">1</span>;i&lt;=m;i++)&#123;</span><br><span class="line">        cin&gt;&gt;x&gt;&gt;y;</span><br><span class="line">        a[x]++,b[y]++;</span><br><span class="line">        <span class="comment">//a[i] 是行，b[i] 是列。</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">2</span>;i&lt;n;i++) cnt+=(!a[i])+(!b[i]); <span class="comment">//不懂？看下面↓</span></span><br><span class="line">    <span class="comment">// a[i] 如果是空的，cnt+1。</span></span><br><span class="line">    <span class="comment">// b[i] 如果是空的，cnt+1。</span></span><br><span class="line">    cout&lt;&lt;cnt-((n%<span class="number">2</span>==<span class="number">1</span>)&amp;&amp;!a[n/<span class="number">2</span><span class="number">+1</span>]&amp;&amp;!b[n/<span class="number">2</span><span class="number">+1</span>]);</span><br><span class="line">    <span class="comment">//如果相遇答案 -1。</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>括号的意思：如果括号里面的的表达式为 $true$ ，返回 $1$ ，否则返回 $0$。</p>]]>
+    </content>
+    <id>https://heyzzz629.github.io/2026/03/09/%E9%A2%98%E8%A7%A3%EF%BC%9ACF333B-Chips/</id>
+    <link href="https://heyzzz629.github.io/2026/03/09/%E9%A2%98%E8%A7%A3%EF%BC%9ACF333B-Chips/"/>
+    <published>2026-03-09T12:19:45.000Z</published>
+    <summary>
+      <![CDATA[<p><a href="https://codeforces.com/problemset/problem/333/B">原题</a><a href="https://www.luogu.com.cn/problem/CF333B">传送门</a></p>
+<h2 id="题目大]]>
+    </summary>
+    <title>题解：CF333B Chips</title>
+    <updated>2026-03-13T13:50:53.543Z</updated>
+  </entry>
+  <entry>
+    <author>
+      <name>heyZzz</name>
+    </author>
+    <category term="题解" scheme="https://heyzzz629.github.io/categories/%E9%A2%98%E8%A7%A3/"/>
+    <category term="题解" scheme="https://heyzzz629.github.io/tags/%E9%A2%98%E8%A7%A3/"/>
+    <content>
+      <![CDATA[<p>题目翻译：</p><p>给定 $n$ 个互不相同二元组，现在要从其中选出三个二元组，使得这三个二元组的的前一项互不相同或后一项互不相同。求有几种方案。</p><p>思路：</p><p>正难则反，先算总数：有 $\Large\frac{n \times (n-1) \times (n-2)}{6}$ 种情况。</p><p>不满足的情况是没有一个二元组与另一个二元组元素两两不相同（同一个元素）。</p><p>也就是就是一个二元组与另一个二元组元素至少一个相同（也是同一个元素）。</p><p>考虑用桶记录，$x_i$ 代表 $a_i$ 的出现个数，$y_i$ 代表 $b_i$ 的出现个数。</p><p>第一组固定，第二组有 $x_{a_i}-1$ 种，第三组有 $y_{b_i}-1$ 种。</p><p>一共有 $(x_{a_i}-1) \times (y_{b_i}-1)$。</p><p>代码楼上楼下都已经写的很明白了，我就不在赘述了。</p>]]>
+    </content>
+    <id>https://heyzzz629.github.io/2026/03/09/%E9%A2%98%E8%A7%A3%EF%BC%9ACF1598D-Training-Session/</id>
+    <link href="https://heyzzz629.github.io/2026/03/09/%E9%A2%98%E8%A7%A3%EF%BC%9ACF1598D-Training-Session/"/>
+    <published>2026-03-09T12:19:45.000Z</published>
+    <summary>
+      <![CDATA[<p>题目翻译：</p>
+<p>给定 $n$ 个互不相同二元组，现在要从其中选出三个二元组，使得这三个二元组的的前一项互不相同或后一项互不相同。求有几种方案。</p>
+<p>思路：</p>
+<p>正难则反，先算总数：有 $\Large\frac{n \times (n-1) \t]]>
+    </summary>
+    <title>题解：CF1598D Training Session</title>
+    <updated>2026-03-13T13:50:53.542Z</updated>
+  </entry>
+  <entry>
+    <author>
+      <name>heyZzz</name>
+    </author>
+    <category term="题解" scheme="https://heyzzz629.github.io/categories/%E9%A2%98%E8%A7%A3/"/>
+    <category term="题解" scheme="https://heyzzz629.github.io/tags/%E9%A2%98%E8%A7%A3/"/>
+    <content>
+      <![CDATA[<p>回顾 kruskal：</p><p>取边权最小的一条边，若两个点在不同连通块（并查集），则连边合并。</p><p>我们把以上规则改一下：</p><p>如果点 $A$ 的老大的小弟数&lt;点 $B$ 的老大的小弟数，$A$ 成为 $B$ 小弟。</p><p>反之，$B$ 成为 $A$ 小弟。</p><p>我们定义 $s_i$ 是点 $i$ 的老大的小弟数，$w$ 是 $a$ 到 $b$ 的边权。</p><p>贡献和为：$(s_A×s_B−1) \times (w+1)$。</p><p>代码楼上楼下都已经写的很明白了，我就不在赘述了。</p>]]>
+    </content>
+    <id>https://heyzzz629.github.io/2026/03/09/%E9%A2%98%E8%A7%A3%EF%BC%9AP10928-%E8%B5%B0%E5%BB%8A%E6%B3%BC%E6%B0%B4%E8%8A%82/</id>
+    <link href="https://heyzzz629.github.io/2026/03/09/%E9%A2%98%E8%A7%A3%EF%BC%9AP10928-%E8%B5%B0%E5%BB%8A%E6%B3%BC%E6%B0%B4%E8%8A%82/"/>
+    <published>2026-03-09T12:19:45.000Z</published>
+    <summary>
+      <![CDATA[<p>回顾 kruskal：</p>
+<p>取边权最小的一条边，若两个点在不同连通块（并查集），则连边合并。</p>
+<p>我们把以上规则改一下：</p>
+<p>如果点 $A$ 的老大的小弟数&lt;点 $B$ 的老大的小弟数，$A$ 成为 $B$ 小弟。</p>
+<p>反之，$]]>
+    </summary>
+    <title>题解：P10928 走廊泼水节</title>
+    <updated>2026-03-13T13:50:53.547Z</updated>
+  </entry>
+  <entry>
+    <author>
+      <name>heyZzz</name>
+    </author>
+    <content>
+      <![CDATA[<p>翻译：</p><p>求有多少个区间内的数异或值为 $0$。</p><p>思路：</p><p>处理出前缀异或数组 $q$。</p><p>如果 $q_i=q_j$，则区间是存在的。</p><p>代码楼上楼下都已经写的很明白了，我就不在赘述了。</p>]]>
+    </content>
+    <id>https://heyzzz629.github.io/2026/03/09/%E9%A2%98%E8%A7%A3%EF%BC%9ACF1109A-Sasha-and-a-Bit-of-Relax/</id>
+    <link href="https://heyzzz629.github.io/2026/03/09/%E9%A2%98%E8%A7%A3%EF%BC%9ACF1109A-Sasha-and-a-Bit-of-Relax/"/>
+    <published>2026-03-09T12:19:44.000Z</published>
+    <summary>
+      <![CDATA[<p>翻译：</p>
+<p>求有多少个区间内的数异或值为 $0$。</p>
+<p>思路：</p>
+<p>处理出前缀异或数组 $q$。</p>
+<p>如果 $q_i=q_j$，则区间是存在的。</p>
+<p>代码楼上楼下都已经写的很明白了，我就不在赘述了。</p>]]>
+    </summary>
+    <title>题解：CF1109A Sasha and a Bit of Relax</title>
+    <updated>2026-03-13T13:50:53.541Z</updated>
+  </entry>
+  <entry>
+    <author>
+      <name>heyZzz</name>
+    </author>
+    <content>
+      <![CDATA[<p>前言：</p><p>看到楼上楼下基本上都用三维的 dp 数组，我来介绍一种用二维的 dp 数组的做法。</p><p>思路：</p><p>我们发现，如果要采 $(a,b)$ 上的矿，那么运输路上（即 $(a,b-1),(a,b-2)…(a,1)$ 或$(a-1,b),(a-2,b)…(1,b)$）的这种矿物都要全采。</p><p>得知这一点后，我们考虑是用动归，定义 $f_{i,j}$ 为在以 $(i,j)$ 为右下角的子矩阵中的最大采矿量。</p><p>维护两个前缀和数组 $a,b$ (具体是什么见代码），$f_{i,j}=\max(f_{i-1,j}+a_{i,j},f_{i,j-1}+b_{i,j})$。</p><p>代码：</p><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> int long long</span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="type">int</span> n,m,a[<span class="number">505</span>][<span class="number">505</span>],b[<span class="number">505</span>][<span class="number">505</span>],f[<span class="number">505</span>][<span class="number">505</span>];</span><br><span class="line"><span class="function"><span class="type">signed</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line"><span class="keyword">while</span>(<span class="number">1</span>)&#123;</span><br><span class="line">cin&gt;&gt;n&gt;&gt;m;</span><br><span class="line"><span class="keyword">if</span>(n==<span class="number">0</span>&amp;&amp;m==<span class="number">0</span>) <span class="keyword">break</span>;</span><br><span class="line"><span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">1</span>;i&lt;=n;i++)</span><br><span class="line"><span class="keyword">for</span>(<span class="type">int</span> j=<span class="number">1</span>;j&lt;=m;j++)</span><br><span class="line">cin&gt;&gt;a[i][j],a[i][j]+=a[i][j<span class="number">-1</span>]; <span class="comment">//前缀和数组 a</span></span><br><span class="line"><span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">1</span>;i&lt;=n;i++)</span><br><span class="line"><span class="keyword">for</span>(<span class="type">int</span> j=<span class="number">1</span>;j&lt;=m;j++)</span><br><span class="line">cin&gt;&gt;b[i][j],b[i][j]+=b[i<span class="number">-1</span>][j]; <span class="comment">//前缀和数组 b</span></span><br><span class="line"><span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">1</span>;i&lt;=n;i++)</span><br><span class="line"><span class="keyword">for</span>(<span class="type">int</span> j=<span class="number">1</span>;j&lt;=m;j++)</span><br><span class="line">f[i][j]=<span class="built_in">max</span>(f[i<span class="number">-1</span>][j]+a[i][j],f[i][j<span class="number">-1</span>]+b[i][j]);</span><br><span class="line">cout&lt;&lt;f[n][m]&lt;&lt;<span class="string">&#x27;\n&#x27;</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>]]>
+    </content>
+    <id>https://heyzzz629.github.io/2026/03/09/%E9%A2%98%E8%A7%A3%EF%BC%9AUVA1366-Martian-Mining/</id>
+    <link href="https://heyzzz629.github.io/2026/03/09/%E9%A2%98%E8%A7%A3%EF%BC%9AUVA1366-Martian-Mining/"/>
+    <published>2026-03-09T12:19:44.000Z</published>
+    <summary>
+      <![CDATA[<p>前言：</p>
+<p>看到楼上楼下基本上都用三维的 dp 数组，我来介绍一种用二维的 dp 数组的做法。</p>
+<p>思路：</p>
+<p>我们发现，如果要采 $(a,b)$ 上的矿，那么运输路上（即 $(a,b-1),(a,b-2)…(a,1)$ 或$(a-1,b),(]]>
+    </summary>
+    <title>题解：UVA1366 Martian Mining</title>
+    <updated>2026-03-13T13:50:53.551Z</updated>
+  </entry>
+  <entry>
+    <author>
+      <name>heyZzz</name>
+    </author>
+    <content>
+      <![CDATA[<p>思路 1：</p><p>使用动态规划算法，$f_i$ 是表示喝 $i$ 瓶药的最大值。</p><p>可以得出：$f_j=\max(f_j,f_{j-1}+a_j)$。</p><p>关键代码：</p><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">1</span>;i&lt;=n;i++)</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> j=i;j;j--)</span><br><span class="line">        <span class="keyword">if</span>(f[j<span class="number">-1</span>]+a[i]&gt;=<span class="number">0</span>)</span><br><span class="line">             f[j]=<span class="built_in">max</span>(f[j],f[j<span class="number">-1</span>]+a[i]);</span><br></pre></td></tr></table></figure><p>时间复杂度：$O(n^2)$。</p><p>思路 2：</p><p>使用贪心算法+优先队列。</p><p>先拼劲全力去喝，如果在这道题中喝药喝死了，我们就要将他把药吐出来。</p><p>关键代码：</p><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">1</span>;i&lt;=n;i++)&#123;</span><br><span class="line">    sum+=f[i],q.<span class="built_in">push</span>(-f[i]);</span><br><span class="line">    <span class="keyword">if</span>(sum&lt;<span class="number">0</span>)&#123;</span><br><span class="line">        p=q.<span class="built_in">top</span>(),q.<span class="built_in">pop</span>();</span><br><span class="line">        p=-p,sum-=p,t++;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>时间复杂度：$O(n \log_2 n)$。</p>]]>
+    </content>
+    <id>https://heyzzz629.github.io/2026/03/09/%E9%A2%98%E8%A7%A3%EF%BC%9ACF1526C1-Potions-Easy-Version/</id>
+    <link href="https://heyzzz629.github.io/2026/03/09/%E9%A2%98%E8%A7%A3%EF%BC%9ACF1526C1-Potions-Easy-Version/"/>
+    <published>2026-03-09T12:19:43.000Z</published>
+    <summary>
+      <![CDATA[<p>思路 1：</p>
+<p>使用动态规划算法，$f_i$ 是表示喝 $i$ 瓶药的最大值。</p>
+<p>可以得出：$f_j=\max(f_j,f_{j-1}+a_j)$。</p>
+<p>关键代码：</p>
+<figure class="highlight cpp"><tab]]>
+    </summary>
+    <title>题解：CF1526C1 Potions (Easy Version)</title>
+    <updated>2026-03-13T13:50:53.542Z</updated>
+  </entry>
+  <entry>
+    <author>
+      <name>heyZzz</name>
+    </author>
+    <content>
+      <![CDATA[<p>首先，我们知道 $\operatorname{lcm}(x,y) \times \gcd(x,y)=a \times b$。</p><p>之后，就可以构造了：</p><p>因为 $a$ 一定要整除 $\operatorname{lcm}(a,b)$。</p><p>再枚举 $\operatorname{lcm}(a,b)$ 的因数。</p><p>每个因数就判断一下，加入答案。</p><p>判断的代码：</p><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">bool</span> <span class="title">check</span><span class="params">(<span class="type">int</span> a)</span></span>&#123;</span><br><span class="line"><span class="type">int</span> b=x*y/a;</span><br><span class="line">    <span class="keyword">return</span> !(a&lt;l||a&gt;r||b&lt;l||b&gt;r||__gcd(a,b)!=x);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>代码楼上楼下都已经写的很明白了，我就不在赘述了。</p>]]>
+    </content>
+    <id>https://heyzzz629.github.io/2026/03/09/%E9%A2%98%E8%A7%A3%EF%BC%9ACF992B-Nastya-Studies-Informatics/</id>
+    <link href="https://heyzzz629.github.io/2026/03/09/%E9%A2%98%E8%A7%A3%EF%BC%9ACF992B-Nastya-Studies-Informatics/"/>
+    <published>2026-03-09T12:19:43.000Z</published>
+    <summary>
+      <![CDATA[<p>首先，我们知道 $\operatorname{lcm}(x,y) \times \gcd(x,y)=a \times b$。</p>
+<p>之后，就可以构造了：</p>
+<p>因为 $a$ 一定要整除 $\operatorname{lcm}(a,b)$。</p>
+<p>再枚]]>
+    </summary>
+    <title>题解：CF992B Nastya Studies Informatics</title>
+    <updated>2026-03-13T13:50:53.544Z</updated>
+  </entry>
+  <entry>
+    <author>
+      <name>heyZzz</name>
+    </author>
+    <content>
+      <![CDATA[<p>思路：</p><p>我们发现，如果要采 $(a,b)$ 上的矿，那么运输路上（即 $(a,b-1),(a,b-2)…(a,1)$ 或$(a-1,b),(a-2,b)…(1,b)$）的这种矿物都要全采。</p><p>得知这一点后，我们考虑是用动归，定义 $f_{i,j}$ 是为在以 $(i,j)$ 为右下角的子矩阵中的最大采矿量。</p><p>维护两个前缀和数组 $a,b$ (具体是什么见代码），$f_{i,j}=\max(f_{i-1,j}+a_{i,j},f_{i,j-1}+b_{i,j})$。</p><p>代码：</p><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> int long long</span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="type">int</span> n,m,a[<span class="number">505</span>][<span class="number">505</span>],b[<span class="number">505</span>][<span class="number">505</span>],f[<span class="number">505</span>][<span class="number">505</span>];</span><br><span class="line"><span class="function"><span class="type">signed</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line"><span class="keyword">while</span>(<span class="number">1</span>)&#123;</span><br><span class="line">cin&gt;&gt;n&gt;&gt;m;</span><br><span class="line"><span class="keyword">if</span>(n==<span class="number">0</span>&amp;&amp;m==<span class="number">0</span>) <span class="keyword">break</span>;</span><br><span class="line"><span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">1</span>;i&lt;=n;i++)</span><br><span class="line"><span class="keyword">for</span>(<span class="type">int</span> j=<span class="number">1</span>;j&lt;=m;j++)</span><br><span class="line">cin&gt;&gt;a[i][j],a[i][j]+=a[i][j<span class="number">-1</span>]; <span class="comment">//前缀和数组 a</span></span><br><span class="line"><span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">1</span>;i&lt;=n;i++)</span><br><span class="line"><span class="keyword">for</span>(<span class="type">int</span> j=<span class="number">1</span>;j&lt;=m;j++)</span><br><span class="line">cin&gt;&gt;b[i][j],b[i][j]+=b[i<span class="number">-1</span>][j]; <span class="comment">//前缀和数组 b</span></span><br><span class="line"><span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">1</span>;i&lt;=n;i++)</span><br><span class="line"><span class="keyword">for</span>(<span class="type">int</span> j=<span class="number">1</span>;j&lt;=m;j++)</span><br><span class="line">f[i][j]=<span class="built_in">max</span>(f[i<span class="number">-1</span>][j]+a[i][j],f[i][j<span class="number">-1</span>]+b[i][j]);</span><br><span class="line">cout&lt;&lt;f[n][m]&lt;&lt;<span class="string">&#x27;\n&#x27;</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>]]>
+    </content>
+    <id>https://heyzzz629.github.io/2026/03/09/%E9%A2%98%E8%A7%A3%EF%BC%9ASP2884-MARTIAN-Martian-Mining/</id>
+    <link href="https://heyzzz629.github.io/2026/03/09/%E9%A2%98%E8%A7%A3%EF%BC%9ASP2884-MARTIAN-Martian-Mining/"/>
+    <published>2026-03-09T12:19:43.000Z</published>
+    <summary>
+      <![CDATA[<p>思路：</p>
+<p>我们发现，如果要采 $(a,b)$ 上的矿，那么运输路上（即 $(a,b-1),(a,b-2)…(a,1)$ 或$(a-1,b),(a-2,b)…(1,b)$）的这种矿物都要全采。</p>
+<p>得知这一点后，我们考虑是用动归，定义 $f_{i,j}$]]>
+    </summary>
+    <title>题解：SP2884 MARTIAN - Martian Mining</title>
+    <updated>2026-03-13T13:50:53.550Z</updated>
+  </entry>
+  <entry>
+    <author>
+      <name>heyZzz</name>
+    </author>
+    <content>
+      <![CDATA[<p>思路：</p><p>$dp_{i,j,c}$ 它表示在前 $i$ 个字符中使用了 $j$ 次更改操作。</p><p>并且最后一个字符是 $c$ 的情况下所能达到的最大美丽度。</p><p>状态转移方程：</p><p>如果 $m=s[i-1]- \texttt a $：$ dp_{i,j,m}=\max{dp_{i,j,m},dp_{i-1,j,q}+c_{q,m}}$</p><p>如果 $m \ne s[i-1]-\texttt a$：$dp_{i,j,m}=\max{dp_{i,j,m},dp_{i-1,j-1,q}+c_{q,m}}$。</p><p>代码：</p><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> int long long</span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="type">int</span> c[<span class="number">26</span>][<span class="number">26</span>],dp[<span class="number">105</span>][<span class="number">105</span>][<span class="number">26</span>],k,n,p,ans=INT_MIN;</span><br><span class="line">string s;</span><br><span class="line"><span class="type">char</span> x,y;</span><br><span class="line"><span class="function"><span class="type">signed</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">cin&gt;&gt;s&gt;&gt;k&gt;&gt;n;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">1</span>;i&lt;=n;i++)&#123;</span><br><span class="line">cin&gt;&gt;x&gt;&gt;y&gt;&gt;p;</span><br><span class="line">c[x-<span class="string">&#x27;a&#x27;</span>][y-<span class="string">&#x27;a&#x27;</span>]=p;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">1</span>;i&lt;=s.<span class="built_in">size</span>();i++)</span><br><span class="line"><span class="keyword">for</span>(<span class="type">int</span> m=<span class="number">0</span>;m&lt;<span class="number">26</span>;m++) dp[i][<span class="number">0</span>][m]=<span class="number">-1e9</span>;</span><br><span class="line">dp[<span class="number">1</span>][<span class="number">0</span>][s[<span class="number">0</span>]-<span class="string">&#x27;a&#x27;</span>]=<span class="number">0</span>;</span><br><span class="line"><span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">2</span>;i&lt;=s.<span class="built_in">size</span>();i++)</span><br><span class="line"><span class="keyword">for</span>(<span class="type">int</span> j=<span class="number">0</span>;j&lt;=k;j++)</span><br><span class="line"><span class="keyword">for</span>(<span class="type">int</span> m=<span class="number">0</span>;m&lt;<span class="number">26</span>;m++)</span><br><span class="line"><span class="keyword">if</span>(m==s[i<span class="number">-1</span>]-<span class="string">&#x27;a&#x27;</span>)</span><br><span class="line"><span class="keyword">for</span>(<span class="type">int</span> q=<span class="number">0</span>;q&lt;<span class="number">26</span>;q++) dp[i][j][m]=<span class="built_in">max</span>(dp[i][j][m],dp[i<span class="number">-1</span>][j][q]+c[q][m]);</span><br><span class="line"><span class="keyword">else</span> <span class="keyword">if</span>(j)</span><br><span class="line"><span class="keyword">for</span>(<span class="type">int</span> q=<span class="number">0</span>;q&lt;<span class="number">26</span>;q++) dp[i][j][m]=<span class="built_in">max</span>(dp[i][j][m],dp[i<span class="number">-1</span>][j<span class="number">-1</span>][q]+c[q][m]);</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> m=<span class="number">0</span>;m&lt;<span class="number">26</span>;m++) ans=<span class="built_in">max</span>(ans,dp[s.<span class="built_in">size</span>()][k][m]);</span><br><span class="line">    cout&lt;&lt;ans&lt;&lt;endl;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>]]>
+    </content>
+    <id>https://heyzzz629.github.io/2026/03/09/%E9%A2%98%E8%A7%A3%EF%BC%9ACF73C-LionAge-II/</id>
+    <link href="https://heyzzz629.github.io/2026/03/09/%E9%A2%98%E8%A7%A3%EF%BC%9ACF73C-LionAge-II/"/>
+    <published>2026-03-09T12:19:42.000Z</published>
+    <summary>
+      <![CDATA[<p>思路：</p>
+<p>$dp_{i,j,c}$ 它表示在前 $i$ 个字符中使用了 $j$ 次更改操作。</p>
+<p>并且最后一个字符是 $c$ 的情况下所能达到的最大美丽度。</p>
+<p>状态转移方程：</p>
+<p>如果 $m=s[i-1]- \texttt a $]]>
+    </summary>
+    <title>题解：CF73C LionAge II</title>
+    <updated>2026-03-13T13:50:53.543Z</updated>
+  </entry>
+  <entry>
+    <author>
+      <name>heyZzz</name>
+    </author>
+    <content>
+      <![CDATA[<p>题意：</p><p>把给定的区间合并成<strong>最简</strong>的形式。</p><p>思路：</p><p>可以用<strong>贪心</strong>的思想解此题：</p><ol><li>将所有给出的区间按小值的值从小到大排序。</li><li>如果一个区间可以与上一个区间合并的，合并区间。</li></ol><p>特判：</p><ol><li>如一个区间为 $[-2<sup>{15},2</sup>{15}]$ 则输出 <code>true</code>。</li><li>如没有合法的区间（即第一个数 $&gt;$ 第一个数）则输出 <code>false</code>。</li><li>输出时，省略补全的数字。</li></ol><p>代码楼上楼下都已经写的很明白了，我就不赘述了。</p>]]>
+    </content>
+    <id>https://heyzzz629.github.io/2026/03/09/%E9%A2%98%E8%A7%A3%EF%BC%9AP6123-NEERC2016-Hard-Refactoring/</id>
+    <link href="https://heyzzz629.github.io/2026/03/09/%E9%A2%98%E8%A7%A3%EF%BC%9AP6123-NEERC2016-Hard-Refactoring/"/>
+    <published>2026-03-09T12:19:42.000Z</published>
+    <summary>
+      <![CDATA[<p>题意：</p>
+<p>把给定的区间合并成<strong>最简</strong>的形式。</p>
+<p>思路：</p>
+<p>可以用<strong>贪心</strong>的思想解此题：</p>
+<ol>
+<li>将所有给出的区间按小值的值从小到大排序。</li>
+<li>如果]]>
+    </summary>
+    <title>题解：P6123 [NEERC2016] Hard Refactoring</title>
+    <updated>2026-03-13T13:50:53.549Z</updated>
+  </entry>
+  <entry>
+    <author>
+      <name>heyZzz</name>
+    </author>
+    <content>
+      <![CDATA[<p>思路：</p><p>使用二分答案。</p><p>二分答案分为两部分：<code>check</code> 函数和二分。</p><p>二分楼上楼下都讲的很清楚了。</p><p>本题解只讲 <code>check</code> 函数。</p><p>首先：</p><ol><li>先给 $a,b$ 数组排序。</li><li>总共有 $\Large \frac{a_i}{b_j}$ $&gt;$ $\Large \frac{a_i}{b_{j+1}}$ 和 $\Large \frac{a_i}{b_j}$ $&lt;$ $\Large \frac{a_i+1}{b_{j}}$。</li><li>最后双指针维护即可。</li></ol><p>下放部分代码：</p><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">bool</span> <span class="title">check</span><span class="params">(<span class="type">double</span> k)</span></span>&#123;</span><br><span class="line">    <span class="type">int</span> j=<span class="number">0</span>,sum=<span class="number">0</span>;</span><br><span class="line"><span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">1</span>;i&lt;=n;i++)&#123;</span><br><span class="line"><span class="keyword">while</span>(a[j<span class="number">+1</span>]&lt;k*b[i]&amp;&amp;j&lt;n)j++;</span><br><span class="line">sum+=j;</span><br><span class="line">&#125;<span class="keyword">return</span> sum&gt;=q;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>]]>
+    </content>
+    <id>https://heyzzz629.github.io/2026/03/09/%E9%A2%98%E8%A7%A3%EF%BC%9AP10091-ROIR-2022-Day-2-%E5%88%86%E6%95%B0%E6%8E%92%E5%BA%8F/</id>
+    <link href="https://heyzzz629.github.io/2026/03/09/%E9%A2%98%E8%A7%A3%EF%BC%9AP10091-ROIR-2022-Day-2-%E5%88%86%E6%95%B0%E6%8E%92%E5%BA%8F/"/>
+    <published>2026-03-09T12:19:41.000Z</published>
+    <summary>
+      <![CDATA[<p>思路：</p>
+<p>使用二分答案。</p>
+<p>二分答案分为两部分：<code>check</code> 函数和二分。</p>
+<p>二分楼上楼下都讲的很清楚了。</p>
+<p>本题解只讲 <code>check</code> 函数。</p>
+<p>首先：</p>
+<o]]>
+    </summary>
+    <title>题解：P10091 [ROIR 2022 Day 2] 分数排序</title>
+    <updated>2026-03-13T13:50:53.545Z</updated>
+  </entry>
+  <entry>
+    <author>
+      <name>heyZzz</name>
+    </author>
+    <category term="题解" scheme="https://heyzzz629.github.io/categories/%E9%A2%98%E8%A7%A3/"/>
+    <category term="题解" scheme="https://heyzzz629.github.io/tags/%E9%A2%98%E8%A7%A3/"/>
+    <content>
+      <![CDATA[<p>线性 DP。</p><p>不难想到 $dp_{i,j}$ 代表在 $a$ 中前 $i$ 个数和 $b$ 中前 $j$ 个数满足要求。</p><p>状态转移方程是：</p><p>边界：</p><ol><li>如果 $i=m$，$dp_{i,j+1}=\min{dp_{i,j}}$。</li><li>如果 $j=n$，$dp_{i+1,j}=\min{dp_{i,j}}$。</li></ol><p>之后：</p><ol><li>$a_{i+1}=b_{j+1}$ 或者 $a_{i+1}=1$ 或者 $b_{j+1}=1$，$dp_{i+1,j+1}=\min{dp_{i,j}}$。</li></ol><p>最后 $dp_{i+1,j}=\min{dp_{i,j}+1},dp_{i,j+1}=\min{dp_{i,j}+1}$。</p><p>代码楼上楼下都已经写的很明白了，我就不在赘述了。</p>]]>
+    </content>
+    <id>https://heyzzz629.github.io/2026/03/09/%E9%A2%98%E8%A7%A3%EF%BC%9AP10043-CCPC-2023-%E5%8C%97%E4%BA%AC%E5%B8%82%E8%B5%9B-%E5%B9%BF%E6%92%AD/</id>
+    <link href="https://heyzzz629.github.io/2026/03/09/%E9%A2%98%E8%A7%A3%EF%BC%9AP10043-CCPC-2023-%E5%8C%97%E4%BA%AC%E5%B8%82%E8%B5%9B-%E5%B9%BF%E6%92%AD/"/>
+    <published>2026-03-09T12:19:41.000Z</published>
+    <summary>
+      <![CDATA[<p>线性 DP。</p>
+<p>不难想到 $dp_{i,j}$ 代表在 $a$ 中前 $i$ 个数和 $b$ 中前 $j$ 个数满足要求。</p>
+<p>状态转移方程是：</p>
+<p>边界：</p>
+<ol>
+<li>如果 $i=m$，$dp_{i,j+1}=\min{dp_]]>
+    </summary>
+    <title>题解：P10043 [CCPC 2023 北京市赛] 广播</title>
+    <updated>2026-03-13T13:50:53.544Z</updated>
+  </entry>
+  <entry>
+    <author>
+      <name>heyZzz</name>
+    </author>
+    <content>
+      <![CDATA[<p>思路：</p><p>注意到树有这样的性质：每个点的度数和为 $2(n−1)$。</p><p>于是我们给每个点 $1$ 的度数，然后分配剩下的 $2(n-1)-n=n-2$ 个数。</p><p>之后用贪心算法，对当前最优的点进行操作，对答案的为 $a(2d+1)$。</p><p>维护一个优先队列，存入 $a(2d+1)$。</p><p>每次取出堆顶，最后将每一个点的累加即可。</p><p>代码楼上楼下都已经写的很明白了，我就不赘述了。</p>]]>
+    </content>
+    <id>https://heyzzz629.github.io/2026/03/09/%E9%A2%98%E8%A7%A3%EF%BC%9AP7840-%E3%80%8CC-E-L-U-03%E3%80%8D%E9%87%8D%E6%9E%84/</id>
+    <link href="https://heyzzz629.github.io/2026/03/09/%E9%A2%98%E8%A7%A3%EF%BC%9AP7840-%E3%80%8CC-E-L-U-03%E3%80%8D%E9%87%8D%E6%9E%84/"/>
+    <published>2026-03-09T12:19:41.000Z</published>
+    <summary>
+      <![CDATA[<p>思路：</p>
+<p>注意到树有这样的性质：每个点的度数和为 $2(n−1)$。</p>
+<p>于是我们给每个点 $1$ 的度数，然后分配剩下的 $2(n-1)-n=n-2$ 个数。</p>
+<p>之后用贪心算法，对当前最优的点进行操作，对答案的为 $a(2d+1)$。</]]>
+    </summary>
+    <title>题解：P7840 「C.E.L.U-03」重构</title>
+    <updated>2026-03-13T13:50:53.550Z</updated>
+  </entry>
+</feed>

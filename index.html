@@ -1,1780 +1,218 @@
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="keywords" content="Hexo Theme Redefine">
-    
-    
-    <meta name="author" content="heyZzz">
-    
-    <!-- Completely eliminate flash of wrong theme -->
-    <script>
-        (function() {
-            const THEME_KEY = "REDEFINE-THEME-STATUS";
-            const DARK = "dark", LIGHT = "light";
-            
-            // Get preferred theme
-            function getTheme() {
-                try {
-                    const saved = localStorage.getItem(THEME_KEY);
-                    if (saved) {
-                        const { isDark } = JSON.parse(saved);
-                        return isDark ? DARK : LIGHT;
-                    }
-                } catch (e) {}
-                
-                return matchMedia("(prefers-color-scheme: dark)").matches ? DARK : LIGHT;
-            }
-            
-            // Apply theme to document
-            function applyTheme(theme) {
-                const isDark = theme === DARK;
-                const root = document.documentElement;
-                
-                // Set classes for compatibility
-                root.classList.add(theme);
-                root.classList.remove(isDark ? LIGHT : DARK);
-                root.style.colorScheme = theme;
-            }
-            
-            // Initial application
-            const theme = getTheme();
-            applyTheme(theme);
-            
-            // Listen for system preference changes
-            matchMedia("(prefers-color-scheme: dark)").addEventListener("change", ({ matches }) => {
-                // Only update if using system preference (no localStorage entry)
-                if (!localStorage.getItem(THEME_KEY)) {
-                    applyTheme(matches ? DARK : LIGHT);
-                }
-            });
-            
-            // Set body classes ASAP (before DOMContentLoaded)
-            (function() {
-                const addBodyClass = () => {
-                    const b = document.body;
-                    if (!b) return false;
-                    b.classList.add(theme + "-mode");
-                    return true;
-                };
-
-                // Try immediately
-                if (addBodyClass()) return;
-
-                // Observe until body exists
-                const mo = new MutationObserver(() => {
-                    if (addBodyClass()) mo.disconnect();
-                });
-                mo.observe(document.documentElement, { childList: true, subtree: true });
-            })();
-        })();
-    </script>
-    
-    <!-- preconnect -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
-    
-        
-        
-        
-            <link rel="preconnect" href="https://registry.npmmirror.com" crossorigin>
-        
-    
-    <!--- Seo Part-->
-    
-    <link rel="canonical" href="https://heyzzz629.github.io/"/>
-    <meta name="robots" content="index,follow">
-    <meta name="googlebot" content="index,follow">
-    <meta name="revisit-after" content="1 days">
-    
-    
-        
-        <meta name="description" content="heyZzz&#39;s OI Blog">
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>heyZzz's OI Blog - My Blog</title><meta name="author" content="heyZzz"><meta name="copyright" content="heyZzz"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="OI | C++ | luogu&#x2F;Codeforces&#x2F;atcoder">
 <meta property="og:type" content="website">
 <meta property="og:title" content="heyZzz&#39;s OI Blog">
 <meta property="og:url" content="https://heyzzz629.github.io/index.html">
 <meta property="og:site_name" content="heyZzz&#39;s OI Blog">
-<meta property="og:description" content="heyZzz&#39;s OI Blog">
+<meta property="og:description" content="OI | C++ | luogu&#x2F;Codeforces&#x2F;atcoder">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://heyzzz629.github.io/images/redefine-og.webp">
+<meta property="og:image" content="https://heyzzz629.github.io/img/butterfly-icon.png">
 <meta property="article:author" content="heyZzz">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://heyzzz629.github.io/images/redefine-og.webp">
-    
-    
-    <!--- Icon Part-->
-    <link rel="icon" type="image/png" href="/img/favicon.ico" sizes="192x192">
-    <link rel="apple-touch-icon" sizes="180x180" href="/img/favicon.ico">
-    <meta name="theme-color" content="#49b1f5">
-    <link rel="shortcut icon" href="/img/favicon.ico">
-    <!--- Page Info-->
-    
-    <title>
-        
-            heyZzz&#39;s blog - Redefine Your Hexo Journey.
-        
-    </title>
-
-    <link rel="stylesheet" href="https://registry.npmmirror.com/hexo-theme-redefine/2.9.0/files/source/fonts/Chillax/chillax.css">
-
-    <!--- Inject Part-->
-    
-
-    
-<link rel="stylesheet" href="/css/style.css">
-
-
-    
-        <link rel="stylesheet" href="https://registry.npmmirror.com/hexo-theme-redefine/2.9.0/files/source/css/build/tailwind.css">
-    
-
-    <link rel="stylesheet" href="https://registry.npmmirror.com/hexo-theme-redefine/2.9.0/files/source/fonts/GeistMono/geist-mono.css">
-    <link rel="stylesheet" href="https://registry.npmmirror.com/hexo-theme-redefine/2.9.0/files/source/fonts/Geist/geist.css">
-    <!--- Font Part-->
-    
-    
-    
-    
-    
-    
-
-    <script id="hexo-configurations">
-    window.config = {"hostname":"heyzzz629.github.io","root":"/","language":"zh-CN","path":"search.json"};
-    window.theme = {"articles":{"style":{"font_size":"16px","line_height":1.5,"image_border_radius":"14px","image_alignment":"center","image_caption":false,"link_icon":true,"delete_mask":false,"title_alignment":"left","headings_top_spacing":{"h1":"3.2rem","h2":"2.4rem","h3":"1.9rem","h4":"1.6rem","h5":"1.4rem","h6":"1.3rem"}},"word_count":{"enable":false,"count":false,"min2read":false},"author_label":{"enable":true,"auto":false,"list":[]},"code_block":{"copy":true,"style":"mac","highlight_theme":{"light":"atom-one-light","dark":"atom-one-dark"},"font":{"enable":false,"family":null,"url":null}},"toc":{"enable":true,"max_depth":3,"number":false,"expand":true,"init_open":true},"copyright":{"enable":true,"default":"cc_by_nc_sa"},"lazyload":true,"pangu_js":false,"recommendation":{"enable":false,"title":"推荐阅读","limit":3,"mobile_limit":2,"placeholder":"/images/wallhaven-wqery6-light.webp","skip_dirs":[]}},"colors":{"primary":"#49b1f5","secondary":"#ff7242","default_mode":"auto"},"global":{"fonts":{"chinese":{"enable":false,"family":null,"url":null},"english":{"enable":false,"family":null,"url":null},"title":{"enable":false,"family":null,"url":null}},"content_max_width":"1000px","sidebar_width":"210px","hover":{"shadow":true,"scale":false},"scroll_progress":{"bar":true,"percentage":false},"website_counter":{"url":"https://cn.vercount.one/js","enable":true,"site_pv":true,"site_uv":true,"post_pv":true},"single_page":true,"preloader":{"enable":false,"custom_message":null},"side_tools":{"gear_rotation":true,"auto_expand":false},"open_graph":{"enable":true,"image":"/images/redefine-og.webp","description":"heyZzz's OI Blog"},"google_analytics":{"enable":false,"id":null}},"home_banner":{"enable":true,"style":"fixed","image":{"light":"#f8f9fa","dark":"#121212"},"title":"heyZzz's blog","subtitle":{"text":["一名 OIer","欢迎来到我的博客","Loading..."],"hitokoto":{"enable":false,"show_author":false,"api":"https://v1.hitokoto.cn"},"typing_speed":120,"backing_speed":80,"starting_delay":500,"backing_delay":1500,"loop":true,"smart_backspace":true},"text_color":{"light":"#333333","dark":"#d1d1b6"},"text_style":{"title_size":"2.8rem","subtitle_size":"1.5rem","line_height":1.2},"custom_font":{"enable":false,"family":null,"url":null},"social_links":{"enable":true,"style":"default","links":[{"icon":"fa-brands fa-github","url":"https://github.com/heyZzz629"},{"icon":"fa-brands fa-code","url":"https://www.luogu.com.cn/user/1015977"},{"icon":"fa-brands fa-envelope","url":"mailto:nolan422@126.com"},{"icon":"fa-brands fa-telegram","url":null},{"icon":"/images/custom-icon.svg","url":null}],"qrs":[{"icon":"fa-brands fa-weixin","qr":null},{"icon":"/images/custom-icon.svg","qr":null}]}},"plugins":{"feed":{"enable":false},"aplayer":{"enable":false,"type":"fixed","audios":[{"name":null,"artist":null,"url":null,"cover":null,"lrc":null}]},"mermaid":{"enable":false,"version":"11.4.1","theme":{"light":"default","dark":"dark"}}},"version":"2.9.0","navbar":{"auto_hide":false,"color":{"left":"#ffffff","right":"#ffffff","transparency":100},"width":{"home":"1200px","pages":"1000px"},"links":{"Home":{"path":"/","icon":"fa-regular fa-house"},"首页":{"path":"/","icon":"fa-regular fa-house"},"题解":{"path":"/categories/题解/","icon":"fa-regular fa-code"},"比赛":{"path":"/categories/比赛/","icon":"fa-regular fa-trophy"},"归档":{"path":"/archives","icon":"fa-regular fa-archive"},"友链":{"path":"/friends","icon":"fa-regular fa-link"},"关于":{"path":"/about","icon":"fa-regular fa-user"}},"search":{"enable":true,"preload":true}},"page_templates":{"friends_column":2,"tags_style":"blur","masonry":{"batch_size":12,"initial_batch_size":24}},"home":{"sidebar":{"enable":true,"position":"right","first_item":"info","announcement":"只是一只可爱的小猫啦～","show_on_mobile":true,"links":null},"article_date_format":"auto","excerpt_length":200,"categories":{"enable":true,"limit":3},"tags":{"enable":true,"limit":3}},"footer":{"runtime":true,"icon":"<i class=\"fa-solid fa-heart\" style=\"color: #f54545\"></i>","start":"2024/01/01 00:00:00","statistics":true,"customize":null,"icp":{"enable":false,"number":null,"url":null}},"footerStart":"2024/01/01 00:00:00","mermaid":{"style":{"light":"default","dark":"dark"}}};
-    window.lang_ago = {"second":"%s 秒前","minute":"%s 分钟前","hour":"%s 小时前","day":"%s 天前","week":"%s 周前","month":"%s 个月前","year":"%s 年前"};
-    window.i18n = {"search":"站内搜索您需要的内容...","toc":"目录","prev":"上一页","next":"下一页","prev_posts":"上一篇","next_posts":"下一篇","page":"第 %d 页","recent_posts":"最新文章","share":"分享","powered_by":"由 %s 驱动","theme":"主题","rss_feed":"RSS Feed","category":"分类","categories":"分类","tag":"标签","tags":"标签","post":"文章","posts":"文章","tagcloud":"标签云","comment":"评论","comments":"评论","top":"置顶","sticky":"置顶","go-back-home":"回到首页","masonry_loading":"照片加载中...","image_viewer":"图片查看器","close":"关闭","exif":{"title":"EXIF","cards":{"camera":"相机","lens":"镜头","exposure":"曝光","other":"其他"},"fields":{"make":"品牌","model":"机型","date_taken":"拍摄时间","lens_model":"镜头","focal_length":"焦距","focus_mode":"对焦模式","shutter":"快门","aperture":"光圈","iso":"感光度","exposure_program":"曝光程序","exposure_compensation":"曝光补偿","metering_mode":"测光模式","flash":"闪光灯","white_balance":"白平衡","latitude":"纬度","longitude":"经度","altitude":"海拔"},"status":{"loading":"加载中...","no_exif":"无 EXIF 信息","library_missing":"EXIF 库未加载","image_source_missing":"图片地址不可用","unavailable":"EXIF 不可用（可能被 CORS 阻止或缺少元数据）","flag_unavailable":"EXIF 不可用"}},"home":"首页","archive":"归档","archives":"归档","about":"关于","links":"链接","link":"链接","friends":"友情链接","friend":"友情链接","timeline":"时间轴","shuoshuo":"说说","bookmarks":"书签","site_uv":"访问人数","site_pv":"总访问量","read_more":"阅读全文","wordcount":"字","min2read":"分钟","changelog":"更新日志","status":"状态","runtime":"博客已运行","days":"天","hours":"小时","minutes":"分钟","seconds":"秒","optimized_by":"并由 Evan 进行优化","rights":"版权所有","site_posts":"共撰写了 %s 篇文章","site_wordcount":"共 %s 字","copyright":{"title":"标题","author":"作者","link":"链接","create_time":"创建于","update_time":"更新于","license_title":"版权声明","license_content":"本文章采用 %s 进行许可。","all_rights_reserved":"版权所有 &#169 %s，禁止转载。","public_domain":"本文为公有领域作品，可自由转载、引用。"},"ago":{"second":"%s 秒前","minute":"%s 分钟前","hour":"%s 小时前","day":"%s 天前","week":"%s 周前","month":"%s 个月前","year":"%s 年前"},"create_time":"创建","update_time":"更新","expired":"这篇文章最后更新于 %s 天前，内容可能已经过时。"};
-    window.data = {"masonry":false};
-  </script>
-    
-    <!--- Fontawesome Part-->
-    <link rel="stylesheet" href="https://registry.npmmirror.com/hexo-theme-redefine/2.9.0/files/source/fontawesome/fontawesome.min.css">
-    <link rel="stylesheet" href="https://registry.npmmirror.com/hexo-theme-redefine/2.9.0/files/source/fontawesome/brands.min.css">
-    <link rel="stylesheet" href="https://registry.npmmirror.com/hexo-theme-redefine/2.9.0/files/source/fontawesome/solid.min.css">
-    <link rel="stylesheet" href="https://registry.npmmirror.com/hexo-theme-redefine/2.9.0/files/source/fontawesome/regular.min.css">
-    
-    
-    
-    
-<meta name="generator" content="Hexo 8.1.1"></head>
-
-
-<body>
-	<div class="progress-bar-container">
-	
-	<span class="scroll-progress-bar"></span>
-	
-
-	
-	<span class="pjax-progress-bar"></span>
-	<!--        <span class="swup-progress-icon">-->
-	<!--            <i class="fa-solid fa-circle-notch fa-spin"></i>-->
-	<!--        </span>-->
-	
-</div>
-
-<main class="page-container" id="swup">
-
-	
-	
-    <style>
-        .home-banner-container {
-            background: none !important;
+<meta name="twitter:image" content="https://heyzzz629.github.io/img/butterfly-icon.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "heyZzz's OI Blog",
+  "alternateName": [
+    "My Blog",
+    "heyzzz629.github.io"
+  ],
+  "url": "https://heyzzz629.github.io/"
+}</script><link rel="shortcut icon" href="/img/butterfly-icon.png"><link rel="canonical" href="https://heyzzz629.github.io/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.4"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
         }
-        .home-article-item,
-        .sidebar-links,
-        .sidebar-content,
-        a.page-number,
-        a.extend,
-        .sidebar-links .links:hover,
-        .right-bottom-tools,
-        footer.footer {
-            background-color: var(--background-color-transparent-80) !important;
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
         }
-        .right-bottom-tools:hover,
-        a.page-number:hover,
-        a.extend:hover {
-            background-color: var(--primary-color) !important;
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
         }
-        .site-info,
-        .home-article-sticky-label {
-            background-color: var(--background-color-transparent-15) !important;
-        }
-        .home-article-sticky-label {
-            backdrop-filter: none !important;
-        }
-    </style>
-    <div class="home-banner-background transition-fade fixed top-0 left-0 w-screen h-screen scale-125 sm:scale-110 box-border will-change-transform bg-cover">
-        <img src="#f8f9fa" alt="home-banner-background" class="w-full h-full object-cover dark:hidden">
-        <img src="#121212" alt="home-banner-background" class="w-full h-full object-cover hidden dark:block">
-    </div>
-
-
-<div class="home-banner-container flex justify-center items-center transition-fade relative">
-    
-    <div class="content mt-8 flex flex-col justify-center items-center transition-fade-down">
-        <div class="description flex flex-col justify-center items-center w-screen font-medium text-center"
-        
-        >
-            heyZzz's blog
-            
-            
-            
-            
-            
-                <p><i id="subtitle"></i></p>
-            
-        </div>
-        
-            
-            <div class="absolute bottom-0.5 flex flex-row justify-between max-w-[1340px] items-center w-full px-8 sm:px-12">
-                <div class="flex p-3 bg-gray-300/50 dark:bg-gray-500/40 backdrop-blur-lg border border-white/20 dark:border-gray-500/30 group rounded-full cursor-pointer flex justify-center items-center aspect-square h-full shadow-redefine-flat hover:shadow-redefine-flat-hover transition-shadow" onclick="scrollToMain()" >
-                    <i class="fa-solid fa-arrow-down fa-fw fa-lg group-hover:translate-y-1 transition-transform"></i>
-                </div>
-                <div class="social-contacts px-6 py-3 bg-gray-300/50 dark:bg-gray-500/40 backdrop-blur-lg border border-white/20 dark:border-gray-500/30 shadow-redefine-flat rounded-full flex flex-row gap-3 items-center">
-                    
-                        
-                            
-                            
-                            
-                            
-                            
-                            
-                                <span class="social-contact-item">
-                                    <a target="_blank" href="https://github.com/heyZzz629">
-                                        <i class="fa-brands fa-github fa-fw fa-lg"></i>
-                                    </a>
-                                </span>
-                            
-                        
-                    
-                        
-                            
-                            
-                            
-                            
-                            
-                            
-                                <span class="social-contact-item">
-                                    <a target="_blank" href="https://www.luogu.com.cn/user/1015977">
-                                        <i class="fa-brands fa-code fa-fw fa-lg"></i>
-                                    </a>
-                                </span>
-                            
-                        
-                    
-                        
-                            
-                            
-                            
-                            
-                            
-                            
-                                <span class="social-contact-item">
-                                    <a target="_blank" href="mailto:nolan422@126.com">
-                                        <i class="fa-brands fa-envelope fa-fw fa-lg"></i>
-                                    </a>
-                                </span>
-                            
-                        
-                    
-                        
-                    
-                        
-                    
-                    
-                </div>
-            </div>
-        
-    </div>
-    <style>
-        /* Mobile-specific QR code styles */
-        .qr-toggle-item.qr-active .qr-popup {
-            visibility: visible !important;
-            opacity: 1 !important;
-            transform: translateY(0) !important;
-        }
-        
-        /* Prevent button from staying in focus/hover state on mobile */
-        @media (hover: none) and (pointer: coarse) {
-            .qr-toggle-item:focus,
-            .qr-toggle-item:hover {
-                background-color: transparent;
-            }
-            
-            .qr-toggle-item .qr-trigger:focus,
-            .qr-toggle-item .qr-trigger:hover {
-                background-color: transparent;
-                color: inherit;
-            }
-            
-            /* Only show active state when explicitly toggled */
-            .qr-popup {
-                visibility: hidden !important;
-                opacity: 0 !important;
-            }
-        }
-    </style>
-</div>
-
-	
-
-	<div class="main-content-container flex flex-col justify-between min-h-dvh">
-		<div class="main-content-header">
-			<header class="navbar-container px-6 md:px-12">
-    <div class="navbar-content transition-navbar has-home-banner">
-        <div class="left">
-            
-            <a class="logo-title" href="/">
-                <h1>
-                heyZzz&#39;s blog
-                </h1>
-            </a>
-        </div>
-
-        <div class="right">
-            <!-- PC -->
-            <div class="desktop">
-                <ul class="navbar-list">
-                    
-                        
-                            
-
-                            <li class="navbar-item">
-                                <!-- Menu -->
-                                <a class="active"
-                                   href="/"
-                                        >
-                                    <i class="fa-regular fa-house fa-fw"></i>
-                                    首页
-                                    
-                                </a>
-
-                                <!-- Submenu -->
-                                
-                            </li>
-                    
-                        
-                            
-
-                            <li class="navbar-item">
-                                <!-- Menu -->
-                                <a class="active"
-                                   href="/"
-                                        >
-                                    <i class="fa-regular fa-house fa-fw"></i>
-                                    首页
-                                    
-                                </a>
-
-                                <!-- Submenu -->
-                                
-                            </li>
-                    
-                        
-                            
-
-                            <li class="navbar-item">
-                                <!-- Menu -->
-                                <a class=""
-                                   href="/categories/%E9%A2%98%E8%A7%A3/"
-                                        >
-                                    <i class="fa-regular fa-code fa-fw"></i>
-                                    题解
-                                    
-                                </a>
-
-                                <!-- Submenu -->
-                                
-                            </li>
-                    
-                        
-                            
-
-                            <li class="navbar-item">
-                                <!-- Menu -->
-                                <a class=""
-                                   href="/categories/%E6%AF%94%E8%B5%9B/"
-                                        >
-                                    <i class="fa-regular fa-trophy fa-fw"></i>
-                                    比赛
-                                    
-                                </a>
-
-                                <!-- Submenu -->
-                                
-                            </li>
-                    
-                        
-                            
-
-                            <li class="navbar-item">
-                                <!-- Menu -->
-                                <a class=""
-                                   href="/archives"
-                                        >
-                                    <i class="fa-regular fa-archive fa-fw"></i>
-                                    归档
-                                    
-                                </a>
-
-                                <!-- Submenu -->
-                                
-                            </li>
-                    
-                        
-                            
-
-                            <li class="navbar-item">
-                                <!-- Menu -->
-                                <a class=""
-                                   href="/friends"
-                                        >
-                                    <i class="fa-regular fa-link fa-fw"></i>
-                                    友链
-                                    
-                                </a>
-
-                                <!-- Submenu -->
-                                
-                            </li>
-                    
-                        
-                            
-
-                            <li class="navbar-item">
-                                <!-- Menu -->
-                                <a class=""
-                                   href="/about"
-                                        >
-                                    <i class="fa-regular fa-user fa-fw"></i>
-                                    关于
-                                    
-                                </a>
-
-                                <!-- Submenu -->
-                                
-                            </li>
-                    
-                    
-                        <li class="navbar-item search search-popup-trigger">
-                            <i class="fa-solid fa-magnifying-glass"></i>
-                        </li>
-                    
-                </ul>
-            </div>
-            <!-- Mobile -->
-            <div class="mobile">
-                
-                    <div class="icon-item search search-popup-trigger"><i class="fa-solid fa-magnifying-glass"></i>
-                    </div>
-                
-                <div class="icon-item navbar-bar">
-                    <div class="navbar-bar-middle"></div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Mobile sheet -->
-    <div class="navbar-drawer h-dvh w-full absolute top-0 left-0 bg-background-color flex flex-col justify-between">
-        <ul class="drawer-navbar-list flex flex-col px-4 justify-center items-start">
-            
-                
-                    
-
-                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
-                        
-                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full active"
-                           href="/"
-                        >
-                            <span>
-                                首页
-                            </span>
-                            
-                                <i class="fa-regular fa-house fa-sm fa-fw"></i>
-                            
-                        </a>
-                        
-
-                        
-                    </li>
-            
-                
-                    
-
-                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
-                        
-                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full active"
-                           href="/"
-                        >
-                            <span>
-                                首页
-                            </span>
-                            
-                                <i class="fa-regular fa-house fa-sm fa-fw"></i>
-                            
-                        </a>
-                        
-
-                        
-                    </li>
-            
-                
-                    
-
-                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
-                        
-                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
-                           href="/categories/%E9%A2%98%E8%A7%A3/"
-                        >
-                            <span>
-                                题解
-                            </span>
-                            
-                                <i class="fa-regular fa-code fa-sm fa-fw"></i>
-                            
-                        </a>
-                        
-
-                        
-                    </li>
-            
-                
-                    
-
-                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
-                        
-                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
-                           href="/categories/%E6%AF%94%E8%B5%9B/"
-                        >
-                            <span>
-                                比赛
-                            </span>
-                            
-                                <i class="fa-regular fa-trophy fa-sm fa-fw"></i>
-                            
-                        </a>
-                        
-
-                        
-                    </li>
-            
-                
-                    
-
-                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
-                        
-                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
-                           href="/archives"
-                        >
-                            <span>
-                                归档
-                            </span>
-                            
-                                <i class="fa-regular fa-archive fa-sm fa-fw"></i>
-                            
-                        </a>
-                        
-
-                        
-                    </li>
-            
-                
-                    
-
-                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
-                        
-                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
-                           href="/friends"
-                        >
-                            <span>
-                                友链
-                            </span>
-                            
-                                <i class="fa-regular fa-link fa-sm fa-fw"></i>
-                            
-                        </a>
-                        
-
-                        
-                    </li>
-            
-                
-                    
-
-                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
-                        
-                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
-                           href="/about"
-                        >
-                            <span>
-                                关于
-                            </span>
-                            
-                                <i class="fa-regular fa-user fa-sm fa-fw"></i>
-                            
-                        </a>
-                        
-
-                        
-                    </li>
-            
-
-            
-            
-        </ul>
-
-        <div class="statistics flex justify-around my-2.5">
-    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">14</div>
-        <div class="label text-third-text-color text-sm">标签</div>
-    </a>
-    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">5</div>
-        <div class="label text-third-text-color text-sm">分类</div>
-    </a>
-    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">34</div>
-        <div class="label text-third-text-color text-sm">文章</div>
-    </a>
-</div>
-    </div>
-
-    <div class="window-mask"></div>
-
-</header>
-
-
-		</div>
-
-		<div class="main-content-body transition-fade-up">
-			
-
-			<div class="main-content">
-				<div class="home-content-container">
-    <ul class="home-article-list">
-        
-            <li class="home-article-item">
-
-                
-                    <div class="absolute top-[12px] right-[12px] text-[0.7rem] text-third-text-color rounded-medium bg-background-color-transparent-15 backdrop-blur-sm py-[2px] px-[10px] border border-border-color z-3 hover:text-first-text-color cursor-default">
-                        <i class="fa-regular fa-thumbtack mr-[3px] text-[0.65rem]"></i>置顶
-                    </div>
-                
-
-                
-
-                
-                <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
-                    <h3 class="home-article-title">
-                        <a href="/2026/03/08/%E6%A0%91%E7%8A%B6%E6%95%B0%E7%BB%84/">
-                            树状数组
-                        </a>
-                    </h3>
-
-                    <div class="home-article-content markdown-body">
-                        
-                            
-                            习题
-首先：
-要说树状数组，就必须要说 $\operatorname{lowbit}$。
-那 $\operatorname{lowbit}$ 是什么呢？
-是一个数的二进制从右往左第一个 $1$ 的值。
-例如，$\operatorname{lowbit}(14)$ 是 $2$，$\operatorname{lowbit}(16)$ 是 $16$。
-那应该怎么求呢？
-是 $n \And (-n)...
-                        
-                    </div>
-
-                    <div class="home-article-meta-info-container">
-    <div class="home-article-meta-info">
-        <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Sun Mar 08 2026 12:29:19 GMT+0800">
-                
-                    2026-03-08
-                
-            </span>
-        </span>
-        
-            <span class="home-article-category">
-                <i class="fa-solid fa-folders"></i>&nbsp;
-            <ul>
-                
-                
-                    
-                        
-                        <li>
-                            <a href="/categories/%E7%AE%97%E6%B3%95%C2%B7%E7%90%86%E8%AE%BA/">算法·理论</a>&nbsp;
-                        </li>
-                    
-                    
-                
-            </ul>
-        </span>
-        
-        
-            <span class="home-article-tag">
-                <i class="fa-solid fa-tags"></i>&nbsp;
-                <ul>
-                    
-                        <li>
-                            
-                            <a href="/tags/%E6%A0%91%E7%8A%B6%E6%95%B0%E7%BB%84/">树状数组</a>&nbsp;
-                        </li>
-                    
-                </ul>
-            </span>
-        
-    </div>
-
-    <a href="/2026/03/08/%E6%A0%91%E7%8A%B6%E6%95%B0%E7%BB%84/">阅读全文<span class="seo-reader-text">树状数组</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
-</div>
-
-                </div>
-            </li>
-        
-            <li class="home-article-item">
-
-                
-                    <div class="absolute top-[12px] right-[12px] text-[0.7rem] text-third-text-color rounded-medium bg-background-color-transparent-15 backdrop-blur-sm py-[2px] px-[10px] border border-border-color z-3 hover:text-first-text-color cursor-default">
-                        <i class="fa-regular fa-thumbtack mr-[3px] text-[0.65rem]"></i>置顶
-                    </div>
-                
-
-                
-
-                
-                <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
-                    <h3 class="home-article-title">
-                        <a href="/2026/03/09/CSP-%E8%80%83%E5%9C%BA%E6%98%93%E9%94%99%E7%82%B9/">
-                            CSP 考场易错点
-                        </a>
-                    </h3>
-
-                    <div class="home-article-content markdown-body">
-                        
-                            
-                            UB（未定义行为）
-未定义行为就是你的代码出现了语言标准没有预料到的代码时，你的代码就会出现一些奇怪的错。
-有时你的评测是对的，而这种错误会在 CCF 垃圾的评测环境中暴露出来，没注意到就会爆零。
-printf
-你一定要看好你输出的和 printf 中的类型是否一样，不然程序会错。
-有符号整数溢出也是未定义行为。
-返回值非 void 函数一定要有返回！
-错误示范：
-1int x(int a)...
-                        
-                    </div>
-
-                    <div class="home-article-meta-info-container">
-    <div class="home-article-meta-info">
-        <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Mon Mar 09 2026 20:44:42 GMT+0800">
-                
-                    2026-03-09
-                
-            </span>
-        </span>
-        
-            <span class="home-article-category">
-                <i class="fa-solid fa-folders"></i>&nbsp;
-            <ul>
-                
-                
-                    
-                        
-                        <li>
-                            <a href="/categories/%E7%AE%97%E6%B3%95%C2%B7%E7%90%86%E8%AE%BA/">算法·理论</a>&nbsp;
-                        </li>
-                    
-                    
-                
-            </ul>
-        </span>
-        
-        
-            <span class="home-article-tag">
-                <i class="fa-solid fa-tags"></i>&nbsp;
-                <ul>
-                    
-                        <li>
-                            
-                            <a href="/tags/CSP/">CSP</a>&nbsp;
-                        </li>
-                    
-                        <li>
-                            | 
-                            <a href="/tags/%E7%90%86%E8%AE%BA/">理论</a>&nbsp;
-                        </li>
-                    
-                </ul>
-            </span>
-        
-    </div>
-
-    <a href="/2026/03/09/CSP-%E8%80%83%E5%9C%BA%E6%98%93%E9%94%99%E7%82%B9/">阅读全文<span class="seo-reader-text">CSP 考场易错点</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
-</div>
-
-                </div>
-            </li>
-        
-            <li class="home-article-item">
-
-                
-                    <div class="absolute top-[12px] right-[12px] text-[0.7rem] text-third-text-color rounded-medium bg-background-color-transparent-15 backdrop-blur-sm py-[2px] px-[10px] border border-border-color z-3 hover:text-first-text-color cursor-default">
-                        <i class="fa-regular fa-thumbtack mr-[3px] text-[0.65rem]"></i>置顶
-                    </div>
-                
-
-                
-
-                
-                <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
-                    <h3 class="home-article-title">
-                        <a href="/2026/03/08/%E6%B5%99%E5%A4%A7%E5%AE%81%E7%90%86%E5%AD%A6%E9%99%A2-ACM-%E8%A2%AB%E8%99%90%E8%AE%B0/">
-                            浙大宁理学院 ACM 被虐记
-                        </a>
-                    </h3>
-
-                    <div class="home-article-content markdown-body">
-                        
-                            
-                            收到 SH 的邀请，我去了浙大宁理学院打 ACM。
-考前
-找了同为 XXS 的 ybw，zhw，xzh。
-开考！
-T1 乱搞，橙题，但是因为行末输出了空格挂了好久。 压力 中
-T2 看 ybw 没做，先放着。
-T3 水题，不用管。
-T4 LCA 模版，调了一会儿，过了。但是别人都跳了这题。
-T5 看 ybw 没做，先放着。
-T6 小模拟，心态有点炸。 压力 高
-T7 水题，不用管。
-T8 一...
-                        
-                    </div>
-
-                    <div class="home-article-meta-info-container">
-    <div class="home-article-meta-info">
-        <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Sun Mar 08 2026 12:29:02 GMT+0800">
-                
-                    2026-03-08
-                
-            </span>
-        </span>
-        
-            <span class="home-article-category">
-                <i class="fa-solid fa-folders"></i>&nbsp;
-            <ul>
-                
-                
-                    
-                        
-                        <li>
-                            <a href="/categories/%E7%94%9F%E6%B4%BB%C2%B7%E6%B8%B8%E8%AE%B0/">生活·游记</a>&nbsp;
-                        </li>
-                    
-                    
-                
-            </ul>
-        </span>
-        
-        
-            <span class="home-article-tag">
-                <i class="fa-solid fa-tags"></i>&nbsp;
-                <ul>
-                    
-                        <li>
-                            
-                            <a href="/tags/ACM/">ACM</a>&nbsp;
-                        </li>
-                    
-                </ul>
-            </span>
-        
-    </div>
-
-    <a href="/2026/03/08/%E6%B5%99%E5%A4%A7%E5%AE%81%E7%90%86%E5%AD%A6%E9%99%A2-ACM-%E8%A2%AB%E8%99%90%E8%AE%B0/">阅读全文<span class="seo-reader-text">浙大宁理学院 ACM 被虐记</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
-</div>
-
-                </div>
-            </li>
-        
-            <li class="home-article-item">
-
-                
-                    <div class="absolute top-[12px] right-[12px] text-[0.7rem] text-third-text-color rounded-medium bg-background-color-transparent-15 backdrop-blur-sm py-[2px] px-[10px] border border-border-color z-3 hover:text-first-text-color cursor-default">
-                        <i class="fa-regular fa-thumbtack mr-[3px] text-[0.65rem]"></i>置顶
-                    </div>
-                
-
-                
-
-                
-                <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
-                    <h3 class="home-article-title">
-                        <a href="/2026/03/08/OI-%E6%A0%A1%E5%9B%AD%E7%94%9F%E6%B4%BB%E6%A8%A1%E6%8B%9F%E5%99%A8/">
-                            OI 校园生活模拟器
-                        </a>
-                    </h3>
-
-                    <div class="home-article-content markdown-body">
-                        
-                            
-                            食用方法，打开这个玩即可
-🎯 游戏目标
-扮演一名信息学竞赛选手（OIer），在3年高中生活中：
-
-提升算法能力，争取在 NOIP 拿到省一/国集资格
-平衡文化课、心态、体力、人际关系
-解锁成就，书写你的 OI 故事
-
-
-📊 状态面板说明
-
-
-
-属性
-含义
-注意事项
-
-
-
-
-💻 算法能力
-你的 OI 水平，决定比赛成绩
-&gt;85 可冲省选，&gt;95 有望国集
-
-
-📚 文化课
-学...
-                        
-                    </div>
-
-                    <div class="home-article-meta-info-container">
-    <div class="home-article-meta-info">
-        <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Sun Mar 08 2026 12:28:46 GMT+0800">
-                
-                    2026-03-08
-                
-            </span>
-        </span>
-        
-            <span class="home-article-category">
-                <i class="fa-solid fa-folders"></i>&nbsp;
-            <ul>
-                
-                
-                    
-                        
-                        <li>
-                            <a href="/categories/%E7%A7%91%E6%8A%80%C2%B7%E5%B7%A5%E7%A8%8B/">科技·工程</a>&nbsp;
-                        </li>
-                    
-                    
-                
-            </ul>
-        </span>
-        
-        
-            <span class="home-article-tag">
-                <i class="fa-solid fa-tags"></i>&nbsp;
-                <ul>
-                    
-                        <li>
-                            
-                            <a href="/tags/OI/">OI</a>&nbsp;
-                        </li>
-                    
-                        <li>
-                            | 
-                            <a href="/tags/%E6%A8%A1%E6%8B%9F%E5%99%A8/">模拟器</a>&nbsp;
-                        </li>
-                    
-                </ul>
-            </span>
-        
-    </div>
-
-    <a href="/2026/03/08/OI-%E6%A0%A1%E5%9B%AD%E7%94%9F%E6%B4%BB%E6%A8%A1%E6%8B%9F%E5%99%A8/">阅读全文<span class="seo-reader-text">OI 校园生活模拟器</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
-</div>
-
-                </div>
-            </li>
-        
-            <li class="home-article-item">
-
-                
-                    <div class="absolute top-[12px] right-[12px] text-[0.7rem] text-third-text-color rounded-medium bg-background-color-transparent-15 backdrop-blur-sm py-[2px] px-[10px] border border-border-color z-3 hover:text-first-text-color cursor-default">
-                        <i class="fa-regular fa-thumbtack mr-[3px] text-[0.65rem]"></i>置顶
-                    </div>
-                
-
-                
-
-                
-                <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
-                    <h3 class="home-article-title">
-                        <a href="/2026/03/09/%E6%8E%92%E5%BA%8F%E7%9A%84%E7%A8%B3%E5%AE%9A%E6%80%A7/">
-                            排序的稳定性
-                        </a>
-                    </h3>
-
-                    <div class="home-article-content markdown-body">
-                        
-                            
-                            排序的稳定性
-
-
-
-排序算法
-平均时间复杂度
-最好时间复杂度
-最坏时间复杂度
-空间复杂度
-是否稳定
-
-
-
-
-冒泡排序
-$O(n^2)$
-$O(n)$
-$O(n^2)$
-$O(1)$
-$T$
-
-
-选择排序
-$O(n^2)$
-$O(n^2)$
-$O(n^2)$
-$O(1)$
-$F$
-
-
-插入排序
-$O(n^2)$
-$O(n)$
-$O(n^2)$
-$O(1)$
-$T$
-
-
-归并排序
-$O(nlog...
-                        
-                    </div>
-
-                    <div class="home-article-meta-info-container">
-    <div class="home-article-meta-info">
-        <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Mon Mar 09 2026 20:44:44 GMT+0800">
-                
-                    2026-03-09
-                
-            </span>
-        </span>
-        
-            <span class="home-article-category">
-                <i class="fa-solid fa-folders"></i>&nbsp;
-            <ul>
-                
-                
-                    
-                        
-                        <li>
-                            <a href="/categories/%E7%AE%97%E6%B3%95%C2%B7%E7%90%86%E8%AE%BA/">算法·理论</a>&nbsp;
-                        </li>
-                    
-                    
-                
-            </ul>
-        </span>
-        
-        
-            <span class="home-article-tag">
-                <i class="fa-solid fa-tags"></i>&nbsp;
-                <ul>
-                    
-                        <li>
-                            
-                            <a href="/tags/%E7%AE%97%E6%B3%95/">算法</a>&nbsp;
-                        </li>
-                    
-                        <li>
-                            | 
-                            <a href="/tags/%E6%8E%92%E5%BA%8F-sort/">排序 sort</a>&nbsp;
-                        </li>
-                    
-                </ul>
-            </span>
-        
-    </div>
-
-    <a href="/2026/03/09/%E6%8E%92%E5%BA%8F%E7%9A%84%E7%A8%B3%E5%AE%9A%E6%80%A7/">阅读全文<span class="seo-reader-text">排序的稳定性</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
-</div>
-
-                </div>
-            </li>
-        
-            <li class="home-article-item">
-
-                
-
-                
-
-                
-                <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
-                    <h3 class="home-article-title">
-                        <a href="/2026/03/10/12-19-12-31%E5%86%99%E9%A2%98%E6%8A%A5%E5%91%8A/">
-                            12.19~12.31写题报告
-                        </a>
-                    </h3>
-
-                    <div class="home-article-content markdown-body">
-                        
-                            
-                            题目
-T 1
-最小生成树。
-刚开始的解法
-忽略 $tol_a+tol_b$，零分。
-之后
-设 $tol_x$ 为最小，向所有点建边。
-12345int axx=min_element(tol+1,tol+n+1)-tol,tot2=0;for(int i=1;i&lt;=n;i++) if(i!=axx)&#123;    if(mp[i*1000000+axx]) tot2+=min(to...
-                        
-                    </div>
-
-                    <div class="home-article-meta-info-container">
-    <div class="home-article-meta-info">
-        <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Tue Mar 10 2026 16:19:55 GMT+0800">
-                
-                    2026-03-10
-                
-            </span>
-        </span>
-        
-        
-    </div>
-
-    <a href="/2026/03/10/12-19-12-31%E5%86%99%E9%A2%98%E6%8A%A5%E5%91%8A/">阅读全文<span class="seo-reader-text">12.19~12.31写题报告</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
-</div>
-
-                </div>
-            </li>
-        
-            <li class="home-article-item">
-
-                
-
-                
-
-                
-                <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
-                    <h3 class="home-article-title">
-                        <a href="/2026/03/10/%E6%90%9E%E7%AC%91/">
-                            搞笑
-                        </a>
-                    </h3>
-
-                    <div class="home-article-content markdown-body">
-                        
-                            
-                            家长直呼太暴力！这些算法可能会被删除
-近日，洛谷网络科技有限公司多位用户家长向 @kkksc03 反映，部分算法存在血腥、暴力等不利于青少年儿童的因素出现，要求对相关算法进行整改或被删除。 洛谷网络科技有限公司题目组管理员在接受采访时说道，在最近几天内，洛谷收到了数十条家长来信，声称网站教授的部分算法存在“血腥”、“暴力”等内容。“他们说这些东西会教坏他们家的孩子，要求我们整改这些算法，把这...
-                        
-                    </div>
-
-                    <div class="home-article-meta-info-container">
-    <div class="home-article-meta-info">
-        <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Tue Mar 10 2026 16:09:04 GMT+0800">
-                
-                    2026-03-10
-                
-            </span>
-        </span>
-        
-            <span class="home-article-category">
-                <i class="fa-solid fa-folders"></i>&nbsp;
-            <ul>
-                
-                
-                    
-                        
-                        <li>
-                            <a href="/categories/%E4%BC%91%E9%97%B2%C2%B7%E5%A8%B1%E4%B9%90/">休闲·娱乐</a>&nbsp;
-                        </li>
-                    
-                    
-                
-            </ul>
-        </span>
-        
-        
-            <span class="home-article-tag">
-                <i class="fa-solid fa-tags"></i>&nbsp;
-                <ul>
-                    
-                        <li>
-                            
-                            <a href="/tags/%E5%A8%B1%E4%B9%90/">娱乐</a>&nbsp;
-                        </li>
-                    
-                </ul>
-            </span>
-        
-    </div>
-
-    <a href="/2026/03/10/%E6%90%9E%E7%AC%91/">阅读全文<span class="seo-reader-text">搞笑</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
-</div>
-
-                </div>
-            </li>
-        
-            <li class="home-article-item">
-
-                
-
-                
-
-                
-                <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
-                    <h3 class="home-article-title">
-                        <a href="/2026/03/09/ST%E8%A1%A8/">
-                            ST表
-                        </a>
-                    </h3>
-
-                    <div class="home-article-content markdown-body">
-                        
-                            
-                            ST表
-ST表它是解决 RMQ 问题（区间最值问题）的一种强有力的工具。
-时间复杂度为 $O(n \log n+Q)$。
-实现过程
-PS：以下讨论的是最大值，最小值同理。
-建立一个 $dp$ 数组 $dp_{i,j}$ 表示从 $i$ 开始 $2^j$ 个数中的最大值。
-边界为 $dp_{i,0}=a_i$，即从 $i$ 点开始 $2^0$ 个数中的最大值。
-我们不难发现 $\max{\ma...
-                        
-                    </div>
-
-                    <div class="home-article-meta-info-container">
-    <div class="home-article-meta-info">
-        <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Mon Mar 09 2026 20:44:44 GMT+0800">
-                
-                    2026-03-09
-                
-            </span>
-        </span>
-        
-            <span class="home-article-category">
-                <i class="fa-solid fa-folders"></i>&nbsp;
-            <ul>
-                
-                
-                    
-                        
-                        <li>
-                            <a href="/categories/%E7%AE%97%E6%B3%95%C2%B7%E7%90%86%E8%AE%BA/">算法·理论</a>&nbsp;
-                        </li>
-                    
-                    
-                
-            </ul>
-        </span>
-        
-        
-            <span class="home-article-tag">
-                <i class="fa-solid fa-tags"></i>&nbsp;
-                <ul>
-                    
-                        <li>
-                            
-                            <a href="/tags/ST-%E8%A1%A8/">ST 表</a>&nbsp;
-                        </li>
-                    
-                        <li>
-                            | 
-                            <a href="/tags/RMQ-%E9%97%AE%E9%A2%98/">RMQ 问题</a>&nbsp;
-                        </li>
-                    
-                        <li>
-                            | 
-                            <a href="/tags/%E7%AE%97%E6%B3%95/">算法</a>&nbsp;
-                        </li>
-                    
-                </ul>
-            </span>
-        
-    </div>
-
-    <a href="/2026/03/09/ST%E8%A1%A8/">阅读全文<span class="seo-reader-text">ST表</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
-</div>
-
-                </div>
-            </li>
-        
-            <li class="home-article-item">
-
-                
-
-                
-
-                
-                <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
-                    <h3 class="home-article-title">
-                        <a href="/2026/03/09/%E5%93%88%E5%A4%AB%E6%9B%BC%E6%A0%91%E4%B8%8E%E5%93%88%E5%A4%AB%E6%9B%BC%E7%BC%96%E7%A0%81/">
-                            哈夫曼树与哈夫曼编码
-                        </a>
-                    </h3>
-
-                    <div class="home-article-content markdown-body">
-                        
-                            
-                            哈夫曼树：
-哈夫曼树可由如下方式构造：
-
-由给定的 $n$ 个权值构造 $n$ 棵仅含有一个根结点的二叉树，记作集合 $F$。
-从集合 $F$ 中选取根结点权值最小的两棵二叉树 $T1$，$T2$ 作为左右子树构造新的二叉树 $T3$，新二叉树的根结点为 $T1$，$T2$ 根结点的权值和。
-从集合 $F$ 中删除 $T1$，$T2$，将 $T3$ 加入 $F$ 中。
-直到 $F$ 中只剩下...
-                        
-                    </div>
-
-                    <div class="home-article-meta-info-container">
-    <div class="home-article-meta-info">
-        <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Mon Mar 09 2026 20:44:44 GMT+0800">
-                
-                    2026-03-09
-                
-            </span>
-        </span>
-        
-            <span class="home-article-category">
-                <i class="fa-solid fa-folders"></i>&nbsp;
-            <ul>
-                
-                
-                    
-                        
-                        <li>
-                            <a href="/categories/%E7%AE%97%E6%B3%95%C2%B7%E7%90%86%E8%AE%BA/">算法·理论</a>&nbsp;
-                        </li>
-                    
-                    
-                
-            </ul>
-        </span>
-        
-        
-            <span class="home-article-tag">
-                <i class="fa-solid fa-tags"></i>&nbsp;
-                <ul>
-                    
-                        <li>
-                            
-                            <a href="/tags/%E7%AE%97%E6%B3%95/">算法</a>&nbsp;
-                        </li>
-                    
-                        <li>
-                            | 
-                            <a href="/tags/%E5%93%88%E5%A4%AB%E6%9B%BC%E6%A0%91%E4%B8%8E%E5%93%88%E5%A4%AB%E6%9B%BC%E7%BC%96%E7%A0%81/">哈夫曼树与哈夫曼编码</a>&nbsp;
-                        </li>
-                    
-                </ul>
-            </span>
-        
-    </div>
-
-    <a href="/2026/03/09/%E5%93%88%E5%A4%AB%E6%9B%BC%E6%A0%91%E4%B8%8E%E5%93%88%E5%A4%AB%E6%9B%BC%E7%BC%96%E7%A0%81/">阅读全文<span class="seo-reader-text">哈夫曼树与哈夫曼编码</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
-</div>
-
-                </div>
-            </li>
-        
-            <li class="home-article-item">
-
-                
-
-                
-
-                
-                <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
-                    <h3 class="home-article-title">
-                        <a href="/2026/03/09/%E7%9F%A9%E9%98%B5%E5%8A%A0%E9%80%9F%E9%80%92%E6%8E%A8/">
-                            矩阵加速递推
-                        </a>
-                    </h3>
-
-                    <div class="home-article-content markdown-body">
-                        
-                            
-                            PS：本文章因篇幅有限，就不讲矩阵乘法和快速幂了。
-题目：
-$$F_n = \left{\begin{aligned} 1 \space (n \le 2) \ F_{n-1}+F_{n-2} \space (n\ge 3) \end{aligned}\right.$$
-求 $F_n$。
-定义一个矩阵$[Base]$，使：
-$$\begin{bmatrix}F_n,F_{n+1}\end{b...
-                        
-                    </div>
-
-                    <div class="home-article-meta-info-container">
-    <div class="home-article-meta-info">
-        <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Mon Mar 09 2026 20:44:43 GMT+0800">
-                
-                    2026-03-09
-                
-            </span>
-        </span>
-        
-            <span class="home-article-category">
-                <i class="fa-solid fa-folders"></i>&nbsp;
-            <ul>
-                
-                
-                    
-                        
-                        <li>
-                            <a href="/categories/%E7%AE%97%E6%B3%95%C2%B7%E7%90%86%E8%AE%BA/">算法·理论</a>&nbsp;
-                        </li>
-                    
-                    
-                
-            </ul>
-        </span>
-        
-        
-            <span class="home-article-tag">
-                <i class="fa-solid fa-tags"></i>&nbsp;
-                <ul>
-                    
-                        <li>
-                            
-                            <a href="/tags/%E7%AE%97%E6%B3%95/">算法</a>&nbsp;
-                        </li>
-                    
-                        <li>
-                            | 
-                            <a href="/tags/%E7%9F%A9%E9%98%B5/">矩阵</a>&nbsp;
-                        </li>
-                    
-                </ul>
-            </span>
-        
-    </div>
-
-    <a href="/2026/03/09/%E7%9F%A9%E9%98%B5%E5%8A%A0%E9%80%9F%E9%80%92%E6%8E%A8/">阅读全文<span class="seo-reader-text">矩阵加速递推</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
-</div>
-
-                </div>
-            </li>
-        
-    </ul>
-
-    <div class="home-paginator px-7 py-5">
-        <div class="paginator">
-	<span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/2/"><i class="fa-regular fa-angle-right"></i></a>
-</div>
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
   
-    </div>
-</div>
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'undefined')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'undefined')
+        }
+      }
 
-			</div>
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
 
-			
-			<div class="home-sidebar-container">
-    <div class="sticky-container sticky">
-        
-        
-            <div class="sidebar-content">
-                <div class="avatar flex justify-center">
-    <img src="/img/avatar.png">
-</div>
-                <div class="author flex flex-col justify-center my-2.5 mx-0">
-    <div class="name">heyZzz</div>
+      const theme = saveToLocal.get('theme')
     
-        <div class="label">Lv4</div>
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
     
-</div>
-                <div class="statistics flex justify-around my-2.5">
-    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">14</div>
-        <div class="label text-third-text-color text-sm">标签</div>
-    </a>
-    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">5</div>
-        <div class="label text-third-text-color text-sm">分类</div>
-    </a>
-    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">34</div>
-        <div class="label text-third-text-color text-sm">文章</div>
-    </a>
-</div>
-            </div>
-            
-                <div class="sidebar-links"   marginTop >
-                    <div class="site-info">
-                        <div class="site-name">heyZzz&#39;s blog</div>
-                        
-                    </div>
-                    
-                        <div class="announcement-outside">
-                            只是一只可爱的小猫啦～
-                        </div>
-                    
-                </div>
-            
-        
-
-    </div>
-</div>
-
-			
-		</div>
-
-		<div class="main-content-footer">
-			<footer class="footer mt-5 py-5 h-auto text-base text-third-text-color relative border-t-2 border-t-border-color">
-    <div class="info-container py-3 text-center">
-        
-        <div class="text-center">
-            &copy;
-            
-              <span>2024</span>
-              -
-            
-            2026&nbsp;&nbsp;<i class="fa-solid fa-heart" style="color: #f54545"></i>&nbsp;&nbsp;<a href="/">heyZzz</a>
-            
-                
-                <p class="post-count space-x-0.5">
-                    <span>
-                        共撰写了 34 篇文章
-                    </span>
-                    
-                </p>
-            
-        </div>
-        
-            <script data-swup-reload-script src="https://cn.vercount.one/js"></script>
-            <div class="relative text-center lg:absolute lg:right-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-right">
-                
-                    <span id="busuanzi_container_site_uv" class="lg:!block">
-                        <span class="text-sm">访问人数</span>
-                        <span id="busuanzi_value_site_uv"></span>
-                    </span>
-                
-                
-                    <span id="busuanzi_container_site_pv" class="lg:!block">
-                        <span class="text-sm">总访问量</span>
-                        <span id="busuanzi_value_site_pv"></span>
-                    </span>
-                
-            </div>
-        
-        <div class="relative text-center lg:absolute lg:left-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-left">
-            <span class="lg:block text-sm">由 <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg class="relative top-[2px] inline-block align-baseline" version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" class="text-base" href="https://hexo.io">Hexo</a> 驱动</span>
-            <span class="text-sm lg:block">主题&nbsp;<a class="text-base" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v2.9.0</a></span>
-        </div>
-        
-        
-            <div>
-                博客已运行 <span class="odometer" id="runtime_days" ></span> 天 <span class="odometer" id="runtime_hours"></span> 小时 <span class="odometer" id="runtime_minutes"></span> 分钟 <span class="odometer" id="runtime_seconds"></span> 秒
-            </div>
-        
-        
-            <script data-swup-reload-script>
-                try {
-                    function odometer_init() {
-                    const elements = document.querySelectorAll('.odometer');
-                    elements.forEach(el => {
-                        new Odometer({
-                            el,
-                            format: '( ddd).dd',
-                            duration: 200
-                        });
-                    });
-                    }
-                    odometer_init();
-                } catch (error) {}
-            </script>
-        
-        
-        
-    </div>  
-</footer>
-		</div>
-	</div>
-
-	
-
-	<div class="right-side-tools-container">
-		<div class="side-tools-container">
-	<ul class="hidden-tools-list">
-		<li class="right-bottom-tools tool-font-adjust-plus flex justify-center items-center">
-			<i class="fa-regular fa-magnifying-glass-plus"></i>
-		</li>
-
-		<li class="right-bottom-tools tool-font-adjust-minus flex justify-center items-center">
-			<i class="fa-regular fa-magnifying-glass-minus"></i>
-		</li>
-
-		<li class="right-bottom-tools tool-dark-light-toggle flex justify-center items-center">
-			<i class="fa-regular fa-moon"></i>
-		</li>
-
-		<!-- rss -->
-		
-
-		
-		<li class="right-bottom-tools tool-scroll-to-top flex justify-center items-center">
-			<i class="fa-regular fa-arrow-up"></i>
-		</li>
-		
-
-		<li class="right-bottom-tools tool-scroll-to-bottom flex justify-center items-center">
-			<i class="fa-regular fa-arrow-down"></i>
-		</li>
-	</ul>
-
-	<ul class="visible-tools-list">
-		<li class="right-bottom-tools toggle-tools-list flex justify-center items-center">
-			<i class="fa-regular fa-cog fa-spin"></i>
-		</li>
-		
-		
-	</ul>
-</div>
-	</div>
-
-	<div class="image-viewer-container" role="dialog" aria-modal="true" aria-label="图片查看器">
-	<button class="image-viewer-close" type="button" aria-label="关闭">
-		<i class="fa-solid fa-xmark"></i>
-	</button>
-	<button class="image-viewer-prev" type="button" aria-label="上一页">
-		<i class="fa-solid fa-chevron-left"></i>
-	</button>
-	<div class="image-viewer-frame">
-		<img src="" alt="">
-	</div>
-	<div class="image-viewer-exif-panel hidden absolute left-1/2 bottom-20 -translate-x-1/2 w-[min(92vw,420px)] max-h-[60vh] overflow-hidden rounded-2xl bg-background-color-transparent-80 p-4 text-left shadow-redefine-flat backdrop-blur-md" role="dialog" aria-label="EXIF" aria-hidden="true">
-		<div class="flex items-center justify-between mb-3">
-			<span class="text-sm font-semibold text-first-text-color">EXIF</span>
-			<button class="image-viewer-exif-close flex h-8 w-8 items-center justify-center rounded-full bg-background-color-transparent-80 text-first-text-color transition hover:bg-background-color-transparent-40" type="button" aria-label="关闭">
-				<i class="fa-solid fa-xmark text-[0.65rem]"></i>
-			</button>
-		</div>
-		<div class="image-viewer-exif-cards grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-[50vh] overflow-y-auto pr-1 scrollbar-hide"></div>
-		<template class="image-viewer-exif-card-template">
-			<div class="rounded-lg bg-background-color-transparent-40 px-3 py-2">
-				<div class="image-viewer-exif-card-header flex items-center gap-2 mb-1">
-					<i class="image-viewer-exif-card-icon fa-solid fa-circle-info text-xs text-third-text-color"></i>
-					<div class="image-viewer-exif-card-title text-xs font-semibold text-first-text-color"></div>
-				</div>
-				<div class="image-viewer-exif-card-items flex flex-col gap-1"></div>
-			</div>
-		</template>
-	</div>
-	<button class="image-viewer-exif-toggle flex items-center gap-2 hidden absolute left-1/2 bottom-6 -translate-x-1/2 rounded-full border border-border-color bg-background-color-transparent-80 px-4 py-2 text-first-text-color backdrop-blur-md transition hover:bg-background-color-transparent-40" type="button" aria-label="EXIF" aria-expanded="false">
-		<i class="fa-solid fa-circle-info text-xs"></i>
-		<span class="text-xs font-semibold uppercase tracking-wider">EXIF</span>
-	</button>
-	<button class="image-viewer-next" type="button" aria-label="下一页">
-		<i class="fa-solid fa-chevron-right"></i>
-	</button>
-</div>
-
-
-	
-	<div class="search-pop-overlay">
-	<div class="popup search-popup">
-		<div class="search-header">
-			<span class="search-input-field-pre">
-				<i class="fa-solid fa-keyboard"></i>
-			</span>
-			<div class="search-input-container">
-				<input autocomplete="off" autocorrect="off" autocapitalize="off" placeholder="站内搜索您需要的内容..." spellcheck="false" type="search" class="search-input">
-			</div>
-			<span class="popup-btn-close">
-				<i class="fa-solid fa-times"></i>
-			</span>
-		</div>
-		<div id="search-result">
-			<div id="no-result">
-				<i class="fa-solid fa-spinner fa-spin-pulse fa-5x fa-fw"></i>
-			</div>
-		</div>
-	</div>
-</div>
-	
-
-</main>
-
-
-<script  src="https://registry.npmmirror.com/hexo-theme-redefine/2.9.0/files/source/js/build/libs/Swup.min.js" ></script><script  src="https://registry.npmmirror.com/hexo-theme-redefine/2.9.0/files/source/js/build/libs/SwupSlideTheme.min.js" ></script><script  src="https://registry.npmmirror.com/hexo-theme-redefine/2.9.0/files/source/js/build/libs/SwupScriptsPlugin.min.js" ></script><script  src="https://registry.npmmirror.com/hexo-theme-redefine/2.9.0/files/source/js/build/libs/SwupProgressPlugin.min.js" ></script><script  src="https://registry.npmmirror.com/hexo-theme-redefine/2.9.0/files/source/js/build/libs/SwupScrollPlugin.min.js" ></script><script  src="https://registry.npmmirror.com/hexo-theme-redefine/2.9.0/files/source/js/build/libs/SwupPreloadPlugin.min.js" ></script>
-<script>
-    window.swup = new Swup({
-        plugins: [
-            new SwupScriptsPlugin({
-                optin: true,
-            }),
-            new SwupProgressPlugin(),
-            new SwupScrollPlugin({
-                offset: 80,
-            }),
-            new SwupSlideTheme({
-                mainElement: ".main-content-body",
-            }),
-            new SwupPreloadPlugin(),
-        ],
-        containers: ["#swup"],
-    });
-
-    window.dispatchEvent(
-        new CustomEvent("redefine:swup:ready", {
-            detail: {
-                swup: window.swup,
-            },
-        }),
-    );
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'heyZzz\'s OI Blog',
+  isHighlightShrink: false,
+  isToc: false,
+  pageType: 'home'
+}</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css"><script>
+  window.MathJax = {
+    tex: {
+      packages: {'[+]': ['noerrors', 'noundefined', 'ams', 'boldsymbol', 'color', 'mathtools']},
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      displayMath: [['$$', '$$'], ['\\[', '\\]']],
+      processEscapes: true,
+      processEnvironments: true,
+      processRefs: true,
+      tags: 'ams',
+      tagSide: 'right',
+      tagIndent: '0.8em',
+      multlineWidth: '85%',
+      maxMacros: 10000,
+      maxBuffer: 5 * 1024 * 1024,
+      noerrors: {
+        disabled: false,
+        multiLine: true,
+        inline: false,
+        style: {
+          'color': 'red',
+          'font-style': 'italic',
+          'background-color': '#FFEEEE',
+          'padding': '2px',
+          'border-radius': '2px'
+        }
+      }
+    },
+    options: {
+      skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+      ignoreHtmlClass: 'tex2jax_ignore',
+      processHtmlClass: 'tex2jax_process'
+    },
+    startup: {
+      typeset: true
+    }
+  };
 </script>
-
-
-
-
-	<script type="module" src="https://registry.npmmirror.com/hexo-theme-redefine/2.9.0/files/source/js/build/main.js" ></script>
-
-
-    <script  src="https://registry.npmmirror.com/hexo-theme-redefine/2.9.0/files/source/js/build/libs/odometer.min.js" ></script>
-    <link rel="stylesheet" href="https://registry.npmmirror.com/hexo-theme-redefine/2.9.0/files/source/assets/odometer-theme-minimal.css">
-
-
-
-
-
-
-  <script  src="https://registry.npmmirror.com/hexo-theme-redefine/2.9.0/files/source/js/build/libs/Typed.min.js" ></script>
-
-
-
-
-
-
-
-
-<script  src="https://registry.npmmirror.com/hexo-theme-redefine/2.9.0/files/source/js/build/libs/moment-with-locales.min.js" data-swup-reload-script></script>
-
-
-	
-</body>
-
-</html>
+<meta name="generator" content="Hexo 8.1.1"><link rel="alternate" href="/atom.xml" title="heyZzz's OI Blog" type="application/atom+xml">
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/butterfly-icon.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">34</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">14</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/search/"><i class="fa-fw fas fa-search"></i><span> 搜索</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-user"></i><span> 关于</span></a></div></div></div></div><div class="page" id="body-wrap"><header class="full_page" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">heyZzz's OI Blog</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/search/"><i class="fa-fw fas fa-search"></i><span> 搜索</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-user"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="site-info"><h1 id="site-title">heyZzz's OI Blog</h1></div><div id="scroll-down"><i class="fas fa-angle-down scroll-down-effects"></i></div></header><main class="layout" id="content-inner"><div class="recent-posts nc" id="recent-posts"><div class="recent-post-items"><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2026/03/08/%E6%A0%91%E7%8A%B6%E6%95%B0%E7%BB%84/" title="树状数组"><i class="fas fa-thumbtack sticky"></i>树状数组</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2026-03-08T04:29:19.000Z" title="发表于 2026-03-08 12:29:19">2026-03-08</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E7%AE%97%E6%B3%95%C2%B7%E7%90%86%E8%AE%BA/">算法·理论</a></span></div><div class="content">习题 首先： 要说树状数组，就必须要说 $\operatorname{lowbit}$。 那 $\operatorname{lowbit}$ 是什么呢？ 是一个数的二进制从右往左第一个 $1$ 的值。 例如，$\operatorname{lowbit}(14)$ 是 $2$，$\operatorname{lowbit}(16)$ 是 $16$。 那应该怎么求呢？ 是 $n \And (-n)$，众所周知 $-n$ 是 $n$ 的补码，就是 $n$ 按位取反再加 $1$。 神奇的是，$n$ 这样一取反前面的 $0$ 都成 $1$ 了，再加一，$1$ 又变成 $0$ 了，但取反后第一个 $0$ 就成 $1$ 了，竟跟取反前一模一样！ 这样一来，只要第一个 $1$ 剩下来了。 我们在举个栗子： $6$ 的二进制是 $110$，补码是 $010$，$\operatorname{lowbit}(6)$ 就是 $2$。 $24$ 的二进制是 $11000$，补码是 $01000$，$\operatorname{lowbit}(6)$ 就是 $8$。 之后（进入正题）： 我们有一个数列（随便写...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2026/03/09/CSP-%E8%80%83%E5%9C%BA%E6%98%93%E9%94%99%E7%82%B9/" title="CSP 考场易错点"><i class="fas fa-thumbtack sticky"></i>CSP 考场易错点</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2026-03-09T12:44:42.000Z" title="发表于 2026-03-09 20:44:42">2026-03-09</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E7%AE%97%E6%B3%95%C2%B7%E7%90%86%E8%AE%BA/">算法·理论</a></span></div><div class="content">UB（未定义行为） 未定义行为就是你的代码出现了语言标准没有预料到的代码时，你的代码就会出现一些奇怪的错。 有时你的评测是对的，而这种错误会在 CCF 垃圾的评测环境中暴露出来，没注意到就会爆零。 printf 你一定要看好你输出的和 printf 中的类型是否一样，不然程序会错。 有符号整数溢出也是未定义行为。 返回值非 void 函数一定要有返回！ 错误示范： 1int x(int a)&#123;cout&lt;&lt;a;&#125; 正确示范： 1int x(int a)&#123;cout&lt;&lt;a; return 1；&#125; 数据结构 RE vector 下标越界。 vector、queue、deque、stack 等为空时进行 pop。 其它 int,long long 除以 $0$ 或模 $0$ 也是未定义行为。 文件读写 都是可以进迷惑行为大赏的。 freopen： 12freopen(&quot;题目名.in&quot;,&quot;r&quot;,stdin);freopen(&quot;题目名.out&quot;,&quot;w&quot;...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2026/03/08/%E6%B5%99%E5%A4%A7%E5%AE%81%E7%90%86%E5%AD%A6%E9%99%A2-ACM-%E8%A2%AB%E8%99%90%E8%AE%B0/" title="浙大宁理学院 ACM 被虐记"><i class="fas fa-thumbtack sticky"></i>浙大宁理学院 ACM 被虐记</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2026-03-08T04:29:02.000Z" title="发表于 2026-03-08 12:29:02">2026-03-08</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E7%94%9F%E6%B4%BB%C2%B7%E6%B8%B8%E8%AE%B0/">生活·游记</a></span></div><div class="content">收到 SH 的邀请，我去了浙大宁理学院打 ACM。 考前 找了同为 XXS 的 ybw，zhw，xzh。 开考！ T1 乱搞，橙题，但是因为行末输出了空格挂了好久。 压力 中 T2 看 ybw 没做，先放着。 T3 水题，不用管。 T4 LCA 模版，调了一会儿，过了。但是别人都跳了这题。 T5 看 ybw 没做，先放着。 T6 小模拟，心态有点炸。 压力 高 T7 水题，不用管。 T8 一眼结论题，但是又调炸了（伏笔）。 T9 水题，不用管。 T10 没人做，超极大模拟，先放着。 又做 T2，发现单调栈忘了，死磕 ST 表，错了，心态爆炸。 压力 超高 T8 继续调无果。 赛后    T1 T2 T3 T4 T5 T6 T7 T8 T9 T10     过 单调栈 过 过 分层图 过 过 忘特判 r-l+1=2。 过 大模拟    第六名。 </div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2026/03/08/OI-%E6%A0%A1%E5%9B%AD%E7%94%9F%E6%B4%BB%E6%A8%A1%E6%8B%9F%E5%99%A8/" title="OI 校园生活模拟器"><i class="fas fa-thumbtack sticky"></i>OI 校园生活模拟器</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2026-03-08T04:28:46.000Z" title="发表于 2026-03-08 12:28:46">2026-03-08</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E7%A7%91%E6%8A%80%C2%B7%E5%B7%A5%E7%A8%8B/">科技·工程</a></span></div><div class="content">食用方法，打开这个玩即可 🎯 游戏目标 扮演一名信息学竞赛选手（OIer），在3年高中生活中：  提升算法能力，争取在 NOIP 拿到省一/国集资格 平衡文化课、心态、体力、人际关系 解锁成就，书写你的 OI 故事   📊 状态面板说明    属性 含义 注意事项     💻 算法能力 你的 OI 水平，决定比赛成绩 &gt;85 可冲省选，&gt;95 有望国集   📚 文化课 学业成绩，避免班主任谈话 &lt;40 会触发&quot;班主任谈话&quot;事件   🧠 心态 心理状态，影响发挥稳定性 &lt;20 会触发&quot;RE/MLE 崩溃&quot;事件   💪 体力 身体状态，归零会强制住院 每回合自动 -2，注意休息   👥 人际关系 与同学/学长的关系 影响随机事件和求助成功率   💰 零花钱 购买书籍、饮料等道具 可通过兼职赚取     🎮 如何操作 基础操作  选择行动：点击下方 4 个行动按钮之一 查看日志：在&quot;游戏日志&quot;标签查看剧情发展 切换标签：点击顶部标签切换【日志/事件/日记/统计】  快捷键 ⚡ 1数字键...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2026/03/09/%E6%8E%92%E5%BA%8F%E7%9A%84%E7%A8%B3%E5%AE%9A%E6%80%A7/" title="排序的稳定性"><i class="fas fa-thumbtack sticky"></i>排序的稳定性</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2026-03-09T12:44:44.000Z" title="发表于 2026-03-09 20:44:44">2026-03-09</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E7%AE%97%E6%B3%95%C2%B7%E7%90%86%E8%AE%BA/">算法·理论</a></span></div><div class="content">排序的稳定性    排序算法 平均时间复杂度 最好时间复杂度 最坏时间复杂度 空间复杂度 是否稳定     冒泡排序 $O(n^2)$ $O(n)$ $O(n^2)$ $O(1)$ $T$   选择排序 $O(n^2)$ $O(n^2)$ $O(n^2)$ $O(1)$ $F$   插入排序 $O(n^2)$ $O(n)$ $O(n^2)$ $O(1)$ $T$   归并排序 $O(nlogn)$ $O(nlogn)$ $O(nlogn)$ $O(n)$ $T$   快速排序 $O(nlogn)$ $O(nlogn)$ $O(n^2)$ $O(log~n)$ $F$   堆排序 $O(nlogn)$ $O(nlogn)$ $O(nlogn)$ $O(1)$ $F$   希尔排序 $O(nlogn)$ $O(n)$ $O(n^2)$ $O(1)$ $F$   计数排序 $O(n+k)$ $O(n+k)$ $O(n+k)$ $O(n+k)$ $T$   基数排序 $O(n \times m)$ $O(n \times m)$ $O(n \times m)$ $O(m)$ $T$   ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2026/03/10/12-19-12-31%E5%86%99%E9%A2%98%E6%8A%A5%E5%91%8A/" title="12.19~12.31写题报告">12.19~12.31写题报告</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2026-03-10T08:19:55.000Z" title="发表于 2026-03-10 16:19:55">2026-03-10</time></span></div><div class="content">题目 T 1 最小生成树。 刚开始的解法 忽略 $tol_a+tol_b$，零分。 之后 设 $tol_x$ 为最小，向所有点建边。 12345int axx=min_element(tol+1,tol+n+1)-tol,tot2=0;for(int i=1;i&lt;=n;i++) if(i!=axx)&#123;    if(mp[i*1000000+axx]) tot2+=min(tol[i]+tol[axx],mp[i*1000000+axx]);    else tot2+=tol[i]+tol[axx];&#125; 最后 要给整个图建如上的虚拟边： 123int axx=min_element(tol+1,tol+n+1)-tol;for(int i=1;i&lt;=n;i++) if(i!=axx)    a[++m]=&#123;i,axx,tol[i]+tol[axx]&#125;; 只要跑个 kruskal 就行了。 T 2 暴力跑 dfs 回溯。 选择出这 $n$ 架飞机的降落顺序。 123456789101112void dfs(int d)&#123;...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2026/03/10/%E6%90%9E%E7%AC%91/" title="搞笑">搞笑</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2026-03-10T08:09:04.000Z" title="发表于 2026-03-10 16:09:04">2026-03-10</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E4%BC%91%E9%97%B2%C2%B7%E5%A8%B1%E4%B9%90/">休闲·娱乐</a></span></div><div class="content">家长直呼太暴力！这些算法可能会被删除 近日，洛谷网络科技有限公司多位用户家长向 @kkksc03 反映，部分算法存在血腥、暴力等不利于青少年儿童的因素出现，要求对相关算法进行整改或被删除。 洛谷网络科技有限公司题目组管理员在接受采访时说道，在最近几天内，洛谷收到了数十条家长来信，声称网站教授的部分算法存在“血腥”、“暴力”等内容。“他们说这些东西会教坏他们家的孩子，要求我们整改这些算法，把这些对小朋友不太好的东西删掉，或者直接把算法删除。” 随着国庆的到来，很多家长直接来到洛谷反映情况。记者在现场随机采访了几位家长，询问他们对这些算法的看法。 刘女士的儿子正在洛谷学习普及组内容。在采访中刘女士告诉记者，希望洛谷停开匈牙利算法。“我看里面讲的都是些一一匹配啊、二分图啊之类的匹配问题，这不是教孩子怎么找npy么？那他以后岂不是学会早恋了？”王先生也有类似的想法。他要求洛谷整改月赛内容。“听说课程里面有‘选妹子’，要是小朋友被女拳打了该怎么办？太危险了！” 认为数据结构太危险、容易伤到孩子，是很多家长的共同心声。王大爷今年已经六十多岁了，却依然专程跑到学校，高呼停止教授Splay树和T...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2026/03/09/ST%E8%A1%A8/" title="ST表">ST表</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2026-03-09T12:44:44.000Z" title="发表于 2026-03-09 20:44:44">2026-03-09</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E7%AE%97%E6%B3%95%C2%B7%E7%90%86%E8%AE%BA/">算法·理论</a></span></div><div class="content">ST表 ST表它是解决 RMQ 问题（区间最值问题）的一种强有力的工具。 时间复杂度为 $O(n \log n+Q)$。 实现过程 PS：以下讨论的是最大值，最小值同理。 建立一个 $dp$ 数组 $dp_{i,j}$ 表示从 $i$ 开始 $2^j$ 个数中的最大值。 边界为 $dp_{i,0}=a_i$，即从 $i$ 点开始 $2^0$ 个数中的最大值。 我们不难发现 $\max{\max{a_1 … a_{\frac{n}{2}}},\max{a_{\frac{n}{2}} … a_n}}}=\max{a_1…a_n}$。 那状态转移方程为： $dp_{i,j}=\max{dp_{i,j-1},dp_{i+2^{j-1},j-1}}$。 其中 $dp_{i,j-1}$ 是前面一段，$dp_{i+2^{j-1},j-1}$ 是后面一段。 求最值 将该区间分成两个ST表，然后直接维护的小区间，然后二者求最值即可。 就是：$\max{f_{l,k},f[r−(2^k)+1][k]}$。 </div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2026/03/09/%E5%93%88%E5%A4%AB%E6%9B%BC%E6%A0%91%E4%B8%8E%E5%93%88%E5%A4%AB%E6%9B%BC%E7%BC%96%E7%A0%81/" title="哈夫曼树与哈夫曼编码">哈夫曼树与哈夫曼编码</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2026-03-09T12:44:44.000Z" title="发表于 2026-03-09 20:44:44">2026-03-09</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E7%AE%97%E6%B3%95%C2%B7%E7%90%86%E8%AE%BA/">算法·理论</a></span></div><div class="content">哈夫曼树： 哈夫曼树可由如下方式构造：  由给定的 $n$ 个权值构造 $n$ 棵仅含有一个根结点的二叉树，记作集合 $F$。 从集合 $F$ 中选取根结点权值最小的两棵二叉树 $T1$，$T2$ 作为左右子树构造新的二叉树 $T3$，新二叉树的根结点为 $T1$，$T2$ 根结点的权值和。 从集合 $F$ 中删除 $T1$，$T2$，将 $T3$ 加入 $F$ 中。 直到 $F$ 中只剩下唯一一棵二叉树为止，这棵树即为哈夫曼树。  建树：    字符 频率 编码 长度     A 35 11 2   B 25 00 2   C 15 01 2   D 15 101 3   E 10 100 3     哈夫曼编码： 哈夫曼编码根据字符在数据中出现的频率来分配不同长度的编码，频率高的字符分配较短的编码，频率低的字符分配较长的编码，从而实现压缩数据的目的，是一种贪心思想。 哈夫曼编码是一种前缀编码，即任一编码都不是其他任何一个编码的前缀。哈夫曼编码即为前缀编码中最短的。 带权路径长度(WPL)。 WPL 是每个编码的长度 $\times$ 频率。    字符 频率 编码 长度 WP...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2026/03/09/%E7%9F%A9%E9%98%B5%E5%8A%A0%E9%80%9F%E9%80%92%E6%8E%A8/" title="矩阵加速递推">矩阵加速递推</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2026-03-09T12:44:43.000Z" title="发表于 2026-03-09 20:44:43">2026-03-09</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E7%AE%97%E6%B3%95%C2%B7%E7%90%86%E8%AE%BA/">算法·理论</a></span></div><div class="content">PS：本文章因篇幅有限，就不讲矩阵乘法和快速幂了。 题目： $$F_n = \left{\begin{aligned} 1 \space (n \le 2) \ F_{n-1}+F_{n-2} \space (n\ge 3) \end{aligned}\right.$$ 求 $F_n$。 定义一个矩阵$[Base]$，使： $$\begin{bmatrix}F_n,F_{n+1}\end{bmatrix}\times\begin{bmatrix}Base\end{bmatrix}=\begin{bmatrix}F_{n+1},F_{n+2}\end{bmatrix}$$ 那： $$\begin{bmatrix}F_n,F_{n+1}\end{bmatrix}\times\begin{bmatrix}Base\end{bmatrix}^2=\begin{bmatrix}F_{n+2},F_{n+3}\end{bmatrix}$$ $$\begin{bmatrix}F_n,F_{n+1}\end{bmatrix}\times\begin{bmatrix}Base\end{bmatri...</div></div></div></div><nav id="pagination"><div class="pagination"><span class="page-number current">1</span><a class="page-number" href="/page/2/#content-inner">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/#content-inner">4</a><a class="extend next" rel="next" href="/page/2/#content-inner"><i class="fas fa-chevron-right fa-fw"></i></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/butterfly-icon.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">heyZzz</div><div class="author-info-description">OI | C++ | luogu/Codeforces/atcoder</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">34</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">14</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/03/10/12-19-12-31%E5%86%99%E9%A2%98%E6%8A%A5%E5%91%8A/" title="12.19~12.31写题报告">12.19~12.31写题报告</a><time datetime="2026-03-10T08:19:55.000Z" title="发表于 2026-03-10 16:19:55">2026-03-10</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/03/10/%E6%90%9E%E7%AC%91/" title="搞笑">搞笑</a><time datetime="2026-03-10T08:09:04.000Z" title="发表于 2026-03-10 16:09:04">2026-03-10</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/03/09/ST%E8%A1%A8/" title="ST表">ST表</a><time datetime="2026-03-09T12:44:44.000Z" title="发表于 2026-03-09 20:44:44">2026-03-09</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/03/09/%E5%93%88%E5%A4%AB%E6%9B%BC%E6%A0%91%E4%B8%8E%E5%93%88%E5%A4%AB%E6%9B%BC%E7%BC%96%E7%A0%81/" title="哈夫曼树与哈夫曼编码">哈夫曼树与哈夫曼编码</a><time datetime="2026-03-09T12:44:44.000Z" title="发表于 2026-03-09 20:44:44">2026-03-09</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/03/09/%E6%8E%92%E5%BA%8F%E7%9A%84%E7%A8%B3%E5%AE%9A%E6%80%A7/" title="排序的稳定性">排序的稳定性</a><time datetime="2026-03-09T12:44:44.000Z" title="发表于 2026-03-09 20:44:44">2026-03-09</time></div></div></div></div><div class="card-widget card-categories"><div class="item-headline">
+            <i class="fas fa-folder-open"></i>
+            <span>分类</span>
+            
+          </div>
+          <ul class="card-category-list" id="aside-cat-list">
+            <li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E4%BC%91%E9%97%B2%C2%B7%E5%A8%B1%E4%B9%90/"><span class="card-category-list-name">休闲·娱乐</span><span class="card-category-list-count">1</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E7%94%9F%E6%B4%BB%C2%B7%E6%B8%B8%E8%AE%B0/"><span class="card-category-list-name">生活·游记</span><span class="card-category-list-count">1</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E7%A7%91%E6%8A%80%C2%B7%E5%B7%A5%E7%A8%8B/"><span class="card-category-list-name">科技·工程</span><span class="card-category-list-count">1</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E7%AE%97%E6%B3%95%C2%B7%E7%90%86%E8%AE%BA/"><span class="card-category-list-name">算法·理论</span><span class="card-category-list-count">6</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E9%A2%98%E8%A7%A3/"><span class="card-category-list-name">题解</span><span class="card-category-list-count">15</span></a></li>
+          </ul></div><div class="card-widget card-tags"><div class="item-headline"><i class="fas fa-tags"></i><span>标签</span></div><div class="card-tag-cloud"><a href="/tags/%E5%93%88%E5%A4%AB%E6%9B%BC%E6%A0%91%E4%B8%8E%E5%93%88%E5%A4%AB%E6%9B%BC%E7%BC%96%E7%A0%81/" style="font-size: 1.1em; color: #999">哈夫曼树与哈夫曼编码</a> <a href="/tags/%E6%8E%92%E5%BA%8F-sort/" style="font-size: 1.1em; color: #999">排序 sort</a> <a href="/tags/%E9%A2%98%E8%A7%A3/" style="font-size: 1.5em; color: #99a9bf">题解</a> <a href="/tags/%E7%AE%97%E6%B3%95/" style="font-size: 1.3em; color: #99a1ac">算法</a> <a href="/tags/%E5%A8%B1%E4%B9%90/" style="font-size: 1.1em; color: #999">娱乐</a> <a href="/tags/RMQ-%E9%97%AE%E9%A2%98/" style="font-size: 1.1em; color: #999">RMQ 问题</a> <a href="/tags/CSP/" style="font-size: 1.1em; color: #999">CSP</a> <a href="/tags/OI/" style="font-size: 1.1em; color: #999">OI</a> <a href="/tags/ST-%E8%A1%A8/" style="font-size: 1.1em; color: #999">ST 表</a> <a href="/tags/%E6%A8%A1%E6%8B%9F%E5%99%A8/" style="font-size: 1.1em; color: #999">模拟器</a> <a href="/tags/%E6%A0%91%E7%8A%B6%E6%95%B0%E7%BB%84/" style="font-size: 1.1em; color: #999">树状数组</a> <a href="/tags/ACM/" style="font-size: 1.1em; color: #999">ACM</a> <a href="/tags/%E7%9F%A9%E9%98%B5/" style="font-size: 1.1em; color: #999">矩阵</a> <a href="/tags/%E7%90%86%E8%AE%BA/" style="font-size: 1.1em; color: #999">理论</a></div></div><div class="card-widget card-archives">
+    <div class="item-headline">
+      <i class="fas fa-archive"></i>
+      <span>归档</span>
+      
+    </div>
+  
+    <ul class="card-archive-list">
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2026/03/">
+            <span class="card-archive-list-date">
+              三月 2026
+            </span>
+            <span class="card-archive-list-count">34</span>
+          </a>
+        </li>
+      
+    </ul>
+  </div><div class="card-widget card-webinfo"><div class="item-headline"><i class="fas fa-chart-line"></i><span>网站信息</span></div><div class="webinfo"><div class="webinfo-item"><div class="item-name">文章数目 :</div><div class="item-count">34</div></div><div class="webinfo-item"><div class="item-name">本站访客数 :</div><div class="item-count" id="busuanzi_value_site_uv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">本站总浏览量 :</div><div class="item-count" id="busuanzi_value_site_pv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">最后更新时间 :</div><div class="item-count" id="last-push-date" data-lastPushDate="2026-03-17T05:30:04.669Z"><i class="fa-solid fa-spinner fa-spin"></i></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By heyZzz</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 8.1.1</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.4</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.4"></script><script src="/js/main.js?v=5.5.4"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
