@@ -751,8 +751,10 @@ select.unit-select:focus{border-color:var(--primary); box-shadow:0 0 0 4px color
   .del-btn{padding:4px 6px; font-size:13px}
 
   /* 总览方块 */
-  .grid.overview{
-    grid-template-columns:repeat(auto-fill,minmax(46px,1fr));
+  .grid.overview,
+  #wordGrid.overview,
+  #ipaGrid.overview{
+    grid-template-columns:repeat(auto-fill,minmax(46px,1fr)) !important;
     gap:6px; padding:12px;
   }
   .grid.overview .card:hover{transform:scale(1.15)}
