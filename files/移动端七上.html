@@ -278,9 +278,11 @@ select.unit-select:focus{border-color:var(--primary); box-shadow:0 0 0 4px color
 }
 
 /* ============ 总览模式 ============ */
-.grid.overview{
-  grid-template-columns:repeat(auto-fill,minmax(54px,1fr));
-  gap:8px; padding:22px; align-items:stretch;
+.grid.overview,
+#wordGrid.overview,
+#ipaGrid.overview{
+  grid-template-columns:repeat(auto-fill,minmax(54px,1fr)) !important;
+  gap:8px !important; padding:22px !important; align-items:stretch;
 }
 .grid.overview .card{
   padding:0 !important; aspect-ratio:1/1; border-radius:10px; overflow:hidden;
@@ -755,7 +757,7 @@ select.unit-select:focus{border-color:var(--primary); box-shadow:0 0 0 4px color
   #wordGrid.overview,
   #ipaGrid.overview{
     grid-template-columns:repeat(auto-fill,minmax(46px,1fr)) !important;
-    gap:6px; padding:12px;
+    gap:6px !important; padding:12px !important;
   }
   .grid.overview .card:hover{transform:scale(1.15)}
   .grid.overview .poem-card::after{font-size:14px}
