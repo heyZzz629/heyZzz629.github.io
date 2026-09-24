@@ -39,26 +39,16 @@ body{
 button,input,select,textarea{font-family:inherit}
 .desktop-only{display:none !important}
 .mobile-only{display:flex !important}
-@media (min-width:761px){
-  .desktop-only{display:flex !important}
-  .mobile-only{display:none !important}
-}
-/* ============ 顶部 ============ */
-header{
-  position:sticky;top:0;z-index:50;
-  background:color-mix(in srgb,var(--bg) 88%,transparent);
-  backdrop-filter:blur(16px) saturate(1.4);-webkit-backdrop-filter:blur(16px) saturate(1.4);
-  border-bottom:1px solid var(--border);
-}
+@media (min-width:761px){.desktop-only{display:flex !important}.mobile-only{display:none !important}}
+header{position:sticky;top:0;z-index:50;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(16px) saturate(1.4);-webkit-backdrop-filter:blur(16px) saturate(1.4);border-bottom:1px solid var(--border)}
 .top-inner{max-width:1440px;margin:0 auto;padding:10px 14px 8px}
 .brand{display:flex;align-items:center;gap:10px;margin-bottom:8px}
 .logo{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;font-size:17px;flex-shrink:0;background:linear-gradient(135deg,var(--primary),#8b5cf6);box-shadow:0 4px 12px color-mix(in srgb,var(--primary) 35%,transparent);position:relative}
 .logo::after{content:'2.0';position:absolute;bottom:-3px;right:-3px;background:var(--danger);color:#fff;font-size:8px;font-weight:900;padding:1px 4px;border-radius:4px;box-shadow:0 2px 4px rgba(0,0,0,.2)}
 .brand h1{margin:0;font-size:15px;font-weight:700}
 .brand .sub{margin:2px 0 0;font-size:11px;color:var(--text-sub);display:none}
-.icon-btn{width:34px;height:34px;border-radius:10px;border:1px solid var(--border);background:var(--card);color:var(--text);cursor:pointer;font-size:15px;display:grid;place-items:center;transition:.15s;flex-shrink:0;position:relative}
+.icon-btn{width:34px;height:34px;border-radius:10px;border:1px solid var(--border);background:var(--card);color:var(--text);cursor:pointer;font-size:15px;display:grid;place-items:center;transition:.15s;flex-shrink:0}
 .icon-btn:active{transform:scale(.94);background:var(--chip)}
-.icon-btn .dot{position:absolute;top:-2px;right:-2px;width:8px;height:8px;border-radius:50%;background:var(--danger);border:2px solid var(--bg)}
 .top-icons{display:flex;gap:6px;margin-left:auto}
 .tabs{display:flex;gap:3px;background:var(--chip);padding:3px;border-radius:10px;margin-bottom:8px;width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
 .tabs::-webkit-scrollbar{display:none}
@@ -89,7 +79,6 @@ main{max-width:1440px;margin:0 auto;padding:12px 14px 40px}
 .stat.s1::before{background:var(--warning)}.stat.s1 b{color:var(--warning)}
 .stat.sd::before{background:var(--primary)}.stat.sd b{color:var(--primary)}
 .stat.ss::before{background:var(--star)}.stat.ss b{color:var(--star)}
-/* ============ 主题库卡片 ============ */
 .lib-list{display:flex;flex-direction:column;gap:10px}
 .lib-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;box-shadow:var(--shadow);transition:.2s;position:relative;overflow:hidden}
 .lib-card::before{content:'';position:absolute;left:0;top:14px;bottom:14px;width:3px;border-radius:0 3px 3px 0;background:var(--border-strong);transition:.2s}
@@ -123,8 +112,6 @@ main{max-width:1440px;margin:0 auto;padding:12px 14px 40px}
 .lib-seg .sb.active[data-s="1"]{background:var(--warning);color:#fff}
 .lib-seg .sb.active[data-s="2"]{background:var(--success);color:#fff}
 .lib-toggle{width:32px;height:32px;border-radius:9px;border:1px solid var(--border);background:var(--card);color:var(--text-sub);cursor:pointer;display:grid;place-items:center;font-size:12px;flex-shrink:0;transition:.15s}
-.lib-toggle:active{transform:scale(.92)}
-/* ============ 总览方块 ============ */
 .q-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(46px,1fr));gap:6px;padding:6px 0;animation:fadeUp .25s}
 .q-square{aspect-ratio:1/1;border-radius:10px;cursor:pointer;display:grid;place-items:center;font-size:13px;font-weight:900;color:#fff;border:1.5px solid transparent;transition:.15s;animation:ovIn .3s cubic-bezier(.34,1.3,.64,1) backwards;position:relative}
 @keyframes ovIn{from{opacity:0;transform:scale(.2)}to{opacity:1;transform:scale(1)}}
@@ -135,7 +122,6 @@ main{max-width:1440px;margin:0 auto;padding:12px 14px 40px}
 .q-square[data-st="wrong"]{background:var(--danger)}
 .q-square[data-st="picked"]{background:var(--primary);border-color:color-mix(in srgb,var(--primary) 70%,transparent);box-shadow:0 3px 10px color-mix(in srgb,var(--primary) 40%,transparent)}
 .q-square[data-st="picked"]::after{content:'✓';position:absolute;top:2px;right:4px;font-size:9px;opacity:.9}
-.q-square[data-st="star"]{background:var(--star)}
 .ov-legend{display:none;gap:10px;align-items:center;flex-wrap:wrap;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:8px 12px;margin:0 0 10px;font-size:11px;font-weight:700;color:var(--text-sub);box-shadow:var(--shadow)}
 .ov-legend.show{display:flex}
 .ov-legend .dot{width:10px;height:10px;border-radius:3px;margin-right:5px;display:inline-block;vertical-align:-1px}
@@ -144,13 +130,11 @@ main{max-width:1440px;margin:0 auto;padding:12px 14px 40px}
 .ov-legend .dot.done{background:var(--success)}
 .ov-legend .dot.wrong{background:var(--danger)}
 .ov-legend .dot.picked{background:var(--primary)}
-.ov-legend .dot.star{background:var(--star);border-radius:50%}
 .ov-legend .item{display:inline-flex;align-items:center}
 .ov-legend .hint{margin-left:auto;font-size:10.5px;opacity:.65;font-weight:500}
 .ov-tip{position:fixed;pointer-events:none;background:var(--text);color:var(--bg);padding:7px 12px;border-radius:9px;font-size:12px;font-weight:700;white-space:nowrap;opacity:0;transition:opacity .15s;z-index:600;box-shadow:0 8px 24px rgba(0,0,0,.28);transform:translate(-50%,-125%);max-width:280px;overflow:hidden;text-overflow:ellipsis}
 .ov-tip.show{opacity:1}
 .ov-tip .sub{display:block;font-weight:600;font-size:10.5px;opacity:.75;margin-top:2px}
-/* ============ 讲解 ============ */
 .notes-grid{display:flex;flex-direction:column;gap:12px}
 .note{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px 16px 14px 18px;box-shadow:var(--shadow)}
 .note-head{display:flex;align-items:flex-start;gap:10px;margin-bottom:12px}
@@ -168,33 +152,20 @@ main{max-width:1440px;margin:0 auto;padding:12px 14px 40px}
 .note-ex .cn{font-size:11.5px;color:var(--text-sub);line-height:1.45;margin-top:2px}
 .note-tip{font-size:12px;line-height:1.65;color:var(--text-sub);padding:9px 12px;border-radius:9px;background:color-mix(in srgb,var(--warning) 10%,transparent);border-left:3px solid var(--warning)}
 .note-tip b{color:var(--warning);font-weight:800}
-/* ============ 数据中心 ============ */
-.dash-hero{
-  background:linear-gradient(135deg,var(--primary),#8b5cf6 60%,var(--purple));
-  color:#fff;border-radius:16px;padding:22px 20px;margin-bottom:14px;
-  box-shadow:0 12px 32px color-mix(in srgb,var(--primary) 35%,transparent);
-  position:relative;overflow:hidden;
-}
+.dash-hero{background:linear-gradient(135deg,var(--primary),#8b5cf6 60%,var(--purple));color:#fff;border-radius:16px;padding:22px 20px;margin-bottom:14px;box-shadow:0 12px 32px color-mix(in srgb,var(--primary) 35%,transparent);position:relative;overflow:hidden}
 .dash-hero::before{content:'';position:absolute;top:-50%;right:-20%;width:60%;height:200%;background:radial-gradient(circle,rgba(255,255,255,.15),transparent 70%);border-radius:50%}
 .dash-hero .row{display:flex;align-items:center;gap:14px;position:relative}
 .dash-hero .streak-num{font-size:52px;font-weight:900;line-height:1;letter-spacing:-2px}
 .dash-hero .streak-lbl{font-size:12px;font-weight:700;opacity:.85;letter-spacing:.5px}
 .dash-hero .today-info{margin-left:auto;text-align:right;font-size:11.5px;font-weight:600;opacity:.9;line-height:1.6}
 .dash-hero .today-info b{font-size:16px;font-weight:900;display:block;letter-spacing:-.5px}
-.dash-hero .progress-circle{
-  width:56px;height:56px;border-radius:50%;background:rgba(255,255,255,.2);
-  display:grid;place-items:center;font-size:15px;font-weight:900;position:relative;flex-shrink:0;
-}
+.dash-hero .progress-circle{width:56px;height:56px;border-radius:50%;background:rgba(255,255,255,.2);display:grid;place-items:center;font-size:15px;font-weight:900;position:relative;flex-shrink:0}
 .dash-hero .progress-circle svg{position:absolute;inset:0;width:100%;height:100%;transform:rotate(-90deg)}
 .dash-hero .progress-circle circle{fill:none;stroke-width:5}
 .dash-hero .progress-circle .bg-c{stroke:rgba(255,255,255,.2)}
 .dash-hero .progress-circle .fg-c{stroke:#fff;stroke-linecap:round;transition:stroke-dashoffset .6s}
-
 .dash-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:14px}
-.dash-card{
-  background:var(--card);border:1px solid var(--border);border-radius:12px;
-  padding:14px;box-shadow:var(--shadow);
-}
+.dash-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;box-shadow:var(--shadow)}
 .dash-card .lbl{font-size:11px;color:var(--text-sub);font-weight:700;margin-bottom:6px;letter-spacing:.3px}
 .dash-card .num{font-size:24px;font-weight:900;line-height:1;letter-spacing:-.5px;font-variant-numeric:tabular-nums}
 .dash-card .sub{font-size:10.5px;color:var(--text-sub);margin-top:4px}
@@ -202,12 +173,9 @@ main{max-width:1440px;margin:0 auto;padding:12px 14px 40px}
 .dash-card .num.w{color:var(--warning)}
 .dash-card .num.p{color:var(--primary)}
 .dash-card .num.pp{color:var(--purple)}
-
 .dash-section{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:14px;box-shadow:var(--shadow)}
 .dash-section h3{margin:0 0 14px;font-size:14px;font-weight:800;display:flex;align-items:center;gap:8px}
 .dash-section h3 .cnt{margin-left:auto;font-size:11px;font-weight:600;color:var(--text-sub)}
-
-/* 柱状图 */
 .bars{display:flex;align-items:flex-end;gap:6px;height:100px;margin-bottom:6px}
 .bar-col{flex:1;background:var(--chip);border-radius:6px 6px 0 0;position:relative;min-height:4px;transition:.4s;overflow:hidden}
 .bar-col .fill{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(180deg,var(--primary),#8b5cf6);border-radius:6px 6px 0 0;transition:height .5s}
@@ -215,32 +183,43 @@ main{max-width:1440px;margin:0 auto;padding:12px 14px 40px}
 .bar-col .cnt{position:absolute;top:-16px;left:50%;transform:translateX(-50%);font-size:9px;font-weight:800;color:var(--text-sub);opacity:.85}
 .bar-lbl{display:flex;gap:6px;margin-top:4px}
 .bar-lbl span{flex:1;text-align:center;font-size:9px;color:var(--text-sub);font-weight:700}
-
-/* 分类进度 */
 .cat-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)}
 .cat-row:last-child{border-bottom:none}
 .cat-row .name{font-size:12px;font-weight:700;min-width:70px}
 .cat-row .bar{flex:1;height:8px;background:var(--chip);border-radius:99px;overflow:hidden}
 .cat-row .bar i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--primary),var(--success));transition:width .5s}
 .cat-row .num{font-size:11px;font-weight:800;color:var(--text-sub);min-width:50px;text-align:right;font-variant-numeric:tabular-nums}
-
-/* 成就徽章 */
 .achieve-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:10px}
-.achieve{
-  background:var(--chip);border-radius:12px;padding:12px 8px;text-align:center;
-  transition:.25s;position:relative;
-}
+.achieve{background:var(--chip);border-radius:12px;padding:12px 8px;text-align:center;transition:.25s;position:relative}
 .achieve.locked{opacity:.4;filter:grayscale(1)}
-.achieve.unlocked{
-  background:linear-gradient(135deg,color-mix(in srgb,var(--gold) 20%,var(--card)),var(--card));
-  box-shadow:0 4px 12px color-mix(in srgb,var(--gold) 25%,transparent);
-}
+.achieve.unlocked{background:linear-gradient(135deg,color-mix(in srgb,var(--gold) 20%,var(--card)),var(--card));box-shadow:0 4px 12px color-mix(in srgb,var(--gold) 25%,transparent)}
 .achieve .ico{font-size:28px;line-height:1;margin-bottom:6px;display:block}
 .achieve .name{font-size:11px;font-weight:800;margin-bottom:2px}
 .achieve .desc{font-size:9.5px;color:var(--text-sub);line-height:1.3}
 .achieve.unlocked::after{content:'✓';position:absolute;top:6px;right:6px;font-size:9px;font-weight:900;color:var(--success);background:var(--card);width:14px;height:14px;border-radius:50%;display:grid;place-items:center}
-
-/* 目标面板 */
+.cal-header{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.cal-header button{width:32px;height:32px;border-radius:9px;border:1px solid var(--border);background:var(--card);color:var(--text-sub);cursor:pointer;font-size:14px;display:grid;place-items:center;transition:.15s}
+.cal-header button:active{transform:scale(.94);background:var(--chip)}
+.cal-title{flex:1;text-align:center;font-size:14px;font-weight:800}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.cal-head{text-align:center;font-size:10.5px;font-weight:800;color:var(--text-sub);padding:4px 0}
+.cal-day{aspect-ratio:1/1;border-radius:8px;position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--text-sub);background:var(--chip);transition:.15s;overflow:hidden}
+.cal-day.empty{background:transparent}
+.cal-day.today{box-shadow:0 0 0 2px var(--primary);color:var(--primary);font-weight:900}
+.cal-day i{position:absolute;inset:0;border-radius:8px;z-index:0}
+.cal-day i.i1{background:color-mix(in srgb,var(--primary) 35%,var(--chip))}
+.cal-day i.i2{background:color-mix(in srgb,var(--primary) 65%,var(--chip))}
+.cal-day i.i3{background:var(--primary)}
+.cal-day.has-data{color:#fff;font-weight:800}
+.cal-day .lbl{position:relative;z-index:1}
+.cal-day .num{position:absolute;bottom:2px;right:3px;font-size:8px;font-weight:900;opacity:.8;z-index:1}
+.cal-legend{display:flex;align-items:center;gap:4px;margin-top:10px;font-size:10.5px;color:var(--text-sub);font-weight:700;justify-content:center}
+.cal-legend i{width:14px;height:14px;border-radius:4px;background:var(--chip);display:inline-block}
+.cal-legend i:nth-child(2){background:color-mix(in srgb,var(--primary) 35%,var(--chip))}
+.cal-legend i:nth-child(3){background:color-mix(in srgb,var(--primary) 65%,var(--chip))}
+.cal-legend i:nth-child(4){background:var(--primary)}
+.cal-stats{display:flex;gap:14px;margin-top:12px;padding-top:12px;border-top:1px solid var(--border);font-size:11.5px;color:var(--text-sub);font-weight:600;justify-content:space-around;flex-wrap:wrap}
+.cal-stats b{color:var(--text);font-weight:800}
 .goal-panel{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:14px;box-shadow:var(--shadow)}
 .goal-panel .top{display:flex;align-items:center;margin-bottom:12px}
 .goal-panel h3{margin:0;font-size:14px;font-weight:800;display:flex;gap:8px;align-items:center}
@@ -249,8 +228,6 @@ main{max-width:1440px;margin:0 auto;padding:12px 14px 40px}
 .goal-bar i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--primary),var(--success));transition:width .5s}
 .goal-text{font-size:12px;color:var(--text-sub);font-weight:600}
 .goal-text b{color:var(--text);font-weight:800}
-
-/* ============ 通用 ============ */
 .btn{border:1px solid var(--border);background:var(--card);color:var(--text-sub);padding:11px 16px;border-radius:11px;font-size:13px;font-weight:700;cursor:pointer;transition:.15s;display:inline-flex;align-items:center;gap:6px;justify-content:center;white-space:nowrap}
 .btn:active{transform:scale(.97)}
 .btn.primary{background:var(--primary);color:#fff;border-color:var(--primary);box-shadow:0 4px 14px color-mix(in srgb,var(--primary) 38%,transparent)}
@@ -262,7 +239,6 @@ main{max-width:1440px;margin:0 auto;padding:12px 14px 40px}
 .btn.on{background:var(--primary-soft);color:var(--primary);border-color:color-mix(in srgb,var(--primary) 40%,transparent)}
 .search{border:1px solid var(--border);background:var(--card);color:var(--text);padding:8px 14px;border-radius:99px;font-size:12.5px;width:220px;outline:none;transition:.15s}
 .search:focus{border-color:var(--primary);box-shadow:0 0 0 4px color-mix(in srgb,var(--primary) 14%,transparent)}
-/* ============ 设置面板 ============ */
 .setup{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px 18px;box-shadow:var(--shadow)}
 .setup h2{margin:0 0 6px;font-size:17px;font-weight:800}
 .setup .desc{color:var(--text-sub);font-size:12.5px;margin:0 0 20px;line-height:1.6}
@@ -270,10 +246,9 @@ main{max-width:1440px;margin:0 auto;padding:12px 14px 40px}
 .setup-row label{font-size:12px;font-weight:800;color:var(--text-sub)}
 .setup-row .chips{display:flex;gap:6px;flex-wrap:wrap}
 .setup-actions{display:flex;gap:10px;margin-top:20px;justify-content:center;flex-wrap:wrap}
-.mode-toggle{display:flex;gap:4px;background:var(--chip);padding:4px;border-radius:10px;width:100%}
-.mode-toggle .mode-btn{flex:1;border:none;background:transparent;color:var(--text-sub);font-size:12px;font-weight:700;padding:9px 4px;border-radius:8px;cursor:pointer;transition:.18s}
+.mode-toggle{display:flex;gap:4px;background:var(--chip);padding:4px;border-radius:10px;width:100%;flex-wrap:wrap}
+.mode-toggle .mode-btn{flex:1;border:none;background:transparent;color:var(--text-sub);font-size:12px;font-weight:700;padding:9px 4px;border-radius:8px;cursor:pointer;transition:.18s;white-space:nowrap;min-width:60px}
 .mode-toggle .mode-btn.active{background:var(--card);color:var(--text);box-shadow:0 2px 6px rgba(0,0,0,.1)}
-/* ============ 做题 ============ */
 .playing{display:flex;flex-direction:column;gap:12px}
 .play-top{display:flex;align-items:center;gap:12px;padding:12px 14px;background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);flex-wrap:wrap}
 .play-title{font-size:12px;font-weight:800;color:var(--text-sub);width:100%}
@@ -320,14 +295,20 @@ main{max-width:1440px;margin:0 auto;padding:12px 14px 40px}
 .play-actions{display:flex;justify-content:space-between;gap:8px;margin-top:14px;padding-top:14px;border-top:1px dashed var(--border);flex-wrap:wrap}
 .play-actions.right{justify-content:flex-end}
 .q-note-btn{border:1px dashed var(--purple);background:transparent;color:var(--purple);font-size:11.5px;font-weight:700;padding:6px 12px;border-radius:9px;cursor:pointer;display:inline-flex;align-items:center;gap:4px}
-/* ============ 结果 ============ */
+.listen-box{padding:24px 16px;text-align:center;background:var(--soft);border-radius:14px;margin-bottom:16px}
+.listen-play{width:88px;height:88px;border-radius:50%;margin:0 auto 14px;background:linear-gradient(135deg,var(--primary),#8b5cf6);color:#fff;border:none;cursor:pointer;font-size:32px;display:grid;place-items:center;box-shadow:0 8px 24px color-mix(in srgb,var(--primary) 40%,transparent);transition:.2s}
+.listen-play:active{transform:scale(.94)}
+.listen-play.playing{animation:pulse 1s infinite}
+@keyframes pulse{0%,100%{box-shadow:0 8px 24px color-mix(in srgb,var(--primary) 40%,transparent);transform:scale(1)}50%{box-shadow:0 8px 36px color-mix(in srgb,var(--primary) 65%,transparent);transform:scale(1.05)}}
+.listen-play:disabled{opacity:.4;cursor:not-allowed}
+.listen-hint{font-size:11.5px;color:var(--text-sub);font-weight:600;margin-bottom:6px}
+.listen-times{font-size:11px;color:var(--warning);font-weight:800}
+.listen-material{margin-top:12px;padding:12px 14px;background:var(--chip);border-radius:10px;font-size:13px;font-family:Georgia,serif;font-weight:600;line-height:1.6;animation:fadeUp .3s;text-align:left;border-left:4px solid var(--success)}
+.listen-material .lbl{font-size:10.5px;color:var(--success);font-weight:800;margin-bottom:4px;font-family:-apple-system,sans-serif;letter-spacing:.5px}
 .result{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:24px 18px;text-align:center;box-shadow:var(--shadow)}
 .result-score{font-size:56px;font-weight:900;line-height:1;margin-bottom:8px;background:linear-gradient(135deg,var(--primary),var(--success));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
 .result-sub{color:var(--text-sub);font-size:13.5px;margin-bottom:6px}
 .result-msg{color:var(--text-sub);font-size:12.5px;margin-bottom:20px;line-height:1.5}
-.result-badges{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:16px}
-.result-badge{background:linear-gradient(135deg,color-mix(in srgb,var(--gold) 20%,var(--card)),var(--card));padding:8px 14px;border-radius:10px;font-size:11.5px;font-weight:800;box-shadow:0 4px 10px color-mix(in srgb,var(--gold) 25%,transparent);animation:badgeIn .5s cubic-bezier(.34,1.56,.64,1)}
-@keyframes badgeIn{from{transform:scale(0) rotate(-20deg);opacity:0}to{transform:none;opacity:1}}
 .wrong-list-box{display:flex;flex-direction:column;gap:9px;margin:18px 0;text-align:left;max-height:340px;overflow-y:auto}
 .wrong-item{background:var(--soft);border-radius:10px;padding:11px 13px;border-left:3px solid var(--danger);font-size:12.5px;line-height:1.6}
 .wrong-item .s{font-family:Georgia,serif;font-weight:600;margin-bottom:4px}
@@ -335,7 +316,6 @@ main{max-width:1440px;margin:0 auto;padding:12px 14px 40px}
 .wrong-item .your{color:var(--danger);font-weight:700;margin-left:8px}
 .wrong-item .ex{color:var(--text-sub);font-size:11.5px;margin-top:5px;padding-top:5px;border-top:1px dashed var(--border)}
 .result-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
-/* ============ 错题 ============ */
 .wrong-header{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 14px;box-shadow:var(--shadow);margin-bottom:12px}
 .wrong-info{font-size:13px;font-weight:700;color:var(--text-sub)}
 .wrong-info b{color:var(--danger);font-size:17px}
@@ -355,7 +335,6 @@ main{max-width:1440px;margin:0 auto;padding:12px 14px 40px}
 .wrong-card .cnt-tag{font-size:10px;font-weight:800;background:color-mix(in srgb,var(--danger) 12%,transparent);color:var(--danger);padding:2px 6px;border-radius:5px}
 .empty{text-align:center;padding:50px 16px;color:var(--text-sub);font-size:13px;line-height:1.6}
 .empty .icon{font-size:40px;display:block;margin-bottom:10px;opacity:.5}
-/* ============ 组卷 ============ */
 .paper-tabs{display:flex;gap:4px;margin-bottom:12px;background:var(--chip);padding:3px;border-radius:10px}
 .ptab{flex:1;border:none;background:transparent;color:var(--text-sub);font-size:12.5px;font-weight:700;padding:9px 8px;border-radius:8px;cursor:pointer;transition:.18s}
 .ptab.active{background:var(--card);color:var(--text);box-shadow:0 2px 8px rgba(0,0,0,.08)}
@@ -389,7 +368,6 @@ select.nice{border:1px solid var(--border);background:var(--card);color:var(--te
 .pick-bar .count{font-size:13px;font-weight:700}
 .pick-bar .count b{color:var(--primary);font-size:16px}
 .pick-bar .spacer{flex:1}
-/* 抽屉 */
 .sheet{position:fixed;inset:0;z-index:400;display:none;background:rgba(8,12,24,.5);backdrop-filter:blur(4px);align-items:flex-end}
 .sheet.show{display:flex;animation:sheetFade .2s}
 @keyframes sheetFade{from{opacity:0}to{opacity:1}}
@@ -411,14 +389,12 @@ select.nice{border:1px solid var(--border);background:var(--card);color:var(--te
 .sheet-item.danger .ico{background:color-mix(in srgb,var(--danger) 12%,transparent)}
 .sheet-item.on{background:var(--primary-soft);color:var(--primary)}
 .sheet-item.on .ico{background:var(--primary);color:#fff}
-/* 全屏搜索 */
 .search-fs{position:fixed;inset:0;z-index:450;display:none;flex-direction:column;background:var(--bg);padding:calc(12px + env(safe-area-inset-top,0px)) 14px 20px}
 .search-fs.show{display:flex;animation:sheetFade .15s}
 .search-row{display:flex;gap:8px;align-items:center}
 .search-row input{flex:1;border:1px solid var(--border);background:var(--card);color:var(--text);padding:12px 16px;border-radius:12px;font-size:16px;outline:none}
 .search-row input:focus{border-color:var(--primary);box-shadow:0 0 0 4px color-mix(in srgb,var(--primary) 14%,transparent)}
 .search-row .cancel{padding:12px 16px;background:var(--chip);color:var(--text-sub);border:none;border-radius:12px;font-size:13px;font-weight:700;cursor:pointer}
-/* 模态 */
 .modal{position:fixed;inset:0;z-index:500;display:none;place-items:center;padding:14px;background:rgba(8,12,24,.55);backdrop-filter:blur(6px)}
 .modal.show{display:grid;animation:fadeIn .18s}
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
@@ -440,19 +416,45 @@ select.nice{border:1px solid var(--border);background:var(--card);color:var(--te
 .confirm-box h2{text-align:center;font-size:17px;margin-bottom:8px}
 .confirm-box p.desc{text-align:center;font-size:13.5px;line-height:1.7;margin-bottom:24px}
 .confirm-box .modal-actions{justify-content:center;gap:12px;margin-top:0}
-/* Toast */
+.voice-item{display:flex;align-items:center;gap:10px;padding:10px 14px;border:1px solid var(--border);border-radius:11px;cursor:pointer;transition:.15s;background:var(--bg);width:100%}
+.voice-item:hover{border-color:var(--primary)}
+.voice-item.active{border-color:var(--primary);background:var(--primary-soft)}
+.voice-item .vn{flex:1;font-size:13px;font-weight:600}
+.voice-item .vl{font-size:11px;color:var(--text-sub);font-family:ui-monospace,monospace}
 .toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translate(-50%,90px);background:var(--text);color:var(--bg);padding:11px 18px;border-radius:11px;font-size:12.5px;font-weight:700;opacity:0;pointer-events:none;z-index:700;transition:.35s cubic-bezier(.34,1.3,.64,1);box-shadow:0 12px 36px rgba(0,0,0,.28);max-width:86vw;text-align:center;line-height:1.5}
 .toast.show{opacity:1;transform:translate(-50%,0)}
 .toast.ok{background:var(--success);color:#fff}
 .toast.warn{background:var(--warning);color:#fff}
 .toast.err{background:var(--danger);color:#fff}
-/* 成就 Toast */
 .achieve-toast{position:fixed;left:50%;top:80px;transform:translate(-50%,-100px) scale(.8);background:linear-gradient(135deg,var(--gold),#f59e0b);color:#fff;padding:14px 22px;border-radius:14px;font-weight:800;box-shadow:0 12px 36px rgba(234,179,8,.4);z-index:700;opacity:0;pointer-events:none;transition:.45s cubic-bezier(.34,1.56,.64,1);display:flex;align-items:center;gap:12px;max-width:88vw}
 .achieve-toast.show{opacity:1;transform:translate(-50%,0) scale(1)}
 .achieve-toast .ico{font-size:32px;flex-shrink:0}
 .achieve-toast .txt{display:flex;flex-direction:column;gap:2px;min-width:0}
 .achieve-toast .title{font-size:13.5px}
 .achieve-toast .sub{font-size:11px;opacity:.9;font-weight:600}
+
+/* PDF 试卷样式 */
+.pdf-toolbar{display:flex;gap:10px;justify-content:flex-end;align-items:center;margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid var(--border);flex-wrap:wrap}
+.pdf-paper{background:#fff;color:#111;padding:26px 32px;font-family:"Times New Roman",Georgia,"SimSun",serif;border-radius:12px;max-width:780px;margin:0 auto;line-height:1.5}
+.pdf-header{text-align:center;padding-bottom:14px;border-bottom:2px solid #333;margin-bottom:22px}
+.pdf-header h1{margin:0 0 14px;font-size:22px;font-weight:700;letter-spacing:3px}
+.pdf-meta{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px 24px;font-size:13px;color:#333;margin-bottom:10px}
+.pdf-meta span{white-space:nowrap}
+.pdf-subtitle{font-size:11.5px;color:#888;margin-top:4px;border-top:1px dashed #ddd;padding-top:8px}
+.pdf-section-title{font-size:14px;font-weight:700;margin:22px 0 14px;letter-spacing:1px}
+.pdf-q{margin-bottom:16px;page-break-inside:avoid;break-inside:avoid}
+.pdf-q-line{display:flex;gap:6px;margin-bottom:6px;font-size:14px;line-height:1.75}
+.pdf-num{font-weight:700;flex-shrink:0;min-width:24px;font-family:"Times New Roman",Georgia,serif}
+.pdf-q-text{flex:1}
+.pdf-blank{display:inline-block;min-width:72px;border-bottom:1px solid #333;margin:0 4px;height:1em;vertical-align:-2px}
+.pdf-hint{color:#666;font-size:12px;margin-left:4px;font-weight:400}
+.pdf-opts{display:grid;grid-template-columns:1fr 1fr;gap:4px 20px;padding-left:30px;font-size:13.5px;line-height:1.8}
+.pdf-opt{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pdf-ans{margin-top:6px;margin-left:30px;padding:8px 12px;background:#f0fdf4;border-left:3px solid #10b981;font-size:12.5px;color:#333;line-height:1.65;border-radius:0 6px 6px 0}
+.pdf-ans b{color:#059669;font-weight:700}
+.pdf-footer{text-align:center;margin-top:32px;padding-top:16px;border-top:1px dashed #ccc;font-size:11.5px;color:#999;letter-spacing:6px}
+.pdf-watermark{text-align:center;font-size:10px;color:#ccc;margin-top:14px;letter-spacing:1px}
+
 @media (min-width:761px){
   .top-inner{padding:14px 22px 12px}
   .logo{width:40px;height:40px;font-size:20px}
@@ -477,10 +479,11 @@ select.nice{border:1px solid var(--border);background:var(--card);color:var(--te
   .ptab{flex:0 0 auto;padding:11px 26px;font-size:13px}
   .new-subtabs{width:fit-content;padding:4px;gap:4px;display:inline-flex}
   .nstab{flex:0 0 auto;padding:11px 26px;font-size:13px}
-  .mode-toggle{width:auto;max-width:520px;padding:4px;gap:4px}
-  .mode-toggle .mode-btn{flex:0 0 auto;padding:10px 24px;font-size:13px}
+  .mode-toggle{width:auto;max-width:640px;padding:4px;gap:4px}
+  .mode-toggle .mode-btn{flex:0 0 auto;padding:10px 20px;font-size:13px}
   .setup-actions{justify-content:flex-end;gap:12px;margin-top:24px}
   .setup-actions .btn{flex:0 0 auto;min-width:200px;padding:12px 36px;font-size:14px}
+  .modal-box{max-width:520px;margin:0 auto}
   .modal-actions{justify-content:flex-end;gap:10px}
   .modal-actions .btn{flex:0 0 auto;min-width:110px;padding:10px 26px;font-size:13.5px}
   .confirm-box .modal-actions{justify-content:center;gap:12px}
@@ -489,7 +492,7 @@ select.nice{border:1px solid var(--border);background:var(--card);color:var(--te
   .result-actions .btn{flex:0 0 auto;min-width:150px;padding:11px 28px}
   .lib-foot{justify-content:space-between;gap:14px}
   .lib-seg{flex:0 0 auto;width:320px}
-  .modal-box .field input,.modal-box .field textarea{max-width:420px}
+  .modal-box .field input,.modal-box .field textarea{max-width:100%}
   .search{width:260px}
   .dash-grid{grid-template-columns:repeat(4,1fr)}
   .achieve-grid{grid-template-columns:repeat(auto-fill,minmax(110px,1fr))}
@@ -497,38 +500,20 @@ select.nice{border:1px solid var(--border);background:var(--card);color:var(--te
   .dash-hero .streak-num{font-size:72px}
   .dash-hero .progress-circle{width:72px;height:72px;font-size:18px}
 }
-/* ============ PC 端 UI 修正 ============ */
-@media (min-width:761px){
-  /* 1. 模态框限制宽度，不要撑满全屏 */
-  .modal-box{max-width:520px; margin:0 auto}
 
-  /* 2. 模态框按钮不拉伸，靠右排列 */
-  .modal-actions{justify-content:flex-end; gap:10px}
-  .modal-actions .btn{flex:0 0 auto; min-width:110px; padding:10px 26px; font-size:13.5px}
-  .confirm-box .modal-actions{justify-content:center}
-  .confirm-box .modal-actions .btn{min-width:130px}
-
-  /* 3. 设置面板「开始做题」靠右 */
-  .setup-actions{justify-content:flex-end; gap:12px; margin-top:24px}
-  .setup-actions .btn{flex:0 0 auto; min-width:200px; padding:12px 36px; font-size:14px}
-
-  /* 4. 结果页按钮居中 */
-  .result-actions{justify-content:center; gap:12px}
-  .result-actions .btn{flex:0 0 auto; min-width:150px; padding:11px 28px}
-
-  /* 5. 二级标签自适应宽度，不被 flex 拉长 */
-  .paper-tabs{width:fit-content; padding:4px; gap:4px}
-  .ptab{flex:0 0 auto; padding:11px 26px; font-size:13px}
-  .new-subtabs{width:fit-content; padding:4px; display:inline-flex; gap:4px}
-  .nstab{flex:0 0 auto; padding:11px 26px; font-size:13px}
-
-  /* 6. 模式切换器 */
-  .mode-toggle{width:auto; max-width:520px; padding:4px; gap:4px}
-  .mode-toggle .mode-btn{flex:0 0 auto; padding:10px 24px; font-size:13px}
-
-  /* 7. 语音设置面板里的语音项：不拉伸 */
-  #voiceList > div{width:100%}
-  #voiceList > div button{flex:0 0 auto}
+@media print{
+  @page{size:A4;margin:14mm 14mm 12mm}
+  body.printing > *:not(.modal){display:none !important}
+  body.printing #previewModal{display:block !important;position:static !important;background:#fff !important;padding:0 !important;margin:0 !important;backdrop-filter:none !important;-webkit-backdrop-filter:none !important;inset:auto !important}
+  body.printing #previewModal .modal-box{box-shadow:none !important;border:none !important;max-width:100% !important;width:100% !important;padding:0 !important;margin:0 !important;background:#fff !important;border-radius:0 !important;max-height:none !important;overflow:visible !important;animation:none !important}
+  body.printing .pdf-toolbar{display:none !important}
+  body.printing .pdf-paper{padding:0 !important;max-width:100% !important;border-radius:0 !important;box-shadow:none !important;color:#000 !important;background:#fff !important}
+  body.printing .pdf-q{page-break-inside:avoid;break-inside:avoid}
+  body.printing .pdf-ans{page-break-inside:avoid;break-inside:avoid}
+  body.printing .pdf-header{padding-bottom:12px;border-bottom:1.5px solid #000}
+  body.printing .pdf-header h1{font-size:20px;margin-bottom:12px}
+  body.printing .pdf-opts{font-size:12.5px}
+  body.printing .pdf-q-line{font-size:13px}
 }
 </style>
 </head>
@@ -540,17 +525,16 @@ select.nice{border:1px solid var(--border);background:var(--card);color:var(--te
       <div class="logo">📐</div>
       <div>
         <h1>七上英语语法</h1>
-        <p class="sub">主题库 · 刷题 · 数据中心 · 错题本 · 组卷</p>
+        <p class="sub">主题库 · 刷题 · 数据中心 · 听力 · 组卷</p>
       </div>
       <div class="top-icons">
         <button class="icon-btn" id="dailyBtn" title="每日一题">🎯</button>
-        <button class="icon-btn" id="voiceBtn" title="语音设置">🎙️</button>
         <button class="icon-btn" id="quickReviewBtn" title="智能复习">⚡</button>
+        <button class="icon-btn" id="voiceBtn" title="语音设置">🎙️</button>
         <button class="icon-btn" id="searchBtn" title="搜索">🔍</button>
         <button class="icon-btn" id="themeBtn" title="主题">🌙</button>
       </div>
     </div>
-
     <div class="tabs">
       <button class="tab" data-tab="lib">📚<span> 主题库</span></button>
       <button class="tab" data-tab="notes">📖<span> 讲解</span></button>
@@ -559,7 +543,6 @@ select.nice{border:1px solid var(--border);background:var(--card);color:var(--te
       <button class="tab" data-tab="wrong">📕<span> 错题</span><span class="badge" id="wrongBadge" data-zero="true">0</span></button>
       <button class="tab" data-tab="paper">📝<span> 组卷</span></button>
     </div>
-
     <div id="libTools" class="toolbar">
       <div class="filter-scroll mobile-only" id="libStatusM">
         <button class="chip active" data-s="all">全部</button>
@@ -584,7 +567,6 @@ select.nice{border:1px solid var(--border);background:var(--card);color:var(--te
         <button class="btn sm danger" id="libResetBtn">重置</button>
       </div>
     </div>
-
     <div id="notesTools" class="toolbar" hidden>
       <div class="filter-scroll" id="noteFilters">
         <button class="chip active" data-f="all">全部</button>
@@ -596,31 +578,18 @@ select.nice{border:1px solid var(--border);background:var(--card);color:var(--te
         <button class="chip" data-f="other">其他</button>
       </div>
     </div>
-
     <div id="practiceTools" class="toolbar" hidden>
-      <div class="filter-scroll">
-        <button class="chip active" data-f="all">全部</button>
-        <button class="chip" data-f="plural">单复数</button>
-        <button class="chip" data-f="third">三单</button>
-        <button class="chip" data-f="be">be 动词</button>
-        <button class="chip" data-f="pron">代词</button>
-        <button class="chip" data-f="tense">时态</button>
-        <button class="chip" data-f="misc">综合</button>
-        <button class="chip" data-f="hard">🔥 重难点</button>
-      </div>
+      <div class="filter-scroll"><span class="chip active" style="cursor:default">做题设置</span></div>
       <button class="mf-more mobile-only" data-module="practice" title="更多">⚙️</button>
     </div>
-
     <div id="dashTools" class="toolbar" hidden>
       <div class="filter-scroll"><span class="chip active" style="cursor:default">学习数据中心</span></div>
       <button class="mf-more mobile-only" data-module="dash" title="更多">⚙️</button>
     </div>
-
     <div id="wrongTools" class="toolbar" hidden>
       <div class="filter-scroll"><span class="chip active" style="cursor:default">错题本</span></div>
       <button class="mf-more mobile-only" data-module="wrong" title="更多">⚙️</button>
     </div>
-
     <div id="paperTools" class="toolbar" hidden>
       <div class="filter-scroll"><span class="chip active" style="cursor:default">试卷管理</span></div>
       <button class="mf-more mobile-only" data-module="paper" title="更多">⚙️</button>
@@ -629,7 +598,6 @@ select.nice{border:1px solid var(--border);background:var(--card);color:var(--te
 </header>
 
 <main>
-  <!-- 主题库 -->
   <section class="view" id="viewLib">
     <div class="progress-row">
       <div class="bar"><i id="lfill"></i></div>
@@ -657,24 +625,23 @@ select.nice{border:1px solid var(--border);background:var(--card);color:var(--te
     <div class="empty" id="libEmpty" hidden><span class="icon">📚</span>没有匹配的题目</div>
   </section>
 
-  <!-- 讲解 -->
   <section class="view" id="viewNotes" hidden>
     <div class="notes-grid" id="notesGrid"></div>
     <div class="empty" id="notesEmpty" hidden><span class="icon">📖</span>没有匹配的语法点</div>
   </section>
 
-  <!-- 做题 -->
   <section class="view" id="viewPractice" hidden>
     <div id="practiceSetup">
       <div class="setup">
         <h2>✍️ 临时做题</h2>
-        <p class="desc">答对自动标记「已掌握」，答错标记「学习中」并加入错题本。填空题支持简写和展开形式（如 They're / They are 都对）。</p>
+        <p class="desc">答对自动标记「已掌握」，答错标记「学习中」并加入错题本。填空题支持简写和展开形式。</p>
         <div class="setup-row">
           <label>模式</label>
           <div class="mode-toggle" id="practiceModeToggle">
             <button class="mode-btn active" data-mode="choice">📋 选择</button>
             <button class="mode-btn" data-mode="fill">✏️ 填空</button>
             <button class="mode-btn" data-mode="mix">🎲 混合</button>
+            <button class="mode-btn" data-mode="listen">🎧 听力</button>
           </div>
         </div>
         <div class="setup-row">
@@ -716,7 +683,6 @@ select.nice{border:1px solid var(--border);background:var(--card);color:var(--te
         </div>
       </div>
     </div>
-
     <div class="playing" id="practicePlaying" hidden>
       <div class="play-top">
         <div class="play-title" id="playTitle"></div>
@@ -742,11 +708,9 @@ select.nice{border:1px solid var(--border);background:var(--card);color:var(--te
         <div class="q-grid" id="playQGrid"></div>
       </div>
     </div>
-
     <div id="practiceResult" hidden></div>
   </section>
 
-  <!-- 数据中心 -->
   <section class="view" id="viewDash" hidden>
     <div class="dash-hero">
       <div class="row">
@@ -767,30 +731,12 @@ select.nice{border:1px solid var(--border);background:var(--card);color:var(--te
         </div>
       </div>
     </div>
-
     <div class="dash-grid">
-      <div class="dash-card">
-        <div class="lbl">累计答题</div>
-        <div class="num p" id="dTotal">0</div>
-        <div class="sub">题</div>
-      </div>
-      <div class="dash-card">
-        <div class="lbl">累计正确</div>
-        <div class="num g" id="dCorrect">0</div>
-        <div class="sub">题</div>
-      </div>
-      <div class="dash-card">
-        <div class="lbl">总正确率</div>
-        <div class="num w" id="dRate">0%</div>
-        <div class="sub">正确率</div>
-      </div>
-      <div class="dash-card">
-        <div class="lbl">已掌握</div>
-        <div class="num pp" id="dMaster">0</div>
-        <div class="sub">/ <span id="dMasterTotal">0</span></div>
-      </div>
+      <div class="dash-card"><div class="lbl">累计答题</div><div class="num p" id="dTotal">0</div><div class="sub">题</div></div>
+      <div class="dash-card"><div class="lbl">累计正确</div><div class="num g" id="dCorrect">0</div><div class="sub">题</div></div>
+      <div class="dash-card"><div class="lbl">总正确率</div><div class="num w" id="dRate">0%</div><div class="sub">正确率</div></div>
+      <div class="dash-card"><div class="lbl">已掌握</div><div class="num pp" id="dMaster">0</div><div class="sub">/ <span id="dMasterTotal">0</span></div></div>
     </div>
-
     <div class="goal-panel">
       <div class="top">
         <h3>🎯 每日目标</h3>
@@ -799,23 +745,32 @@ select.nice{border:1px solid var(--border);background:var(--card);color:var(--te
       <div class="goal-bar"><i id="goalBar"></i></div>
       <div class="goal-text" id="goalText">今日 <b>0</b> / <b>20</b> 题</div>
     </div>
-
     <div class="dash-section">
       <h3>📅 最近 7 天 <span class="cnt" id="dWeekTotal">共 0 题</span></h3>
       <div class="bars" id="dWeekBars"></div>
       <div class="bar-lbl" id="dWeekLabels"></div>
     </div>
-
     <div class="dash-section">
       <h3>📚 分类掌握度</h3>
       <div id="dCatBars"></div>
     </div>
-
+    <div class="dash-section">
+      <h3>📅 学习日历 <span class="cnt" id="calMonthTotal">本月 0 题</span></h3>
+      <div class="cal-header">
+        <button id="calPrev">◀</button>
+        <div class="cal-title" id="calTitle"></div>
+        <button id="calNext">▶</button>
+      </div>
+      <div class="cal-grid" id="calGrid"></div>
+      <div class="cal-legend">
+        <span>少</span><i></i><i></i><i></i><i></i><span>多</span>
+      </div>
+      <div class="cal-stats" id="calStats"></div>
+    </div>
     <div class="dash-section">
       <h3>🏆 成就徽章 <span class="cnt" id="dAchCnt">0 / 0</span></h3>
       <div class="achieve-grid" id="dAchieveGrid"></div>
     </div>
-
     <div class="dash-section">
       <h3>💾 数据管理</h3>
       <div style="display:flex;gap:8px;flex-wrap:wrap">
@@ -826,7 +781,6 @@ select.nice{border:1px solid var(--border);background:var(--card);color:var(--te
     </div>
   </section>
 
-  <!-- 错题 -->
   <section class="view" id="viewWrong" hidden>
     <div class="wrong-header">
       <div class="wrong-info">共 <b id="wrongCount">0</b> 道错题</div>
@@ -852,24 +806,20 @@ select.nice{border:1px solid var(--border);background:var(--card);color:var(--te
     </div>
   </section>
 
-  <!-- 组卷 -->
   <section class="view" id="viewPaper" hidden>
     <div class="paper-tabs">
       <button class="ptab active" data-ptab="my">📁 我的试卷</button>
       <button class="ptab" data-ptab="new">➕ 新建</button>
     </div>
-
     <div id="myPapersView">
       <div class="paper-list" id="paperListEl"></div>
       <div class="empty" id="paperEmpty" hidden><span class="icon">📝</span>还没有保存的试卷</div>
     </div>
-
     <div id="newPaperView" hidden>
       <div class="new-subtabs">
         <button class="nstab active" data-sub="cond">⚡ 按条件</button>
         <button class="nstab" data-sub="manual">✋ 手动选</button>
       </div>
-
       <div id="condView">
         <div class="setup">
           <h2>⚡ 按条件快速组卷</h2>
@@ -920,7 +870,6 @@ select.nice{border:1px solid var(--border);background:var(--card);color:var(--te
           </div>
         </div>
       </div>
-
       <div id="manualView" hidden>
         <div class="pick-tools">
           <div class="left">
@@ -955,7 +904,6 @@ select.nice{border:1px solid var(--border);background:var(--card);color:var(--te
         <div class="q-grid" id="pickQGrid" hidden style="padding-bottom:100px"></div>
       </div>
     </div>
-
     <div class="pick-bar" id="pickBar" hidden>
       <div class="pick-bar-inner">
         <div class="count">已选 <b id="pickedCount">0</b></div>
@@ -1010,12 +958,28 @@ select.nice{border:1px solid var(--border);background:var(--card);color:var(--te
 
 <div class="modal" id="noteModal">
   <div class="modal-box">
-    <h2 id="noteTitle">📝 笔记</h2>
-    <p class="desc" id="noteSub">记录你的记忆方法、易错点</p>
+    <h2>📝 笔记</h2>
+    <p class="desc">记录你的记忆方法、易错点</p>
     <div class="field"><textarea id="noteInput" placeholder="例如：看到 Look! 就用现在进行时"></textarea></div>
     <div class="modal-actions">
       <button class="btn" id="noteCancel">取消</button>
       <button class="btn primary" id="noteOk">保存</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="voiceModal">
+  <div class="modal-box">
+    <h2>🎙️ 语音设置</h2>
+    <p class="desc">选一个你听起来最舒服的英文发音。推荐用 <b>Edge 浏览器</b>打开，能自动使用微软神经网络语音。</p>
+    <div id="voiceList" style="display:flex;flex-direction:column;gap:8px;max-height:50vh;overflow-y:auto;margin-bottom:16px"></div>
+    <div class="field">
+      <label>语速：<span id="rateVal">0.92</span></label>
+      <input type="range" id="rateRange" min="0.5" max="1.5" step="0.02" value="0.92" style="width:100%">
+    </div>
+    <div class="modal-actions">
+      <button class="btn" id="voiceTest">试听 "Good morning"</button>
+      <button class="btn primary" id="voiceClose">完成</button>
     </div>
   </div>
 </div>
@@ -1030,22 +994,6 @@ select.nice{border:1px solid var(--border);background:var(--card);color:var(--te
     <span class="title" id="achieveToastTitle">解锁成就</span>
     <span class="sub" id="achieveToastSub"></span>
   </span>
-</div>
-
-<div class="modal" id="voiceModal">
-  <div class="modal-box">
-    <h2>🎙️ 语音设置</h2>
-    <p class="desc">选择一个你听起来最舒服的英文发音。推荐用 <b>Edge 浏览器</b>打开，能自动使用微软神经网络语音，效果最自然。</p>
-    <div id="voiceList" style="display:flex;flex-direction:column;gap:8px;max-height:50vh;overflow-y:auto;margin-bottom:16px"></div>
-    <div class="field">
-      <label>语速：<span id="rateVal">0.92</span></label>
-      <input type="range" id="rateRange" min="0.5" max="1.5" step="0.02" value="0.92" style="width:100%">
-    </div>
-    <div class="modal-actions">
-      <button class="btn" id="voiceTest">试听 "Good morning"</button>
-      <button class="btn primary" id="voiceClose">完成</button>
-    </div>
-  </div>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -1068,81 +1016,30 @@ function todayStr(){const d=new Date();return `${d.getFullYear()}-${String(d.get
 function fmtTime(ts){const d=new Date(ts);const p=n=>String(n).padStart(2,'0');return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}`;}
 function fmtDur(s){const m=Math.floor(s/60);const ss=s%60;return `${m}:${String(ss).padStart(2,'0')}`;}
 function isMobile(){return window.matchMedia('(max-width: 760px)').matches;}
-function normalize(s){
-  return String(s||'').toLowerCase().trim()
-    .replace(/[’‘`´]/g,"'")
-    .replace(/[.,!?;:]+$/g,'')
-    .replace(/\s+/g,' ');
-}
-/* ============ TTS 朗读 ============ */
-/* ============ TTS 朗读（智能筛选最优语音） ============ */
-let allVoices = [];
-let selectedVoiceName = localStorage.getItem('q7g-voice-name') || '';
+function normalize(s){return String(s||'').toLowerCase().trim().replace(/[’‘`´]/g,"'").replace(/[.,!?;:]+$/g,'').replace(/\s+/g,' ');}
 
-function loadVoices(){
-  if(!('speechSynthesis' in window)) return;
-  const v = window.speechSynthesis.getVoices();
-  if(v.length){
-    allVoices = v.filter(x => /^en(-|_)?/i.test(x.lang));
-  }
-}
-if('speechSynthesis' in window){
-  loadVoices();
-  window.speechSynthesis.onvoiceschanged = loadVoices;
-}
-
-/* 语音质量评分：分数越高越优先 */
-function voiceScore(v){
-  const n = v.name.toLowerCase();
-  let s = 0;
-  // 微软 Edge 神经网络语音（最自然）
-  if(/microsoft/.test(n) && /(aria|jenny|guy|michelle|ana|christopher|eric|roger|ava|andrew|emma|brian)/.test(n)) s += 100;
-  // Google
-  if(/google/.test(n) && /(us|uk)\s+english/.test(n)) s += 80;
-  // macOS 高质量
-  if(/samantha|alex|karen|daniel|moira|tessa/.test(n)) s += 70;
-  // Windows 传统语音
-  if(/microsoft/.test(n) && /(zira|david|mark|hazel)/.test(n)) s += 50;
-  if(v.lang === 'en-US') s += 10;
-  if(v.localService) s += 5;
-  // 机械感强的扣分
-  if(/espeak|festival|flite/i.test(n)) s -= 200;
-  return s;
-}
-
-function pickBestVoice(){
-  if(!allVoices.length) return null;
-  if(selectedVoiceName){
-    const hit = allVoices.find(v => v.name === selectedVoiceName);
-    if(hit) return hit;
-  }
-  return allVoices.slice().sort((a,b) => voiceScore(b) - voiceScore(a))[0] || null;
-}
-
-function speak(text){
-  if(!('speechSynthesis' in window)) return;
-  try{
-    window.speechSynthesis.cancel();
-    if(!allVoices.length) loadVoices();
-    const u = new SpeechSynthesisUtterance(text);
-    const v = pickBestVoice();
-    if(v){ u.voice = v; u.lang = v.lang; }
-    else { u.lang = 'en-US'; }
-    u.rate = 0.92;
-    u.pitch = 1.0;
-    u.volume = 1.0;
-    window.speechSynthesis.speak(u);
-  }catch(e){}
-}
-
-function stripHTML(s){
-  return String(s||'')
-    .replace(/<[^>]+>/g,' ')     // 去掉 HTML 标签
-    .replace(/&[a-z]+;/gi,' ')   // 去掉 HTML 实体
-    .replace(/_{2,}/g,' blank ') // 把 ______ 读成 "blank"
-    .replace(/\s+/g,' ')
-    .trim();
-}
+/* ============ 数据自动迁移（把旧 key 的数据搬到新 key） ============ */
+(function autoMigrate(){
+  const pairs = [
+    ['q7g-lib-v4','q7g-lib-v3'],['q7g-lib-v4','q7g-lib-v2'],
+    ['q7g-wrong-v4','q7g-wrong-v3'],['q7g-wrong-v4','q7g-wrong-v2'],['q7g-wrong-v4','q7g-wrong'],
+    ['q7g-papers-v4','q7g-papers-v3'],['q7g-papers-v4','q7g-papers-v2'],['q7g-papers-v4','q7g-papers'],
+    ['q7g-session-v3','q7g-session-v2'],['q7g-session-v3','q7g-session'],
+    ['q7g-stats-v1','q7g-stats-v2'],
+    ['q7g-note-v1','q7g-note-v2'],
+    ['q7g-goal-v1','q7g-goal-v2'],
+    ['q7g-ach-v1','q7g-ach-v2'],
+    ['q7g-star-v1','q7g-star-v5'],
+    ['q7g-daily-v4','q7g-daily-v5'],['q7g-daily-v4','q7g-daily-v1'],
+  ];
+  pairs.forEach(([t,s])=>{
+    try{
+      if(!localStorage.getItem(t) && localStorage.getItem(s)){
+        localStorage.setItem(t, localStorage.getItem(s));
+      }
+    }catch(e){}
+  });
+})();
 
 /* ============ 弹窗 ============ */
 let _cr=null;
@@ -1184,7 +1081,6 @@ document.getElementById('promptOk').addEventListener('click',()=>{const v=docume
 document.getElementById('promptCancel').addEventListener('click',()=>closePrompt(null));
 document.getElementById('promptInput').addEventListener('keydown',e=>{if(e.key==='Enter'){const v=e.target.value.trim();closePrompt(v||null);}});
 document.getElementById('promptModal').addEventListener('click',e=>{if(e.target===document.getElementById('promptModal'))closePrompt(null);});
-/* 笔记弹窗 */
 let _nr=null;
 function askNote(current){
   return new Promise(resolve=>{
@@ -1221,189 +1117,148 @@ const NOTES=[
   {cat:'misc',title:'宾语从句',points:['结构：主句 + 引导词 + 从句（陈述语序）','<b>that</b> 引导陈述句（可省略）','<b>if / whether</b> 引导一般疑问句','<b>特殊疑问词</b>引导特殊疑问句','<b>从句必须用陈述语序</b>'],examples:[{en:'I don\'t know <em>where</em> he <em>lives</em>.',cn:'我不知道他住在哪里。'}],tip:'<b>主句过去时，从句也要用过去时。</b>'},
   {cat:'misc',title:'if 条件句（主将从现）',points:['<b>if 引导的条件状语从句</b>','<b>主将从现</b>：主句用将来时，从句用一般现在时','If it <b>rains</b> tomorrow, we <b>will stay</b> at home.','if 引导宾语从句时表示"是否"，不受此限制'],examples:[{en:'If it <em>rains</em> tomorrow, we <em>will stay</em> at home.',cn:'如果明天下雨，我们就待在家里。'}],tip:'<b>主将从现是高频考点。</b>'},
   {cat:'tense',title:'过去进行时',points:['结构：<code>was / were + 动词-ing</code>','表示过去某个时刻正在进行的动作','常与 at that time, at 8 last night, while 连用','while 常与过去进行时连用'],examples:[{en:'He <em>was watching</em> TV at 8 last night.',cn:'昨晚8点他正在看电视。'}],tip:'<b>when + 一般过去时，while + 过去进行时。</b>'},
-  {cat:'misc',title:'被动语态',points:['结构：<code>be + 过去分词</code>','一般现在时被动：<code>am/is/are + done</code>','一般过去时被动：<code>was/were + done</code>','一般将来时被动：<code>will be + done</code>','只有及物动词有被动语态'],examples:[{en:'English <em>is spoken</em> all over the world.',cn:'全世界都在说英语。'}],tip:'<b>by + 施动者</b> 表示"被谁"。</br>'},
-  {cat:'misc',title:'比较级和最高级',points:['单音节 + <code>-er / -est</code>：tall → taller → tallest','多音节前加 <code>more / most</code>：interesting → more interesting','不规则：good → better → best；bad → worse → worst','比较级用 <code>than</code>；最高级用 <code>the</code>','<code>as...as</code> 中间用原级'],examples:[{en:'He is <em>taller</em> than me.',cn:'他比我高。'}],tip:'<b>比较级 + than any other</b> = 最高级。</br>'},
-  {cat:'misc',title:'虚拟语气（基础）',points:['if 从句与现在事实相反：从句用过去时，主句用 would + 动词原形','if 从句与过去事实相反：从句用 had + 过去分词，主句用 would have + 过去分词','<code>I wish</code> 后跟从句也用虚拟语气','be 动词在虚拟语气里都用 <code>were</code>'],examples:[{en:'If I <em>were</em> you, I <em>would</em> work harder.',cn:'如果我是你，我会更努力。'}],tip:'<b>虚拟语气的 be 动词永远用 were</b>。</br>'}
+  {cat:'misc',title:'被动语态',points:['结构：<code>be + 过去分词</code>','一般现在时被动：<code>am/is/are + done</code>','一般过去时被动：<code>was/were + done</code>','一般将来时被动：<code>will be + done</code>','只有及物动词有被动语态'],examples:[{en:'English <em>is spoken</em> all over the world.',cn:'全世界都在说英语。'}],tip:'<b>by + 施动者</b> 表示"被谁"。'},
+  {cat:'misc',title:'比较级和最高级',points:['单音节 + <code>-er / -est</code>：tall → taller → tallest','多音节前加 <code>more / most</code>：interesting → more interesting','不规则：good → better → best；bad → worse → worst','比较级用 <code>than</code>；最高级用 <code>the</code>','<code>as...as</code> 中间用原级'],examples:[{en:'He is <em>taller</em> than me.',cn:'他比我高。'}],tip:'<b>比较级 + than any other</b> = 最高级。'},
+  {cat:'misc',title:'虚拟语气（基础）',points:['if 从句与现在事实相反：从句用过去时，主句用 would + 动词原形','if 从句与过去事实相反：从句用 had + 过去分词，主句用 would have + 过去分词','<code>I wish</code> 后跟从句也用虚拟语气','be 动词在虚拟语气里都用 <code>were</code>'],examples:[{en:'If I <em>were</em> you, I <em>would</em> work harder.',cn:'如果我是你，我会更努力。'}],tip:'<b>虚拟语气的 be 动词永远用 were</b>。'}
 ];
 
-/* 精简题库（保留核心 ~250 题 + 新增 ~130 题 2.0 = 380 题），如需再扩充可继续添加 */
+/* ============ 语法题库 ============ */
 const RAW=[
-/* 单复数 30 */
-['plural','There are three ______ in the kitchen.',['mouse','mice','mouses','mices'],1,'mouse','mouse → <b>mice</b>，不规则变化。'],
-['plural','My father bought two ______ of bread.',['loaf','loafs','loaves','loafes'],2,'loaf','-f → -ves：<b>loaves</b>。'],
-['plural','The ______ of the two buildings are very high.',['roof','roofs','rooves','roofes'],1,'roof','roof 加 -s → <b>roofs</b>。'],
-['plural','There are many ______ on the farm.',['sheep','sheeps','sheepes','sheepe'],0,'sheep','sheep 单复同形。'],
-['plural','Two ______ are playing chess under the tree.',['man','men','mans','mens'],1,'man','man → <b>men</b>。'],
-['plural','I want to buy two ______ for my daughter.',['toy','toys','toies','toyes'],1,'toy','元音 + y 加 -s → <b>toys</b>。'],
-['plural','The ______ are falling from the trees in autumn.',['leaf','leafs','leaves','leafes'],2,'leaf','leaf → <b>leaves</b>。'],
-['plural','There are many ______ in the park today.',['people','peoples','person','persons'],0,'people','people 本身是复数。'],
-['plural','Mother put two ______ on the plate.',['tomato','tomatos','tomatoes','tomatoe'],2,'tomato','<b>tomatoes</b>。'],
-['plural','My grandparents have three ______.',['child','childs','children','childrens'],2,'child','<b>children</b>。'],
-['plural','The ______ are cleaning the street.',['policeman','policemans','policemen','policemens'],2,'policeman','<b>policemen</b>。'],
-['plural','I brush my ______ twice a day.',['tooth','tooths','teeth','teeths'],2,'tooth','<b>teeth</b>。'],
-['plural','The ______ in this shop are very expensive.',['photo','photos','photoes','photo'],1,'photo','<b>photos</b>。'],
-['plural','There are many ______ in the zoo.',['deer','deers','deeres','deere'],0,'deer','deer 单复同形。'],
-['plural','Two ______ are talking about the film.',['woman','womans','women','womens'],2,'woman','<b>women</b>。'],
-['plural','My sister has two ______ in her bag.',['watch','watchs','watches','watch'],2,'watch','<b>watches</b>。'],
-['plural','There are many ______ on the shelf.',['shelf','shelfs','shelves','shelfes'],2,'shelf','<b>shelves</b>。'],
-['plural','He bought three ______ for the students.',['dictionary','dictionarys','dictionaries','dictionaryes'],2,'dictionary','<b>dictionaries</b>。'],
-['plural','Two ______ are eating grass in the field.',['goose','gooses','geese','geeses'],2,'goose','<b>geese</b>。'],
-['plural','He has two ______ in his pocket.',['knife','knifes','knives','knifees'],2,'knife','<b>knives</b>。'],
-['plural','I need three ______ to write my homework.',['box','boxs','boxes','boxies'],2,'box','<b>boxes</b>。'],
-['plural','The ______ are all very expensive in this city.',['city','citys','cities','cityes'],2,'city','<b>cities</b>。'],
-['plural','My ______ are very kind to me.',['family','familys','families','familyes'],2,'family','<b>families</b>。'],
-['plural','I like eating ______ very much.',['strawberry','strawberrys','strawberries','strawberryes'],2,'strawberry','<b>strawberries</b>。'],
-['plural','There are five ______ in the classroom.',['bus','buss','buses','busses'],2,'bus','<b>buses</b>。'],
-['plural','She bought two ______ of shoes yesterday.',['pair','pairs','paires','pares'],1,'pair','<b>pairs</b>。'],
-['plural','The ______ are playing with a ball.',['kitten','kittens','kittenes','kittenses'],1,'kitten','<b>kittens</b>。'],
-['plural','Two ______ are flying in the sky.',['butterfly','butterflys','butterflies','butterflyes'],2,'butterfly','<b>butterflies</b>。'],
-['plural','There are many ______ on the tree.',['branch','branchs','branches','branche'],2,'branch','<b>branches</b>。'],
-['plural','The ______ are cleaning the windows.',['hero','heros','heroes','heroe'],2,'hero','<b>heroes</b>。'],
-/* 三单 30 */
-['third','My brother ______ TV every evening.',['watch','watches','watching','watched'],1,'watch','<b>watches</b>。'],
-['third','She ______ English very well.',['speak','speaks','speaking','spoke'],1,'speak','<b>speaks</b>。'],
-['third','Tom ______ his homework after dinner.',['do','does','doing','did'],1,'do','<b>does</b>。'],
-['third','The boy ______ kites in the park on Sundays.',['fly','flys','flies','flying'],2,'fly','<b>flies</b>。'],
-['third','My mother ______ the dishes every day.',['wash','washs','washes','washing'],2,'wash','<b>washes</b>。'],
-['third','Lily ______ to school on foot.',['go','goes','going','went'],1,'go','<b>goes</b>。'],
-['third','He ______ a nice new bike.',['have','has','having','had'],1,'have','<b>has</b>。'],
-['third','The cat ______ mice at night.',['catch','catchs','catches','catching'],2,'catch','<b>catches</b>。'],
-['third','Jack ______ playing football with his friends.',['enjoy','enjoys','enjoyes','enjoying'],1,'enjoy','<b>enjoys</b>。'],
-['third','Everyone in our class ______ the new teacher.',['like','likes','liking','liked'],1,'like','<b>likes</b>。'],
-['third','The baby ______ when he is hungry.',['cry','crys','cries','crying'],2,'cry','<b>cries</b>。'],
-['third','The bus ______ at seven every morning.',['stop','stops','stopes','stopping'],1,'stop','<b>stops</b>。'],
-['third','Peter ______ some books every month.',['buy','buys','buyes','buying'],1,'buy','<b>buys</b>。'],
-['third','The sun ______ in the east.',['rise','rises','riseing','rose'],1,'rise','<b>rises</b>。'],
-['third','My sister ______ to music every night.',['listen','listens','listenes','listening'],1,'listen','<b>listens</b>。'],
-['third','He ______ his keys again.',['miss','misss','misses','missing'],2,'miss','<b>misses</b>。'],
-['third','The girl ______ her teeth twice a day.',['brush','brushs','brushes','brushing'],2,'brush','<b>brushes</b>。'],
-['third','Tom and Jack ______ basketball after school.',['plays','play','playing','played'],1,'play','两人复数 → <b>play</b>。'],
-['third','My mother ______ about my study.',['worry','worrys','worries','worryes'],2,'worry','<b>worries</b>。'],
-['third','She ______ her little brother every day.',['carry','carrys','carries','carryes'],2,'carry','<b>carries</b>。'],
-['third','He ______ "hello" to me every morning.',['say','says','sayes','saying'],1,'say','<b>says</b>。'],
-['third','My father ______ basketball every Sunday.',['play','plays','playes','playing'],1,'play','<b>plays</b>。'],
-['third','She ______ Chinese and English.',['study','studys','studies','studyes'],2,'study','<b>studies</b>。'],
-['third','Miss Wang ______ us English.',['teach','atchs','teaches','teaching'],2,'teach','<b>teaches</b>。'],
-['third','The cook ______ the soup well.',['mix','mixs','mixes','mixe'],2,'mix','<b>mixes</b>。'],
-['third','He ______ the exam easily.',['pass','passs','passes','passe'],2,'pass','<b>passes</b>。'],
-['third','She ______ to catch the bus.',['hurry','hurryes','hurries','hurryies'],2,'hurry','<b>hurries</b>。'],
-['third','My sister ______ at home on Sundays.',['stay','stays','stayes','staying'],1,'stay','<b>stays</b>。'],
-['third','The bird ______ high in the sky.',['fly','flys','flies','flyes'],2,'fly','<b>flies</b>。'],
-['third','She ______ the door open.',['push','pushs','pushes','pushing'],2,'push','<b>pushes</b>。'],
-/* be 30 */
-['be','I ______ a middle school student.',['is','am','are','be'],1,'be','I 用 <b>am</b>。'],
-['be','The news ______ very good today.',['is','are','am','be'],0,'be','news 不可数 → <b>is</b>。'],
-['be','My trousers ______ too long for me.',['is','are','am','be'],1,'be','trousers 复数 → <b>are</b>。'],
-['be','This pair of shoes ______ new.',['is','are','am','be'],0,'be','主语 This pair → <b>is</b>。'],
-['be','______ your parents at home now?',['Is','Are','Am','Be'],1,'be','<b>Are</b>。'],
-['be','Math ______ my favorite subject.',['is','are','am','be'],0,'be','<b>is</b>。'],
-['be','There ______ some milk in the glass.',['is','are','have','has'],0,'be','<b>is</b>。'],
-['be','The children ______ playing in the garden now.',['is','are','am','be'],1,'be','<b>are</b>。'],
-['be','Everyone in our class ______ here now.',['is','are','am','be'],0,'be','<b>is</b>。'],
-['be','My family ______ a big one.',['is','are','am','be'],0,'be','<b>is</b>。'],
-['be','Five dollars ______ enough for the book.',['is','are','am','be'],0,'be','<b>is</b>。'],
-['be','Three years ______ a long time.',['is','are','am','be'],0,'be','<b>is</b>。'],
-['be','The police ______ looking for the thief.',['is','are','am','be'],1,'be','<b>are</b>。'],
-['be','Neither you nor I ______ right.',['is','am','are','be'],1,'be','<b>am</b>。'],
-['be','There ______ a pen and two books on the desk.',['is','are','have','has'],0,'be','<b>is</b>。'],
-['be','There ______ two books and a pen on the desk.',['is','are','have','has'],1,'be','<b>are</b>。'],
-['be','Physics ______ very interesting.',['is','are','am','be'],0,'be','<b>is</b>。'],
-['be','My glasses ______ broken.',['is','are','am','be'],1,'be','<b>are</b>。'],
-['be','The rich ______ not always happy.',['is','are','was','be'],1,'be','<b>are</b>。'],
-['be','Twenty miles ______ a long way to walk.',['is','are','am','be'],0,'be','<b>is</b>。'],
-['be','Each of the students ______ a book.',['have','has','is','are'],1,'have','<b>has</b>。'],
-['be','The number of students in our school ______ about 800.',['is','are','have','has'],0,'be','<b>is</b>。'],
-['be','A number of students ______ playing on the playground.',['is','are','have','has'],1,'be','<b>are</b>。'],
-['be','His trousers ______ black and white.',['is','are','am','be'],1,'be','<b>are</b>。'],
-['be','My shoes ______ under the bed.',['is','are','am','be'],1,'be','<b>are</b>。'],
-['be','There ______ an apple and three pears in the basket.',['is','are','have','has'],0,'be','<b>is</b>。'],
-['be','There ______ three pears and an apple in the basket.',['is','are','have','has'],1,'be','<b>are</b>。'],
-['be','Neither of the answers ______ correct.',['is','are','am','be'],0,'be','<b>is</b>。'],
-['be','Either you or he ______ going to help us.',['is','are','am','be'],0,'be','<b>is</b>。'],
-['be','Not only the students but also the teacher ______ interested.',['is','are','am','be'],0,'be','<b>is</b>。'],
-/* 代词 30 */
-['pron','This is ______ book. (我)',['I','me','my','mine'],2,'I','<b>my</b>。'],
-['pron','Please give the pen to ______. (他)',['he','him','his','himself'],1,'he','<b>him</b>。'],
-['pron','______ is my sister. (她)',['Her','She','Hers','Herself'],1,'she','<b>She</b>。'],
-['pron','The dog lost ______ bone.',['it','its','it\'s','it is'],1,'it','"它的" → <b>its</b>。'],
-['pron','______ going to school now.',['Their','They\'re','There','They'],1,'they','"他们是" → <b>They\'re</b>|They are','简写或展开都对。'],
-['pron','This book is ______. (我的)',['I','me','my','mine'],3,'I','<b>mine</b>。'],
-['pron','______ are my good friends. (他们)',['Their','Them','They','Theirs'],2,'they','<b>They</b>。'],
-['pron','Can you help ______? (我们)',['we','us','our','ours'],1,'we','<b>us</b>。'],
-['pron','______ mother is a teacher. (她的)',['She','Her','Hers','Herself'],1,'she','<b>Her</b>。'],
-['pron','The book is ______. (他的)',['he','him','his','himself'],2,'he','<b>his</b>。'],
-['pron','This is ______ pen. (他的)',['he','him','his','he\'s'],2,'he','<b>his</b>。'],
-['pron','It is ______ ruler. (她的)',['she','her','hers','her\'s'],1,'she','<b>her</b>。'],
-['pron','The books are ______. (他们的)',['their','them','theirs','they\'re'],2,'they','<b>theirs</b>。'],
-['pron','Look at ______! He is so tall.',['he','him','his','he\'s'],1,'he','<b>him</b>。'],
-['pron','These books are ______. (我们的)',['we','us','our','ours'],3,'we','<b>ours</b>。'],
-['pron','He can do it by ______.',['he','him','himself','his'],2,'he','<b>himself</b>。'],
-['pron','I can look after ______.',['I','me','myself','mine'],2,'I','<b>myself</b>。'],
-['pron','Please help ______ to some fish, kids.',['you','your','yourself','yourselves'],3,'you','<b>yourselves</b>。'],
-['pron','They enjoyed ______ at the party.',['them','themself','themselves','their'],2,'they','<b>themselves</b>。'],
-['pron','We can do it ______.',['we','us','our','ourselves'],3,'we','<b>ourselves</b>。'],
-['pron','______ are you waiting for?',['Who','Whom','Whose','Which'],0,'who','<b>Who</b>。'],
-['pron','This is my bag. ______ is that?',['Who','Whose','Who\'s','Which'],1,'whose','<b>Whose</b>。'],
-['pron','There is something wrong with ______ bike.',['I','me','my','mine'],2,'I','<b>my</b>。'],
-['pron','These are ______ books, not mine.',['she','her','hers','her\'s'],1,'she','<b>her</b>。'],
-['pron','Please bring ______ some water.',['I','me','my','mine'],1,'I','<b>me</b>。'],
-['pron','______ is this pen? — It\'s hers.',['Who','Whose','Which','What'],1,'whose','<b>Whose</b>。'],
-['pron','The girl ______ hair is long is my sister.',['who','which','whose','whom'],2,'whose','<b>whose</b>。'],
-['pron','He hurt ______ in the accident.',['him','his','himself','he'],2,'he','<b>himself</b>。'],
-['pron','The children made the cake ______.',['them','their','themselves','they'],2,'they','<b>themselves</b>。'],
-['pron','Did you enjoy ______ at the party?',['you','your','yourself','yours'],2,'you','<b>yourself</b>。'],
-/* 时态 50 */
-['tense','Look! The children ______ football on the playground.',['play','plays','are playing','played'],2,'play','<b>are playing</b>。'],
-['tense','My father usually ______ to work by bus.',['go','goes','is going','went'],1,'go','<b>goes</b>。'],
-['tense','Listen! Someone ______ in the next room.',['sing','sings','is singing','sang'],2,'sing','<b>is singing</b>。'],
-['tense','We ______ English every day.',['study','studies','are studying','studied'],0,'study','<b>study</b>。'],
-['tense','Don\'t talk! The baby ______ now.',['sleeps','is sleeping','slept','sleep'],1,'sleep','<b>is sleeping</b>。'],
-['tense','She often ______ her homework in the evening.',['do','does','is doing','did'],1,'do','<b>does</b>。'],
-['tense','Look at the picture. The boys ______ in the river.',['swim','swims','are swimming','swam'],2,'swim','<b>are swimming</b>。'],
-['tense','Now she ______ a book.',['reads','is reading','read','reading'],1,'read','<b>is reading</b>。'],
-['tense','He ______ English every morning.',['reads','is reading','read','reading'],0,'read','<b>reads</b>。'],
-['tense','My mother sometimes ______ TV in the evening.',['watch','watches','is watching','watching'],1,'watch','<b>watches</b>。'],
-['tense','We often ______ our grandparents on weekends.',['visit','visits','are visiting','visited'],0,'visit','<b>visit</b>。'],
-['tense','They ______ a party at the moment.',['have','has','are having','had'],2,'have','<b>are having</b>。'],
-['tense','It ______ outside. Take an umbrella!',['rains','is raining','rained','rain'],1,'rain','<b>is raining</b>。'],
-['tense','She ______ to be a teacher.',['want','wants','is wanting','wanted'],1,'want','<b>wants</b>。'],
-['tense','Look! The cat ______ up the tree.',['climbs','is climbing','climbed','climb'],1,'climb','<b>is climbing</b>。'],
-['tense','She ______ to school every Sunday.',['goes','is going','went','go'],0,'go','<b>goes</b>。'],
-['tense','My mom ______ in the kitchen now.',['cooks','is cooking','cooked','cook'],1,'cook','<b>is cooking</b>。'],
-['tense','We ______ our homework every day.',['do','does','are doing','did'],0,'do','<b>do</b>。'],
-['tense','Look! The teacher ______ to us.',['talks','is talking','talked','talk'],1,'talk','<b>is talking</b>。'],
-['tense','It often ______ in summer here.',['rain','rains','is raining','rained'],1,'rain','<b>rains</b>。'],
-['tense','I ______ my homework now.',['do','am doing','did','does'],1,'do','<b>am doing</b>。'],
-['tense','Listen! The birds ______ in the tree.',['sing','sings','are singing','sang'],2,'sing','<b>are singing</b>。'],
-['tense','We usually ______ to school by bike.',['go','goes','are going','went'],0,'go','<b>go</b>。'],
-['tense','Look! She ______ a letter to her friend.',['writes','is writing','wrote','write'],1,'write','<b>is writing</b>。'],
-['tense','My brother ______ English every evening.',['study','studies','is studying','studied'],1,'study','<b>studies</b>。'],
-['tense','I ______ my grandparents last week.',['visit','visits','visited','visiting'],2,'visit','<b>visited</b>。'],
-['tense','She ______ to Beijing yesterday.',['go','goes','went','going'],2,'go','<b>went</b>。'],
-['tense','We ______ a wonderful party last night.',['have','has','had','having'],2,'have','<b>had</b>。'],
-['tense','He ______ his homework an hour ago.',['do','does','did','doing'],2,'do','<b>did</b>。'],
-['tense','They ______ in the park yesterday morning.',['play','plays','played','playing'],2,'play','<b>played</b>。'],
-['tense','She ______ TV with her family last Sunday.',['watch','watches','watched','watching'],2,'watch','<b>watched</b>。'],
-['tense','The weather ______ very hot last summer.',['is','are','was','were'],2,'be','<b>was</b>。'],
-['tense','They ______ very happy when they heard the news.',['is','are','was','were'],3,'be','<b>were</b>。'],
-['tense','I ______ born in 2011.',['am','is','was','were'],2,'be','<b>was</b>。'],
-['tense','He ______ his keys this morning.',['lose','loses','lost','losing'],2,'lose','<b>lost</b>。'],
-['tense','We ______ a film last night.',['see','sees','saw','seen'],2,'see','<b>saw</b>。'],
-['tense','She ______ a beautiful song at the party.',['sing','sings','sang','sung'],2,'sing','<b>sang</b>。'],
-['tense','He ______ English two years ago.',['study','studies','studied','studying'],2,'study','<b>studied</b>。'],
-['tense','They ______ to the zoo last weekend.',['go','goes','went','going'],2,'go','<b>went</b>。'],
-['tense','My father ______ me a new bike for my birthday.',['buy','buys','bought','buying'],2,'buy','<b>bought</b>。'],
-['tense','We ______ our homework before dinner yesterday.',['finish','finishes','finished','finishing'],2,'finish','<b>finished</b>。'],
-['tense','It ______ heavily last night.',['rain','rains','rained','raining'],2,'rain','<b>rained</b>。'],
-['tense','I ______ my teacher in the street yesterday.',['meet','meets','met','meeting'],2,'meet','<b>met</b>。'],
-['tense','They ______ the museum last Sunday.',['visit','visits','visited','visiting'],2,'visit','<b>visited</b>。'],
-['tense','She ______ back home at 6 o\'clock yesterday.',['come','comes','came','coming'],2,'come','<b>came</b>。'],
-['tense','I ______ you tomorrow.',['call','calls','will call','called'],2,'call','<b>will call</b>。'],
-['tense','They ______ the museum next Sunday.',['visit','will visit','visited','visiting'],1,'visit','<b>will visit</b>。'],
-['tense','She ______ a doctor when she grows up.',['is','will be','was','been'],1,'be','<b>will be</b>。'],
-['tense','We ______ a party this weekend.',['have','are going to have','had','having'],1,'have','<b>are going to have</b>。'],
-['tense','It ______ tomorrow according to the weather report.',['rain','will rain','rained','raining'],1,'rain','<b>will rain</b>。'],
-/* 现在完成时 15 */
+['plural','There are three ______ in the kitchen.',['mouse','mice','mouses','mices'],1,'mouse','mouse → <b>mice</b>'],
+['plural','My father bought two ______ of bread.',['loaf','loafs','loaves','loafes'],2,'loaf','-f → -ves：<b>loaves</b>'],
+['plural','The ______ of the two buildings are very high.',['roof','roofs','rooves','roofes'],1,'roof','<b>roofs</b>，特例'],
+['plural','There are many ______ on the farm.',['sheep','sheeps','sheepes','sheepe'],0,'sheep','单复同形'],
+['plural','Two ______ are playing chess under the tree.',['man','men','mans','mens'],1,'man','man → <b>men</b>'],
+['plural','I want to buy two ______ for my daughter.',['toy','toys','toies','toyes'],1,'toy','元音 + y 加 -s'],
+['plural','The ______ are falling from the trees.',['leaf','leafs','leaves','leafes'],2,'leaf','<b>leaves</b>'],
+['plural','There are many ______ in the park today.',['people','peoples','person','persons'],0,'people','people 本身是复数'],
+['plural','Mother put two ______ on the plate.',['tomato','tomatos','tomatoes','tomatoe'],2,'tomato','<b>tomatoes</b>'],
+['plural','My grandparents have three ______.',['child','childs','children','childrens'],2,'child','<b>children</b>'],
+['plural','The ______ are cleaning the street.',['policeman','policemans','policemen','policemens'],2,'policeman','<b>policemen</b>'],
+['plural','I brush my ______ twice a day.',['tooth','tooths','teeth','teeths'],2,'tooth','<b>teeth</b>'],
+['plural','The ______ in this shop are very expensive.',['photo','photos','photoes','photo'],1,'photo','<b>photos</b>'],
+['plural','There are many ______ in the zoo.',['deer','deers','deeres','deere'],0,'deer','单复同形'],
+['plural','Two ______ are talking about the film.',['woman','womans','women','womens'],2,'woman','<b>women</b>'],
+['plural','My sister has two ______ in her bag.',['watch','watchs','watches','watch'],2,'watch','<b>watches</b>'],
+['plural','There are many ______ on the shelf.',['shelf','shelfs','shelves','shelfes'],2,'shelf','<b>shelves</b>'],
+['plural','He bought three ______ for the students.',['dictionary','dictionarys','dictionaries','dictionaryes'],2,'dictionary','<b>dictionaries</b>'],
+['plural','Two ______ are eating grass in the field.',['goose','gooses','geese','geeses'],2,'goose','<b>geese</b>'],
+['plural','He has two ______ in his pocket.',['knife','knifes','knives','knifees'],2,'knife','<b>knives</b>'],
+['plural','I need three ______ to write my homework.',['box','boxs','boxes','boxies'],2,'box','<b>boxes</b>'],
+['plural','The ______ are all very expensive in this city.',['city','citys','cities','cityes'],2,'city','<b>cities</b>'],
+['plural','My ______ are very kind to me.',['family','familys','families','familyes'],2,'family','<b>families</b>'],
+['plural','I like eating ______ very much.',['strawberry','strawberrys','strawberries','strawberryes'],2,'strawberry','<b>strawberries</b>'],
+['plural','There are five ______ in the classroom.',['bus','buss','buses','busses'],2,'bus','<b>buses</b>'],
+['plural','The ______ are cleaning the windows.',['hero','heros','heroes','heroe'],2,'hero','<b>heroes</b>'],
+['third','My brother ______ TV every evening.',['watch','watches','watching','watched'],1,'watch','<b>watches</b>'],
+['third','She ______ English very well.',['speak','speaks','speaking','spoke'],1,'speak','<b>speaks</b>'],
+['third','Tom ______ his homework after dinner.',['do','does','doing','did'],1,'do','<b>does</b>'],
+['third','The boy ______ kites in the park on Sundays.',['fly','flys','flies','flying'],2,'fly','<b>flies</b>'],
+['third','My mother ______ the dishes every day.',['wash','washs','washes','washing'],2,'wash','<b>washes</b>'],
+['third','Lily ______ to school on foot.',['go','goes','going','went'],1,'go','<b>goes</b>'],
+['third','He ______ a nice new bike.',['have','has','having','had'],1,'have','<b>has</b>'],
+['third','The cat ______ mice at night.',['catch','catchs','catches','catching'],2,'catch','<b>catches</b>'],
+['third','Jack ______ playing football with his friends.',['enjoy','enjoys','enjoyes','enjoying'],1,'enjoy','<b>enjoys</b>'],
+['third','Everyone in our class ______ the new teacher.',['like','likes','liking','liked'],1,'like','<b>likes</b>'],
+['third','The baby ______ when he is hungry.',['cry','crys','cries','crying'],2,'cry','<b>cries</b>'],
+['third','The bus ______ at seven every morning.',['stop','stops','stopes','stopping'],1,'stop','<b>stops</b>'],
+['third','Peter ______ some books every month.',['buy','buys','buyes','buying'],1,'buy','<b>buys</b>'],
+['third','The sun ______ in the east.',['rise','rises','riseing','rose'],1,'rise','<b>rises</b>'],
+['third','My sister ______ to music every night.',['listen','listens','listenes','listening'],1,'listen','<b>listens</b>'],
+['third','He ______ his keys again.',['miss','misss','misses','missing'],2,'miss','<b>misses</b>'],
+['third','The girl ______ her teeth twice a day.',['brush','brushs','brushes','brushing'],2,'brush','<b>brushes</b>'],
+['third','Tom and Jack ______ basketball after school.',['plays','play','playing','played'],1,'play','两人复数 → <b>play</b>'],
+['third','My mother ______ about my study.',['worry','worrys','worries','worryes'],2,'worry','<b>worries</b>'],
+['third','She ______ her little brother every day.',['carry','carrys','carries','carryes'],2,'carry','<b>carries</b>'],
+['third','He ______ "hello" to me every morning.',['say','says','sayes','saying'],1,'say','<b>says</b>'],
+['third','My father ______ basketball every Sunday.',['play','plays','playes','playing'],1,'play','<b>plays</b>'],
+['third','She ______ Chinese and English.',['study','studys','studies','studyes'],2,'study','<b>studies</b>'],
+['third','Miss Wang ______ us English.',['teach','atchs','teaches','teaching'],2,'teach','<b>teaches</b>'],
+['third','The cook ______ the soup well.',['mix','mixs','mixes','mixe'],2,'mix','<b>mixes</b>'],
+['third','He ______ the exam easily.',['pass','passs','passes','passe'],2,'pass','<b>passes</b>'],
+['third','She ______ to catch the bus.',['hurry','hurryes','hurries','hurryies'],2,'hurry','<b>hurries</b>'],
+['third','My sister ______ at home on Sundays.',['stay','stays','stayes','staying'],1,'stay','<b>stays</b>'],
+['third','The bird ______ high in the sky.',['fly','flys','flies','flyes'],2,'fly','<b>flies</b>'],
+['third','She ______ the door open.',['push','pushs','pushes','pushing'],2,'push','<b>pushes</b>'],
+['be','I ______ a middle school student.',['is','am','are','be'],1,'be','I 用 <b>am</b>'],
+['be','The news ______ very good today.',['is','are','am','be'],0,'be','news 不可数 → <b>is</b>'],
+['be','My trousers ______ too long for me.',['is','are','am','be'],1,'be','trousers 复数 → <b>are</b>'],
+['be','This pair of shoes ______ new.',['is','are','am','be'],0,'be','This pair → <b>is</b>'],
+['be','______ your parents at home now?',['Is','Are','Am','Be'],1,'be','<b>Are</b>'],
+['be','Math ______ my favorite subject.',['is','are','am','be'],0,'be','<b>is</b>'],
+['be','There ______ some milk in the glass.',['is','are','have','has'],0,'be','<b>is</b>'],
+['be','The children ______ playing in the garden now.',['is','are','am','be'],1,'be','<b>are</b>'],
+['be','Everyone in our class ______ here now.',['is','are','am','be'],0,'be','<b>is</b>'],
+['be','My family ______ a big one.',['is','are','am','be'],0,'be','<b>is</b>'],
+['be','Five dollars ______ enough for the book.',['is','are','am','be'],0,'be','<b>is</b>'],
+['be','Three years ______ a long time.',['is','are','am','be'],0,'be','<b>is</b>'],
+['be','The police ______ looking for the thief.',['is','are','am','be'],1,'be','<b>are</b>'],
+['be','Neither you nor I ______ right.',['is','am','are','be'],1,'be','<b>am</b>'],
+['be','There ______ a pen and two books on the desk.',['is','are','have','has'],0,'be','<b>is</b>'],
+['be','There ______ two books and a pen on the desk.',['is','are','have','has'],1,'be','<b>are</b>'],
+['be','Physics ______ very interesting.',['is','are','am','be'],0,'be','<b>is</b>'],
+['be','My glasses ______ broken.',['is','are','am','be'],1,'be','<b>are</b>'],
+['be','The rich ______ not always happy.',['is','are','was','be'],1,'be','<b>are</b>'],
+['be','Each of the students ______ a book.',['have','has','is','are'],1,'have','<b>has</b>'],
+['be','The number of students in our school ______ about 800.',['is','are','have','has'],0,'be','<b>is</b>'],
+['be','A number of students ______ playing on the playground.',['is','are','have','has'],1,'be','<b>are</b>'],
+['be','His trousers ______ black and white.',['is','are','am','be'],1,'be','<b>are</b>'],
+['be','My shoes ______ under the bed.',['is','are','am','be'],1,'be','<b>are</b>'],
+['be','Neither of the answers ______ correct.',['is','are','am','be'],0,'be','<b>is</b>'],
+['pron','This is ______ book. (我)',['I','me','my','mine'],2,'I','<b>my</b>'],
+['pron','Please give the pen to ______. (他)',['he','him','his','himself'],1,'he','<b>him</b>'],
+['pron','______ is my sister. (她)',['Her','She','Hers','Herself'],1,'she','<b>She</b>'],
+['pron','The dog lost ______ bone.',['it','its','it\'s','it is'],1,'it','<b>its</b>'],
+['pron','______ going to school now.',['Their','They\'re','There','They'],1,'they','<b>They\'re</b>|They are'],
+['pron','This book is ______. (我的)',['I','me','my','mine'],3,'I','<b>mine</b>'],
+['pron','______ are my good friends. (他们)',['Their','Them','They','Theirs'],2,'they','<b>They</b>'],
+['pron','Can you help ______? (我们)',['we','us','our','ours'],1,'we','<b>us</b>'],
+['pron','______ mother is a teacher. (她的)',['She','Her','Hers','Herself'],1,'she','<b>Her</b>'],
+['pron','The book is ______. (他的)',['he','him','his','himself'],2,'he','<b>his</b>'],
+['pron','This is ______ pen. (他的)',['he','him','his','he\'s'],2,'he','<b>his</b>'],
+['pron','It is ______ ruler. (她的)',['she','her','hers','her\'s'],1,'she','<b>her</b>'],
+['pron','The books are ______. (他们的)',['their','them','theirs','they\'re'],2,'they','<b>theirs</b>'],
+['pron','Look at ______! He is so tall.',['he','him','his','he\'s'],1,'he','<b>him</b>'],
+['pron','These books are ______. (我们的)',['we','us','our','ours'],3,'we','<b>ours</b>'],
+['pron','He can do it by ______.',['he','him','himself','his'],2,'he','<b>himself</b>'],
+['pron','I can look after ______.',['I','me','myself','mine'],2,'I','<b>myself</b>'],
+['pron','Please help ______ to some fish, kids.',['you','your','yourself','yourselves'],3,'you','<b>yourselves</b>'],
+['pron','They enjoyed ______ at the party.',['them','themself','themselves','their'],2,'they','<b>themselves</b>'],
+['pron','We can do it ______.',['we','us','our','ourselves'],3,'we','<b>ourselves</b>'],
+['pron','______ are you waiting for?',['Who','Whom','Whose','Which'],0,'who','<b>Who</b>'],
+['pron','This is my bag. ______ is that?',['Who','Whose','Who\'s','Which'],1,'whose','<b>Whose</b>'],
+['pron','There is something wrong with ______ bike.',['I','me','my','mine'],2,'I','<b>my</b>'],
+['pron','These are ______ books, not mine.',['she','her','hers','her\'s'],1,'she','<b>her</b>'],
+['pron','Please bring ______ some water.',['I','me','my','mine'],1,'I','<b>me</b>'],
+['tense','Look! The children ______ football.',['play','plays','are playing','played'],2,'play','<b>are playing</b>'],
+['tense','My father usually ______ to work by bus.',['go','goes','is going','went'],1,'go','<b>goes</b>'],
+['tense','Listen! Someone ______ in the next room.',['sing','sings','is singing','sang'],2,'sing','<b>is singing</b>'],
+['tense','We ______ English every day.',['study','studies','are studying','studied'],0,'study','<b>study</b>'],
+['tense','Don\'t talk! The baby ______ now.',['sleeps','is sleeping','slept','sleep'],1,'sleep','<b>is sleeping</b>'],
+['tense','She often ______ her homework in the evening.',['do','does','is doing','did'],1,'do','<b>does</b>'],
+['tense','Look at the picture. The boys ______ in the river.',['swim','swims','are swimming','swam'],2,'swim','<b>are swimming</b>'],
+['tense','Now she ______ a book.',['reads','is reading','read','reading'],1,'read','<b>is reading</b>'],
+['tense','He ______ English every morning.',['reads','is reading','read','reading'],0,'read','<b>reads</b>'],
+['tense','My mother sometimes ______ TV in the evening.',['watch','watches','is watching','watching'],1,'watch','<b>watches</b>'],
+['tense','They ______ a party at the moment.',['have','has','are having','had'],2,'have','<b>are having</b>'],
+['tense','It ______ outside. Take an umbrella!',['rains','is raining','rained','rain'],1,'rain','<b>is raining</b>'],
+['tense','Look! The cat ______ up the tree.',['climbs','is climbing','climbed','climb'],1,'climb','<b>is climbing</b>'],
+['tense','I ______ my grandparents last week.',['visit','visits','visited','visiting'],2,'visit','<b>visited</b>'],
+['tense','She ______ to Beijing yesterday.',['go','goes','went','going'],2,'go','<b>went</b>'],
+['tense','We ______ a wonderful party last night.',['have','has','had','having'],2,'have','<b>had</b>'],
+['tense','He ______ his homework an hour ago.',['do','does','did','doing'],2,'do','<b>did</b>'],
+['tense','They ______ in the park yesterday.',['play','plays','played','playing'],2,'play','<b>played</b>'],
+['tense','The weather ______ very hot last summer.',['is','are','was','were'],2,'be','<b>was</b>'],
+['tense','They ______ very happy when they heard the news.',['is','are','was','were'],3,'be','<b>were</b>'],
+['tense','I ______ born in 2011.',['am','is','was','were'],2,'be','<b>was</b>'],
+['tense','He ______ his keys this morning.',['lose','loses','lost','losing'],2,'lose','<b>lost</b>'],
+['tense','We ______ a film last night.',['see','sees','saw','seen'],2,'see','<b>saw</b>'],
+['tense','They ______ to the zoo last weekend.',['go','goes','went','going'],2,'go','<b>went</b>'],
+['tense','My father ______ me a new bike.',['buy','buys','bought','buying'],2,'buy','<b>bought</b>'],
+['tense','I ______ you tomorrow.',['call','calls','will call','called'],2,'call','<b>will call</b>'],
+['tense','They ______ the museum next Sunday.',['visit','will visit','visited','visiting'],1,'visit','<b>will visit</b>'],
+['tense','She ______ a doctor when she grows up.',['is','will be','was','been'],1,'be','<b>will be</b>'],
+['tense','We ______ a party this weekend.',['have','are going to have','had','having'],1,'have','<b>are going to have</b>'],
 ['tense','I ______ already ______ my homework.',['have/finished','has/finished','have/finish','has/finish'],0,'have finish','<b>have finished</b>'],
 ['tense','She ______ just ______ the room.',['have/cleaned','has/cleaned','has/clean','have/clean'],1,'have clean','<b>has cleaned</b>'],
 ['tense','______ you ever ______ to Beijing?',['Have/been','Has/been','Have/be','Has/be'],0,'have be','<b>Have been</b>'],
@@ -1415,38 +1270,19 @@ const RAW=[
 ['tense','He ______ to Shanghai. He will come back tomorrow.',['has been','has gone','have been','have gone'],1,'go','<b>has gone</b>'],
 ['tense','My father ______ his car for five years.',['has bought','has had','have bought','have had'],1,'have','<b>has had</b>'],
 ['tense','The film ______ for ten minutes.',['has begun','has been on','have begun','have been on'],1,'be','<b>has been on</b>'],
-['tense','I ______ already ______ the book.',['have/read','has/read','have/readed','has/readed'],0,'have read','<b>have read</b>'],
-['tense','We ______ known each other since childhood.',['have','has','is','are'],0,'have','<b>have known</b>'],
-['tense','She ______ her homework yet.',['hasn\'t finished','haven\'t finished','doesn\'t finish','isn\'t finishing'],0,'have finish','<b>hasn\'t finished</b>'],
-['tense','______ you ______ your lunch yet?',['Have/had','Has/had','Have/have','Has/have'],0,'have have','<b>Have had</b>'],
-/* 综合 40 */
-['misc','There ______ a pen and two books on the desk.',['is','are','have','has'],0,'be','<b>is</b>。'],
-['misc','There ______ two books and a pen on the desk.',['is','are','have','has'],1,'be','<b>are</b>。'],
+['misc','There ______ a pen and two books on the desk.',['is','are','have','has'],0,'be','<b>is</b>'],
 ['misc','______ she go to school by bike?',['Do','Does','Is','Are'],1,'do','<b>Does</b>'],
 ['misc','He ______ like playing computer games.',['doesn\'t','don\'t','isn\'t','aren\'t'],0,'do','<b>doesn\'t</b>'],
 ['misc','Does your father ______ TV in the evening?',['watches','watch','watching','watched'],1,'watch','<b>watch</b>'],
 ['misc','Each of the students ______ a dictionary.',['have','has','having','had'],1,'have','<b>has</b>'],
 ['misc','The number of the students in our school ______ about 800.',['is','are','have','has'],0,'be','<b>is</b>'],
 ['misc','A number of students ______ playing basketball.',['is','are','have','has'],1,'be','<b>are</b>'],
-['misc','The rich ______ not always happy.',['is','are','was','be'],1,'be','<b>are</b>'],
-['misc','Three years ______ a long time for a child.',['is','are','have','has'],0,'be','<b>is</b>'],
-['misc','Neither Tom nor his friends ______ coming to the party.',['is','are','am','be'],1,'be','<b>are</b>'],
-['misc','Everyone ______ here now.',['is','are','am','be'],0,'be','<b>is</b>'],
 ['misc','Both of them ______ my good friends.',['is','are','am','be'],1,'be','<b>are</b>'],
-['misc','Neither of them ______ right.',['is','are','am','be'],0,'be','<b>is</b>'],
-['misc','Either of the answers ______ correct.',['is','are','am','be'],0,'be','<b>is</b>'],
 ['misc','Something ______ wrong with my computer.',['is','are','have','has'],0,'be','<b>is</b>'],
-['misc','Nothing ______ impossible if you work hard.',['is','are','were','be'],0,'be','<b>is</b>'],
-['misc','Someone ______ knocking at the door.',['is','are','have','has'],0,'be','<b>is</b>'],
 ['misc','Nobody ______ the answer to this question.',['know','knows','knowing','knew'],1,'know','<b>knows</b>'],
 ['misc','All of the students ______ in the classroom.',['is','are','am','be'],1,'be','<b>are</b>'],
-['misc','All of the water ______ clean.',['is','are','am','be'],0,'be','<b>is</b>'],
 ['misc','The police ______ looking for the missing child.',['is','are','was','has'],1,'be','<b>are</b>'],
 ['misc','Mathematics ______ my favorite subject.',['is','are','am','be'],0,'be','<b>is</b>'],
-['misc','Ten dollars ______ enough for the meal.',['is','are','have','has'],0,'be','<b>is</b>'],
-['misc','Twenty percent of the students ______ girls.',['is','are','am','be'],1,'be','<b>are</b>'],
-['misc','Twenty percent of the water ______ dirty.',['is','are','am','be'],0,'be','<b>is</b>'],
-['misc','This pair of shoes ______ too expensive.',['is','are','have','has'],0,'be','<b>is</b>'],
 ['misc','______ you like some tea?',['Would','Do','Are','Is'],0,'would','<b>Would</b>'],
 ['misc','His family ______ all watching TV now.',['is','are','have','has'],1,'be','<b>are</b>'],
 ['misc','His family ______ a very big one.',['is','are','have','has'],0,'be','<b>is</b>'],
@@ -1461,10 +1297,6 @@ const RAW=[
 ['misc','The book is ______ the desk.',['in','on','at','for'],1,'in/on/at','<b>on</b>'],
 ['misc','She lives ______ Beijing.',['in','on','at','for'],0,'in/on/at','<b>in</b>'],
 ['misc','He is waiting ______ the bus stop.',['in','on','at','for'],2,'in/on/at','<b>at</b>'],
-['misc','I usually go to bed ______ 10 p.m.',['in','on','at','for'],2,'in/on/at','<b>at</b>'],
-['misc','We have a math class ______ Tuesday.',['in','on','at','for'],1,'in/on/at','<b>on</b>'],
-['misc','She often goes swimming ______ summer.',['in','on','at','for'],0,'in/on/at','<b>in</b>'],
-['misc','The school is ______ the post office and the bank.',['among','between','in','on'],1,'between/among','<b>between</b>'],
 ['misc','______ the door, please.',['Open','Opens','Opening','Opened'],0,'open','<b>Open</b>'],
 ['misc','______ be late for school.',['Not','Don\'t','Doesn\'t','No'],1,'do','<b>Don\'t</b>'],
 ['misc','Let\'s ______ to the park.',['go','goes','going','went'],0,'go','<b>go</b>'],
@@ -1472,15 +1304,11 @@ const RAW=[
 ['misc','You mustn\'t ______ here.',['smokes','smoke','smoking','smoked'],1,'smoke','<b>smoke</b>'],
 ['misc','______ I use your pen?',['Can','Do','Am','Is'],0,'can','<b>Can</b>'],
 ['misc','Must I go now? — No, you ______.',['mustn\'t','needn\'t','can\'t','don\'t'],1,'need','<b>needn\'t</b>'],
-['misc','The children ______ swim in this river. It\'s dangerous.',['mustn\'t','can','may','needn\'t'],0,'must','<b>mustn\'t</b>'],
-['misc','Please ______ me with my homework.',['helps','help','helping','helped'],1,'help','<b>help</b>'],
-['misc','Don\'t ______ in the library!',['talks','talk','talking','talked'],1,'talk','<b>talk</b>'],
 ['misc','The more you read, the ______ you will be.',['clever','cleverer','cleverest','more clever'],1,'clever','<b>cleverer</b>'],
 ['misc','Which is ______, an apple or an orange?',['big','bigger','biggest','the biggest'],1,'big','<b>bigger</b>'],
 ['misc','Beijing is one of the ______ cities in China.',['big','bigger','biggest','the biggest'],2,'big','<b>biggest</b>'],
 ['misc','______ a beautiful day!',['What','How','Which','Where'],0,'what/how','<b>What</b>'],
 ['misc','______ nice the flowers are!',['What','How','Which','Who'],1,'what/how','<b>How</b>'],
-/* 重难点 60 */
 ['hard','He said ______ he was tired.',['that','what','if','whether'],0,'that','<b>that</b>'],
 ['hard','I don\'t know ______ he will come.',['that','what','if','which'],2,'if/whether','<b>if</b>'],
 ['hard','Do you know where ______?',['he lives','does he live','he live','lives he'],0,'he live','<b>he lives</b>'],
@@ -1490,35 +1318,26 @@ const RAW=[
 ['hard','She is the ______ girl in our class.',['tall','taller','tallest','more tall'],2,'tall','<b>tallest</b>'],
 ['hard','This book is ______ than that one.',['interesting','more interesting','most interesting','interested'],1,'interesting','<b>more interesting</b>'],
 ['hard','He runs ______ than his brother.',['fast','faster','fastest','more fast'],1,'fast','<b>faster</b>'],
-['hard','The weather is getting ______ and ______.',['hot/hot','hotter/hotter','hottest/hottest','more hot'],1,'hot','<b>hotter and hotter</b>'],
 ['hard','______ tall the boy is!',['What','How','Which','Whose'],1,'what/how','<b>How</b>'],
-['hard','______ wonderful news!',['What','How','What a','How a'],0,'what/how','<b>What</b>'],
 ['hard','I want ______ to the movies.',['go','to go','going','went'],1,'go','<b>to go</b>'],
 ['hard','She enjoys ______ books.',['read','to read','reading','reads'],2,'read','<b>reading</b>'],
-['hard','Let me ______ you.',['help','to help','helping','helps'],0,'help','<b>help</b>'],
 ['hard','Thank you for ______ me.',['help','to help','helping','helps'],2,'help','<b>helping</b>'],
 ['hard','It\'s important ______ English well.',['learn','to learn','learning','learns'],1,'learn','<b>to learn</b>'],
 ['hard','This is the man ______ helped me yesterday.',['which','who','whom','whose'],1,'who','<b>who</b>'],
-['hard','The book ______ I bought yesterday is very interesting.',['who','whose','that','what'],2,'that','<b>that</b>'],
+['hard','The book ______ I bought yesterday is interesting.',['who','whose','that','what'],2,'that','<b>that</b>'],
 ['hard','This is the house ______ I was born.',['which','that','where','when'],2,'where','<b>where</b>'],
 ['hard','I still remember the day ______ we first met.',['which','that','when','where'],2,'when','<b>when</b>'],
 ['hard','The girl ______ hair is long is my sister.',['who','which','whose','whom'],2,'whose','<b>whose</b>'],
 ['hard','He is the only person ______ can solve this problem.',['who','which','that','whose'],2,'that','<b>that</b>'],
-['hard','Do you know the boy ______ is playing basketball?',['who','which','whose','whom'],0,'who','<b>who</b>'],
-['hard','This is the most interesting book ______ I have ever read.',['which','that','who','whose'],1,'that','<b>that</b>'],
 ['hard','He said he ______ TV at that time.',['watch','watches','was watching','has watched'],2,'watch','<b>was watching</b>'],
 ['hard','She asked me ______ I had finished my homework.',['that','whether','what','which'],1,'whether','<b>whether</b>'],
 ['hard','Could you tell me ______ the post office is?',['what','which','where','how'],2,'where','<b>where</b>'],
-['hard','I don\'t know ______ to do next.',['what','how','which','who'],0,'what','<b>what</b>'],
 ['hard','The teacher told us that the earth ______ around the sun.',['went','goes','will go','has gone'],1,'go','<b>goes</b>'],
 ['hard','My father asked me ______ I had finished my homework.',['that','if','what','whether or not'],1,'if','<b>if</b>'],
-['hard','He didn\'t tell me ______ he would come back.',['that','what','when','which'],2,'when','<b>when</b>'],
-['hard','I wonder ______ he will agree with us.',['that','whether','what','which'],1,'whether','<b>whether</b>'],
-['hard','He speaks English ______ than any other student in his class.',['good','better','best','well'],1,'good','<b>better</b>'],
+['hard','He speaks English ______ than any other student.',['good','better','best','well'],1,'good','<b>better</b>'],
 ['hard','His English is ______ than mine.',['good','well','better','best'],2,'good','<b>better</b>'],
 ['hard','Tom is ______ student in our class.',['tall','taller','the tallest','tallest'],2,'tall','<b>the tallest</b>'],
 ['hard','This question is ______ than that one.',['easy','easier','easiest','more easy'],1,'easy','<b>easier</b>'],
-['hard','The Yellow River is the second ______ river in China.',['long','longer','longest','the longest'],2,'long','<b>longest</b>'],
 ['hard','When I got home, my mother ______ dinner.',['cooks','cooked','was cooking','is cooking'],2,'cook','<b>was cooking</b>'],
 ['hard','He ______ TV while I was doing my homework.',['watches','watched','was watching','is watching'],2,'watch','<b>was watching</b>'],
 ['hard','They ______ football when it began to rain.',['play','played','were playing','are playing'],2,'play','<b>were playing</b>'],
@@ -1532,9 +1351,7 @@ const RAW=[
 ['hard','She ______ English since she came to China.',['studies','studied','has studied','is studying'],2,'study','<b>has studied</b>'],
 ['hard','I ______ him for three years.',['know','knew','have known','am knowing'],2,'know','<b>have known</b>'],
 ['hard','He ______ in this school since 2015.',['teaches','taught','has taught','is teaching'],2,'teach','<b>has taught</b>'],
-['hard','They ______ each other since we were children.',['know','knew','have known','are knowing'],2,'know','<b>have known</b>'],
 ['hard','He ______ the army for two years.',['joined','has joined','has been in','is in'],2,'join','<b>has been in</b>'],
-['hard','The old man ______ for three years.',['died','has died','has been dead','is dead'],2,'die','<b>has been dead</b>'],
 ['hard','If I ______ money, I would buy a car.',['have','has','had','will have'],2,'have','<b>had</b>'],
 ['hard','I wish I ______ taller.',['am','was','were','be'],2,'be','<b>were</b>'],
 ['hard','He talks as if he ______ everything.',['knows','knew','know','is knowing'],1,'know','<b>knew</b>'],
@@ -1545,113 +1362,7 @@ const RAW=[
 ['hard','English ______ all over the world.',['speaks','is spoken','spoke','speaking'],1,'speak','<b>is spoken</b>'],
 ['hard','The homework ______ tomorrow.',['hand in','will hand in','will be handed in','hands in'],2,'hand in','<b>will be handed in</b>'],
 ['hard','The letter ______ by Tom yesterday.',['writes','wrote','was written','is written'],2,'write','<b>was written</b>'],
-['hard','The room ______ every day.',['cleans','cleaned','is cleaned','cleaning'],2,'clean','<b>is cleaned</b>'],
-/* 新增 2.0 版本 100 题 */
-['misc','The cat ______ under the tree now.',['sleep','sleeps','is sleeping','slept'],2,'sleep','Look/now 暗示 → <b>is sleeping</b>。'],
-['misc','My grandparents ______ in the countryside.',['live','lives','are living','lived'],0,'live','主语复数 → <b>live</b>。'],
-['misc','There ______ many books on the shelf.',['is','are','have','has'],1,'be','books 复数 → <b>are</b>。'],
-['misc','How many students ______ in your class?',['is there','are there','there is','there are'],1,'there be','疑问句 <b>are there</b>。'],
-['misc','Look at the sky! It ______ like rain.',['look','looks','is looking','looked'],1,'look','主语 It 三单 → <b>looks</b>。'],
-['misc','The teacher asked us ______ quiet.',['keep','to keep','keeping','kept'],1,'keep','ask sb to do → <b>to keep</b>。'],
-['misc','We should ______ our homework on time.',['finish','to finish','finishing','finished'],0,'finish','情态动词 + 原形 → <b>finish</b>。'],
-['misc','Would you please ______ me?',['help','to help','helping','helped'],0,'help','Would you please + 原形 → <b>help</b>。'],
-['misc','She is good at ______ English songs.',['sing','singing','sang','sings'],1,'sing','be good at + doing → <b>singing</b>。'],
-['misc','My father often tells me ______ hard.',['study','to study','studying','studied'],1,'study','tell sb to do → <b>to study</b>。'],
-['misc','Look! The baby ______ happily.',['smile','smiles','is smiling','smiled'],2,'smile','Look! → <b>is smiling</b>。'],
-['misc','She usually ______ her teeth before bed.',['brush','brushes','is brushing','brushed'],1,'brush','usually + 三单 → <b>brushes</b>。'],
-['misc','There ______ some water in the bottle.',['is','are','have','has'],0,'be','water 不可数 → <b>is</b>。'],
-['misc','______ you ever been to the Great Wall?',['Do','Have','Are','Did'],1,'have','现在完成时 <b>Have</b>。'],
-['misc','My mother has ______ here since 2010.',['live','lived','lives','living'],1,'live','since + 完成时 <b>lived</b>。'],
-['misc','He is the ______ boy in his class.',['tallest','taller','tall','more tall'],0,'tall','最高级 <b>tallest</b>。'],
-['misc','Is this ______ book or yours?',['he','him','his','himself'],2,'he','<b>his</b>。'],
-['misc','These are ______ pencils.',['my','mine','I','me'],0,'I','后面有名词 <b>my</b>。'],
-['misc','The girl ______ is singing is my sister.',['who','which','whose','what'],0,'who','人做主语 <b>who</b>。'],
-['misc','I like the film ______ we saw yesterday.',['who','whose','that','what'],2,'that','先行词是物 <b>that</b>。'],
-['misc','If it ______ fine tomorrow, we\'ll go hiking.',['is','will be','was','were'],0,'be','主将从现 <b>is</b>。'],
-['misc','Would you like ______ to my party?',['come','to come','coming','came'],1,'come','would like to do <b>to come</b>。'],
-['misc','She spent two hours ______ her homework.',['do','to do','doing','did'],2,'do','spend time doing <b>doing</b>。'],
-['misc','They arrived ______ Beijing last night.',['at','in','on','to'],1,'in','大地点用 <b>in</b>。'],
-['misc','We will meet ______ the school gate.',['at','in','on','to'],0,'at','小地点 <b>at</b>。'],
-['misc','There is a bird ______ the tree.',['on','in','at','under'],1,'in','树上长着的用 <b>in</b>。'],
-['misc','Look at the picture ______ the wall.',['in','on','at','to'],1,'on','墙上挂着用 <b>on</b>。'],
-['misc','She goes to school ______ foot every day.',['by','on','in','at'],1,'on','步行 <b>on</b> foot。'],
-['misc','His birthday is ______ May 1st.',['in','on','at','for'],1,'on','具体某天 <b>on</b>。'],
-['misc','It\'s very hot ______ summer in Beijing.',['in','on','at','for'],0,'in','季节 <b>in</b>。'],
-['misc','I usually get up ______ 6:30.',['in','on','at','for'],2,'at','具体时刻 <b>at</b>。'],
-['misc','They will be back ______ a week.',['in','on','at','for'],0,'in','将来 in + 时间段 <b>in</b>。'],
-['misc','He has been here ______ three days.',['in','on','for','since'],2,'for','for + 时间段 <b>for</b>。'],
-['misc','I haven\'t seen him ______ last year.',['for','since','in','at'],1,'since','since + 时间点 <b>since</b>。'],
-['misc','Must I finish it now? — No, you ______.',['mustn\'t','needn\'t','can\'t','don\'t'],1,'need','<b>needn\'t</b>。'],
-['misc','You ______ be tired after the long trip.',['must','need','can','would'],0,'must','推测"一定" <b>must</b>。'],
-['misc','It ______ be Tom\'s book. His name is on it.',['must','can\'t','needn\'t','shouldn\'t'],0,'must','肯定推测 <b>must</b>。'],
-['misc','You mustn\'t ______ in the classroom.',['running','run','runs','ran'],1,'run','mustn\'t + 原形 <b>run</b>。'],
-['misc','______ me your phone number, please.',['Tell','Tells','Telling','Told'],0,'tell','祈使句 <b>Tell</b>。'],
-['misc','Let\'s ______ a walk after dinner.',['take','takes','taking','took'],0,'take','Let\'s + 原形 <b>take</b>。'],
-['misc','Don\'t ______ noise in the library.',['make','makes','making','made'],0,'make','Don\'t + 原形 <b>make</b>。'],
-['misc','We should help ______ when they are in trouble.',['other','others','the other','another'],1,'others','泛指别人 <b>others</b>。'],
-['misc','I have ______ to tell you.',['something important','important something','anything important','important anything'],0,'something','形容词修饰不定代词后置 <b>something important</b>。'],
-['misc','The book is ______ interesting that I read it twice.',['so','such','very','too'],0,'so','so + adj + that <b>so</b>。'],
-['misc','She is ______ a kind girl that everyone likes her.',['so','such','very','too'],1,'such','such + a + n + that <b>such</b>。'],
-['misc','It is the third time that I ______ here.',['am','was','have been','will be'],2,'be','It is + 序数词 + that + 完成时 <b>have been</b>。'],
-['misc','Neither he nor I ______ wrong.',['am','is','are','be'],0,'be','就近原则 <b>am</b>。'],
-['misc','Not only Tom but also his parents ______ the film.',['like','likes','liking','liked'],0,'like','就近原则：parents 复数 <b>like</b>。'],
-['misc','It\'s very kind ______ you to help me.',['for','of','to','with'],1,'of','kind of sb <b>of</b>。'],
-['misc','It\'s important ______ us to learn English.',['for','of','to','with'],0,'for','important for sb <b>for</b>。'],
-['misc','He is old enough ______ care of himself.',['take','to take','taking','took'],1,'take','adj + enough + to do <b>to take</b>。'],
-['misc','The bag is too heavy for me ______.',['carry','to carry','carrying','carried'],1,'carry','too...to <b>to carry</b>。'],
-['misc','The trees ______ well last year.',['plant','planted','were planted','are planted'],2,'plant','被动语态过去 <b>were planted</b>。'],
-['misc','The Great Wall ______ by many people every year.',['visit','visits','is visited','was visited'],2,'visit','一般现在时被动 <b>is visited</b>。'],
-['misc','A new hospital ______ in our city next year.',['builds','will build','will be built','built'],2,'build','将来时被动 <b>will be built</b>。'],
-['misc','The problem ______ by the students yesterday.',['solved','was solved','is solved','solves'],1,'solve','过去时被动 <b>was solved</b>。'],
-['misc','This song ______ by a famous singer.',['sings','sang','is sung','singing'],2,'sing','被动 <b>is sung</b>。'],
-['misc','The old man ______ to hospital yesterday.',['takes','took','was taken','is taken'],2,'take','被动 <b>was taken</b>。'],
-['misc','Great changes ______ in our hometown since 2010.',['take place','took place','have taken place','are taken place'],2,'take place','since 用完成时 <b>have taken place</b>。'],
-['misc','The book is worth ______.',['read','reading','to read','reads'],1,'read','be worth doing <b>reading</b>。'],
-['misc','I\'m looking forward to ______ from you.',['hear','hearing','heard','hears'],1,'hear','look forward to doing <b>hearing</b>。'],
-['misc','The girl is busy ______ her homework.',['do','doing','to do','did'],1,'do','be busy doing <b>doing</b>。'],
-['misc','I prefer reading ______ watching TV.',['than','to','for','with'],1,'to','prefer doing to doing <b>to</b>。'],
-['misc','We\'d better ______ early tomorrow.',['start','to start','starting','started'],0,'start','had better do <b>start</b>。'],
-['misc','Why ______ you come earlier?',['don\'t','not','didn\'t you','not you'],1,'not','Why not + do <b>not</b>。'],
-['misc','Would you mind ______ me the way?',['tell','to tell','telling','told'],2,'tell','mind doing <b>telling</b>。'],
-['misc','I have no time ______ TV now.',['watch','to watch','watching','watched'],1,'watch','have no time to do <b>to watch</b>。'],
-['misc','It\'s time ______ class.',['for','to','of','with'],0,'for','It\'s time for + n <b>for</b>。'],
-['misc','It\'s time ______ have class.',['for','to','of','with'],1,'to','It\'s time to do <b>to</b>。'],
-['misc','There is nothing ______.',['worry about','to worry about','worrying about','worried about'],1,'worry about','不定式后置 <b>to worry about</b>。'],
-['misc','I found it hard ______ English well.',['learn','to learn','learning','learned'],1,'learn','it 作形式宾语 <b>to learn</b>。'],
-['misc','He made a decision ______ abroad.',['study','to study','studying','studied'],1,'study','decision to do <b>to study</b>。'],
-['misc','My dream is ______ a doctor.',['become','to become','becoming','became'],1,'become','dream is to do <b>to become</b>。'],
-['misc','Our plan is ______ the work on time.',['finish','to finish','finishing','finished'],1,'finish','plan is to do <b>to finish</b>。'],
-['misc','The most important thing is ______ healthy.',['keep','to keep','keeping','kept'],1,'keep','<b>to keep</b>。'],
-['misc','He was heard ______ in the next room.',['sing','to sing','sang','sings'],1,'sing','被动还原 to <b>to sing</b>。'],
-['misc','She is often seen ______ English in the morning.',['read','to read','reads','reading'],0,'read','感官动词被动 <b>read</b>（省略 to）或 to read 均可'],
-['misc','What he said made us ______.',['happy','happily','happiness','to be happy'],0,'happy','make sb + adj <b>happy</b>。'],
-['misc','This is a ______ story.',['really interesting','real interesting','really interested','real interested'],0,'really interesting','修饰形容词用副词 <b>really interesting</b>。'],
-['misc','He speaks English ______.',['good','well','nice','fine'],1,'well','修饰动词用副词 <b>well</b>。'],
-['misc','The soup tastes ______.',['well','good','nicely','badly'],1,'good','感官动词后接形容词 <b>good</b>。'],
-['misc','She looks ______ today.',['happy','happily','happiness','to be happy'],0,'happy','系动词后接形容词 <b>happy</b>。'],
-['misc','The music sounds ______.',['beautiful','beautifully','beauty','more beautiful'],0,'beautiful','系动词后 <b>beautiful</b>。'],
-['misc','Please speak ______ so that everyone can hear you.',['loud','loudly','aloud','loudness'],1,'loudly','修饰 speak <b>loudly</b>。'],
-['misc','He is ______ to come to school.',['too lazy','lazy too','so lazy','very lazy'],0,'too lazy','too + adj + to do <b>too lazy</b>。'],
-['misc','It\'s ______ cold to go out.',['too','so','such','very'],0,'too','too...to <b>too</b>。'],
-['misc','We have ______ homework to do today.',['too many','too much','many too','much too'],1,'too much','不可数名词 <b>too much</b>。'],
-['misc','There are ______ books on the desk.',['too much','much too','too many','many too'],2,'too many','可数名词复数 <b>too many</b>。'],
-['misc','He is ______ young to go to school.',['so','such','too','very'],2,'too','too...to <b>too</b>。'],
-['misc','The problem is ______ difficult for us.',['much too','too much','many too','too many'],0,'much too','much too + adj <b>much too</b>。'],
-['misc','He is ______ that he can\'t go to work.',['so ill','such ill','very ill','too ill'],0,'so ill','so + adj + that <b>so ill</b>。'],
-['misc','It was ______ a cold day that we stayed home.',['so','such','very','too'],1,'such','such + a + adj + n + that <b>such</b>。'],
-['misc','The more we get together, ______ we\'ll be.',['the happy','the happier','happier','the happiest'],1,'happier','the more...the more <b>the happier</b>。'],
-['misc','Which is ______, this one or that one?',['good','better','best','the best'],1,'good','两者 <b>better</b>。'],
-['misc','Shanghai is ______ than any other city in China.',['large','larger','largest','the largest'],1,'large','<b>larger</b>。'],
-['misc','This is ______ film I\'ve ever seen.',['good','better','the best','best'],2,'good','<b>the best</b>。'],
-['misc','The film is as ______ as that one.',['interesting','more interesting','most interesting','the most interesting'],0,'interesting','as + 原级 + as <b>interesting</b>。'],
-['misc','She sings ______ than any other girl in her class.',['well','better','best','the best'],1,'well','<b>better</b>。'],
-['misc','Tom is one of ______ students in our class.',['tall','taller','tallest','the tallest'],3,'tall','one of the + 最高级 <b>the tallest</b>。'],
-['misc','I am ______ in reading books.',['interested','interesting','interest','to interest'],0,'interested','be interested in <b>interested</b>。'],
-['misc','The news is very ______.',['exciting','excited','excite','excitement'],0,'exciting','修饰物 <b>exciting</b>。'],
-['misc','We are ______ about the trip.',['exciting','excited','excite','excitement'],1,'excited','修饰人 <b>excited</b>。'],
-['misc','His ______ English is very good.',['speak','speaking','spoken','spoke'],2,'spoken','<b>spoken</b> English。'],
-['misc','He got ______ in the exam.',['good','well','a good grade','a well grade'],2,'a good grade','<b>a good grade</b>。'],
-['misc','The ______ news made us happy.',['exciting','excited','excite','excitement'],0,'exciting','<b>exciting</b>。']
+['hard','The room ______ every day.',['cleans','cleaned','is cleaned','cleaning'],2,'clean','<b>is cleaned</b>']
 ];
 
 function expandAliases(answer){
@@ -1679,16 +1390,59 @@ const QUESTIONS=RAW.map((r,i)=>{
 });
 const Q_MAP={};QUESTIONS.forEach(q=>Q_MAP[q.id]=q);
 
-/* ============ 成就系统 ============ */
+/* ============ 听力独立题库 ============ */
+const LISTENING_BANK=[
+  {id:'L1',type:'qa',audio:'I usually get up at six in the morning.',q:'When does the speaker get up?',options:['At 6:00','At 7:00','At 8:00','At 9:00'],answer:0,explain:'"at six in the morning" 表示早上六点。'},
+  {id:'L2',type:'qa',audio:'My favorite subject is English because it is interesting.',q:'Why does the speaker like English?',options:['Because it is easy','Because it is interesting','Because it is useful','Because the teacher is kind'],answer:1,explain:'"because it is interesting" 直接说明原因。'},
+  {id:'L3',type:'qa',audio:'I go to school by bike every day.',q:'How does the speaker go to school?',options:['By bus','By bike','On foot','By car'],answer:1,explain:'"by bike" 表示骑自行车。'},
+  {id:'L4',type:'qa',audio:'My father is a doctor. He works in a hospital.',q:'Where does the speaker\'s father work?',options:['In a school','In a bank','In a hospital','In a shop'],answer:2,explain:'"works in a hospital" 直接说明。'},
+  {id:'L5',type:'qa',audio:'There are forty students in our class.',q:'How many students are there in the class?',options:['14','40','44','4'],answer:1,explain:'"forty students" = 40 名学生。'},
+  {id:'L6',type:'qa',audio:'I have two brothers and one sister.',q:'How many sisters does the speaker have?',options:['One','Two','Three','Four'],answer:0,explain:'"one sister" 表示有一个姐妹。'},
+  {id:'L7',type:'qa',audio:'The weather is sunny and warm today.',q:'What is the weather like today?',options:['Rainy','Sunny and warm','Cold and windy','Cloudy'],answer:1,explain:'"sunny and warm" 直接说明天气。'},
+  {id:'L8',type:'qa',audio:'I would like a cup of tea, please.',q:'What would the speaker like?',options:['A cup of coffee','A cup of tea','A glass of water','A bottle of juice'],answer:1,explain:'"a cup of tea" 表示一杯茶。'},
+  {id:'L9',type:'qa',audio:'The movie starts at seven thirty.',q:'When does the movie start?',options:['At 6:30','At 7:00','At 7:30','At 8:00'],answer:2,explain:'"seven thirty" = 7:30。'},
+  {id:'L10',type:'qa',audio:'I am going to visit my grandparents this weekend.',q:'What is the speaker going to do this weekend?',options:['Go shopping','Visit grandparents','Do homework','Play sports'],answer:1,explain:'"visit my grandparents" 说明计划。'},
+  {id:'L11',type:'qa',audio:'My birthday is on October 1st.',q:'When is the speaker\'s birthday?',options:['January 1st','October 1st','December 1st','September 1st'],answer:1,explain:'"October 1st" 是生日日期。'},
+  {id:'L12',type:'qa',audio:'I am from Canada, but I live in China now.',q:'Where is the speaker from?',options:['China','Canada','America','England'],answer:1,explain:'"from Canada" 表示来自加拿大。'},
+  {id:'L13',type:'qa',audio:'My mother is cooking in the kitchen.',q:'What is the mother doing?',options:['Reading','Cooking','Sleeping','Watching TV'],answer:1,explain:'"cooking in the kitchen" 表示正在做饭。'},
+  {id:'L14',type:'qa',audio:'I want to be a teacher when I grow up.',q:'What does the speaker want to be?',options:['A doctor','A teacher','A driver','A writer'],answer:1,explain:'"a teacher" 说明理想职业。'},
+  {id:'L15',type:'qa',audio:'There is a bookshop near our school.',q:'What is near the school?',options:['A library','A bookshop','A hospital','A park'],answer:1,explain:'"a bookshop near our school" 说明书店在学校附近。'},
+  {id:'L16',type:'qa',audio:'I often play basketball with my friends after school.',q:'What does the speaker often do after school?',options:['Play football','Play basketball','Play tennis','Play ping-pong'],answer:1,explain:'"play basketball" 说明活动。'},
+  {id:'L17',type:'qa',audio:'The cat is sleeping under the tree.',q:'Where is the cat?',options:['On the tree','Under the tree','In the house','Behind the tree'],answer:1,explain:'"under the tree" 说明猫的位置。'},
+  {id:'L18',type:'qa',audio:'I have English class on Monday and Wednesday.',q:'When does the speaker have English class?',options:['Monday and Tuesday','Monday and Wednesday','Tuesday and Thursday','Wednesday and Friday'],answer:1,explain:'"Monday and Wednesday" 说明上课时间。'},
+  {id:'L19',type:'qa',audio:'The girl in the red dress is my sister.',q:'Which girl is the speaker\'s sister?',options:['The girl in the blue dress','The girl in the red dress','The girl in the white dress','The girl in the yellow dress'],answer:1,explain:'"in the red dress" 是识别特征。'},
+  {id:'L20',type:'qa',audio:'The train leaves at nine o\'clock in the morning.',q:'When does the train leave?',options:['At 9:00 am','At 9:00 pm','At 10:00 am','At 8:00 am'],answer:0,explain:'"nine o\'clock in the morning" = 上午9点。'},
+  {id:'L21',type:'aq',audio:'I am fine, thank you.',q:'听答句，选出对应的问句',options:['How are you?','What\'s your name?','How old are you?','Where are you from?'],answer:0,explain:'"I am fine" 是对 "How are you?" 的经典回答。'},
+  {id:'L22',type:'aq',audio:'My name is Tom.',q:'听答句，选出对应的问句',options:['How are you?','What\'s your name?','Where are you?','Who is he?'],answer:1,explain:'"My name is..." 回答 "What\'s your name?"。'},
+  {id:'L23',type:'aq',audio:'I am twelve years old.',q:'听答句，选出对应的问句',options:['How are you?','How old are you?','What grade are you in?','When is your birthday?'],answer:1,explain:'"twelve years old" 回答年龄。'},
+  {id:'L24',type:'aq',audio:'I am from Australia.',q:'听答句，选出对应的问句',options:['Where are you from?','Where are you going?','How are you?','Who are you?'],answer:0,explain:'"from Australia" 回答 "Where are you from?"。'},
+  {id:'L25',type:'aq',audio:'It is Monday today.',q:'听答句，选出对应的问句',options:['What day is it today?','What\'s the date today?','What time is it?','How\'s the weather?'],answer:0,explain:'"Monday" 是一周的哪一天。'},
+  {id:'L26',type:'aq',audio:'It\'s eight o\'clock.',q:'听答句，选出对应的问句',options:['What day is it?','What time is it?','When is it?','How is it?'],answer:1,explain:'"eight o\'clock" 回答具体时间。'},
+  {id:'L27',type:'aq',audio:'Yes, I can.',q:'听答句，选出对应的问句',options:['Do you like it?','Can you swim?','Are you a student?','Did you go?'],answer:1,explain:'"Yes, I can" 回答 can 引导的疑问句。'},
+  {id:'L28',type:'aq',audio:'I am doing my homework.',q:'听答句，选出对应的问句',options:['What do you do?','What are you doing?','What did you do?','What will you do?'],answer:1,explain:'"am doing" 回答现在进行时的问题。'},
+  {id:'L29',type:'aq',audio:'By bus.',q:'听答句，选出对应的问句',options:['Where are you going?','How do you go to school?','When do you go?','Why do you go?'],answer:1,explain:'"By bus" 回答交通方式。'},
+  {id:'L30',type:'aq',audio:'Because it\'s interesting.',q:'听答句，选出对应的问句',options:['What is it?','Why do you like it?','Where is it?','How is it?'],answer:1,explain:'"Because..." 回答 "Why..." 引导的疑问句。'},
+  {id:'L31',type:'aq',audio:'She is my sister.',q:'听答句，选出对应的问句',options:['Who is she?','How is she?','Where is she?','What is she?'],answer:0,explain:'"my sister" 回答身份。'},
+  {id:'L32',type:'aq',audio:'It\'s sunny.',q:'听答句，选出对应的问句',options:['What day is it?','What\'s the weather like?','What time is it?','How are you?'],answer:1,explain:'"sunny" 描述天气。'},
+  {id:'L33',type:'aq',audio:'I am in Class Two.',q:'听答句，选出对应的问句',options:['What class are you in?','What grade are you in?','Where are you?','How are you?'],answer:0,explain:'"Class Two" 回答班级。'},
+  {id:'L34',type:'aq',audio:'At seven in the morning.',q:'听答句，选出对应的问句',options:['What time is it?','When do you get up?','How do you get up?','Where do you get up?'],answer:1,explain:'回答具体时间点。'},
+  {id:'L35',type:'aq',audio:'Yes, please.',q:'听答句，选出对应的问句',options:['Would you like some tea?','Do you like tea?','Are you tired?','Can you help me?'],answer:0,explain:'"Yes, please" 回答 "Would you like..." 的邀请。'},
+  {id:'L36',type:'aq',audio:'No, I haven\'t.',q:'听答句，选出对应的问句',options:['Do you have a pen?','Have you finished your homework?','Did you go there?','Are you hungry?'],answer:1,explain:'"haven\'t" 回答现在完成时。'},
+  {id:'L37',type:'aq',audio:'It\'s a book.',q:'听答句，选出对应的问句',options:['Who is it?','What is it?','Where is it?','How is it?'],answer:1,explain:'"a book" 回答物品。'},
+  {id:'L38',type:'aq',audio:'It\'s red.',q:'听答句，选出对应的问句',options:['What color is it?','What is it?','Where is it?','How is it?'],answer:0,explain:'"red" 是颜色。'},
+  {id:'L39',type:'aq',audio:'I want to join the music club.',q:'听答句，选出对应的问句',options:['What club do you want to join?','Do you like music?','Can you sing?','What do you do?'],answer:0,explain:'回答"想加入什么俱乐部"。'},
+  {id:'L40',type:'aq',audio:'My favorite subject is math.',q:'听答句，选出对应的问句',options:['What do you like?','What\'s your favorite subject?','Do you like math?','How is math?'],answer:1,explain:'回答"最喜欢的科目"。'}
+];
+const LISTEN_MAP={};LISTENING_BANK.forEach(q=>LISTEN_MAP[q.id]=q);
+
+/* ============ 成就 ============ */
 const ACHIEVEMENTS=[
   {id:'first',icon:'🌱',name:'初学者',desc:'完成第一次练习',check:(s)=>s.totalAnswered>=1},
   {id:'a10',icon:'📖',name:'小试牛刀',desc:'答对 10 题',check:(s)=>s.totalCorrect>=10},
   {id:'a50',icon:'📚',name:'勤奋学者',desc:'答对 50 题',check:(s)=>s.totalCorrect>=50},
   {id:'a100',icon:'🎓',name:'学富五车',desc:'答对 100 题',check:(s)=>s.totalCorrect>=100},
-  {id:'a300',icon:'🏆',name:'语法大师',desc:'答对 300 题',check:(s)=>s.totalCorrect>=300},
   {id:'s3',icon:'🔥',name:'三日之约',desc:'连续学习 3 天',check:(s)=>s.streak>=3},
   {id:'s7',icon:'⚡',name:'一周不断',desc:'连续学习 7 天',check:(s)=>s.streak>=7},
-  {id:'s30',icon:'💎',name:'月度大师',desc:'连续学习 30 天',check:(s)=>s.streak>=30},
   {id:'pf',icon:'✨',name:'完美主义',desc:'一轮全对',check:(s)=>s.hasPerfect},
   {id:'master',icon:'👑',name:'全部掌握',desc:'主题库全部已掌握',check:()=>QUESTIONS.every(q=>getSt(q.id)===2)},
   {id:'star',icon:'⭐',name:'收藏家',desc:'收藏 10 道题',check:()=>starSet.size>=10},
@@ -1699,8 +1453,8 @@ const ACHIEVEMENTS=[
 
 /* ============ 存储 ============ */
 const K={
-  lib:'q7g-lib-v4',wrong:'q7g-wrong-v4',papers:'q7g-papers-v4',session:'q7g-session-v4',
-  theme:'q7g-theme',star:'q7g-star-v4',daily:'q7g-daily-v4',stats:'q7g-stats-v1',
+  lib:'q7g-lib-v4',wrong:'q7g-wrong-v4',papers:'q7g-papers-v4',session:'q7g-session-v3',
+  theme:'q7g-theme',star:'q7g-star-v1',daily:'q7g-daily-v4',stats:'q7g-stats-v1',
   note:'q7g-note-v1',goal:'q7g-goal-v1',achieve:'q7g-ach-v1'
 };
 let libState=load(K.lib,{});
@@ -1728,7 +1482,6 @@ function recordAnswer(correct){
   if(!stats.dailyLog[today])stats.dailyLog[today]={answered:0,correct:0};
   stats.dailyLog[today].answered++;
   if(correct)stats.dailyLog[today].correct++;
-  // 连续天数
   if(stats.lastStudyDate!==today){
     const y=new Date(Date.now()-86400000);
     const yStr=`${y.getFullYear()}-${String(y.getMonth()+1).padStart(2,'0')}-${String(y.getDate()).padStart(2,'0')}`;
@@ -1744,9 +1497,7 @@ function checkAchievements(){
   const newOnes=[];
   ACHIEVEMENTS.forEach(a=>{
     if(unlockedAchievements.has(a.id))return;
-    try{
-      if(a.check(stats)){unlockedAchievements.add(a.id);newOnes.push(a);}
-    }catch(e){}
+    try{if(a.check(stats)){unlockedAchievements.add(a.id);newOnes.push(a);}}catch(e){}
   });
   if(newOnes.length){
     save(K.achieve,[...unlockedAchievements]);
@@ -1764,10 +1515,115 @@ function showAchieveToast(a){
 function checkGoal(){
   const today=todayStr();
   const t=stats.dailyLog[today]||{answered:0};
-  if(t.answered===dailyGoal){
-    toast(`🎉 今日目标达成！完成 ${dailyGoal} 题`,'ok');
-  }
+  if(t.answered===dailyGoal)toast(`🎉 今日目标达成！完成 ${dailyGoal} 题`,'ok');
 }
+
+/* ============ TTS 智能语音 ============ */
+let allVoices=[];
+let selectedVoiceName=localStorage.getItem('q7g-voice-name')||'';
+let speechRate=parseFloat(localStorage.getItem('q7g-rate'))||0.92;
+function loadVoices(){
+  if(!('speechSynthesis' in window))return;
+  const v=window.speechSynthesis.getVoices();
+  if(v.length)allVoices=v.filter(x=>/^en(-|_)?/i.test(x.lang));
+}
+if('speechSynthesis' in window){
+  loadVoices();
+  window.speechSynthesis.onvoiceschanged=loadVoices;
+}
+function voiceScore(v){
+  const n=v.name.toLowerCase();
+  let s=0;
+  if(/microsoft/.test(n)&&/(aria|jenny|guy|michelle|ana|christopher|eric|roger|ava|andrew|emma|brian)/.test(n))s+=100;
+  if(/google/.test(n)&&/(us|uk)\s+english/.test(n))s+=80;
+  if(/samantha|alex|karen|daniel|moira|tessa/.test(n))s+=70;
+  if(/microsoft/.test(n)&&/(zira|david|mark|hazel)/.test(n))s+=50;
+  if(v.lang==='en-US')s+=10;
+  if(v.localService)s+=5;
+  if(/espeak|festival|flite/i.test(n))s-=200;
+  return s;
+}
+function pickBestVoice(){
+  if(!allVoices.length)return null;
+  if(selectedVoiceName){
+    const hit=allVoices.find(v=>v.name===selectedVoiceName);
+    if(hit)return hit;
+  }
+  return allVoices.slice().sort((a,b)=>voiceScore(b)-voiceScore(a))[0]||null;
+}
+function speak(text){
+  if(!('speechSynthesis' in window))return;
+  try{
+    window.speechSynthesis.cancel();
+    if(!allVoices.length)loadVoices();
+    const u=new SpeechSynthesisUtterance(text);
+    const v=pickBestVoice();
+    if(v){u.voice=v;u.lang=v.lang;}else{u.lang='en-US';}
+    u.rate=speechRate;u.pitch=1.0;u.volume=1.0;
+    window.speechSynthesis.speak(u);
+  }catch(e){}
+}
+function stripHTML(s){
+  return String(s||'')
+    .replace(/<[^>]+>/g,' ')
+    .replace(/&[a-z]+;/gi,' ')
+    .replace(/_{2,}/g,' blank ')
+    .replace(/\s+/g,' ')
+    .trim();
+}
+const voiceModal=document.getElementById('voiceModal');
+const voiceListEl=document.getElementById('voiceList');
+function renderVoiceList(){
+  if(!allVoices.length){
+    voiceListEl.innerHTML='<div style="padding:16px;text-align:center;color:var(--text-sub);font-size:13px">未检测到英文语音，请检查系统语音设置</div>';
+    return;
+  }
+  const sorted=allVoices.slice().sort((a,b)=>voiceScore(b)-voiceScore(a));
+  const current=pickBestVoice();
+  voiceListEl.innerHTML=sorted.map(v=>`
+    <div class="voice-item${current&&v.name===current.name?' active':''}" data-name="${esc(v.name)}">
+      <div class="vn">${esc(v.name)}</div>
+      <div class="vl">${esc(v.lang)}</div>
+      <button class="btn sm" data-test="${esc(v.name)}" style="flex:0 0 auto;padding:6px 10px">🔊</button>
+    </div>
+  `).join('');
+  voiceListEl.querySelectorAll('.voice-item').forEach(item=>{
+    item.addEventListener('click',e=>{
+      if(e.target.closest('[data-test]'))return;
+      selectedVoiceName=item.dataset.name;
+      localStorage.setItem('q7g-voice-name',selectedVoiceName);
+      renderVoiceList();
+      speak('Hello, this is my voice.');
+    });
+  });
+  voiceListEl.querySelectorAll('[data-test]').forEach(btn=>{
+    btn.addEventListener('click',e=>{
+      e.stopPropagation();
+      const v=allVoices.find(x=>x.name===btn.dataset.test);
+      if(!v)return;
+      try{
+        window.speechSynthesis.cancel();
+        const u=new SpeechSynthesisUtterance('Hello, this is my voice.');
+        u.voice=v;u.lang=v.lang;u.rate=speechRate;u.pitch=1.0;
+        window.speechSynthesis.speak(u);
+      }catch(err){}
+    });
+  });
+}
+document.getElementById('voiceBtn').addEventListener('click',()=>{
+  loadVoices();renderVoiceList();voiceModal.classList.add('show');
+});
+document.getElementById('voiceClose').addEventListener('click',()=>voiceModal.classList.remove('show'));
+document.getElementById('voiceTest').addEventListener('click',()=>speak('Good morning! How are you today?'));
+voiceModal.addEventListener('click',e=>{if(e.target===voiceModal)voiceModal.classList.remove('show');});
+const rateRange=document.getElementById('rateRange');
+rateRange.value=speechRate;
+document.getElementById('rateVal').textContent=speechRate.toFixed(2);
+rateRange.addEventListener('input',()=>{
+  speechRate=parseFloat(rateRange.value);
+  document.getElementById('rateVal').textContent=speechRate.toFixed(2);
+  localStorage.setItem('q7g-rate',speechRate);
+});
 
 /* ============ Tab ============ */
 let currentTab='lib';
@@ -2011,30 +1867,21 @@ document.getElementById('noteFilters').addEventListener('click',e=>{
 
 /* ============ 数据中心 ============ */
 function renderDash(){
-  // Hero
   document.getElementById('dStreak').textContent=stats.streak;
   const today=todayStr();
   const t=stats.dailyLog[today]||{answered:0,correct:0};
   document.getElementById('dToday').textContent=t.answered;
   const pct=Math.min(100,Math.round(t.answered/dailyGoal*100));
   document.getElementById('dGoalPct').textContent=pct+'%';
-  const c=document.getElementById('dGoalCircle');
-  const total=276.5; // 2 * pi * 44
-  c.setAttribute('stroke-dashoffset', total*(1-pct/100));
-
-  // 累计
+  document.getElementById('dGoalCircle').setAttribute('stroke-dashoffset', 276.5*(1-pct/100));
   document.getElementById('dTotal').textContent=stats.totalAnswered;
   document.getElementById('dCorrect').textContent=stats.totalCorrect;
   document.getElementById('dRate').textContent=(stats.totalAnswered?Math.round(stats.totalCorrect/stats.totalAnswered*100):0)+'%';
   const masterCount=QUESTIONS.filter(q=>getSt(q.id)===2).length;
   document.getElementById('dMaster').textContent=masterCount;
   document.getElementById('dMasterTotal').textContent=QUESTIONS.length;
-
-  // 目标条
   document.getElementById('goalBar').style.width=pct+'%';
   document.getElementById('goalText').innerHTML=`今日 <b>${t.answered}</b> / <b>${dailyGoal}</b> 题`;
-
-  // 最近 7 天
   const days=[];
   const labels=['日','一','二','三','四','五','六'];
   let weekTotal=0;
@@ -2047,40 +1894,87 @@ function renderDash(){
   }
   document.getElementById('dWeekTotal').textContent=`共 ${weekTotal} 题`;
   const maxCount=Math.max(...days.map(d=>d.count),1);
-  const barsEl=document.getElementById('dWeekBars');
-  barsEl.innerHTML=days.map(d=>{
+  document.getElementById('dWeekBars').innerHTML=days.map(d=>{
     const h=Math.max(4,d.count/maxCount*100);
     return `<div class="bar-col"><div class="fill${d.count>=dailyGoal?' ok':''}" style="height:${h}%"></div>${d.count>0?`<span class="cnt">${d.count}</span>`:''}</div>`;
   }).join('');
   document.getElementById('dWeekLabels').innerHTML=days.map(d=>`<span>${d.label}</span>`).join('');
-
-  // 分类掌握度
   const cats=['plural','third','be','pron','tense','misc','hard'];
-  const catEl=document.getElementById('dCatBars');
-  catEl.innerHTML=cats.map(cat=>{
+  document.getElementById('dCatBars').innerHTML=cats.map(cat=>{
     const qs=QUESTIONS.filter(q=>q.cat===cat);
     const done=qs.filter(q=>getSt(q.id)===2).length;
     const total=qs.length;
     const pct=total?Math.round(done/total*100):0;
-    return `<div class="cat-row">
-      <span class="name">${CAT_LABEL[cat]}</span>
-      <div class="bar"><i style="width:${pct}%"></i></div>
-      <span class="num">${done}/${total}</span>
-    </div>`;
+    return `<div class="cat-row"><span class="name">${CAT_LABEL[cat]}</span><div class="bar"><i style="width:${pct}%"></i></div><span class="num">${done}/${total}</span></div>`;
   }).join('');
-
-  // 成就
   const unlocked=ACHIEVEMENTS.filter(a=>unlockedAchievements.has(a.id)).length;
   document.getElementById('dAchCnt').textContent=`${unlocked} / ${ACHIEVEMENTS.length}`;
   document.getElementById('dAchieveGrid').innerHTML=ACHIEVEMENTS.map(a=>{
     const u=unlockedAchievements.has(a.id);
-    return `<div class="achieve${u?' unlocked':' locked'}">
-      <span class="ico">${a.icon}</span>
-      <div class="name">${esc(a.name)}</div>
-      <div class="desc">${esc(a.desc)}</div>
-    </div>`;
+    return `<div class="achieve${u?' unlocked':' locked'}"><span class="ico">${a.icon}</span><div class="name">${esc(a.name)}</div><div class="desc">${esc(a.desc)}</div></div>`;
   }).join('');
+  renderCalendar();
 }
+
+/* ============ 学习日历 ============ */
+let calCurrent=new Date();
+function renderCalendar(){
+  const y=calCurrent.getFullYear();
+  const m=calCurrent.getMonth();
+  const daysInMonth=new Date(y,m+1,0).getDate();
+  const startDay=new Date(y,m,1).getDay();
+  document.getElementById('calTitle').textContent=`${y}年${m+1}月`;
+  let monthMax=0,monthTotal=0,activeDays=0;
+  for(let d=1;d<=daysInMonth;d++){
+    const ds=`${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const cnt=(stats.dailyLog[ds]?.answered)||0;
+    monthTotal+=cnt;
+    if(cnt>0)activeDays++;
+    if(cnt>monthMax)monthMax=cnt;
+  }
+  document.getElementById('calMonthTotal').textContent=`本月 ${monthTotal} 题`;
+  let html='';
+  ['日','一','二','三','四','五','六'].forEach(d=>{html+=`<div class="cal-head">${d}</div>`;});
+  for(let i=0;i<startDay;i++)html+=`<div class="cal-day empty"></div>`;
+  const today=todayStr();
+  for(let d=1;d<=daysInMonth;d++){
+    const ds=`${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const cnt=(stats.dailyLog[ds]?.answered)||0;
+    const isToday=ds===today;
+    let intensity=0;
+    if(cnt>0){
+      if(monthMax<=1)intensity=3;
+      else{
+        const ratio=cnt/monthMax;
+        intensity=ratio>=0.66?3:ratio>=0.33?2:1;
+      }
+    }
+    let cls='cal-day';
+    if(isToday)cls+=' today';
+    if(cnt>0)cls+=' has-data';
+    html+=`<div class="${cls}" title="${ds} · ${cnt} 题">
+      ${cnt>0?`<i class="i${intensity}"></i>`:''}
+      <span class="lbl">${d}</span>
+      ${cnt>0?`<span class="num">${cnt}</span>`:''}
+    </div>`;
+  }
+  document.getElementById('calGrid').innerHTML=html;
+  let cur=0,maxStreak=0;
+  for(let d=1;d<=daysInMonth;d++){
+    const ds=`${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    if((stats.dailyLog[ds]?.answered)>0){cur++;if(cur>maxStreak)maxStreak=cur;}
+    else cur=0;
+  }
+  document.getElementById('calStats').innerHTML=`
+    <span>📚 学习 <b>${activeDays}</b> 天</span>
+    <span>🔥 最长连续 <b>${maxStreak}</b> 天</span>
+    <span>⚡ 日均 <b>${activeDays?Math.round(monthTotal/activeDays):0}</b> 题</span>
+  `;
+}
+document.getElementById('calPrev').addEventListener('click',()=>{calCurrent.setMonth(calCurrent.getMonth()-1);renderCalendar();});
+document.getElementById('calNext').addEventListener('click',()=>{calCurrent.setMonth(calCurrent.getMonth()+1);renderCalendar();});
+
+/* ============ 数据导出/导入 ============ */
 document.getElementById('setGoalBtn').addEventListener('click',async()=>{
   const v=await askPrompt({title:'设定每日目标',msg:'每天计划做多少题？',value:String(dailyGoal),placeholder:'例如：20'});
   if(!v)return;
@@ -2091,47 +1985,32 @@ document.getElementById('setGoalBtn').addEventListener('click',async()=>{
 document.getElementById('exportDataBtn').addEventListener('click',()=>exportAllData());
 document.getElementById('importDataBtn').addEventListener('click',()=>importAllData());
 document.getElementById('clearAllDataBtn').addEventListener('click',async()=>{
-  const ok=await askConfirm('将清空所有学习数据（含主题库状态、错题本、试卷、成就、统计），此操作不可恢复。',{title:'清空全部数据？',icon:'⚠️',okText:'确认清空',danger:true});
+  const ok=await askConfirm('将清空所有学习数据，此操作不可恢复。',{title:'清空全部数据？',icon:'⚠️',okText:'确认清空',danger:true});
   if(!ok)return;
-  localStorage.clear();
-  location.reload();
+  localStorage.clear();location.reload();
 });
-
 function exportAllData(){
-  const data={
-    version:'2.0',exportedAt:new Date().toISOString(),
-    lib:libState,wrong:wrongBook,papers:papers,star:[...starSet],
-    note:noteMap,stats:stats,achieve:[...unlockedAchievements],goal:dailyGoal
-  };
+  const data={version:'2.0',exportedAt:new Date().toISOString(),lib:libState,wrong:wrongBook,papers,star:[...starSet],note:noteMap,stats,achieve:[...unlockedAchievements],goal:dailyGoal};
   const str=JSON.stringify(data,null,2);
   if(navigator.clipboard&&navigator.clipboard.writeText){
-    navigator.clipboard.writeText(str).then(()=>toast('已复制到剪贴板，可粘贴保存','ok'),()=>fallbackDownload(str));
+    navigator.clipboard.writeText(str).then(()=>toast('已复制到剪贴板','ok'),()=>fallbackDownload(str));
   }else fallbackDownload(str);
 }
 function fallbackDownload(str){
   const blob=new Blob([str],{type:'application/json'});
   const url=URL.createObjectURL(blob);
-  const a=document.createElement('a');
-  a.href=url;a.download=`语法学习备份_${todayStr()}.json`;
-  a.click();
-  setTimeout(()=>URL.revokeObjectURL(url),1000);
-  toast('已导出文件','ok');
+  const a=document.createElement('a');a.href=url;a.download=`语法备份_${todayStr()}.json`;a.click();
+  setTimeout(()=>URL.revokeObjectURL(url),1000);toast('已导出文件','ok');
 }
 async function importAllData(){
   const v=await askPrompt({title:'导入数据',msg:'粘贴之前导出的 JSON 内容',placeholder:'{"version":"2.0",...}'});
   if(!v)return;
   try{
     const d=JSON.parse(v);
-    if(d.lib)save(K.lib,d.lib);
-    if(d.wrong)save(K.wrong,d.wrong);
-    if(d.papers)save(K.papers,d.papers);
-    if(d.star)save(K.star,d.star);
-    if(d.note)save(K.note,d.note);
-    if(d.stats)save(K.stats,d.stats);
-    if(d.achieve)save(K.achieve,d.achieve);
-    if(d.goal)save(K.goal,d.goal);
-    toast('导入成功，即将刷新','ok');
-    setTimeout(()=>location.reload(),800);
+    if(d.lib)save(K.lib,d.lib);if(d.wrong)save(K.wrong,d.wrong);if(d.papers)save(K.papers,d.papers);
+    if(d.star)save(K.star,d.star);if(d.note)save(K.note,d.note);if(d.stats)save(K.stats,d.stats);
+    if(d.achieve)save(K.achieve,d.achieve);if(d.goal)save(K.goal,d.goal);
+    toast('导入成功，即将刷新','ok');setTimeout(()=>location.reload(),800);
   }catch(e){toast('导入失败：格式不正确','err');}
 }
 
@@ -2162,6 +2041,15 @@ document.getElementById('practiceNumChips').addEventListener('click',e=>{
   document.querySelectorAll('#practiceNumChips .chip').forEach(c=>c.classList.toggle('active',c===btn));
 });
 document.getElementById('startPracticeBtn').addEventListener('click',()=>{
+  // 听力模式：独立题库
+  if(practiceMode==='listen'){
+    const shuffled=shuffle(LISTENING_BANK);
+    const count=practiceNum==='all'?shuffled.length:Math.min(practiceNum,shuffled.length);
+    const ids=shuffled.slice(0,count).map(q=>q.id);
+    if(!ids.length){toast('听力题库为空','warn');return;}
+    startSession({type:'practice',title:'🎧 听力练习',qids:ids,mode:'listen'});
+    return;
+  }
   const pool=buildPool(practiceRange,practiceCat);
   if(!pool.length){toast('没有匹配的题目','warn');return;}
   const shuffled=shuffle(pool);
@@ -2204,17 +2092,52 @@ function renderSession(){
   if(!currentSession)return;
   const s=currentSession;
   if(s.idx>=s.qids.length){renderResult();return;}
-  const q=Q_MAP[s.qids[s.idx]];if(!q){s.idx++;renderSession();return;}
+  const q=Q_MAP[s.qids[s.idx]]||LISTEN_MAP[s.qids[s.idx]];
+  if(!q){s.idx++;renderSession();return;}
   document.getElementById('playTitle').textContent=s.title;
   document.getElementById('playBarFill').style.width=(s.idx/s.qids.length*100)+'%';
   document.getElementById('playProgress').textContent=`第 ${s.idx+1} / ${s.qids.length} 题`;
   document.getElementById('playRight').textContent=s.rightCount;
   document.getElementById('playWrong').textContent=s.wrongIds.length;
-  const useFill=s.mode==='fill'||(s.mode==='mix'&&Math.random()<0.5);
-  s._isFill=useFill;
+  const useListen=s.mode==='listen';
+  const useFill=!useListen&&(s.mode==='fill'||(s.mode==='mix'&&Math.random()<0.5));
+  s._isFill=useFill;s._isListen=useListen;
   const wrap=document.getElementById('playCardWrap');
-  const catCls=q.cat==='hard'?'q-cat hard':'q-cat';
-  if(useFill){
+  const catCls=(q.cat==='hard')?'q-cat hard':'q-cat';
+
+  if(useListen){
+    const listenLabel=q.type==='aq'?'🎧 听答句选问句':'🎧 听材料答问题';
+    wrap.innerHTML=`
+      <div class="q-card">
+        <div class="${catCls}">${listenLabel}</div>
+        <div class="listen-box">
+          <button class="listen-play" id="listenPlay">🔊</button>
+          <div class="listen-hint">点击按钮播放音频，共可播放 3 次</div>
+          <div class="listen-times" id="listenTimes">剩余 3 次</div>
+        </div>
+        <div class="q-sentence" style="margin-top:16px;padding-right:0"><b>${esc(q.q)}</b></div>
+        <div class="q-options" id="qOpts">
+          ${q.options.map((opt,i)=>`<button class="q-opt" data-i="${i}"><span class="letter">${'ABCD'[i]}</span><span class="letter-text">${esc(opt)}</span></button>`).join('')}
+        </div>
+        <div id="qFeedback"></div>
+        <div class="play-actions"><button class="btn" id="playQuit">⏸ 保存并退出</button></div>
+      </div>
+    `;
+    let playCount=0;const maxPlay=3;
+    const playBtn=document.getElementById('listenPlay');
+    const timesEl=document.getElementById('listenTimes');
+    playBtn.addEventListener('click',()=>{
+      if(playCount>=maxPlay)return;
+      speak(q.audio);
+      playCount++;
+      timesEl.textContent=`剩余 ${maxPlay-playCount} 次`;
+      playBtn.classList.add('playing');
+      setTimeout(()=>playBtn.classList.remove('playing'),1500);
+      if(playCount>=maxPlay){playBtn.disabled=true;timesEl.textContent='播放次数已用完';}
+    });
+    setTimeout(()=>playBtn.click(),300);
+    document.querySelectorAll('#qOpts .q-opt').forEach(btn=>btn.addEventListener('click',()=>selectAnswer(+btn.dataset.i)));
+  }else if(useFill){
     wrap.innerHTML=`
       <div class="q-card">
         <div class="${catCls}">${CAT_LABEL[q.cat]||q.cat} · 填空题</div>
@@ -2271,7 +2194,8 @@ function submitFillAnswer(){
 }
 function selectAnswer(idx){
   const s=currentSession;if(!s)return;
-  const q=Q_MAP[s.qids[s.idx]];if(!q)return;
+  const q=Q_MAP[s.qids[s.idx]]||LISTEN_MAP[s.qids[s.idx]];
+  if(!q)return;
   if(s.answers[q.id]!==undefined)return;
   const correct=idx===q.answer;
   const btns=document.querySelectorAll('#qOpts .q-opt');
@@ -2281,17 +2205,29 @@ function selectAnswer(idx){
 }
 function handleAnswer(correct,userAns,q,chosenIdx){
   const s=currentSession;
+  const isListening=s.mode==='listen';
   s.answers[q.id]=chosenIdx!==undefined?chosenIdx:userAns;
-  if(correct){s.rightCount++;markCorrect(q.id);}
-  else{s.wrongIds.push(q.id);markWrong(q.id);addToWrongBook(q.id,chosenIdx!==undefined?chosenIdx:userAns);}
+  if(correct){
+    s.rightCount++;
+    if(!isListening)markCorrect(q.id);
+  }else{
+    s.wrongIds.push(q.id);
+    if(!isListening){
+      markWrong(q.id);
+      addToWrongBook(q.id,chosenIdx!==undefined?chosenIdx:userAns);
+    }
+  }
   recordAnswer(correct);
   saveSession();
   const fb=document.getElementById('qFeedback');
   const isFill=s._isFill;
-  const aliases=q.fillAnswers.length>1?`<span class="alt-ok">可接受：${q.fillAnswers.map(esc).join(' / ')}</span>`:'';
+  const aliases=(q.fillAnswers&&q.fillAnswers.length>1)?`<span class="alt-ok">可接受：${q.fillAnswers.map(esc).join(' / ')}</span>`:'';
+  const revealHTML=isListening?`<div class="listen-material"><div class="lbl">📝 听力原文</div>${esc(q.audio)}</div>`:'';
+  const ansLetter=(isFill||isListening)?esc(q.options[q.answer]):'ABCD'[q.answer];
   fb.innerHTML=`
     <div class="q-explain ${correct?'ok':'bad'}">
-      <div class="head">${correct?'✓ 答对了':'✗ 正确答案是 '+(isFill?esc(q.options[q.answer]):'ABCD'[q.answer])}${isFill?aliases:''}</div>
+      <div class="head">${correct?'✓ 答对了':'✗ 正确答案是 '+ansLetter}${(isFill)?aliases:''}</div>
+      ${revealHTML}
       <div class="body">${q.explain}</div>
     </div>
     <div class="play-actions right">
@@ -2304,8 +2240,7 @@ function handleAnswer(correct,userAns,q,chosenIdx){
     const v=await askNote(noteMap[q.id]||'');
     if(v===null)return;
     if(v)noteMap[q.id]=v;else delete noteMap[q.id];
-    save(K.note,noteMap);
-    toast(v?'笔记已保存':'笔记已删除','ok');
+    save(K.note,noteMap);toast(v?'笔记已保存':'笔记已删除','ok');
     checkAchievements();
   });
   document.getElementById('playRight').textContent=s.rightCount;
@@ -2315,7 +2250,7 @@ function buildPlayGrid(){
   const s=currentSession;if(!s)return;
   const grid=document.getElementById('playQGrid');grid.innerHTML='';
   s.qids.forEach((qid,i)=>{
-    const q=Q_MAP[qid];if(!q)return;
+    const q=Q_MAP[qid]||LISTEN_MAP[qid];if(!q)return;
     let st='none';
     if(i<s.idx){st=s.wrongIds.includes(qid)?'wrong':'done';}
     else if(i===s.idx){st='learning';}
@@ -2323,7 +2258,7 @@ function buildPlayGrid(){
     sq.className='q-square';sq.dataset.st=st;sq.textContent=i+1;
     sq.style.animationDelay=(Math.min(i,30)*5)+'ms';
     bindSquare(sq,
-      ()=>`第 ${i+1} 题 · ${CAT_LABEL[q.cat]||q.cat}`,
+      ()=>`第 ${i+1} 题`,
       ()=>q.q.replace(/______+/g,'____'),
       ()=>{
         s.idx=i;saveSession();renderSession();
@@ -2348,7 +2283,6 @@ function renderResult(){
   const el=document.getElementById('practiceResult');el.hidden=false;
   const total=s.qids.length;
   const pct=total?Math.round(s.rightCount/total*100):0;
-  // 完美成就
   if(total>=5&&s.rightCount===total&&!stats.hasPerfect){
     stats.hasPerfect=true;save(K.stats,stats);checkAchievements();
   }
@@ -2361,7 +2295,7 @@ function renderResult(){
     const paper=papers.find(p=>p.id===s.paperId);
     if(paper){paper.lastScore={right:s.rightCount,total,ts:now()};paper.lastWrongIds=s.wrongIds.slice();save(K.papers,papers);}
   }
-  const wrongQs=s.wrongIds.map(id=>Q_MAP[id]).filter(Boolean);
+  const wrongQs=s.wrongIds.map(id=>Q_MAP[id]||LISTEN_MAP[id]).filter(Boolean);
   el.innerHTML=`
     <div class="result">
       <div class="result-score">${pct}%</div>
@@ -2370,13 +2304,7 @@ function renderResult(){
       ${wrongQs.length?`
         <div style="text-align:left;font-weight:800;color:var(--text-sub);font-size:12px;margin-bottom:8px">✗ 本次错题（${wrongQs.length} 道）</div>
         <div class="wrong-list-box">
-          ${wrongQs.map(q=>`
-            <div class="wrong-item">
-              <div class="s">${formatQ(q.q)}</div>
-              <div>正确答案：<span class="a">${esc(q.options[q.answer])}</span> <span class="your">你选了：${esc(String(s.answers[q.id]??''))}</span></div>
-              <div class="ex">${q.explain}</div>
-            </div>
-          `).join('')}
+          ${wrongQs.map(q=>`<div class="wrong-item"><div class="s">${formatQ(q.q)}</div><div>正确答案：<span class="a">${esc(q.options[q.answer])}</span> <span class="your">你选了：${esc(String(s.answers[q.id]??''))}</span></div><div class="ex">${q.explain}</div></div>`).join('')}
         </div>
       `:''}
       <div class="result-actions">
@@ -2572,6 +2500,7 @@ function renderPaperList(){
         <button class="btn sm primary" data-act="do">▶ 作答</button>
         <button class="btn sm" data-act="view">👁</button>
         <button class="btn sm" data-act="wrong">📕 错题</button>
+        <button class="btn sm" data-act="pdf">🖨️ PDF</button>
       </div>
     `;
     card.querySelector('.del-icon').addEventListener('click',async()=>{
@@ -2585,6 +2514,7 @@ function renderPaperList(){
         const act=btn.dataset.act;
         if(act==='do')startSession({type:'paper',title:paper.name,qids:paper.qids.slice(),paperId:paper.id,mode:paper.mode||'choice'});
         else if(act==='view')showPaperPreview(paper);
+        else if(act==='pdf')exportPaperToPDF(paper,false);
         else if(act==='wrong'){
           const ids=paper.lastWrongIds||[];
           if(!ids.length){toast('还没有错题记录','warn');return;}
@@ -2621,8 +2551,83 @@ function showPaperPreview(paper){
     startSession({type:'paper',title:paper.name,qids:paper.qids.slice(),paperId:paper.id,mode:paper.mode||'choice'});
   });
 }
-document.getElementById('previewModal').addEventListener('click',e=>{if(e.target===document.getElementById('previewModal'))document.getElementById('previewModal').classList.remove('show');});
-/* 按条件 */
+document.getElementById('previewModal').addEventListener('click',e=>{
+  if(e.target===document.getElementById('previewModal')){
+    document.getElementById('previewModal').classList.remove('show');
+    document.body.classList.remove('printing');
+  }
+});
+
+/* ============ 试卷导出 PDF ============ */
+function exportPaperToPDF(paper,withAnswer){
+  const content=document.getElementById('previewContent');
+  const includeAns=withAnswer===true;
+  const total=paper.qids.length;
+  const totalScore=total*5;
+
+  const html=`
+    <div class="pdf-toolbar">
+      <button class="btn" id="pdfCloseBtn">✕ 关闭</button>
+      <button class="btn" id="pdfToggleAns">${includeAns?'📄 学生版':'📝 教师版'}</button>
+      <button class="btn primary" id="pdfPrintBtn">🖨️ 打印 / 存为 PDF</button>
+    </div>
+    <div class="pdf-paper">
+      <div class="pdf-header">
+        <h1>英语语法练习卷</h1>
+        <div class="pdf-meta">
+          <span>姓名：_______________</span>
+          <span>班级：_______________</span>
+          <span>日期：_______________</span>
+          <span>得分：_______________</span>
+        </div>
+        <div class="pdf-subtitle">共 ${total} 题 · 每题 5 分 · 满分 ${totalScore} 分 · 生成于 ${fmtTime(paper.createdAt)}</div>
+      </div>
+
+      <div class="pdf-section-title">一、单项选择（每题 5 分，共 ${totalScore} 分）</div>
+
+      ${paper.qids.map((qid,i)=>{
+        const q=Q_MAP[qid];if(!q)return '';
+        const qText=esc(q.q).replace(/______+/g,'<span class="pdf-blank"></span>');
+        const hint=q.hint?`<span class="pdf-hint">（${esc(q.hint)}）</span>`:'';
+        return `
+          <div class="pdf-q">
+            <div class="pdf-q-line">
+              <span class="pdf-num">${i+1}.</span>
+              <span class="pdf-q-text">${qText}${hint}</span>
+            </div>
+            <div class="pdf-opts">
+              ${q.options.map((o,j)=>`<span class="pdf-opt">${'ABCD'[j]}. ${esc(o)}</span>`).join('')}
+            </div>
+            ${includeAns?`<div class="pdf-ans"><b>✓ ${'ABCD'[q.answer]}. ${esc(q.options[q.answer])}</b><br>${q.explain}</div>`:''}
+          </div>
+        `;
+      }).join('')}
+
+      <div class="pdf-footer">— 试卷结束 —</div>
+      <div class="pdf-watermark">${includeAns?'【教师版·含答案】':'【学生版】'} · 由「七上英语语法 2.0」生成</div>
+    </div>
+  `;
+
+  content.innerHTML=html;
+  document.getElementById('previewModal').classList.add('show');
+
+  document.getElementById('pdfCloseBtn').addEventListener('click',()=>{
+    document.getElementById('previewModal').classList.remove('show');
+    document.body.classList.remove('printing');
+  });
+  document.getElementById('pdfToggleAns').addEventListener('click',()=>{
+    exportPaperToPDF(paper,!includeAns);
+  });
+  document.getElementById('pdfPrintBtn').addEventListener('click',()=>{
+    document.body.classList.add('printing');
+    setTimeout(()=>{
+      window.print();
+      setTimeout(()=>document.body.classList.remove('printing'),600);
+    },120);
+  });
+}
+
+/* 按条件组卷 */
 let condRange='all',condCat='all',condNum=20,condMode='choice';
 document.getElementById('condRangeChips').addEventListener('click',e=>{
   const btn=e.target.closest('.chip');if(!btn)return;
@@ -2660,7 +2665,6 @@ document.getElementById('condGenerateBtn').addEventListener('click',async()=>{
   document.querySelectorAll('.ptab').forEach(b=>b.classList.toggle('active',b.dataset.ptab==='my'));
   renderPaperView();
 });
-/* 手动选题 */
 function renderPickList(){
   const list=document.getElementById('pickListEl');
   const grid=document.getElementById('pickQGrid');list.innerHTML='';grid.innerHTML='';
@@ -2800,10 +2804,11 @@ function renderSheetContent(){
   }else if(m==='practice'){
     cfg={title:'✍️ 临时做题',cnt:`${QUESTIONS.length} 题`,sections:[
       {title:'快速开始',items:[
-        {ico:'🔥',txt:'重难点专项',sub:'只做重难点题',action:()=>{closeSheet();practiceRange='hard';practiceCat='all';document.querySelectorAll('#practiceRangeChips .chip').forEach(c=>c.classList.toggle('active',c.dataset.r==='hard'));document.querySelectorAll('#practiceCatChips .chip').forEach(c=>c.classList.toggle('active',c.dataset.cat==='all'));document.getElementById('startPracticeBtn').click();}},
-        {ico:'📚',txt:'未学习专项',sub:'只做还没学过的题',action:()=>{closeSheet();practiceRange='0';practiceCat='all';document.querySelectorAll('#practiceRangeChips .chip').forEach(c=>c.classList.toggle('active',c.dataset.r==='0'));document.querySelectorAll('#practiceCatChips .chip').forEach(c=>c.classList.toggle('active',c.dataset.cat==='all'));document.getElementById('startPracticeBtn').click();}},
-        {ico:'🔁',txt:'巩固学习中',sub:'只做尚未掌握但已学过的',action:()=>{closeSheet();practiceRange='1';practiceCat='all';document.querySelectorAll('#practiceRangeChips .chip').forEach(c=>c.classList.toggle('active',c.dataset.r==='1'));document.querySelectorAll('#practiceCatChips .chip').forEach(c=>c.classList.toggle('active',c.dataset.cat==='all'));document.getElementById('startPracticeBtn').click();}},
-        {ico:'⭐',txt:'只做收藏',sub:'从收藏的题目中抽题',action:()=>{closeSheet();practiceRange='star';practiceCat='all';document.querySelectorAll('#practiceRangeChips .chip').forEach(c=>c.classList.toggle('active',c.dataset.r==='star'));document.querySelectorAll('#practiceCatChips .chip').forEach(c=>c.classList.toggle('active',c.dataset.cat==='all'));document.getElementById('startPracticeBtn').click();}}
+        {ico:'🎧',txt:'听力专项',sub:'独立听力题库',action:()=>{closeSheet();practiceMode='listen';document.querySelectorAll('#practiceModeToggle .mode-btn').forEach(b=>b.classList.toggle('active',b.dataset.mode==='listen'));document.getElementById('startPracticeBtn').click();}},
+        {ico:'🔥',txt:'重难点专项',sub:'只做重难点题',action:()=>{closeSheet();practiceMode='choice';practiceRange='hard';practiceCat='all';document.querySelectorAll('#practiceModeToggle .mode-btn').forEach(b=>b.classList.toggle('active',b.dataset.mode==='choice'));document.querySelectorAll('#practiceRangeChips .chip').forEach(c=>c.classList.toggle('active',c.dataset.r==='hard'));document.querySelectorAll('#practiceCatChips .chip').forEach(c=>c.classList.toggle('active',c.dataset.cat==='all'));document.getElementById('startPracticeBtn').click();}},
+        {ico:'📚',txt:'未学习专项',sub:'只做还没学过的题',action:()=>{closeSheet();practiceMode='choice';practiceRange='0';practiceCat='all';document.querySelectorAll('#practiceModeToggle .mode-btn').forEach(b=>b.classList.toggle('active',b.dataset.mode==='choice'));document.querySelectorAll('#practiceRangeChips .chip').forEach(c=>c.classList.toggle('active',c.dataset.r==='0'));document.querySelectorAll('#practiceCatChips .chip').forEach(c=>c.classList.toggle('active',c.dataset.cat==='all'));document.getElementById('startPracticeBtn').click();}},
+        {ico:'🔁',txt:'巩固学习中',sub:'只做尚未掌握的',action:()=>{closeSheet();practiceMode='choice';practiceRange='1';practiceCat='all';document.querySelectorAll('#practiceModeToggle .mode-btn').forEach(b=>b.classList.toggle('active',b.dataset.mode==='choice'));document.querySelectorAll('#practiceRangeChips .chip').forEach(c=>c.classList.toggle('active',c.dataset.r==='1'));document.querySelectorAll('#practiceCatChips .chip').forEach(c=>c.classList.toggle('active',c.dataset.cat==='all'));document.getElementById('startPracticeBtn').click();}},
+        {ico:'⭐',txt:'只做收藏',sub:'从收藏中抽题',action:()=>{closeSheet();practiceMode='choice';practiceRange='star';practiceCat='all';document.querySelectorAll('#practiceModeToggle .mode-btn').forEach(b=>b.classList.toggle('active',b.dataset.mode==='choice'));document.querySelectorAll('#practiceRangeChips .chip').forEach(c=>c.classList.toggle('active',c.dataset.r==='star'));document.querySelectorAll('#practiceCatChips .chip').forEach(c=>c.classList.toggle('active',c.dataset.cat==='all'));document.getElementById('startPracticeBtn').click();}}
       ]}
     ]};
   }else if(m==='dash'){
@@ -2850,7 +2855,7 @@ function renderSheetContent(){
   cfg.sections.forEach(sec=>{sec.items.forEach(it=>{const el=sheetBody.querySelector(`[data-idx="${itemIdx++}"]`);if(el)el.addEventListener('click',()=>it.action());});});
 }
 
-/* 全屏搜索 */
+/* 搜索 */
 const searchFS=document.getElementById('searchFS');
 const searchFSInput=document.getElementById('searchFSInput');
 document.getElementById('searchBtn').addEventListener('click',()=>{
@@ -2863,7 +2868,6 @@ searchFSInput.addEventListener('input',()=>{
   libKeyword=searchFSInput.value.trim().toLowerCase();
   if(currentTab==='lib')renderLib();
 });
-/* 每日一题 */
 document.getElementById('dailyBtn').addEventListener('click',()=>{
   const today=new Date().toDateString();
   const seed=today.split('').reduce((a,c)=>a+c.charCodeAt(0),0);
@@ -2871,14 +2875,11 @@ document.getElementById('dailyBtn').addEventListener('click',()=>{
   save(K.daily,{date:today,qid});
   startSession({type:'practice',title:'🎯 每日一题',qids:[qid],mode:'choice'});
 });
-/* 智能复习 */
 document.getElementById('quickReviewBtn').addEventListener('click',()=>{
-  // 优先错题，其次学习中的
   const wrongIds=wrongBook.map(w=>w.id);
   const learningIds=QUESTIONS.filter(q=>getSt(q.id)===1).map(q=>q.id);
   const unlearnedIds=QUESTIONS.filter(q=>getSt(q.id)===0).map(q=>q.id);
   let ids=[];
-  // 智能组合：错题优先 + 学习中的 + 未学习的
   if(wrongIds.length)ids=shuffle(wrongIds).slice(0,10);
   if(ids.length<10&&learningIds.length)ids=ids.concat(shuffle(learningIds).slice(0,10-ids.length));
   if(ids.length<10&&unlearnedIds.length)ids=ids.concat(shuffle(unlearnedIds).slice(0,10-ids.length));
@@ -2892,15 +2893,14 @@ document.addEventListener('keydown',e=>{
     else if(document.getElementById('confirmModal').classList.contains('show'))closeConfirm(false);
     else if(document.getElementById('promptModal').classList.contains('show'))closePrompt(null);
     else if(document.getElementById('noteModal').classList.contains('show'))closeNote(null);
-    else if(document.getElementById('previewModal').classList.contains('show'))document.getElementById('previewModal').classList.remove('show');
+    else if(document.getElementById('voiceModal').classList.contains('show'))voiceModal.classList.remove('show');
+    else if(document.getElementById('previewModal').classList.contains('show')){document.getElementById('previewModal').classList.remove('show');document.body.classList.remove('printing');}
   }
   if(currentSession&&!e.target.matches('input,textarea')){
     if(e.key>='1'&&e.key<='4'){const btn=document.querySelector(`#qOpts .q-opt[data-i="${+e.key-1}"]`);if(btn&&!btn.classList.contains('locked'))btn.click();}
     if(e.key==='Enter'){const n=document.getElementById('nextQBtn');if(n)n.click();}
   }
 });
-
-/* 恢复会话 */
 async function checkResume(){
   if(!currentSession||!currentSession.qids||!currentSession.qids.length)return;
   if(currentSession.idx>=currentSession.qids.length){currentSession=null;localStorage.removeItem(K.session);return;}
@@ -2919,8 +2919,6 @@ async function checkResume(){
     startTimer();renderSession();
   }else{currentSession=null;localStorage.removeItem(K.session);}
 }
-
-/* 主题 */
 const themeBtn=document.getElementById('themeBtn');
 const savedTheme=localStorage.getItem(K.theme)||'light';
 document.documentElement.dataset.theme=savedTheme;
@@ -2933,87 +2931,8 @@ themeBtn.addEventListener('click',()=>{
   const meta=document.querySelector('meta[name="theme-color"]');
   if(meta)meta.content=next==='dark'?'#0a0f1e':'#6366f1';
 });
-
-/* 启动 */
 document.querySelector('.tab[data-tab="lib"]').click();
 setTimeout(checkResume,350);
-/* 语音设置面板 */
-const voiceModal=document.getElementById('voiceModal');
-const voiceListEl=document.getElementById('voiceList');
-
-function renderVoiceList(){
-  if(!allVoices.length){
-    voiceListEl.innerHTML='<div style="padding:16px;text-align:center;color:var(--text-sub);font-size:13px">未检测到英文语音，请检查系统语音设置</div>';
-    return;
-  }
-  const sorted=allVoices.slice().sort((a,b)=>voiceScore(b)-voiceScore(a));
-  const current=pickBestVoice();
-  voiceListEl.innerHTML=sorted.map(v=>`
-    <div class="voice-item${current&&v.name===current.name?' active':''}" data-name="${esc(v.name)}" style="display:flex;align-items:center;gap:10px;padding:10px 14px;border:1px solid var(--border);border-radius:11px;cursor:pointer;transition:.15s;background:var(--bg)">
-      <div style="flex:1;font-size:13px;font-weight:600">${esc(v.name)}</div>
-      <div style="font-size:11px;color:var(--text-sub);font-family:ui-monospace,monospace">${esc(v.lang)}</div>
-      <button class="btn sm" data-test="${esc(v.name)}">🔊</button>
-    </div>
-  `).join('');
-  voiceListEl.querySelectorAll('.voice-item').forEach(item=>{
-    item.addEventListener('click',e=>{
-      if(e.target.closest('[data-test]'))return;
-      selectedVoiceName=item.dataset.name;
-      localStorage.setItem('q7g-voice-name',selectedVoiceName);
-      renderVoiceList();
-      speak('Hello, this is my voice.');
-    });
-    const active=item.classList.contains('active');
-    if(active)item.style.borderColor='var(--primary)';
-  });
-  voiceListEl.querySelectorAll('[data-test]').forEach(btn=>{
-    btn.addEventListener('click',e=>{
-      e.stopPropagation();
-      const v=allVoices.find(x=>x.name===btn.dataset.test);
-      if(!v)return;
-      try{
-        window.speechSynthesis.cancel();
-        const u=new SpeechSynthesisUtterance('Hello, this is my voice.');
-        u.voice=v;u.lang=v.lang;u.rate=0.92;u.pitch=1.0;
-        window.speechSynthesis.speak(u);
-      }catch(err){}
-    });
-  });
-}
-
-document.getElementById('voiceBtn')?.addEventListener('click',()=>{
-  loadVoices();renderVoiceList();voiceModal.classList.add('show');
-});
-document.getElementById('voiceClose')?.addEventListener('click',()=>voiceModal.classList.remove('show'));
-document.getElementById('voiceTest')?.addEventListener('click',()=>speak('Good morning! How are you today?'));
-voiceModal?.addEventListener('click',e=>{if(e.target===voiceModal)voiceModal.classList.remove('show');});
-
-const rateRange=document.getElementById('rateRange');
-if(rateRange){
-  let speechRate=parseFloat(localStorage.getItem('q7g-rate'))||0.92;
-  rateRange.value=speechRate;
-  document.getElementById('rateVal').textContent=speechRate.toFixed(2);
-  rateRange.addEventListener('input',()=>{
-    speechRate=parseFloat(rateRange.value);
-    document.getElementById('rateVal').textContent=speechRate.toFixed(2);
-    localStorage.setItem('q7g-rate',speechRate);
-  });
-  // 覆盖 speak 使用新语速
-  const origSpeak=speak;
-  window.speak=function(text){
-    if(!('speechSynthesis' in window))return;
-    try{
-      window.speechSynthesis.cancel();
-      if(!allVoices.length)loadVoices();
-      const u=new SpeechSynthesisUtterance(text);
-      const v=pickBestVoice();
-      if(v){u.voice=v;u.lang=v.lang;}else{u.lang='en-US';}
-      u.rate=speechRate;u.pitch=1.0;u.volume=1.0;
-      window.speechSynthesis.speak(u);
-    }catch(e){}
-  };
-}
-
 </script>
 </body>
 </html>
