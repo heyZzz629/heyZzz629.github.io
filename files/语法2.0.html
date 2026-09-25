@@ -432,29 +432,25 @@ select.nice{border:1px solid var(--border);background:var(--card);color:var(--te
 .achieve-toast .txt{display:flex;flex-direction:column;gap:2px;min-width:0}
 .achieve-toast .title{font-size:13.5px}
 .achieve-toast .sub{font-size:11px;opacity:.9;font-weight:600}
-
-/* PDF 试卷样式 */
-.pdf-toolbar{display:flex;gap:10px;justify-content:flex-end;align-items:center;margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid var(--border);flex-wrap:wrap}
-.pdf-paper{background:#fff;color:#111;padding:26px 32px;font-family:"Times New Roman",Georgia,"SimSun",serif;border-radius:12px;max-width:780px;margin:0 auto;line-height:1.5}
-.pdf-header{text-align:center;padding-bottom:14px;border-bottom:2px solid #333;margin-bottom:22px}
-.pdf-header h1{margin:0 0 14px;font-size:22px;font-weight:700;letter-spacing:3px}
-.pdf-meta{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px 24px;font-size:13px;color:#333;margin-bottom:10px}
-.pdf-meta span{white-space:nowrap}
-.pdf-subtitle{font-size:11.5px;color:#888;margin-top:4px;border-top:1px dashed #ddd;padding-top:8px}
-.pdf-section-title{font-size:14px;font-weight:700;margin:22px 0 14px;letter-spacing:1px}
-.pdf-q{margin-bottom:16px;page-break-inside:avoid;break-inside:avoid}
-.pdf-q-line{display:flex;gap:6px;margin-bottom:6px;font-size:14px;line-height:1.75}
-.pdf-num{font-weight:700;flex-shrink:0;min-width:24px;font-family:"Times New Roman",Georgia,serif}
-.pdf-q-text{flex:1}
-.pdf-blank{display:inline-block;min-width:72px;border-bottom:1px solid #333;margin:0 4px;height:1em;vertical-align:-2px}
-.pdf-hint{color:#666;font-size:12px;margin-left:4px;font-weight:400}
-.pdf-opts{display:grid;grid-template-columns:1fr 1fr;gap:4px 20px;padding-left:30px;font-size:13.5px;line-height:1.8}
-.pdf-opt{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.pdf-ans{margin-top:6px;margin-left:30px;padding:8px 12px;background:#f0fdf4;border-left:3px solid #10b981;font-size:12.5px;color:#333;line-height:1.65;border-radius:0 6px 6px 0}
-.pdf-ans b{color:#059669;font-weight:700}
-.pdf-footer{text-align:center;margin-top:32px;padding-top:16px;border-top:1px dashed #ccc;font-size:11.5px;color:#999;letter-spacing:6px}
-.pdf-watermark{text-align:center;font-size:10px;color:#ccc;margin-top:14px;letter-spacing:1px}
-
+/* 番茄钟 */
+.pomodoro-widget{position:fixed;top:70px;right:14px;z-index:490;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px 16px;box-shadow:var(--shadow-lg);display:none;flex-direction:column;gap:10px;min-width:220px}
+.pomodoro-widget.show{display:flex;animation:fadeUp .25s}
+.pomodoro-head{display:flex;align-items:center;gap:8px}
+.pomodoro-head .ico{font-size:20px}
+.pomodoro-label{font-size:11.5px;color:var(--text-sub);font-weight:700;letter-spacing:.3px;flex:1}
+.pomodoro-close{border:none;background:transparent;color:var(--text-sub);cursor:pointer;font-size:16px;padding:2px 6px;border-radius:6px;line-height:1}
+.pomodoro-close:hover{background:var(--chip)}
+.pomodoro-time{font-size:38px;font-weight:900;font-variant-numeric:tabular-nums;letter-spacing:-1px;color:var(--primary);line-height:1;text-align:center;margin:4px 0}
+.pomodoro-time.rest{color:var(--success)}
+.pomodoro-progress{height:6px;background:var(--chip);border-radius:99px;overflow:hidden}
+.pomodoro-progress i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--primary),#8b5cf6);transition:width 1s linear}
+.pomodoro-progress.rest i{background:linear-gradient(90deg,var(--success),#10b981)}
+.pomodoro-actions{display:flex;gap:6px}
+.pomodoro-actions button{flex:1;border:1px solid var(--border);background:transparent;color:var(--text-sub);font-size:12px;font-weight:700;padding:8px 10px;border-radius:9px;cursor:pointer;font-family:inherit;transition:.15s}
+.pomodoro-actions button:hover{background:var(--chip);color:var(--text)}
+.pomodoro-actions button.primary{background:var(--primary);color:#fff;border-color:var(--primary)}
+.pomodoro-actions button.primary:hover{filter:brightness(1.08);color:#fff}
+.pomodoro-tip{font-size:10.5px;color:var(--text-sub);text-align:center;opacity:.75;line-height:1.4}
 @media (min-width:761px){
   .top-inner{padding:14px 22px 12px}
   .logo{width:40px;height:40px;font-size:20px}
@@ -492,7 +488,6 @@ select.nice{border:1px solid var(--border);background:var(--card);color:var(--te
   .result-actions .btn{flex:0 0 auto;min-width:150px;padding:11px 28px}
   .lib-foot{justify-content:space-between;gap:14px}
   .lib-seg{flex:0 0 auto;width:320px}
-  .modal-box .field input,.modal-box .field textarea{max-width:100%}
   .search{width:260px}
   .dash-grid{grid-template-columns:repeat(4,1fr)}
   .achieve-grid{grid-template-columns:repeat(auto-fill,minmax(110px,1fr))}
@@ -500,21 +495,36 @@ select.nice{border:1px solid var(--border);background:var(--card);color:var(--te
   .dash-hero .streak-num{font-size:72px}
   .dash-hero .progress-circle{width:72px;height:72px;font-size:18px}
 }
-
 @media print{
   @page{size:A4;margin:14mm 14mm 12mm}
   body.printing > *:not(.modal){display:none !important}
-  body.printing #previewModal{display:block !important;position:static !important;background:#fff !important;padding:0 !important;margin:0 !important;backdrop-filter:none !important;-webkit-backdrop-filter:none !important;inset:auto !important}
+  body.printing #previewModal{display:block !important;position:static !important;background:#fff !important;padding:0 !important;margin:0 !important;backdrop-filter:none !important;inset:auto !important}
   body.printing #previewModal .modal-box{box-shadow:none !important;border:none !important;max-width:100% !important;width:100% !important;padding:0 !important;margin:0 !important;background:#fff !important;border-radius:0 !important;max-height:none !important;overflow:visible !important;animation:none !important}
   body.printing .pdf-toolbar{display:none !important}
   body.printing .pdf-paper{padding:0 !important;max-width:100% !important;border-radius:0 !important;box-shadow:none !important;color:#000 !important;background:#fff !important}
   body.printing .pdf-q{page-break-inside:avoid;break-inside:avoid}
   body.printing .pdf-ans{page-break-inside:avoid;break-inside:avoid}
-  body.printing .pdf-header{padding-bottom:12px;border-bottom:1.5px solid #000}
-  body.printing .pdf-header h1{font-size:20px;margin-bottom:12px}
-  body.printing .pdf-opts{font-size:12.5px}
-  body.printing .pdf-q-line{font-size:13px}
 }
+.pdf-toolbar{display:flex;gap:10px;justify-content:flex-end;align-items:center;margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid var(--border);flex-wrap:wrap}
+.pdf-paper{background:#fff;color:#111;padding:26px 32px;font-family:"Times New Roman",Georgia,"SimSun",serif;border-radius:12px;max-width:780px;margin:0 auto;line-height:1.5}
+.pdf-header{text-align:center;padding-bottom:14px;border-bottom:2px solid #333;margin-bottom:22px}
+.pdf-header h1{margin:0 0 14px;font-size:22px;font-weight:700;letter-spacing:3px}
+.pdf-meta{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px 24px;font-size:13px;color:#333;margin-bottom:10px}
+.pdf-meta span{white-space:nowrap}
+.pdf-subtitle{font-size:11.5px;color:#888;margin-top:4px;border-top:1px dashed #ddd;padding-top:8px}
+.pdf-section-title{font-size:14px;font-weight:700;margin:22px 0 14px;letter-spacing:1px}
+.pdf-q{margin-bottom:16px;page-break-inside:avoid}
+.pdf-q-line{display:flex;gap:6px;margin-bottom:6px;font-size:14px;line-height:1.75}
+.pdf-num{font-weight:700;flex-shrink:0;min-width:24px}
+.pdf-q-text{flex:1}
+.pdf-blank{display:inline-block;min-width:72px;border-bottom:1px solid #333;margin:0 4px;height:1em;vertical-align:-2px}
+.pdf-hint{color:#666;font-size:12px;margin-left:4px;font-weight:400}
+.pdf-opts{display:grid;grid-template-columns:1fr 1fr;gap:4px 20px;padding-left:30px;font-size:13.5px;line-height:1.8}
+.pdf-opt{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pdf-ans{margin-top:6px;margin-left:30px;padding:8px 12px;background:#f0fdf4;border-left:3px solid #10b981;font-size:12.5px;color:#333;line-height:1.65;border-radius:0 6px 6px 0}
+.pdf-ans b{color:#059669;font-weight:700}
+.pdf-footer{text-align:center;margin-top:32px;padding-top:16px;border-top:1px dashed #ccc;font-size:11.5px;color:#999;letter-spacing:6px}
+.pdf-watermark{text-align:center;font-size:10px;color:#ccc;margin-top:14px;letter-spacing:1px}
 </style>
 </head>
 <body>
@@ -528,6 +538,7 @@ select.nice{border:1px solid var(--border);background:var(--card);color:var(--te
         <p class="sub">主题库 · 刷题 · 数据中心 · 听力 · 组卷</p>
       </div>
       <div class="top-icons">
+        <button class="icon-btn" id="pomodoroBtn" title="番茄钟">🍅</button>
         <button class="icon-btn" id="dailyBtn" title="每日一题">🎯</button>
         <button class="icon-btn" id="quickReviewBtn" title="智能复习">⚡</button>
         <button class="icon-btn" id="voiceBtn" title="语音设置">🎙️</button>
@@ -917,6 +928,21 @@ select.nice{border:1px solid var(--border);background:var(--card);color:var(--te
 
 <div class="ov-tip" id="ovTip"></div>
 
+<div class="pomodoro-widget" id="pomodoroWidget">
+  <div class="pomodoro-head">
+    <span class="ico">🍅</span>
+    <span class="pomodoro-label" id="pomodoroLabel">点击开始专注</span>
+    <button class="pomodoro-close" id="pomodoroClose" title="关闭">×</button>
+  </div>
+  <div class="pomodoro-time" id="pomodoroTime">25:00</div>
+  <div class="pomodoro-progress"><i id="pomodoroBar" style="width:100%"></i></div>
+  <div class="pomodoro-actions">
+    <button id="pomodoroToggle" class="primary">开始</button>
+    <button id="pomodoroReset">重置</button>
+  </div>
+  <div class="pomodoro-tip">25 分钟专注 + 5 分钟休息</div>
+</div>
+
 <div class="sheet" id="mobileSheet">
   <div class="sheet-panel">
     <div class="sheet-handle"></div>
@@ -1018,27 +1044,10 @@ function fmtDur(s){const m=Math.floor(s/60);const ss=s%60;return `${m}:${String(
 function isMobile(){return window.matchMedia('(max-width: 760px)').matches;}
 function normalize(s){return String(s||'').toLowerCase().trim().replace(/[’‘`´]/g,"'").replace(/[.,!?;:]+$/g,'').replace(/\s+/g,' ');}
 
-/* ============ 数据自动迁移（把旧 key 的数据搬到新 key） ============ */
+/* 数据自动迁移 */
 (function autoMigrate(){
-  const pairs = [
-    ['q7g-lib-v4','q7g-lib-v3'],['q7g-lib-v4','q7g-lib-v2'],
-    ['q7g-wrong-v4','q7g-wrong-v3'],['q7g-wrong-v4','q7g-wrong-v2'],['q7g-wrong-v4','q7g-wrong'],
-    ['q7g-papers-v4','q7g-papers-v3'],['q7g-papers-v4','q7g-papers-v2'],['q7g-papers-v4','q7g-papers'],
-    ['q7g-session-v3','q7g-session-v2'],['q7g-session-v3','q7g-session'],
-    ['q7g-stats-v1','q7g-stats-v2'],
-    ['q7g-note-v1','q7g-note-v2'],
-    ['q7g-goal-v1','q7g-goal-v2'],
-    ['q7g-ach-v1','q7g-ach-v2'],
-    ['q7g-star-v1','q7g-star-v5'],
-    ['q7g-daily-v4','q7g-daily-v5'],['q7g-daily-v4','q7g-daily-v1'],
-  ];
-  pairs.forEach(([t,s])=>{
-    try{
-      if(!localStorage.getItem(t) && localStorage.getItem(s)){
-        localStorage.setItem(t, localStorage.getItem(s));
-      }
-    }catch(e){}
-  });
+  const pairs=[['q7g-lib-v4','q7g-lib-v3'],['q7g-lib-v4','q7g-lib-v2'],['q7g-wrong-v4','q7g-wrong-v3'],['q7g-wrong-v4','q7g-wrong-v2'],['q7g-wrong-v4','q7g-wrong'],['q7g-papers-v4','q7g-papers-v3'],['q7g-papers-v4','q7g-papers-v2'],['q7g-papers-v4','q7g-papers'],['q7g-session-v3','q7g-session-v2'],['q7g-session-v3','q7g-session'],['q7g-stats-v1','q7g-stats-v2'],['q7g-note-v1','q7g-note-v2'],['q7g-goal-v1','q7g-goal-v2'],['q7g-ach-v1','q7g-ach-v2'],['q7g-star-v1','q7g-star-v5'],['q7g-daily-v4','q7g-daily-v5'],['q7g-daily-v4','q7g-daily-v1']];
+  pairs.forEach(([t,s])=>{try{if(!localStorage.getItem(t)&&localStorage.getItem(s))localStorage.setItem(t,localStorage.getItem(s));}catch(e){}});
 })();
 
 /* ============ 弹窗 ============ */
@@ -1122,7 +1131,6 @@ const NOTES=[
   {cat:'misc',title:'虚拟语气（基础）',points:['if 从句与现在事实相反：从句用过去时，主句用 would + 动词原形','if 从句与过去事实相反：从句用 had + 过去分词，主句用 would have + 过去分词','<code>I wish</code> 后跟从句也用虚拟语气','be 动词在虚拟语气里都用 <code>were</code>'],examples:[{en:'If I <em>were</em> you, I <em>would</em> work harder.',cn:'如果我是你，我会更努力。'}],tip:'<b>虚拟语气的 be 动词永远用 were</b>。'}
 ];
 
-/* ============ 语法题库 ============ */
 const RAW=[
 ['plural','There are three ______ in the kitchen.',['mouse','mice','mouses','mices'],1,'mouse','mouse → <b>mice</b>'],
 ['plural','My father bought two ______ of bread.',['loaf','loafs','loaves','loafes'],2,'loaf','-f → -ves：<b>loaves</b>'],
@@ -1390,52 +1398,52 @@ const QUESTIONS=RAW.map((r,i)=>{
 });
 const Q_MAP={};QUESTIONS.forEach(q=>Q_MAP[q.id]=q);
 
-/* ============ 听力独立题库 ============ */
+/* 听力独立题库 */
 const LISTENING_BANK=[
-  {id:'L1',type:'qa',audio:'I usually get up at six in the morning.',q:'When does the speaker get up?',options:['At 6:00','At 7:00','At 8:00','At 9:00'],answer:0,explain:'"at six in the morning" 表示早上六点。'},
-  {id:'L2',type:'qa',audio:'My favorite subject is English because it is interesting.',q:'Why does the speaker like English?',options:['Because it is easy','Because it is interesting','Because it is useful','Because the teacher is kind'],answer:1,explain:'"because it is interesting" 直接说明原因。'},
-  {id:'L3',type:'qa',audio:'I go to school by bike every day.',q:'How does the speaker go to school?',options:['By bus','By bike','On foot','By car'],answer:1,explain:'"by bike" 表示骑自行车。'},
-  {id:'L4',type:'qa',audio:'My father is a doctor. He works in a hospital.',q:'Where does the speaker\'s father work?',options:['In a school','In a bank','In a hospital','In a shop'],answer:2,explain:'"works in a hospital" 直接说明。'},
-  {id:'L5',type:'qa',audio:'There are forty students in our class.',q:'How many students are there in the class?',options:['14','40','44','4'],answer:1,explain:'"forty students" = 40 名学生。'},
-  {id:'L6',type:'qa',audio:'I have two brothers and one sister.',q:'How many sisters does the speaker have?',options:['One','Two','Three','Four'],answer:0,explain:'"one sister" 表示有一个姐妹。'},
-  {id:'L7',type:'qa',audio:'The weather is sunny and warm today.',q:'What is the weather like today?',options:['Rainy','Sunny and warm','Cold and windy','Cloudy'],answer:1,explain:'"sunny and warm" 直接说明天气。'},
-  {id:'L8',type:'qa',audio:'I would like a cup of tea, please.',q:'What would the speaker like?',options:['A cup of coffee','A cup of tea','A glass of water','A bottle of juice'],answer:1,explain:'"a cup of tea" 表示一杯茶。'},
-  {id:'L9',type:'qa',audio:'The movie starts at seven thirty.',q:'When does the movie start?',options:['At 6:30','At 7:00','At 7:30','At 8:00'],answer:2,explain:'"seven thirty" = 7:30。'},
-  {id:'L10',type:'qa',audio:'I am going to visit my grandparents this weekend.',q:'What is the speaker going to do this weekend?',options:['Go shopping','Visit grandparents','Do homework','Play sports'],answer:1,explain:'"visit my grandparents" 说明计划。'},
-  {id:'L11',type:'qa',audio:'My birthday is on October 1st.',q:'When is the speaker\'s birthday?',options:['January 1st','October 1st','December 1st','September 1st'],answer:1,explain:'"October 1st" 是生日日期。'},
-  {id:'L12',type:'qa',audio:'I am from Canada, but I live in China now.',q:'Where is the speaker from?',options:['China','Canada','America','England'],answer:1,explain:'"from Canada" 表示来自加拿大。'},
-  {id:'L13',type:'qa',audio:'My mother is cooking in the kitchen.',q:'What is the mother doing?',options:['Reading','Cooking','Sleeping','Watching TV'],answer:1,explain:'"cooking in the kitchen" 表示正在做饭。'},
-  {id:'L14',type:'qa',audio:'I want to be a teacher when I grow up.',q:'What does the speaker want to be?',options:['A doctor','A teacher','A driver','A writer'],answer:1,explain:'"a teacher" 说明理想职业。'},
-  {id:'L15',type:'qa',audio:'There is a bookshop near our school.',q:'What is near the school?',options:['A library','A bookshop','A hospital','A park'],answer:1,explain:'"a bookshop near our school" 说明书店在学校附近。'},
-  {id:'L16',type:'qa',audio:'I often play basketball with my friends after school.',q:'What does the speaker often do after school?',options:['Play football','Play basketball','Play tennis','Play ping-pong'],answer:1,explain:'"play basketball" 说明活动。'},
-  {id:'L17',type:'qa',audio:'The cat is sleeping under the tree.',q:'Where is the cat?',options:['On the tree','Under the tree','In the house','Behind the tree'],answer:1,explain:'"under the tree" 说明猫的位置。'},
-  {id:'L18',type:'qa',audio:'I have English class on Monday and Wednesday.',q:'When does the speaker have English class?',options:['Monday and Tuesday','Monday and Wednesday','Tuesday and Thursday','Wednesday and Friday'],answer:1,explain:'"Monday and Wednesday" 说明上课时间。'},
-  {id:'L19',type:'qa',audio:'The girl in the red dress is my sister.',q:'Which girl is the speaker\'s sister?',options:['The girl in the blue dress','The girl in the red dress','The girl in the white dress','The girl in the yellow dress'],answer:1,explain:'"in the red dress" 是识别特征。'},
-  {id:'L20',type:'qa',audio:'The train leaves at nine o\'clock in the morning.',q:'When does the train leave?',options:['At 9:00 am','At 9:00 pm','At 10:00 am','At 8:00 am'],answer:0,explain:'"nine o\'clock in the morning" = 上午9点。'},
-  {id:'L21',type:'aq',audio:'I am fine, thank you.',q:'听答句，选出对应的问句',options:['How are you?','What\'s your name?','How old are you?','Where are you from?'],answer:0,explain:'"I am fine" 是对 "How are you?" 的经典回答。'},
-  {id:'L22',type:'aq',audio:'My name is Tom.',q:'听答句，选出对应的问句',options:['How are you?','What\'s your name?','Where are you?','Who is he?'],answer:1,explain:'"My name is..." 回答 "What\'s your name?"。'},
-  {id:'L23',type:'aq',audio:'I am twelve years old.',q:'听答句，选出对应的问句',options:['How are you?','How old are you?','What grade are you in?','When is your birthday?'],answer:1,explain:'"twelve years old" 回答年龄。'},
-  {id:'L24',type:'aq',audio:'I am from Australia.',q:'听答句，选出对应的问句',options:['Where are you from?','Where are you going?','How are you?','Who are you?'],answer:0,explain:'"from Australia" 回答 "Where are you from?"。'},
-  {id:'L25',type:'aq',audio:'It is Monday today.',q:'听答句，选出对应的问句',options:['What day is it today?','What\'s the date today?','What time is it?','How\'s the weather?'],answer:0,explain:'"Monday" 是一周的哪一天。'},
-  {id:'L26',type:'aq',audio:'It\'s eight o\'clock.',q:'听答句，选出对应的问句',options:['What day is it?','What time is it?','When is it?','How is it?'],answer:1,explain:'"eight o\'clock" 回答具体时间。'},
-  {id:'L27',type:'aq',audio:'Yes, I can.',q:'听答句，选出对应的问句',options:['Do you like it?','Can you swim?','Are you a student?','Did you go?'],answer:1,explain:'"Yes, I can" 回答 can 引导的疑问句。'},
-  {id:'L28',type:'aq',audio:'I am doing my homework.',q:'听答句，选出对应的问句',options:['What do you do?','What are you doing?','What did you do?','What will you do?'],answer:1,explain:'"am doing" 回答现在进行时的问题。'},
-  {id:'L29',type:'aq',audio:'By bus.',q:'听答句，选出对应的问句',options:['Where are you going?','How do you go to school?','When do you go?','Why do you go?'],answer:1,explain:'"By bus" 回答交通方式。'},
-  {id:'L30',type:'aq',audio:'Because it\'s interesting.',q:'听答句，选出对应的问句',options:['What is it?','Why do you like it?','Where is it?','How is it?'],answer:1,explain:'"Because..." 回答 "Why..." 引导的疑问句。'},
-  {id:'L31',type:'aq',audio:'She is my sister.',q:'听答句，选出对应的问句',options:['Who is she?','How is she?','Where is she?','What is she?'],answer:0,explain:'"my sister" 回答身份。'},
-  {id:'L32',type:'aq',audio:'It\'s sunny.',q:'听答句，选出对应的问句',options:['What day is it?','What\'s the weather like?','What time is it?','How are you?'],answer:1,explain:'"sunny" 描述天气。'},
-  {id:'L33',type:'aq',audio:'I am in Class Two.',q:'听答句，选出对应的问句',options:['What class are you in?','What grade are you in?','Where are you?','How are you?'],answer:0,explain:'"Class Two" 回答班级。'},
-  {id:'L34',type:'aq',audio:'At seven in the morning.',q:'听答句，选出对应的问句',options:['What time is it?','When do you get up?','How do you get up?','Where do you get up?'],answer:1,explain:'回答具体时间点。'},
-  {id:'L35',type:'aq',audio:'Yes, please.',q:'听答句，选出对应的问句',options:['Would you like some tea?','Do you like tea?','Are you tired?','Can you help me?'],answer:0,explain:'"Yes, please" 回答 "Would you like..." 的邀请。'},
-  {id:'L36',type:'aq',audio:'No, I haven\'t.',q:'听答句，选出对应的问句',options:['Do you have a pen?','Have you finished your homework?','Did you go there?','Are you hungry?'],answer:1,explain:'"haven\'t" 回答现在完成时。'},
-  {id:'L37',type:'aq',audio:'It\'s a book.',q:'听答句，选出对应的问句',options:['Who is it?','What is it?','Where is it?','How is it?'],answer:1,explain:'"a book" 回答物品。'},
-  {id:'L38',type:'aq',audio:'It\'s red.',q:'听答句，选出对应的问句',options:['What color is it?','What is it?','Where is it?','How is it?'],answer:0,explain:'"red" 是颜色。'},
-  {id:'L39',type:'aq',audio:'I want to join the music club.',q:'听答句，选出对应的问句',options:['What club do you want to join?','Do you like music?','Can you sing?','What do you do?'],answer:0,explain:'回答"想加入什么俱乐部"。'},
-  {id:'L40',type:'aq',audio:'My favorite subject is math.',q:'听答句，选出对应的问句',options:['What do you like?','What\'s your favorite subject?','Do you like math?','How is math?'],answer:1,explain:'回答"最喜欢的科目"。'}
+{id:'L1',type:'qa',audio:'I usually get up at six in the morning.',q:'When does the speaker get up?',options:['At 6:00','At 7:00','At 8:00','At 9:00'],answer:0,explain:'"at six in the morning" 表示早上六点。'},
+{id:'L2',type:'qa',audio:'My favorite subject is English because it is interesting.',q:'Why does the speaker like English?',options:['Because it is easy','Because it is interesting','Because it is useful','Because the teacher is kind'],answer:1,explain:'"because it is interesting" 直接说明原因。'},
+{id:'L3',type:'qa',audio:'I go to school by bike every day.',q:'How does the speaker go to school?',options:['By bus','By bike','On foot','By car'],answer:1,explain:'"by bike" 表示骑自行车。'},
+{id:'L4',type:'qa',audio:'My father is a doctor. He works in a hospital.',q:'Where does the speaker\'s father work?',options:['In a school','In a bank','In a hospital','In a shop'],answer:2,explain:'"works in a hospital" 直接说明。'},
+{id:'L5',type:'qa',audio:'There are forty students in our class.',q:'How many students are there in the class?',options:['14','40','44','4'],answer:1,explain:'"forty students" = 40 名学生。'},
+{id:'L6',type:'qa',audio:'I have two brothers and one sister.',q:'How many sisters does the speaker have?',options:['One','Two','Three','Four'],answer:0,explain:'"one sister" 表示有一个姐妹。'},
+{id:'L7',type:'qa',audio:'The weather is sunny and warm today.',q:'What is the weather like today?',options:['Rainy','Sunny and warm','Cold and windy','Cloudy'],answer:1,explain:'"sunny and warm" 直接说明天气。'},
+{id:'L8',type:'qa',audio:'I would like a cup of tea, please.',q:'What would the speaker like?',options:['A cup of coffee','A cup of tea','A glass of water','A bottle of juice'],answer:1,explain:'"a cup of tea" 表示一杯茶。'},
+{id:'L9',type:'qa',audio:'The movie starts at seven thirty.',q:'When does the movie start?',options:['At 6:30','At 7:00','At 7:30','At 8:00'],answer:2,explain:'"seven thirty" = 7:30。'},
+{id:'L10',type:'qa',audio:'I am going to visit my grandparents this weekend.',q:'What is the speaker going to do this weekend?',options:['Go shopping','Visit grandparents','Do homework','Play sports'],answer:1,explain:'"visit my grandparents" 说明计划。'},
+{id:'L11',type:'qa',audio:'My birthday is on October 1st.',q:'When is the speaker\'s birthday?',options:['January 1st','October 1st','December 1st','September 1st'],answer:1,explain:'"October 1st" 是生日日期。'},
+{id:'L12',type:'qa',audio:'I am from Canada, but I live in China now.',q:'Where is the speaker from?',options:['China','Canada','America','England'],answer:1,explain:'"from Canada" 表示来自加拿大。'},
+{id:'L13',type:'qa',audio:'My mother is cooking in the kitchen.',q:'What is the mother doing?',options:['Reading','Cooking','Sleeping','Watching TV'],answer:1,explain:'"cooking in the kitchen" 表示正在做饭。'},
+{id:'L14',type:'qa',audio:'I want to be a teacher when I grow up.',q:'What does the speaker want to be?',options:['A doctor','A teacher','A driver','A writer'],answer:1,explain:'"a teacher" 说明理想职业。'},
+{id:'L15',type:'qa',audio:'There is a bookshop near our school.',q:'What is near the school?',options:['A library','A bookshop','A hospital','A park'],answer:1,explain:'"a bookshop near our school" 说明书店在学校附近。'},
+{id:'L16',type:'qa',audio:'I often play basketball with my friends after school.',q:'What does the speaker often do after school?',options:['Play football','Play basketball','Play tennis','Play ping-pong'],answer:1,explain:'"play basketball" 说明活动。'},
+{id:'L17',type:'qa',audio:'The cat is sleeping under the tree.',q:'Where is the cat?',options:['On the tree','Under the tree','In the house','Behind the tree'],answer:1,explain:'"under the tree" 说明猫的位置。'},
+{id:'L18',type:'qa',audio:'I have English class on Monday and Wednesday.',q:'When does the speaker have English class?',options:['Monday and Tuesday','Monday and Wednesday','Tuesday and Thursday','Wednesday and Friday'],answer:1,explain:'"Monday and Wednesday" 说明上课时间。'},
+{id:'L19',type:'qa',audio:'The girl in the red dress is my sister.',q:'Which girl is the speaker\'s sister?',options:['The girl in the blue dress','The girl in the red dress','The girl in the white dress','The girl in the yellow dress'],answer:1,explain:'"in the red dress" 是识别特征。'},
+{id:'L20',type:'qa',audio:'The train leaves at nine o\'clock in the morning.',q:'When does the train leave?',options:['At 9:00 am','At 9:00 pm','At 10:00 am','At 8:00 am'],answer:0,explain:'"nine o\'clock in the morning" = 上午9点。'},
+{id:'L21',type:'aq',audio:'I am fine, thank you.',q:'听答句，选出对应的问句',options:['How are you?','What\'s your name?','How old are you?','Where are you from?'],answer:0,explain:'"I am fine" 是对 "How are you?" 的经典回答。'},
+{id:'L22',type:'aq',audio:'My name is Tom.',q:'听答句，选出对应的问句',options:['How are you?','What\'s your name?','Where are you?','Who is he?'],answer:1,explain:'"My name is..." 回答 "What\'s your name?"。'},
+{id:'L23',type:'aq',audio:'I am twelve years old.',q:'听答句，选出对应的问句',options:['How are you?','How old are you?','What grade are you in?','When is your birthday?'],answer:1,explain:'"twelve years old" 回答年龄。'},
+{id:'L24',type:'aq',audio:'I am from Australia.',q:'听答句，选出对应的问句',options:['Where are you from?','Where are you going?','How are you?','Who are you?'],answer:0,explain:'"from Australia" 回答 "Where are you from?"。'},
+{id:'L25',type:'aq',audio:'It is Monday today.',q:'听答句，选出对应的问句',options:['What day is it today?','What\'s the date today?','What time is it?','How\'s the weather?'],answer:0,explain:'"Monday" 是一周的哪一天。'},
+{id:'L26',type:'aq',audio:'It\'s eight o\'clock.',q:'听答句，选出对应的问句',options:['What day is it?','What time is it?','When is it?','How is it?'],answer:1,explain:'"eight o\'clock" 回答具体时间。'},
+{id:'L27',type:'aq',audio:'Yes, I can.',q:'听答句，选出对应的问句',options:['Do you like it?','Can you swim?','Are you a student?','Did you go?'],answer:1,explain:'"Yes, I can" 回答 can 引导的疑问句。'},
+{id:'L28',type:'aq',audio:'I am doing my homework.',q:'听答句，选出对应的问句',options:['What do you do?','What are you doing?','What did you do?','What will you do?'],answer:1,explain:'"am doing" 回答现在进行时的问题。'},
+{id:'L29',type:'aq',audio:'By bus.',q:'听答句，选出对应的问句',options:['Where are you going?','How do you go to school?','When do you go?','Why do you go?'],answer:1,explain:'"By bus" 回答交通方式。'},
+{id:'L30',type:'aq',audio:'Because it\'s interesting.',q:'听答句，选出对应的问句',options:['What is it?','Why do you like it?','Where is it?','How is it?'],answer:1,explain:'"Because..." 回答 "Why..." 引导的疑问句。'},
+{id:'L31',type:'aq',audio:'She is my sister.',q:'听答句，选出对应的问句',options:['Who is she?','How is she?','Where is she?','What is she?'],answer:0,explain:'"my sister" 回答身份。'},
+{id:'L32',type:'aq',audio:'It\'s sunny.',q:'听答句，选出对应的问句',options:['What day is it?','What\'s the weather like?','What time is it?','How are you?'],answer:1,explain:'"sunny" 描述天气。'},
+{id:'L33',type:'aq',audio:'I am in Class Two.',q:'听答句，选出对应的问句',options:['What class are you in?','What grade are you in?','Where are you?','How are you?'],answer:0,explain:'"Class Two" 回答班级。'},
+{id:'L34',type:'aq',audio:'At seven in the morning.',q:'听答句，选出对应的问句',options:['What time is it?','When do you get up?','How do you get up?','Where do you get up?'],answer:1,explain:'回答具体时间点。'},
+{id:'L35',type:'aq',audio:'Yes, please.',q:'听答句，选出对应的问句',options:['Would you like some tea?','Do you like tea?','Are you tired?','Can you help me?'],answer:0,explain:'"Yes, please" 回答 "Would you like..." 的邀请。'},
+{id:'L36',type:'aq',audio:'No, I haven\'t.',q:'听答句，选出对应的问句',options:['Do you have a pen?','Have you finished your homework?','Did you go there?','Are you hungry?'],answer:1,explain:'"haven\'t" 回答现在完成时。'},
+{id:'L37',type:'aq',audio:'It\'s a book.',q:'听答句，选出对应的问句',options:['Who is it?','What is it?','Where is it?','How is it?'],answer:1,explain:'"a book" 回答物品。'},
+{id:'L38',type:'aq',audio:'It\'s red.',q:'听答句，选出对应的问句',options:['What color is it?','What is it?','Where is it?','How is it?'],answer:0,explain:'"red" 是颜色。'},
+{id:'L39',type:'aq',audio:'I want to join the music club.',q:'听答句，选出对应的问句',options:['What club do you want to join?','Do you like music?','Can you sing?','What do you do?'],answer:0,explain:'回答"想加入什么俱乐部"。'},
+{id:'L40',type:'aq',audio:'My favorite subject is math.',q:'听答句，选出对应的问句',options:['What do you like?','What\'s your favorite subject?','Do you like math?','How is math?'],answer:1,explain:'回答"最喜欢的科目"。'}
 ];
 const LISTEN_MAP={};LISTENING_BANK.forEach(q=>LISTEN_MAP[q.id]=q);
 
-/* ============ 成就 ============ */
+/* 成就（已删除"完美主义"） */
 const ACHIEVEMENTS=[
   {id:'first',icon:'🌱',name:'初学者',desc:'完成第一次练习',check:(s)=>s.totalAnswered>=1},
   {id:'a10',icon:'📖',name:'小试牛刀',desc:'答对 10 题',check:(s)=>s.totalCorrect>=10},
@@ -1443,7 +1451,6 @@ const ACHIEVEMENTS=[
   {id:'a100',icon:'🎓',name:'学富五车',desc:'答对 100 题',check:(s)=>s.totalCorrect>=100},
   {id:'s3',icon:'🔥',name:'三日之约',desc:'连续学习 3 天',check:(s)=>s.streak>=3},
   {id:'s7',icon:'⚡',name:'一周不断',desc:'连续学习 7 天',check:(s)=>s.streak>=7},
-  {id:'pf',icon:'✨',name:'完美主义',desc:'一轮全对',check:(s)=>s.hasPerfect},
   {id:'master',icon:'👑',name:'全部掌握',desc:'主题库全部已掌握',check:()=>QUESTIONS.every(q=>getSt(q.id)===2)},
   {id:'star',icon:'⭐',name:'收藏家',desc:'收藏 10 道题',check:()=>starSet.size>=10},
   {id:'clean',icon:'🧹',name:'清道夫',desc:'清空错题本',check:(s)=>s.hasClearedWrong},
@@ -1451,7 +1458,7 @@ const ACHIEVEMENTS=[
   {id:'note',icon:'✍️',name:'笔记大师',desc:'写 5 条笔记',check:()=>Object.keys(noteMap).length>=5},
 ];
 
-/* ============ 存储 ============ */
+/* 存储 */
 const K={
   lib:'q7g-lib-v4',wrong:'q7g-wrong-v4',papers:'q7g-papers-v4',session:'q7g-session-v3',
   theme:'q7g-theme',star:'q7g-star-v1',daily:'q7g-daily-v4',stats:'q7g-stats-v1',
@@ -1464,7 +1471,8 @@ let currentSession=load(K.session,null);
 let starSet=new Set(load(K.star,[]));
 let pickedIds=new Set();
 let noteMap=load(K.note,{});
-let stats=load(K.stats,{totalAnswered:0,totalCorrect:0,dailyLog:{},streak:0,lastStudyDate:'',hasPerfect:false,hasClearedWrong:false});
+let stats=load(K.stats,{totalAnswered:0,totalCorrect:0,dailyLog:{},streak:0,lastStudyDate:'',hasClearedWrong:false});
+if(stats.hasPerfect!==undefined)delete stats.hasPerfect; // 清理已删除字段
 let unlockedAchievements=new Set(load(K.achieve,[]));
 let dailyGoal=load(K.goal,20);
 
@@ -1475,11 +1483,16 @@ function markWrong(qid){setSt(qid,1);}
 function isStar(qid){return starSet.has(qid);}
 function toggleStar(qid){if(starSet.has(qid))starSet.delete(qid);else starSet.add(qid);save(K.star,[...starSet]);}
 
-function recordAnswer(correct){
+/* 记录答题：同一天同一题只计一次，防止刷分 */
+function recordAnswer(correct, qid){
   const today=todayStr();
+  if(!stats.dailyLog[today])stats.dailyLog[today]={answered:0,correct:0,answeredIds:[]};
+  if(!stats.dailyLog[today].answeredIds)stats.dailyLog[today].answeredIds=[];
+  // 同一题今日已答过：跳过累计
+  if(qid && stats.dailyLog[today].answeredIds.includes(qid))return;
+  if(qid)stats.dailyLog[today].answeredIds.push(qid);
   stats.totalAnswered++;
   if(correct)stats.totalCorrect++;
-  if(!stats.dailyLog[today])stats.dailyLog[today]={answered:0,correct:0};
   stats.dailyLog[today].answered++;
   if(correct)stats.dailyLog[today].correct++;
   if(stats.lastStudyDate!==today){
@@ -1518,7 +1531,7 @@ function checkGoal(){
   if(t.answered===dailyGoal)toast(`🎉 今日目标达成！完成 ${dailyGoal} 题`,'ok');
 }
 
-/* ============ TTS 智能语音 ============ */
+/* TTS */
 let allVoices=[];
 let selectedVoiceName=localStorage.getItem('q7g-voice-name')||'';
 let speechRate=parseFloat(localStorage.getItem('q7g-rate'))||0.92;
@@ -1527,10 +1540,7 @@ function loadVoices(){
   const v=window.speechSynthesis.getVoices();
   if(v.length)allVoices=v.filter(x=>/^en(-|_)?/i.test(x.lang));
 }
-if('speechSynthesis' in window){
-  loadVoices();
-  window.speechSynthesis.onvoiceschanged=loadVoices;
-}
+if('speechSynthesis' in window){loadVoices();window.speechSynthesis.onvoiceschanged=loadVoices;}
 function voiceScore(v){
   const n=v.name.toLowerCase();
   let s=0;
@@ -1545,10 +1555,7 @@ function voiceScore(v){
 }
 function pickBestVoice(){
   if(!allVoices.length)return null;
-  if(selectedVoiceName){
-    const hit=allVoices.find(v=>v.name===selectedVoiceName);
-    if(hit)return hit;
-  }
+  if(selectedVoiceName){const hit=allVoices.find(v=>v.name===selectedVoiceName);if(hit)return hit;}
   return allVoices.slice().sort((a,b)=>voiceScore(b)-voiceScore(a))[0]||null;
 }
 function speak(text){
@@ -1563,21 +1570,11 @@ function speak(text){
     window.speechSynthesis.speak(u);
   }catch(e){}
 }
-function stripHTML(s){
-  return String(s||'')
-    .replace(/<[^>]+>/g,' ')
-    .replace(/&[a-z]+;/gi,' ')
-    .replace(/_{2,}/g,' blank ')
-    .replace(/\s+/g,' ')
-    .trim();
-}
+function stripHTML(s){return String(s||'').replace(/<[^>]+>/g,' ').replace(/&[a-z]+;/gi,' ').replace(/_{2,}/g,' blank ').replace(/\s+/g,' ').trim();}
 const voiceModal=document.getElementById('voiceModal');
 const voiceListEl=document.getElementById('voiceList');
 function renderVoiceList(){
-  if(!allVoices.length){
-    voiceListEl.innerHTML='<div style="padding:16px;text-align:center;color:var(--text-sub);font-size:13px">未检测到英文语音，请检查系统语音设置</div>';
-    return;
-  }
+  if(!allVoices.length){voiceListEl.innerHTML='<div style="padding:16px;text-align:center;color:var(--text-sub);font-size:13px">未检测到英文语音，请检查系统语音设置</div>';return;}
   const sorted=allVoices.slice().sort((a,b)=>voiceScore(b)-voiceScore(a));
   const current=pickBestVoice();
   voiceListEl.innerHTML=sorted.map(v=>`
@@ -1610,22 +1607,16 @@ function renderVoiceList(){
     });
   });
 }
-document.getElementById('voiceBtn').addEventListener('click',()=>{
-  loadVoices();renderVoiceList();voiceModal.classList.add('show');
-});
+document.getElementById('voiceBtn').addEventListener('click',()=>{loadVoices();renderVoiceList();voiceModal.classList.add('show');});
 document.getElementById('voiceClose').addEventListener('click',()=>voiceModal.classList.remove('show'));
 document.getElementById('voiceTest').addEventListener('click',()=>speak('Good morning! How are you today?'));
 voiceModal.addEventListener('click',e=>{if(e.target===voiceModal)voiceModal.classList.remove('show');});
 const rateRange=document.getElementById('rateRange');
 rateRange.value=speechRate;
 document.getElementById('rateVal').textContent=speechRate.toFixed(2);
-rateRange.addEventListener('input',()=>{
-  speechRate=parseFloat(rateRange.value);
-  document.getElementById('rateVal').textContent=speechRate.toFixed(2);
-  localStorage.setItem('q7g-rate',speechRate);
-});
+rateRange.addEventListener('input',()=>{speechRate=parseFloat(rateRange.value);document.getElementById('rateVal').textContent=speechRate.toFixed(2);localStorage.setItem('q7g-rate',speechRate);});
 
-/* ============ Tab ============ */
+/* Tab */
 let currentTab='lib';
 const views={lib:'viewLib',notes:'viewNotes',practice:'viewPractice',dash:'viewDash',wrong:'viewWrong',paper:'viewPaper'};
 const toolbars={lib:'libTools',notes:'notesTools',practice:'practiceTools',dash:'dashTools',wrong:'wrongTools',paper:'paperTools'};
@@ -1644,7 +1635,7 @@ document.querySelectorAll('.tab').forEach(btn=>{
   });
 });
 
-/* ============ 悬浮 ============ */
+/* 悬浮 */
 const ovTip=document.getElementById('ovTip');
 function showOvTip(t,s,x,y){ovTip.innerHTML=esc(t)+(s?`<span class="sub">${esc(s)}</span>`:'');ovTip.style.left=x+'px';ovTip.style.top=y+'px';ovTip.classList.add('show');}
 function hideOvTip(){ovTip.classList.remove('show');}
@@ -1655,7 +1646,7 @@ function bindSquare(sq,getTitle,getSub,onClick){
   sq.addEventListener('click',e=>{e.stopPropagation();hideOvTip();onClick();});
 }
 
-/* ============ 主题库 ============ */
+/* 主题库 */
 let libStatusFilter='all';
 let libCatFilter='all';
 let libKeyword='';
@@ -1837,7 +1828,7 @@ document.getElementById('libResetBtn')?.addEventListener('click',async()=>{
 });
 document.getElementById('libExportBtn')?.addEventListener('click',()=>exportAllData());
 
-/* ============ 讲解 ============ */
+/* 讲解 */
 let noteFilter='all';
 function renderNotes(){
   const grid=document.getElementById('notesGrid');
@@ -1848,6 +1839,7 @@ function renderNotes(){
     visible++;
     const card=document.createElement('article');
     card.className='note';
+    card.id='note-'+NOTES.indexOf(n);
     card.innerHTML=`
       <div class="note-head"><h3>${esc(n.title)}</h3><span class="note-cat">${CAT_LABEL[n.cat]||n.cat}</span></div>
       <ul class="note-points">${n.points.map(p=>`<li>${p}</li>`).join('')}</ul>
@@ -1865,7 +1857,7 @@ document.getElementById('noteFilters').addEventListener('click',e=>{
   renderNotes();
 });
 
-/* ============ 数据中心 ============ */
+/* 数据中心 */
 function renderDash(){
   document.getElementById('dStreak').textContent=stats.streak;
   const today=todayStr();
@@ -1882,9 +1874,7 @@ function renderDash(){
   document.getElementById('dMasterTotal').textContent=QUESTIONS.length;
   document.getElementById('goalBar').style.width=pct+'%';
   document.getElementById('goalText').innerHTML=`今日 <b>${t.answered}</b> / <b>${dailyGoal}</b> 题`;
-  const days=[];
-  const labels=['日','一','二','三','四','五','六'];
-  let weekTotal=0;
+  const days=[];const labels=['日','一','二','三','四','五','六'];let weekTotal=0;
   for(let i=6;i>=0;i--){
     const d=new Date(Date.now()-i*86400000);
     const ds=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
@@ -1916,7 +1906,7 @@ function renderDash(){
   renderCalendar();
 }
 
-/* ============ 学习日历 ============ */
+/* 学习日历 */
 let calCurrent=new Date();
 function renderCalendar(){
   const y=calCurrent.getFullYear();
@@ -1944,10 +1934,7 @@ function renderCalendar(){
     let intensity=0;
     if(cnt>0){
       if(monthMax<=1)intensity=3;
-      else{
-        const ratio=cnt/monthMax;
-        intensity=ratio>=0.66?3:ratio>=0.33?2:1;
-      }
+      else{const ratio=cnt/monthMax;intensity=ratio>=0.66?3:ratio>=0.33?2:1;}
     }
     let cls='cal-day';
     if(isToday)cls+=' today';
@@ -1974,7 +1961,7 @@ function renderCalendar(){
 document.getElementById('calPrev').addEventListener('click',()=>{calCurrent.setMonth(calCurrent.getMonth()-1);renderCalendar();});
 document.getElementById('calNext').addEventListener('click',()=>{calCurrent.setMonth(calCurrent.getMonth()+1);renderCalendar();});
 
-/* ============ 数据导出/导入 ============ */
+/* 数据导出导入 */
 document.getElementById('setGoalBtn').addEventListener('click',async()=>{
   const v=await askPrompt({title:'设定每日目标',msg:'每天计划做多少题？',value:String(dailyGoal),placeholder:'例如：20'});
   if(!v)return;
@@ -2014,7 +2001,7 @@ async function importAllData(){
   }catch(e){toast('导入失败：格式不正确','err');}
 }
 
-/* ============ 做题 ============ */
+/* 做题 */
 let practiceRange='all';
 let practiceCat='all';
 let practiceNum=20;
@@ -2041,7 +2028,6 @@ document.getElementById('practiceNumChips').addEventListener('click',e=>{
   document.querySelectorAll('#practiceNumChips .chip').forEach(c=>c.classList.toggle('active',c===btn));
 });
 document.getElementById('startPracticeBtn').addEventListener('click',()=>{
-  // 听力模式：独立题库
   if(practiceMode==='listen'){
     const shuffled=shuffle(LISTENING_BANK);
     const count=practiceNum==='all'?shuffled.length:Math.min(practiceNum,shuffled.length);
@@ -2093,7 +2079,7 @@ function renderSession(){
   const s=currentSession;
   if(s.idx>=s.qids.length){renderResult();return;}
   const q=Q_MAP[s.qids[s.idx]]||LISTEN_MAP[s.qids[s.idx]];
-  if(!q){s.idx++;renderSession();return;}
+  if(!q){s.idx++;saveSession();renderSession();return;}
   document.getElementById('playTitle').textContent=s.title;
   document.getElementById('playBarFill').style.width=(s.idx/s.qids.length*100)+'%';
   document.getElementById('playProgress').textContent=`第 ${s.idx+1} / ${s.qids.length} 题`;
@@ -2205,6 +2191,7 @@ function selectAnswer(idx){
 }
 function handleAnswer(correct,userAns,q,chosenIdx){
   const s=currentSession;
+  if(!s)return;
   const isListening=s.mode==='listen';
   s.answers[q.id]=chosenIdx!==undefined?chosenIdx:userAns;
   if(correct){
@@ -2212,12 +2199,9 @@ function handleAnswer(correct,userAns,q,chosenIdx){
     if(!isListening)markCorrect(q.id);
   }else{
     s.wrongIds.push(q.id);
-    if(!isListening){
-      markWrong(q.id);
-      addToWrongBook(q.id,chosenIdx!==undefined?chosenIdx:userAns);
-    }
+    if(!isListening){markWrong(q.id);addToWrongBook(q.id,chosenIdx!==undefined?chosenIdx:userAns);}
   }
-  recordAnswer(correct);
+  recordAnswer(correct,q.id);
   saveSession();
   const fb=document.getElementById('qFeedback');
   const isFill=s._isFill;
@@ -2235,7 +2219,15 @@ function handleAnswer(correct,userAns,q,chosenIdx){
       <button class="btn primary" id="nextQBtn">${s.idx+1>=s.qids.length?'查看结果 →':'下一题 →'}</button>
     </div>
   `;
-  document.getElementById('nextQBtn').addEventListener('click',()=>{s.idx++;saveSession();renderSession();});
+  const nextBtn=document.getElementById('nextQBtn');
+  if(nextBtn){
+    nextBtn.onclick=()=>{
+      if(currentSession!==s)return; // 防止会话被切换
+      s.idx++;
+      saveSession();
+      renderSession();
+    };
+  }
   document.getElementById('qNoteBtn').addEventListener('click',async()=>{
     const v=await askNote(noteMap[q.id]||'');
     if(v===null)return;
@@ -2261,6 +2253,7 @@ function buildPlayGrid(){
       ()=>`第 ${i+1} 题`,
       ()=>q.q.replace(/______+/g,'____'),
       ()=>{
+        if(currentSession!==s)return;
         s.idx=i;saveSession();renderSession();
         document.getElementById('playQGridWrap').hidden=true;
         document.getElementById('playCardWrap').hidden=false;
@@ -2283,9 +2276,6 @@ function renderResult(){
   const el=document.getElementById('practiceResult');el.hidden=false;
   const total=s.qids.length;
   const pct=total?Math.round(s.rightCount/total*100):0;
-  if(total>=5&&s.rightCount===total&&!stats.hasPerfect){
-    stats.hasPerfect=true;save(K.stats,stats);checkAchievements();
-  }
   let msg;
   if(pct===100)msg='完美！全对！🎉';
   else if(pct>=80)msg='很棒！再巩固一下错题 💪';
@@ -2315,13 +2305,13 @@ function renderResult(){
     </div>
   `;
   if(timerHandle){clearInterval(timerHandle);timerHandle=null;}
-  document.getElementById('resultBack').addEventListener('click',()=>{currentSession=null;localStorage.removeItem(K.session);backToSetup();});
+  document.getElementById('resultBack').onclick=()=>{currentSession=null;localStorage.removeItem(K.session);backToSetup();};
   const pw=document.getElementById('resultPracticeWrong');
-  if(pw)pw.addEventListener('click',()=>{startSession({type:'practice',title:'错题重做',qids:s.wrongIds.slice(),mode:s.mode});});
-  document.getElementById('resultDash').addEventListener('click',()=>{
+  if(pw)pw.onclick=()=>{startSession({type:'practice',title:'错题重做',qids:s.wrongIds.slice(),mode:s.mode});};
+  document.getElementById('resultDash').onclick=()=>{
     currentSession=null;localStorage.removeItem(K.session);backToSetup();
     document.querySelector('.tab[data-tab="dash"]').click();
-  });
+  };
 }
 function backToSetup(){
   document.getElementById('practiceSetup').hidden=false;
@@ -2330,7 +2320,7 @@ function backToSetup(){
   document.getElementById('playQGridWrap').hidden=true;
 }
 
-/* ============ 错题 ============ */
+/* 错题 */
 function addToWrongBook(qid,chosen){
   const item=wrongBook.find(w=>w.id===qid);
   if(item){item.chosen=chosen;item.ts=now();item.count=(item.count||1)+1;}
@@ -2448,7 +2438,7 @@ document.getElementById('practiceSelectedWrongD')?.addEventListener('click',doPr
 document.getElementById('removeSelectedWrongD')?.addEventListener('click',doRemoveSelected);
 document.getElementById('clearAllWrongD')?.addEventListener('click',doClearAll);
 
-/* ============ 组卷 ============ */
+/* 组卷 */
 let paperSubTab='my';
 let newSubTab='cond';
 let pickSearchKey='';
@@ -2545,11 +2535,11 @@ function showPaperPreview(paper){
     </div>
   `;
   document.getElementById('previewModal').classList.add('show');
-  document.getElementById('previewClose').addEventListener('click',()=>document.getElementById('previewModal').classList.remove('show'));
-  document.getElementById('previewStart').addEventListener('click',()=>{
+  document.getElementById('previewClose').onclick=()=>document.getElementById('previewModal').classList.remove('show');
+  document.getElementById('previewStart').onclick=()=>{
     document.getElementById('previewModal').classList.remove('show');
     startSession({type:'paper',title:paper.name,qids:paper.qids.slice(),paperId:paper.id,mode:paper.mode||'choice'});
-  });
+  };
 }
 document.getElementById('previewModal').addEventListener('click',e=>{
   if(e.target===document.getElementById('previewModal')){
@@ -2557,15 +2547,12 @@ document.getElementById('previewModal').addEventListener('click',e=>{
     document.body.classList.remove('printing');
   }
 });
-
-/* ============ 试卷导出 PDF ============ */
 function exportPaperToPDF(paper,withAnswer){
   const content=document.getElementById('previewContent');
   const includeAns=withAnswer===true;
   const total=paper.qids.length;
   const totalScore=total*5;
-
-  const html=`
+  content.innerHTML=`
     <div class="pdf-toolbar">
       <button class="btn" id="pdfCloseBtn">✕ 关闭</button>
       <button class="btn" id="pdfToggleAns">${includeAns?'📄 学生版':'📝 教师版'}</button>
@@ -2582,9 +2569,7 @@ function exportPaperToPDF(paper,withAnswer){
         </div>
         <div class="pdf-subtitle">共 ${total} 题 · 每题 5 分 · 满分 ${totalScore} 分 · 生成于 ${fmtTime(paper.createdAt)}</div>
       </div>
-
       <div class="pdf-section-title">一、单项选择（每题 5 分，共 ${totalScore} 分）</div>
-
       ${paper.qids.map((qid,i)=>{
         const q=Q_MAP[qid];if(!q)return '';
         const qText=esc(q.q).replace(/______+/g,'<span class="pdf-blank"></span>');
@@ -2602,32 +2587,21 @@ function exportPaperToPDF(paper,withAnswer){
           </div>
         `;
       }).join('')}
-
       <div class="pdf-footer">— 试卷结束 —</div>
       <div class="pdf-watermark">${includeAns?'【教师版·含答案】':'【学生版】'} · 由「七上英语语法 2.0」生成</div>
     </div>
   `;
-
-  content.innerHTML=html;
   document.getElementById('previewModal').classList.add('show');
-
-  document.getElementById('pdfCloseBtn').addEventListener('click',()=>{
+  document.getElementById('pdfCloseBtn').onclick=()=>{
     document.getElementById('previewModal').classList.remove('show');
     document.body.classList.remove('printing');
-  });
-  document.getElementById('pdfToggleAns').addEventListener('click',()=>{
-    exportPaperToPDF(paper,!includeAns);
-  });
-  document.getElementById('pdfPrintBtn').addEventListener('click',()=>{
+  };
+  document.getElementById('pdfToggleAns').onclick=()=>exportPaperToPDF(paper,!includeAns);
+  document.getElementById('pdfPrintBtn').onclick=()=>{
     document.body.classList.add('printing');
-    setTimeout(()=>{
-      window.print();
-      setTimeout(()=>document.body.classList.remove('printing'),600);
-    },120);
-  });
+    setTimeout(()=>{window.print();setTimeout(()=>document.body.classList.remove('printing'),600);},120);
+  };
 }
-
-/* 按条件组卷 */
 let condRange='all',condCat='all',condNum=20,condMode='choice';
 document.getElementById('condRangeChips').addEventListener('click',e=>{
   const btn=e.target.closest('.chip');if(!btn)return;
@@ -2763,7 +2737,7 @@ document.getElementById('generatePaperBtn').addEventListener('click',async()=>{
   renderPaperView();
 });
 
-/* ============ 抽屉 ============ */
+/* 抽屉 */
 const sheet=document.getElementById('mobileSheet');
 const sheetTitle=document.getElementById('sheetTitle');
 const sheetBody=document.getElementById('sheetBody');
@@ -2868,6 +2842,8 @@ searchFSInput.addEventListener('input',()=>{
   libKeyword=searchFSInput.value.trim().toLowerCase();
   if(currentTab==='lib')renderLib();
 });
+
+/* 每日一题：答完即结果，不重复计分 */
 document.getElementById('dailyBtn').addEventListener('click',()=>{
   const today=new Date().toDateString();
   const seed=today.split('').reduce((a,c)=>a+c.charCodeAt(0),0);
@@ -2875,6 +2851,8 @@ document.getElementById('dailyBtn').addEventListener('click',()=>{
   save(K.daily,{date:today,qid});
   startSession({type:'practice',title:'🎯 每日一题',qids:[qid],mode:'choice'});
 });
+
+/* 智能复习：至少 5 题，避免单题体验 */
 document.getElementById('quickReviewBtn').addEventListener('click',()=>{
   const wrongIds=wrongBook.map(w=>w.id);
   const learningIds=QUESTIONS.filter(q=>getSt(q.id)===1).map(q=>q.id);
@@ -2883,9 +2861,98 @@ document.getElementById('quickReviewBtn').addEventListener('click',()=>{
   if(wrongIds.length)ids=shuffle(wrongIds).slice(0,10);
   if(ids.length<10&&learningIds.length)ids=ids.concat(shuffle(learningIds).slice(0,10-ids.length));
   if(ids.length<10&&unlearnedIds.length)ids=ids.concat(shuffle(unlearnedIds).slice(0,10-ids.length));
-  if(!ids.length)ids=shuffle(QUESTIONS.map(q=>q.id)).slice(0,10);
+  // 至少凑够 5 题（如果题库够）
+  if(ids.length<5){
+    const rest=QUESTIONS.map(q=>q.id).filter(id=>!ids.includes(id));
+    ids=ids.concat(shuffle(rest).slice(0,5-ids.length));
+  }
+  if(!ids.length){toast('题库为空','warn');return;}
   startSession({type:'practice',title:'⚡ 智能复习',qids:ids,mode:'choice'});
 });
+
+/* 番茄钟 */
+let pomodoroState={mode:'idle',left:25*60,timer:null,focusLen:25*60,restLen:5*60};
+const pomodoroWidget=document.getElementById('pomodoroWidget');
+const pomodoroTime=document.getElementById('pomodoroTime');
+const pomodoroLabel=document.getElementById('pomodoroLabel');
+const pomodoroBar=document.getElementById('pomodoroBar');
+function pomodoroFormat(s){const m=Math.floor(s/60);const ss=s%60;return `${String(m).padStart(2,'0')}:${String(ss).padStart(2,'0')}`;}
+function pomodoroRender(){
+  if(!pomodoroTime)return;
+  pomodoroTime.textContent=pomodoroFormat(pomodoroState.left);
+  pomodoroTime.classList.toggle('rest',pomodoroState.mode==='rest');
+  if(pomodoroState.mode==='focus')pomodoroLabel.textContent='🎯 专注中';
+  else if(pomodoroState.mode==='rest')pomodoroLabel.textContent='☕ 休息中';
+  else pomodoroLabel.textContent='点击开始专注';
+  const total=pomodoroState.mode==='rest'?pomodoroState.restLen:pomodoroState.focusLen;
+  const pct=Math.max(0,Math.min(100,pomodoroState.left/total*100));
+  pomodoroBar.style.width=pct+'%';
+  pomodoroBar.parentElement.classList.toggle('rest',pomodoroState.mode==='rest');
+  const btn=document.getElementById('pomodoroToggle');
+  if(btn){
+    if(pomodoroState.timer)btn.textContent='暂停';
+    else if(pomodoroState.mode==='idle')btn.textContent='开始';
+    else btn.textContent='继续';
+  }
+}
+function pomodoroSound(){
+  if('speechSynthesis' in window){
+    try{
+      window.speechSynthesis.cancel();
+      const u=new SpeechSynthesisUtterance(pomodoroState.mode==='focus'?'休息时间到':'休息结束，继续加油');
+      u.lang='zh-CN';u.rate=1;
+      window.speechSynthesis.speak(u);
+    }catch(e){}
+  }
+  if(navigator.vibrate)navigator.vibrate([200,100,200,100,200]);
+}
+function pomodoroTick(){
+  pomodoroState.left--;
+  pomodoroRender();
+  if(pomodoroState.left<=0){
+    clearInterval(pomodoroState.timer);pomodoroState.timer=null;
+    pomodoroSound();
+    if(pomodoroState.mode==='focus'){
+      toast('🎉 25 分钟专注结束！休息 5 分钟吧','ok');
+      pomodoroState.mode='rest';pomodoroState.left=pomodoroState.restLen;
+      setTimeout(()=>{if(pomodoroState.mode==='rest'&&!pomodoroState.timer)pomodoroStart();},3000);
+    }else{
+      toast('☕ 休息结束，继续加油！','ok');
+      pomodoroState.mode='idle';pomodoroState.left=pomodoroState.focusLen;
+    }
+    pomodoroRender();
+  }
+}
+function pomodoroStart(){
+  if(pomodoroState.timer)return;
+  if(pomodoroState.mode==='idle'){pomodoroState.mode='focus';pomodoroState.left=pomodoroState.focusLen;}
+  pomodoroState.timer=setInterval(pomodoroTick,1000);
+  pomodoroRender();
+}
+function pomodoroPause(){
+  if(pomodoroState.timer){clearInterval(pomodoroState.timer);pomodoroState.timer=null;}
+  pomodoroRender();
+}
+function pomodoroReset(){
+  if(pomodoroState.timer){clearInterval(pomodoroState.timer);pomodoroState.timer=null;}
+  pomodoroState.mode='idle';pomodoroState.left=pomodoroState.focusLen;
+  pomodoroRender();
+}
+document.getElementById('pomodoroBtn').addEventListener('click',e=>{
+  e.stopPropagation();
+  pomodoroWidget.classList.toggle('show');
+  if(pomodoroWidget.classList.contains('show'))pomodoroRender();
+});
+document.getElementById('pomodoroToggle').addEventListener('click',()=>{
+  if(pomodoroState.timer)pomodoroPause();else pomodoroStart();
+});
+document.getElementById('pomodoroReset').addEventListener('click',pomodoroReset);
+document.getElementById('pomodoroClose').addEventListener('click',e=>{
+  e.stopPropagation();
+  pomodoroWidget.classList.remove('show');
+});
+
+/* 键盘 */
 document.addEventListener('keydown',e=>{
   if(e.key==='Escape'){
     if(searchFS.classList.contains('show'))searchFS.classList.remove('show');
@@ -2901,6 +2968,8 @@ document.addEventListener('keydown',e=>{
     if(e.key==='Enter'){const n=document.getElementById('nextQBtn');if(n)n.click();}
   }
 });
+
+/* 恢复会话 */
 async function checkResume(){
   if(!currentSession||!currentSession.qids||!currentSession.qids.length)return;
   if(currentSession.idx>=currentSession.qids.length){currentSession=null;localStorage.removeItem(K.session);return;}
@@ -2919,6 +2988,8 @@ async function checkResume(){
     startTimer();renderSession();
   }else{currentSession=null;localStorage.removeItem(K.session);}
 }
+
+/* 主题 */
 const themeBtn=document.getElementById('themeBtn');
 const savedTheme=localStorage.getItem(K.theme)||'light';
 document.documentElement.dataset.theme=savedTheme;
@@ -2931,6 +3002,7 @@ themeBtn.addEventListener('click',()=>{
   const meta=document.querySelector('meta[name="theme-color"]');
   if(meta)meta.content=next==='dark'?'#0a0f1e':'#6366f1';
 });
+
 document.querySelector('.tab[data-tab="lib"]').click();
 setTimeout(checkResume,350);
 </script>
