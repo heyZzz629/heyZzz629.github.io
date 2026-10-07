@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#6366f1">
+<title>学习工具箱 · Learning Toolbox</title>
+<style>
+:root{
+  --bg:#0a0e1a; --card:rgba(20,27,45,.85); --card-border:rgba(99,102,241,.18);
+  --text:#e6ebf5; --text-sub:#8b96ad; --text-dim:#5a6c85;
+  --primary:#6366f1; --primary-soft:rgba(99,102,241,.15);
+  --glow:rgba(99,102,241,.4);
+  --radius:20px; --radius-sm:12px;
+  --shadow:0 8px 32px rgba(0,0,0,.3);
+  --sans:-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{
+  font-family:var(--sans);background:var(--bg);color:var(--text);
+  -webkit-font-smoothing:antialiased;
+  background:
+    radial-gradient(900px 500px at 10% -10%, rgba(99,102,241,.12), transparent 60%),
+    radial-gradient(800px 500px at 90% 110%, rgba(16,185,129,.08), transparent 60%),
+    radial-gradient(600px 400px at 50% 50%, rgba(168,85,247,.06), transparent 70%),
+    var(--bg);
+  min-height:100vh;overflow-x:hidden;
+}
+/* 顶部品牌区 */
+.hero{
+  text-align:center;padding:64px 20px 40px;position:relative;
+  animation:fadeUp .6s ease both;
+}
+.hero-icon{
+  width:72px;height:72px;border-radius:20px;margin:0 auto 20px;
+  display:grid;place-items:center;font-size:34px;
+  background:linear-gradient(135deg,#6366f1,#8b5cf6 50%,#a855f7);
+  box-shadow:0 12px 40px rgba(99,102,241,.45), inset 0 1px 0 rgba(255,255,255,.2);
+}
+.hero h1{
+  font-size:clamp(26px,4vw,40px);font-weight:800;letter-spacing:-1px;margin-bottom:10px;
+  background:linear-gradient(135deg,#fff 30%,#a5b4fc 60%,#818cf8);
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+}
+.hero p{color:var(--text-sub);font-size:14.5px;line-height:1.7;max-width:520px;margin:0 auto}
+.hero-stats{
+  display:flex;gap:32px;justify-content:center;margin-top:28px;flex-wrap:wrap;
+}
+.hero-stat{text-align:center}
+.hero-stat .num{font-size:24px;font-weight:800;color:var(--primary);
+  background:linear-gradient(135deg,#818cf8,#a5b4fc);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.hero-stat .lbl{font-size:11px;color:var(--text-dim);font-weight:600;letter-spacing:.5px;margin-top:2px}
+
+/* 工具卡片网格 */
+.grid{
+  max-width:1080px;margin:0 auto;padding:0 20px 60px;
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));
+  gap:20px;
+}
+.card{
+  position:relative;background:var(--card);
+  border:1px solid var(--card-border);border-radius:var(--radius);
+  padding:26px 24px 22px;cursor:pointer;
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  transition:transform .3s cubic-bezier(.4,0,.2,1),box-shadow .3s,border-color .3s;
+  display:flex;flex-direction:column;text-decoration:none;color:inherit;
+  overflow:hidden;
+  animation:fadeUp .5s ease both;
+}
+.card:nth-child(1){animation-delay:.05s}
+.card:nth-child(2){animation-delay:.1s}
+.card:nth-child(3){animation-delay:.15s}
+.card:nth-child(4){animation-delay:.2s}
+.card:nth-child(5){animation-delay:.25s}
+.card::before{
+  content:'';position:absolute;top:0;left:24px;right:24px;height:3px;
+  border-radius:0 0 3px 3px;background:var(--accent,var(--primary));
+  opacity:.9;transition:opacity .3s;
+}
+.card:hover{
+  transform:translateY(-6px);
+  border-color:rgba(99,102,241,.35);
+  box-shadow:0 20px 60px rgba(99,102,241,.18),0 0 0 1px rgba(99,102,241,.1);
+}
+.card:hover::before{opacity:1}
+.card-icon{
+  width:52px;height:52px;border-radius:14px;display:grid;place-items:center;
+  font-size:26px;margin-bottom:16px;flex-shrink:0;
+  background:linear-gradient(135deg,var(--icon-bg1,#1e2540),var(--icon-bg2,#2a3560));
+  border:1px solid rgba(255,255,255,.06);
+  box-shadow:0 4px 16px rgba(0,0,0,.2);
+}
+.card h2{font-size:17px;font-weight:700;margin-bottom:6px;letter-spacing:-.2px}
+.card .tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.tag{
+  font-size:10.5px;font-weight:700;padding:3px 9px;border-radius:6px;
+  background:var(--primary-soft);color:#a5b4fc;letter-spacing:.3px;
+}
+.card .desc{
+  font-size:12.5px;color:var(--text-sub);line-height:1.7;flex:1;
+  display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;
+}
+.card-foot{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-top:18px;padding-top:16px;border-top:1px solid rgba(255,255,255,.05);
+}
+.card-foot .visit{
+  font-size:12.5px;font-weight:700;color:var(--primary);
+  display:flex;align-items:center;gap:6px;transition:gap .2s;
+}
+.card:hover .card-foot .visit{gap:10px}
+.card-foot .file{font-size:10.5px;color:var(--text-dim);font-family:ui-monospace,monospace}
+.card-foot .arrow{font-size:16px;transition:transform .25s}
+.card:hover .card-foot .arrow{transform:translateX(4px)}
+
+/* 各卡片的强调色 */
+.card[data-accent="schedule"]{--accent:#6366f1;--icon-bg1:#1e1b4b;--icon-bg2:#312e81}
+.card[data-accent="review"]{--accent:#10b981;--icon-bg1:#064e3b;--icon-bg2:#065f46}
+.card[data-accent="math"]{--accent:#f59e0b;--icon-bg1:#78350f;--icon-bg2:#92400e}
+.card[data-accent="geo"]{--accent:#2cd4ff;--icon-bg1:#0c4a6e;--icon-bg2:#0369a1}
+.card[data-accent="english"]{--accent:#f472b6;--icon-bg1:#831843;--icon-bg2:#9d174d}
+
+.card[data-accent="schedule"]:hover{box-shadow:0 20px 60px rgba(99,102,241,.2),0 0 0 1px rgba(99,102,241,.15)}
+.card[data-accent="review"]:hover{box-shadow:0 20px 60px rgba(16,185,129,.2),0 0 0 1px rgba(16,185,129,.15)}
+.card[data-accent="math"]:hover{box-shadow:0 20px 60px rgba(245,158,11,.2),0 0 0 1px rgba(245,158,11,.15)}
+.card[data-accent="geo"]:hover{box-shadow:0 20px 60px rgba(44,212,255,.2),0 0 0 1px rgba(44,212,255,.15)}
+.card[data-accent="english"]:hover{box-shadow:0 20px 60px rgba(244,114,182,.2),0 0 0 1px rgba(244,114,182,.15)}
+
+/* 底部 */
+.footer{
+  text-align:center;padding:0 20px 40px;color:var(--text-dim);font-size:12px;line-height:1.8;
+}
+.footer a{color:var(--text-sub);text-decoration:none;border-bottom:1px solid rgba(139,150,173,.3)}
+.footer a:hover{color:var(--primary);border-color:var(--primary)}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+
+@media(max-width:720px){
+  .hero{padding:44px 20px 28px}
+  .hero-icon{width:60px;height:60px;font-size:28px;border-radius:16px}
+  .hero-stats{gap:24px}
+  .grid{grid-template-columns:1fr;gap:14px;padding:0 16px 40px}
+  .card{padding:22px 20px 18px}
+}
+@media(max-width:380px){
+  .hero-stat .num{font-size:20px}
+  .card h2{font-size:15.5px}
+}
+</style>
+</head>
+<body>
+
+<section class="hero">
+  <div class="hero-icon">📚</div>
+  <h1>学习工具箱</h1>
+  <p>一个页面，五个工具。课程表、背诵打卡、几何手册、地理模拟、语法练习——全部离线可用，数据存在你自己的浏览器里。</p>
+  <div class="hero-stats">
+    <div class="hero-stat"><div class="num">5</div><div class="lbl">学习工具</div></div>
+    <div class="hero-stat"><div class="num">100%</div><div class="lbl">离线可用</div></div>
+    <div class="hero-stat"><div class="num">0</div><div class="lbl">数据上传</div></div>
+  </div>
+</section>
+
+<main class="grid">
+
+  <a class="card" data-accent="schedule" href="Schedule.html">
+    <div class="card-icon">📅</div>
+    <h2>智能课程表</h2>
+    <div class="tags"><span class="tag">周/月视图</span><span class="tag">拖拽排课</span><span class="tag">冲突检测</span></div>
+    <div class="desc">支持周视图和月视图切换，拖拽调整课程时间，自动检测时间冲突。内置固定节次参考，支持课程颜色标记、备注、起止日期设置。</div>
+    <div class="card-foot">
+      <span class="visit">打开课程表 <span class="arrow">→</span></span>
+      <span class="file">Schedule.html</span>
+    </div>
+  </a>
+
+  <a class="card" data-accent="review" href="review.html">
+    <div class="card-icon">📚</div>
+    <h2>七上学习打卡</h2>
+    <div class="tags"><span class="tag">古诗词</span><span class="tag">英语单词</span><span class="tag">国际音标</span></div>
+    <div class="desc">人教版2024七上内容。古诗词背诵进度追踪、英语单词卡片（含发音和例句）、48个国际音标学习。支持拼写测验、音标练习、自测模式、总览模式。</div>
+    <div class="card-foot">
+      <span class="visit">打开打卡 <span class="arrow">→</span></span>
+      <span class="file">review.html</span>
+    </div>
+  </a>
+
+  <a class="card" data-accent="math" href="math.html">
+    <div class="card-icon">📐</div>
+    <h2>初中几何复习手册</h2>
+    <div class="tags"><span class="tag">条件反射表</span><span class="tag">六大模型</span><span class="tag">例题精讲</span></div>
+    <div class="desc">从"想不到"到"有套路"。核心是一张可背的条件反射表，看到中点/角平分线/垂直平分线立刻知道该做什么。六大经典模型、四步解题法、代数武器库。</div>
+    <div class="card-foot">
+      <span class="visit">打开手册 <span class="arrow">→</span></span>
+      <span class="file">math.html</span>
+    </div>
+  </a>
+
+  <a class="card" data-accent="geo" href="geo.html">
+    <div class="card-icon">🌍</div>
+    <h2>GeoLab 地理实验室</h2>
+    <div class="tags"><span class="tag">3D地球仪</span><span class="tag">四季公转</span><span class="tag">知识卡片</span></div>
+    <div class="desc">可旋转的3D地球仪，实时显示经纬度、半球、五带、时区。四季公转模拟展示太阳直射点移动和昼夜长短变化。知识卡片内嵌互动演示。</div>
+    <div class="card-foot">
+      <span class="visit">打开实验室 <span class="arrow">→</span></span>
+      <span class="file">geo.html</span>
+    </div>
+  </a>
+
+  <a class="card" data-accent="english" href="exscise.html">
+    <div class="card-icon">✍️</div>
+    <h2>英语语法 3.2 精讲精练</h2>
+    <div class="tags"><span class="tag">主题题库</span><span class="tag">错题本</span><span class="tag">笔记中心</span></div>
+    <div class="desc">七上英语语法专项。200+ 选择题和填空题，覆盖单复数、三单、be动词、代词、时态。内置错题本、笔记中心、拼写测验、听力练习、数据分析、组卷功能。</div>
+    <div class="card-foot">
+      <span class="visit">打开练习 <span class="arrow">→</span></span>
+      <span class="file">exscise.html</span>
+    </div>
+  </a>
+
+</main>
+
+<footer class="footer">
+  <p>学习工具箱 · 所有数据存储在浏览器本地 · 无需登录，无需联网</p>
+  <p style="margin-top:6px">部署于 <a href="https://heyZzz629.github.io/files/" target="_blank" rel="noopener">heyZzz629.github.io/files</a></p>
+</footer>
+
+</body>
+</html>

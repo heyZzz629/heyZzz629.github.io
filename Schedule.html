@@ -1,0 +1,1605 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>智能课程表 v1.3.7 </title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        :root {
+            --bg-body: #f8fafc;
+            --bg-panel: rgba(255, 255, 255, 0.9);
+            --bg-panel-solid: #ffffff;
+            --border-color: #e2e8f0;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --primary: #6366f1;
+            --primary-hover: #4f46e5;
+            --danger: #ef4444;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --bg-hover: #f1f5f9;
+            --bg-active: #e0e7ff;
+            --shadow-color: rgba(0, 0, 0, 0.06);
+            --modal-bg: #ffffff;
+            --input-bg: #f8fafc;
+            --time-axis-width: 85px;
+            --half-hour-height: 40px;
+            --hour-height: 80px;
+            --c-mint: linear-gradient(135deg, #a8e6cf, #71c9a4);
+            --c-pink: linear-gradient(135deg, #ffb7b2, #ff8b85);
+            --c-blue: linear-gradient(135deg, #b5d8ff, #7bb3ff);
+            --c-purple: linear-gradient(135deg, #d4bbff, #af8bff);
+            --c-yellow: linear-gradient(135deg, #ffe6a7, #ffcc66);
+            --c-orange: linear-gradient(135deg, #ffd0b5, #ffab7b);
+            --c-cyan: linear-gradient(135deg, #b2ebf2, #6ed6e0);
+            --c-coral: linear-gradient(135deg, #ffc0cb, #ff9eb5);
+            --c-gray: linear-gradient(135deg, #e2e8f0, #cbd5e1);
+            --c-rose: linear-gradient(135deg, #ffd1dc, #ffa3b5);
+        }
+        body.dark-mode {
+            --bg-body: #0f1115;
+            --bg-panel: rgba(26, 30, 38, 0.85);
+            --bg-panel-solid: #1a1e26;
+            --border-color: rgba(255, 255, 255, 0.08);
+            --text-main: #f1f5f9;
+            --text-muted: #94a3b8;
+            --primary: #818cf8;
+            --primary-hover: #6366f1;
+            --danger: #f87171;
+            --bg-hover: rgba(255, 255, 255, 0.05);
+            --bg-active: rgba(99, 102, 241, 0.1);
+            --shadow-color: rgba(0, 0, 0, 0.4);
+            --modal-bg: #1a1e26;
+            --input-bg: rgba(0, 0, 0, 0.3);
+            --c-mint: linear-gradient(135deg, #408a70, #2b5e4b);
+            --c-pink: linear-gradient(135deg, #9e6560, #734440);
+            --c-blue: linear-gradient(135deg, #5575a8, #3b557e);
+            --c-purple: linear-gradient(135deg, #6e5a99, #4e3d73);
+            --c-yellow: linear-gradient(135deg, #a3894e, #7a6233);
+            --c-orange: linear-gradient(135deg, #a87858, #7a5238);
+            --c-cyan: linear-gradient(135deg, #548b91, #396368);
+            --c-coral: linear-gradient(135deg, #9e6a73, #734b52);
+            --c-gray: linear-gradient(135deg, #5a626e, #3d434c);
+            --c-rose: linear-gradient(135deg, #9e5f6c, #733f4a);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; transition: background-color 0.3s, border-color 0.3s; }
+        body { background-color: var(--bg-body); color: var(--text-main); height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+        body.exporting .header { display: none !important; }
+        body.exporting .main-container { overflow: visible !important; height: auto !important; }
+        body.exporting .scroll-container { overflow: visible !important; height: auto !important; }
+        body.exporting .grid-area { min-height: auto !important; }
+        body.exporting .course-card { transform: none !important; transition: none !important; }
+        body.exporting .current-time-line { display: none !important; }
+        body.exporting .day-header.today { background: transparent !important; color: var(--text-main) !important; }
+        body.exporting .day-header.today .date { color: var(--text-muted) !important; }
+        body.exporting .day-column.today-col { background: transparent !important; }
+        body.exporting .selection-box { display: none !important; }
+        body.exporting .export-header { display: flex !important; justify-content: center; align-items: center; padding: 20px; font-size: 24px; font-weight: bold; color: var(--text-main); border-bottom: 2px solid var(--border-color); margin-bottom: 10px; }
+        body.exporting #month-view { display: flex !important; overflow: visible !important; }
+        body.exporting #week-view { display: none !important; }
+        body.exporting.view-month #month-view { display: flex !important; }
+        body.exporting.view-week #week-view { display: flex !important; }
+        body.exporting .course-card.future-diluted { opacity: 1 !important; filter: none !important; }
+        .export-header { display: none; }
+        .header { min-height: 64px; display: flex; justify-content: space-between; align-items: center; padding: 0 24px; background: var(--bg-panel); backdrop-filter: blur(10px); border-bottom: 1px solid var(--border-color); z-index: 100; flex-wrap: wrap; gap: 10px; padding-top: 10px; padding-bottom: 10px;}
+        .header-left { display: flex; align-items: center; gap: 15px; flex-wrap: wrap;}
+        .header h1 { font-size: 18px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+        .header h1 span { font-size: 11px; font-weight: 500; color: white; background: var(--primary); padding: 3px 8px; border-radius: 12px; box-shadow: 0 2px 8px rgba(99, 102, 241, 0.4); }
+        .header-controls { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+        .btn { background: var(--bg-panel-solid); border: 1px solid var(--border-color); color: var(--text-main); padding: 8px 14px; border-radius: 10px; cursor: pointer; font-size: 13px; font-weight: 500; transition: all 0.2s ease; display: flex; align-items: center; justify-content: center; gap: 6px; white-space: nowrap; }
+        .btn:hover { background: var(--bg-hover); transform: translateY(-1px); }
+        .btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+        .btn.primary { background: var(--primary); border-color: var(--primary); color: white; box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3); }
+        .btn.primary:hover { background: var(--primary-hover); }
+        .btn.danger { background: rgba(239, 68, 68, 0.1); border-color: rgba(239, 68, 68, 0.3); color: var(--danger); }
+        .btn.danger:hover { background: var(--danger); color: white; }
+        .btn.icon { padding: 0; width: 36px; height: 36px; border-radius: 50%; font-size: 16px; display: flex; align-items: center; justify-content: center; }
+        .btn.active-lock { background: var(--danger); border-color: var(--danger); color: white; box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3); }
+        .btn.active-drag { background: var(--primary); border-color: var(--primary); color: white; box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3); }
+        .view-switch { display: flex; background: var(--input-bg); border-radius: 10px; padding: 3px; border: 1px solid var(--border-color); }
+        .view-switch button { padding: 6px 14px; font-size: 13px; border-radius: 8px; border: none; background: transparent; color: var(--text-muted); cursor: pointer; font-weight: 500; transition: all 0.2s; }
+        .view-switch button.active { background: var(--bg-panel-solid); color: var(--primary); box-shadow: 0 2px 6px var(--shadow-color); }
+        .week-nav { display: flex; align-items: center; gap: 5px; background: var(--input-bg); border-radius: 10px; padding: 3px; border: 1px solid var(--border-color); }
+        .week-nav button { background: transparent; border: none; color: var(--text-main); cursor: pointer; padding: 4px 8px; border-radius: 6px; font-size: 12px; transition: background 0.2s; }
+        .week-nav button:hover { background: var(--bg-hover); }
+        .week-nav span { font-size: 12px; font-weight: 600; color: var(--primary); padding: 0 5px; min-width: 100px; text-align: center; }
+        .search-box { position: relative; display: flex; align-items: center; }
+        .search-box input { padding: 8px 12px 8px 32px; border-radius: 10px; border: 1px solid var(--border-color); background: var(--input-bg); color: var(--text-main); font-size: 13px; outline: none; width: 150px; transition: width 0.3s; }
+        .search-box input:focus { width: 180px; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15); }
+        .search-box::before { content: '🔍'; position: absolute; left: 10px; font-size: 12px; opacity: 0.6; pointer-events: none; }
+        .main-container { flex: 1; display: flex; flex-direction: column; overflow: hidden; position: relative; }
+        #week-view { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+        .week-header { display: flex; height: 56px; border-bottom: 1px solid var(--border-color); background: var(--bg-panel); padding-right: 12px; z-index: 20; }
+        .time-header-placeholder { width: var(--time-axis-width); min-width: var(--time-axis-width); border-right: 1px solid var(--border-color); display: flex; align-items: center; justify-content: center; font-size: 13px; color: var(--primary); font-weight: 600; cursor: pointer; transition: background 0.2s; background: var(--bg-active); }
+        .time-header-placeholder:hover { background: var(--primary); color: white; }
+        .day-headers { flex: 1; display: grid; grid-template-columns: repeat(7, 1fr); }
+        .day-header { display: flex; flex-direction: column; justify-content: center; align-items: center; border-right: 1px solid var(--border-color); font-size: 14px; font-weight: 500; color: var(--text-muted); }
+        .day-header .date { font-size: 11px; margin-top: 4px; font-weight: 400; opacity: 0.7; }
+        .day-header.today { color: var(--primary); font-weight: 600; background: var(--bg-active); }
+        .day-header.today .date { color: var(--primary); opacity: 1; }
+        .scroll-container { flex: 1; overflow-y: auto; overflow-x: hidden; position: relative; scrollbar-width: thin; scrollbar-color: var(--border-color) transparent; }
+        .scroll-container::-webkit-scrollbar { width: 8px; }
+        .scroll-container::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 4px; }
+        .grid-area { display: flex; position: relative; min-height: 1040px; }
+        .time-axis { width: var(--time-axis-width); min-width: var(--time-axis-width); border-right: 1px solid var(--border-color); background: var(--bg-panel); position: relative; z-index: 10; }
+        .time-slot { height: var(--half-hour-height); position: relative; border-bottom: 1px dashed var(--border-color); }
+        .time-slot::after { content: attr(data-time); position: absolute; top: -8px; right: 10px; font-size: 11px; color: var(--text-muted); font-variant-numeric: tabular-nums; }
+        .time-slot.hour-mark::after { color: var(--text-main); font-weight: 600; top: -9px; }
+        .time-slot.hour-mark { border-bottom: 1px solid var(--border-color); }
+        .time-slot:last-child { border-bottom: none; }
+        .period-badge { position: absolute; left: 6px; width: 18px; height: 18px; background: var(--primary); color: white; font-size: 10px; font-weight: 700; border-radius: 50%; display: flex; align-items: center; justify-content: center; transform: translateY(-9px); z-index: 15; box-shadow: 0 2px 6px rgba(99, 102, 241, 0.4); pointer-events: auto; cursor: help; border: 2px solid var(--bg-panel); }
+        .days-grid { flex: 1; display: grid; grid-template-columns: repeat(7, 1fr); position: relative; }
+        .day-column { border-right: 1px solid var(--border-color); position: relative; transition: background 0.2s; }
+        .day-column:hover { background: var(--bg-hover); }
+        .day-column.today-col { background: var(--bg-active); }
+        .bg-line { position: absolute; left: 0; right: 0; height: 0; border-bottom: 1px dashed var(--border-color); pointer-events: none; }
+        .bg-line.hour-line { border-bottom: 1px solid var(--border-color); }
+        .fixed-period-block { position: absolute; left: 0; right: 0; background: rgba(99, 102, 241, 0.04); border-top: 1px solid rgba(99, 102, 241, 0.15); border-bottom: 1px solid rgba(99, 102, 241, 0.15); pointer-events: none; z-index: 1; border-radius: 2px; box-sizing: border-box; }
+        body.dark-mode .fixed-period-block { background: rgba(129, 140, 248, 0.06); border-top: 1px solid rgba(129, 140, 248, 0.2); border-bottom: 1px solid rgba(129, 140, 248, 0.2); }
+        .selection-box { position: absolute; left: 0; width: 100%; background: rgba(99, 102, 241, 0.2); border: 2px dashed var(--primary); z-index: 100; pointer-events: none; border-radius: 4px; display: block; }
+        #month-view { flex: 1; display: none; flex-direction: column; padding: 20px; overflow-y: auto; }
+        .month-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .month-header h2 { font-size: 20px; font-weight: 600; }
+        .month-grid { display: grid; grid-template-columns: repeat(7, 1fr); grid-template-rows: repeat(6, 1fr); gap: 1px; background: var(--border-color); border: 1px solid var(--border-color); border-radius: 12px; overflow: hidden; flex: 1; }
+        .month-day-header { background: var(--bg-panel); padding: 12px 0; text-align: center; font-size: 13px; font-weight: 600; color: var(--text-muted); }
+        .month-day-cell { background: var(--bg-panel-solid); padding: 8px; min-height: 100px; position: relative; transition: background 0.2s; display: flex; flex-direction: column; cursor: pointer; }
+        .month-day-cell:hover { background: var(--bg-hover); }
+        .month-day-cell.other-month { opacity: 0.4; }
+        .month-day-cell.today { background: var(--bg-active); }
+        .month-date { font-size: 13px; font-weight: 600; margin-bottom: 6px; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; border-radius: 50%; flex-shrink: 0; }
+        .month-day-cell.today .month-date { background: var(--primary); color: white; }
+        .month-course-item { font-size: 11px; padding: 2px 6px; border-radius: 4px; margin-bottom: 3px; color: #1e293b; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: pointer; transition: transform 0.1s; font-weight: 500; }
+        body.dark-mode .month-course-item { color: #f1f5f9; }
+        .month-course-item:hover { transform: translateX(2px); }
+        .more-courses { font-size: 10px; color: var(--text-muted); margin-top: 2px; cursor: pointer; }
+        .course-card { position: absolute; left: 3px; right: 3px; border-radius: 10px; padding: 8px 10px; color: #1e293b; font-size: 12px; overflow: hidden; transition: box-shadow 0.2s, filter 0.2s, transform 0.2s, opacity 0.3s; box-shadow: 0 4px 6px var(--shadow-color); border: 1px solid rgba(0,0,0,0.05); display: flex; flex-direction: column; z-index: 5; user-select: none; }
+        body.dark-mode .course-card { color: #f1f5f9; border: 1px solid rgba(255,255,255,0.1); }
+        .course-card.future-diluted { opacity: 0.45; }
+        .course-card.future-diluted:hover { opacity: 0.9; z-index: 10; }
+        .course-card.search-match { box-shadow: 0 0 0 3px var(--primary), 0 4px 12px rgba(99, 102, 241, 0.6); z-index: 99; transform: scale(1.02); }
+        .course-card.search-dim { opacity: 0.15; pointer-events: none; }
+        .course-card.locked { cursor: default; }
+        .course-card.locked:hover { transform: none; filter: none; box-shadow: 0 4px 6px var(--shadow-color); }
+        .course-card.locked .resize-handle { display: none !important; }
+        .course-card:not(.locked) { cursor: grab; }
+        .course-card:not(.locked):active { cursor: grabbing; }
+        .course-card:not(.locked):hover { z-index: 10; filter: brightness(1.05); transform: translateY(-1px); }
+        .course-card:not(.locked)::after { content: '🔓'; position: absolute; top: 4px; right: 6px; font-size: 10px; opacity: 0.5; }
+        .course-card.dragging { position: fixed !important; z-index: 1000; opacity: 0.95; cursor: grabbing; box-shadow: 0 20px 40px rgba(0,0,0,0.2); pointer-events: none; transform: scale(1.02); transition: transform 0.1s; border: 2px solid var(--primary); }
+        .course-card.placeholder { opacity: 0.2; border: 1px dashed var(--primary); background: transparent !important; box-shadow: none; }
+        .course-title { font-weight: 700; margin-bottom: 2px; line-height: 1.3; font-size: 13px; pointer-events: none; }
+        .course-location { font-size: 11px; opacity: 0.8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; pointer-events: none; margin-bottom: 2px;}
+        .course-note { font-size: 10px; background: rgba(255,255,255,0.4); padding: 2px 4px; border-radius: 4px; margin-top: 2px; margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; pointer-events: none; font-style: italic;}
+        .course-date-range { font-size: 10px; background: rgba(0,0,0,0.08); padding: 1px 4px; border-radius: 4px; margin-top: 2px; margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; pointer-events: none; font-weight: 500;}
+        .course-time { font-size: 10px; opacity: 0.9; margin-top: auto; font-variant-numeric: tabular-nums; pointer-events: none; font-weight: 600;}
+        .card-delete-btn { position: absolute; top: 4px; right: 4px; width: 20px; height: 20px; border-radius: 50%; background: rgba(239, 68, 68, 0.9); color: white; border: none; font-size: 12px; display: none; align-items: center; justify-content: center; cursor: pointer; z-index: 20; transition: all 0.2s; }
+        .course-card:not(.locked):hover .card-delete-btn { display: flex; }
+        .card-delete-btn:hover { transform: scale(1.1); background: var(--danger); }
+        .resize-handle { position: absolute; bottom: 0; left: 0; right: 0; height: 10px; cursor: ns-resize; border-radius: 0 0 10px 10px; background: rgba(0,0,0,0.1); opacity: 0; transition: opacity 0.2s; display: flex; align-items: flex-end; justify-content: center; }
+        body.dark-mode .resize-handle { background: rgba(255,255,255,0.1); }
+        .course-card:not(.locked):hover .resize-handle { opacity: 1; }
+        .resize-handle::after { content: ''; display: block; width: 24px; height: 4px; background: var(--text-main); border-radius: 2px; margin-bottom: 2px; opacity: 0.5; }
+        .current-time-line { position: absolute; left: var(--time-axis-width); right: 0; height: 2px; background-color: var(--danger); z-index: 50; pointer-events: none; box-shadow: 0 0 10px rgba(239, 68, 68, 0.8); display: none; }
+        .current-time-line::before { content: ''; position: absolute; left: -5px; top: -4px; width: 10px; height: 10px; border-radius: 50%; background-color: var(--danger); }
+        .context-menu { position: absolute; background: var(--modal-bg); border: 1px solid var(--border-color); border-radius: 12px; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.2), 0 8px 10px -6px rgba(0, 0, 0, 0.1); padding: 6px; z-index: 2000; min-width: 140px; display: none; backdrop-filter: blur(10px); }
+        .context-menu.active { display: block; animation: fadeIn 0.15s ease-out; }
+        .menu-item { padding: 10px 14px; font-size: 13px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 10px; color: var(--text-main); transition: background 0.2s; }
+        .menu-item:hover { background: var(--bg-hover); }
+        .menu-item.danger { color: var(--danger); }
+        .menu-item.danger:hover { background: rgba(239, 68, 68, 0.1); }
+        .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.5); backdrop-filter: blur(4px); display: flex; justify-content: center; align-items: center; z-index: 1000; opacity: 0; pointer-events: none; transition: all 0.3s ease; }
+        .modal-overlay.active { opacity: 1; pointer-events: auto; }
+        .modal-content { background: var(--modal-bg); width: 90%; border-radius: 20px; border: 1px solid var(--border-color); box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); transform: translateY(20px) scale(0.98); transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); overflow: hidden; display: flex; flex-direction: column; max-height: 90vh;}
+        .modal-overlay.active .modal-content { transform: translateY(0) scale(1); }
+        .modal-header { padding: 20px 24px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; flex-shrink: 0;}
+        .modal-header h3 { font-size: 17px; font-weight: 600; }
+        .close-btn { background: none; border: none; color: var(--text-muted); font-size: 24px; cursor: pointer; transition: color 0.2s; line-height: 1; }
+        .close-btn:hover { color: var(--danger); }
+        .modal-body { padding: 24px; display: flex; flex-direction: column; gap: 16px; overflow-y: auto; }
+        .form-group { display: flex; flex-direction: column; gap: 6px; }
+        .form-group label { font-size: 13px; color: var(--text-muted); font-weight: 600; }
+        .form-control { background: var(--input-bg); border: 1px solid var(--border-color); color: var(--text-main); padding: 12px 14px; border-radius: 10px; font-size: 14px; outline: none; transition: all 0.2s; }
+        .form-control:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15); }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+        textarea.form-control { resize: vertical; min-height: 60px; font-family: inherit; }
+        .color-picker { display: flex; gap: 10px; margin-top: 4px; flex-wrap: wrap; }
+        .color-option { width: 32px; height: 32px; border-radius: 50%; cursor: pointer; border: 3px solid transparent; transition: all 0.2s; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .color-option:hover { transform: scale(1.15); }
+        .color-option.selected { border-color: var(--text-main); transform: scale(1.2); box-shadow: 0 0 12px var(--shadow-color); }
+        .modal-footer { padding: 16px 24px; border-top: 1px solid var(--border-color); display: flex; justify-content: flex-end; gap: 12px; background: var(--input-bg); flex-shrink: 0;}
+        .confirm-dialog .modal-content { max-width: 360px; text-align: center; }
+        .confirm-dialog .modal-header { justify-content: center; border-bottom: none; padding-bottom: 10px; }
+        .confirm-dialog .modal-body { padding-top: 0; }
+        .confirm-dialog .modal-footer { justify-content: center; border-top: none; background: transparent; padding-bottom: 24px; }
+        .toast-container { position: fixed; top: 80px; left: 50%; transform: translateX(-50%); z-index: 3000; display: flex; flex-direction: column; gap: 10px; pointer-events: none; }
+        .toast { background: var(--modal-bg); border: 1px solid var(--border-color); padding: 12px 20px; border-radius: 12px; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1); font-size: 14px; font-weight: 500; color: var(--text-main); display: flex; align-items: center; gap: 10px; opacity: 0; transform: translateY(-20px); transition: all 0.3s ease; pointer-events: auto; }
+        .toast.show { opacity: 1; transform: translateY(0); }
+        .toast.success { border-left: 4px solid var(--success); }
+        .toast.warning { border-left: 4px solid var(--warning); }
+        .toast.error { border-left: 4px solid var(--danger); }
+        .toast.info { border-left: 4px solid var(--primary); }
+        .color-palette { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; justify-items: center; }
+        .palette-item { width: 40px; height: 40px; border-radius: 50%; cursor: pointer; border: 3px solid transparent; transition: all 0.2s; }
+        .palette-item:hover { transform: scale(1.15); }
+        .palette-item.selected { border-color: var(--text-main); transform: scale(1.2); box-shadow: 0 0 15px var(--shadow-color); }
+        .stat-item { display: flex; justify-content: space-between; padding: 12px; background: var(--input-bg); border-radius: 8px; margin-bottom: 8px; font-size: 14px; }
+        .stat-item strong { color: var(--primary); }
+        .stat-bar-container { height: 8px; background: var(--border-color); border-radius: 4px; margin-top: 8px; overflow: hidden; display: flex; }
+        .stat-bar { height: 100%; transition: width 0.5s; }
+        .batch-search-box { position: relative; display: flex; align-items: center; flex: 1; }
+        .batch-search-box input { padding: 6px 10px 6px 28px; border-radius: 8px; border: 1px solid var(--border-color); background: var(--input-bg); color: var(--text-main); font-size: 12px; outline: none; width: 100%; }
+        .batch-search-box input:focus { border-color: var(--primary); box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.15); }
+        .batch-search-box::before { content: '🔍'; position: absolute; left: 8px; font-size: 11px; opacity: 0.6; pointer-events: none; }
+        @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+        @media print {
+            @page { size: A4 landscape; margin: 10mm; }
+            body { background: white !important; color: black !important; height: auto !important; overflow: visible !important; }
+            .header, .context-menu, .modal-overlay, .selection-box, .week-nav, .toast-container { display: none !important; }
+            #week-view { display: flex !important; overflow: visible !important; }
+            .export-header { display: flex !important; justify-content: center; padding: 15px; font-size: 20px; font-weight: bold; border-bottom: 2px solid #ccc; margin-bottom: 10px; color: black !important; }
+            .week-header { background: white !important; border-bottom: 2px solid #000 !important; height: auto !important; padding: 5px 0 !important; }
+            .time-header-placeholder { border-right: 1px solid #ccc !important; font-weight: bold !important; font-size: 11px !important; background: white !important; color: black !important;}
+            .day-header { border-right: 1px solid #ccc !important; color: black !important; font-weight: bold !important; font-size: 11px !important;}
+            .day-header .date { color: #666 !important; font-size: 9px !important;}
+            .day-header.today { background: transparent !important; color: black !important; }
+            .day-column.today-col { background: transparent !important; }
+            .current-time-line { display: none !important; }
+            .scroll-container { overflow: visible !important; }
+            .grid-area { min-height: auto !important; }
+            .time-axis { background: white !important; border-right: 1px solid #ccc !important; width: 60px !important; }
+            .time-slot { border-bottom: 1px dashed #eee !important; height: 35px !important; }
+            .time-slot::after { color: #333 !important; font-size: 8px !important; right: 2px !important; top: -6px !important; }
+            .time-slot.hour-mark { border-bottom: 1px solid #ccc !important; }
+            .time-slot.hour-mark::after { font-weight: bold !important; }
+            .day-column { border-right: 1px solid #ccc !important; background: white !important; }
+            .bg-line { border-bottom: 1px dashed #eee !important; }
+            .bg-line.hour-line { border-bottom: 1px solid #ccc !important; }
+            .fixed-period-block { background: #f8f9ff !important; border-top: 1px dashed #c7d2fe !important; border-bottom: 1px dashed #c7d2fe !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .period-badge { background: #6366f1 !important; color: white !important; border: 1px solid #fff !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; font-size: 8px !important; width: 14px !important; height: 14px !important; transform: translateY(-7px) !important; left: 4px !important; }
+            .course-card { box-shadow: none !important; border: 1px solid rgba(0,0,0,0.1) !important; background: inherit !important; color: black !important; padding: 4px !important; border-radius: 6px !important; left: 1px !important; right: 1px !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; opacity: 1 !important; transform: none !important; }
+            .course-card::after { display: none !important; }
+            .course-card.future-diluted { opacity: 1 !important; }
+            .course-title { color: black !important; font-size: 10px !important; margin-bottom: 1px !important;}
+            .course-location, .course-time { color: #333 !important; font-size: 8px !important; }
+            .course-note { background: rgba(0,0,0,0.05) !important; color: #000 !important; font-size: 8px !important; border: 1px solid rgba(0,0,0,0.1) !important; margin: 1px 0 !important; padding: 1px !important;}
+            .course-date-range { background: transparent !important; border: none !important; color: #333 !important; font-size: 8px !important; padding: 0 !important;}
+            .card-delete-btn { display: none !important; }
+            .resize-handle { display: none !important; }
+            #month-view { display: flex !important; overflow: visible !important; background: white !important; padding: 0 !important; }
+            .month-grid { border: 1px solid #000 !important; gap: 0 !important; }
+            .month-day-header { background: #eee !important; color: black !important; border-bottom: 1px solid #000 !important; padding: 5px !important; font-size: 11px !important;}
+            .month-day-cell { background: white !important; border-right: 1px solid #000 !important; border-bottom: 1px solid #000 !important; min-height: 80px !important; padding: 4px !important;}
+            .month-date { color: black !important; font-size: 11px !important; width: 18px !important; height: 18px !important;}
+            .month-course-item { border: 1px solid #000 !important; color: black !important; background: white !important; font-size: 9px !important; padding: 1px 3px !important; margin-bottom: 1px !important; -webkit-print-color-adjust: exact; print-color-adjust: exact;}
+        }
+    </style>
+</head>
+<body class="light-mode">
+
+    <div class="toast-container" id="toastContainer"></div>
+
+    <header class="header">
+        <div class="header-left">
+            <h1>智能课程表 <span>v1.3.7</span></h1>
+            <div class="view-switch">
+                <button class="active" id="btnWeekView">📅 周视图</button>
+                <button id="btnMonthView">🗓️ 月视图</button>
+            </div>
+            <div class="week-nav" id="weekNav">
+                <button id="prevWeek">◀</button>
+                <span id="weekRangeLabel">本周</span>
+                <button id="nextWeek">▶</button>
+                <button id="todayWeek" style="font-size:11px;">回本周</button>
+                <button id="scrollNowBtn" style="font-size:11px;">现在</button>
+            </div>
+        </div>
+        <div class="header-controls">
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="搜索课程/地点/备注...">
+            </div>
+            <button class="btn icon" id="undoBtn" disabled title="撤销 (Ctrl+Z)">↩️</button>
+            <button class="btn icon" id="redoBtn" disabled title="前进 (Ctrl+Shift+Z)">↪️</button>
+            <button class="btn icon" id="dragCreateToggle" title="开启框选添加">✏️</button>
+            <button class="btn icon active-lock" id="lockToggle" title="锁定/解锁课程">🔒</button>
+            <button class="btn icon" id="batchBtn" title="批量管理">☑️</button>
+            <button class="btn icon" id="statsBtn" title="课表统计">📊</button>
+            <button class="btn icon" id="themeToggle" title="切换深色/浅色模式">🌙</button>
+            <button class="btn primary" id="addCourseBtn">+ 添加课程</button>
+            <button class="btn icon" id="settingsBtn" title="设置">⚙️</button>
+        </div>
+    </header>
+
+    <main class="main-container">
+        <div id="week-view">
+            <div class="export-header" id="exportHeader">我的专属课表</div>
+            <div class="week-header">
+                <div class="time-header-placeholder" id="calendarTrigger" title="点击查看月历">时间 📅</div>
+                <div class="day-headers" id="dayHeaders"></div>
+            </div>
+            <div class="scroll-container" id="scrollContainer">
+                <div class="grid-area">
+                    <div class="time-axis" id="timeAxis"></div>
+                    <div class="days-grid" id="daysGrid"></div>
+                    <div class="current-time-line" id="currentTimeLine"></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="month-view">
+            <div class="export-header" id="monthExportHeader">我的专属课表</div>
+            <div class="month-header">
+                <h2 id="monthTitle">2024年 10月</h2>
+                <div style="display: flex; gap: 10px;">
+                    <button class="btn" id="prevMonth">上月</button>
+                    <button class="btn" id="nextMonth">下月</button>
+                    <button class="btn" id="todayMonth">本月</button>
+                </div>
+            </div>
+            <div class="month-grid" id="monthGrid"></div>
+        </div>
+    </main>
+
+    <div class="context-menu" id="contextMenu">
+        <div class="menu-item" id="cmEdit">✏️ 修改课程</div>
+        <div class="menu-item" id="cmCopy">📋 复制课程</div>
+        <div class="menu-item" id="cmPaste" style="display: none;">📥 粘贴到此时间</div>
+        <div class="menu-item danger" id="cmDelete">🗑️ 删除课程</div>
+    </div>
+
+    <div class="modal-overlay" id="courseModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle">添加课程</h3>
+                <button class="close-btn" id="closeModalBtn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="courseId">
+                <div class="form-group"><label>课程名称</label><input type="text" id="courseName" class="form-control" placeholder="例如：高等数学" autocomplete="off"></div>
+                <div class="form-group"><label>上课地点 (选填)</label><input type="text" id="courseLocation" class="form-control" placeholder="例如：教三 302" autocomplete="off"></div>
+                <div class="form-group"><label>备注 (选填)</label><textarea id="courseNote" class="form-control" placeholder="例如：需要带电脑、准备考试..."></textarea></div>
+                <div class="form-row">
+                    <div class="form-group"><label>星期</label><select id="courseDay" class="form-control"><option value="1">周一</option><option value="2">周二</option><option value="3">周三</option><option value="4">周四</option><option value="5">周五</option><option value="6">周六</option><option value="7">周日</option></select></div>
+                    <div class="form-group"><label>开始时间</label><input type="time" id="courseStart" class="form-control" step="300" value="08:00"></div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group"><label>结束时间</label><input type="time" id="courseEnd" class="form-control" step="300" value="09:40"></div>
+                    <div class="form-group"><label>开始日期 (选填)</label><input type="date" id="courseStartDate" class="form-control"></div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group"><label>结束日期 (选填)</label><input type="date" id="courseEndDate" class="form-control"></div>
+                    <div class="form-group"><label>颜色</label>
+                        <div class="color-picker" id="colorPicker">
+                            <div class="color-option selected" style="background: var(--c-mint)" data-color="c-mint"></div>
+                            <div class="color-option" style="background: var(--c-pink)" data-color="c-pink"></div>
+                            <div class="color-option" style="background: var(--c-blue)" data-color="c-blue"></div>
+                            <div class="color-option" style="background: var(--c-purple)" data-color="c-purple"></div>
+                            <div class="color-option" style="background: var(--c-yellow)" data-color="c-yellow"></div>
+                            <div class="color-option" style="background: var(--c-orange)" data-color="c-orange"></div>
+                            <div class="color-option" style="background: var(--c-cyan)" data-color="c-cyan"></div>
+                            <div class="color-option" style="background: var(--c-coral)" data-color="c-coral"></div>
+                            <div class="color-option" style="background: var(--c-rose)" data-color="c-rose"></div>
+                            <div class="color-option" style="background: var(--c-gray)" data-color="c-gray"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" id="modalFooter">
+                <div class="confirm-delete" id="confirmDeleteWrap" style="display:none; align-items:center; gap:10px; width:100%; justify-content:space-between;">
+                    <span style="color: var(--danger); font-size:13px; font-weight:500;">确定要删除这门课吗？</span>
+                    <div style="display:flex; gap:10px;">
+                        <button class="btn" id="cancelDeleteBtn">取消</button>
+                        <button class="btn danger" id="confirmDeleteBtn">确认删除</button>
+                    </div>
+                </div>
+                <button class="btn" id="cancelBtn">取消</button>
+                <button class="btn primary" id="saveCourseBtn" style="margin-left: auto;">保存课程</button>
+                <button class="btn danger" id="deleteCourseBtn" style="display: none;">删除课程</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="batchModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>批量管理（同名合并）</h3>
+                <button class="close-btn" id="closeBatchBtn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 5px;">系统已将课程名相同的课程视为同一门课进行合并，方便统一管理。</p>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; gap: 10px;">
+                    <label style="display: flex; align-items: center; gap: 6px; font-size: 13px; cursor: pointer; white-space: nowrap;">
+                        <input type="checkbox" id="selectAllCourses" style="width: 16px; height: 16px;"> 全选
+                    </label>
+                    <div class="batch-search-box">
+                        <input type="text" id="batchSearchInput" placeholder="搜索课程..." autocomplete="off">
+                    </div>
+                    <span style="font-size: 12px; color: var(--text-muted); white-space: nowrap;" id="selectedCount">已选 0 门课</span>
+                </div>
+                <div class="batch-list" id="batchList" style="max-height: 400px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px;"></div>
+            </div>
+            <div class="modal-footer" style="flex-direction: column; align-items: stretch;">
+                <div style="display: flex; gap: 10px; justify-content: flex-end;">
+                    <button class="btn" id="batchColorBtn">🎨 批量改色</button>
+                    <button class="btn" id="batchRenameBtn">✏️ 批量改名</button>
+                    <button class="btn danger" id="batchDeleteBtn">🗑️ 批量删除</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="settingsModal">
+        <div class="modal-content" style="max-width: 420px;">
+            <div class="modal-header"><h3>设置</h3><button class="close-btn" id="closeSettingsBtn">&times;</button></div>
+            <div class="modal-body">
+                <div class="form-group"><label>导出课表标题</label><input type="text" id="exportTitleInput" class="form-control" value="我的专属课表" placeholder="例如：2024-2025学年第一学期"></div>
+                <div class="form-group"><label>每周起始日</label><select id="weekStartSelect" class="form-control"><option value="1">周一</option><option value="0">周日</option></select></div>
+                <div class="form-group" style="margin-top: 5px;">
+                    <label>导出 / 备份操作</label>
+                    <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                        <button class="btn" id="exportImageBtn" style="flex: 1; font-size:12px;">📷 导出图片</button>
+                        <button class="btn" id="printBtn" style="flex: 1; font-size:12px;">🖨️ 导出PDF</button>
+                        <button class="btn" id="ioBtn" style="flex: 1; font-size:12px;">💾 备份数据</button>
+                    </div>
+                </div>
+                <div style="display: flex; gap: 10px; margin-top: 10px;">
+                    <button class="btn danger" id="clearDataBtn" style="flex: 1;">🗑️ 清空所有数据</button>
+                    <button class="btn" id="resetDataBtn" style="flex: 1;">🔄 恢复默认数据</button>
+                </div>
+            </div>
+            <div class="modal-footer"><button class="btn primary" id="saveSettingsBtn">保存设置</button></div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="ioModal">
+        <div class="modal-content">
+            <div class="modal-header"><h3>导入 / 导出数据</h3><button class="close-btn" id="closeIoBtn">&times;</button></div>
+            <div class="modal-body">
+                <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 8px;">为了防止数据丢失，建议定期"导出备份"保存到本地。</p>
+                <textarea id="ioTextArea" class="form-control" style="height: 150px; font-family: monospace; font-size: 12px;" placeholder="请粘贴 JSON 数据，或点击下方导出备份..."></textarea>
+                <div style="display: flex; gap: 10px; margin-top: 10px;">
+                    <button class="btn" id="exportFileBtn" style="flex: 1;">📥 导出文件</button>
+                    <button class="btn" id="importFileBtn" style="flex: 1;">📤 导入文件</button>
+                </div>
+                <input type="file" id="fileInput" accept=".json" style="display: none;">
+            </div>
+            <div class="modal-footer">
+                <button class="btn" id="cancelIoBtn">取消</button>
+                <button class="btn primary" id="confirmIoBtn">确认导入（覆盖现有数据）</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="statsModal">
+        <div class="modal-content" style="max-width: 420px;">
+            <div class="modal-header"><h3>课表统计分析</h3><button class="close-btn" id="closeStatsBtn">&times;</button></div>
+            <div class="modal-body">
+                <div class="stat-item"><span>总课程数</span><strong id="statTotalCount">0 门</strong></div>
+                <div class="stat-item"><span>每周总课时</span><strong id="statTotalHours">0 小时</strong></div>
+                <div style="margin-top: 15px;">
+                    <h4 style="font-size: 14px; margin-bottom: 10px;">课程时长占比</h4>
+                    <div class="stat-bar-container" id="statBarContainer"></div>
+                    <div id="statLegend" style="margin-top: 10px; display: flex; flex-wrap: wrap; gap: 8px;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="calendarModal">
+        <div class="modal-content" style="max-width: 400px;">
+            <div class="modal-header">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <h3 id="calTitle">2024年 10月</h3>
+                    <div style="display: flex; gap: 4px;">
+                        <button class="btn" id="calPrevMonth" style="padding: 4px 8px; font-size: 12px;">&lt;</button>
+                        <button class="btn" id="calToday" style="padding: 4px 8px; font-size: 12px;">本月</button>
+                        <button class="btn" id="calNextMonth" style="padding: 4px 8px; font-size: 12px;">&gt;</button>
+                    </div>
+                </div>
+                <button class="close-btn" id="closeCalBtn">&times;</button>
+            </div>
+            <div class="modal-body" style="padding: 10px 24px 24px;"><div class="cal-grid" id="calGrid"></div></div>
+        </div>
+    </div>
+
+    <div class="modal-overlay confirm-dialog" id="confirmModal">
+        <div class="modal-content" style="max-width: 320px;">
+            <div class="modal-header"><h3 id="confirmTitle">提示</h3></div>
+            <div class="modal-body"><p id="confirmMessage" style="font-size:14px; color:var(--text-muted); line-height:1.5;"></p></div>
+            <div class="modal-footer">
+                <button class="btn" id="confirmCancelBtn">取消</button>
+                <button class="btn primary" id="confirmOkBtn">确定</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="promptModal">
+        <div class="modal-content" style="max-width: 320px;">
+            <div class="modal-header"><h3 id="promptTitle">输入</h3></div>
+            <div class="modal-body"><input type="text" id="promptInput" class="form-control" style="width:100%;"></div>
+            <div class="modal-footer">
+                <button class="btn" id="promptCancelBtn">取消</button>
+                <button class="btn primary" id="promptOkBtn">确定</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="colorPickerModal">
+        <div class="modal-content" style="max-width: 320px;">
+            <div class="modal-header"><h3>选择颜色</h3></div>
+            <div class="modal-body"><div class="color-palette" id="colorPalette"></div></div>
+            <div class="modal-footer">
+                <button class="btn" id="colorCancelBtn">取消</button>
+                <button class="btn primary" id="colorOkBtn">应用</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const FIXED_PERIODS = [
+            { name: '第一节', start: '08:00', end: '08:40' }, { name: '第二节', start: '08:55', end: '09:35' },
+            { name: '第三节', start: '10:10', end: '10:50' }, { name: '第四节', start: '11:05', end: '11:45' },
+            { name: '第五节', start: '13:30', end: '14:10' }, { name: '第六节', start: '14:25', end: '15:05' },
+            { name: '第七节', start: '15:20', end: '16:00' }, { name: '第八节', start: '16:15', end: '16:55' }
+        ];
+        const START_HOUR = 8, END_HOUR = 21;
+        const PX_PER_MINUTE = 80 / 60;
+        const SNAP_MINUTES = 5;
+        
+        const colorGradients = {
+            'c-mint': 'var(--c-mint)', 'c-pink': 'var(--c-pink)', 'c-blue': 'var(--c-blue)',
+            'c-purple': 'var(--c-purple)', 'c-yellow': 'var(--c-yellow)', 'c-orange': 'var(--c-orange)',
+            'c-cyan': 'var(--c-cyan)', 'c-coral': 'var(--c-coral)', 'c-rose': 'var(--c-rose)', 'c-gray': 'var(--c-gray)'
+        };
+
+        let selectedColor = 'c-mint';
+        let contextTargetId = null;
+        let isLocked = true;
+        let isDragCreateEnabled = false;
+        let currentView = 'week';
+        let copiedCourse = null;
+        let weekStartDay = 1;
+        let currentWeekOffset = 0;
+        
+        let undoStack = [];
+        let redoStack = [];
+        const MAX_UNDO = 20;
+
+        let courses = [];
+        const oldData = localStorage.getItem('smart_schedule_v1_3_6');
+        const newData = localStorage.getItem('smart_schedule_v1_3_7');
+        
+        if (newData) {
+            courses = JSON.parse(newData);
+        } else if (oldData) {
+            courses = JSON.parse(oldData);
+            courses = courses.map(c => ({ ...c, note: c.note || '', startDate: c.startDate || '', endDate: c.endDate || '' }));
+            localStorage.setItem('smart_schedule_v1_3_7', JSON.stringify(courses));
+        } else {
+            courses = [
+                { id: '1', day: 3, start: '08:00', end: '09:35', name: '高等数学', location: '教三 302', note: '带计算器', color: 'c-mint', startDate: '', endDate: '' },
+                { id: '2', day: 4, start: '14:00', end: '15:35', name: '大学物理', location: '理科楼 B204', note: '', color: 'c-blue', startDate: '2024-09-01', endDate: '2024-12-31' },
+                { id: '3', day: 5, start: '10:10', end: '11:45', name: '数据结构', location: '机房 5', note: '准备上机实验', color: 'c-purple', startDate: '', endDate: '' },
+                { id: '4', day: 6, start: '15:20', end: '16:55', name: '程序设计', location: '实验楼', note: '交大作业', color: 'c-pink', startDate: '', endDate: '' },
+                { id: '5', day: 1, start: '08:55', end: '09:35', name: '英语', location: '外语楼 201', note: '', color: 'c-yellow', startDate: '', endDate: '' }
+            ];
+        }
+
+        function saveData() { localStorage.setItem('smart_schedule_v1_3_7', JSON.stringify(courses)); }
+        function timeToMinutes(timeStr) { const [h, m] = timeStr.split(':').map(Number); return h * 60 + m; }
+        function minutesToTime(minutes) {
+            const h = Math.floor(minutes / 60).toString().padStart(2, '0');
+            const m = (minutes % 60).toString().padStart(2, '0');
+            return `${h}:${m}`;
+        }
+        function getTopPixels(timeStr) { return Math.max(0, (timeToMinutes(timeStr) - START_HOUR * 60) * PX_PER_MINUTE); }
+        function getHeightPixels(startStr, endStr) { return Math.max(22, (timeToMinutes(endStr) - timeToMinutes(startStr)) * PX_PER_MINUTE); }
+
+        function saveStateForUndo() {
+            undoStack.push(JSON.stringify(courses));
+            if (undoStack.length > MAX_UNDO) undoStack.shift();
+            redoStack = [];
+            updateUndoRedoButtons();
+        }
+        function updateUndoRedoButtons() {
+            document.getElementById('undoBtn').disabled = undoStack.length === 0;
+            document.getElementById('redoBtn').disabled = redoStack.length === 0;
+        }
+        document.getElementById('undoBtn').addEventListener('click', () => {
+            if (undoStack.length > 0) {
+                redoStack.push(JSON.stringify(courses));
+                courses = JSON.parse(undoStack.pop());
+                saveData();
+                if (currentView === 'week') renderWeekView(); else renderMonthView();
+                updateUndoRedoButtons();
+                showToast('已撤销上一步操作', 'success');
+            }
+        });
+        document.getElementById('redoBtn').addEventListener('click', () => {
+            if (redoStack.length > 0) {
+                undoStack.push(JSON.stringify(courses));
+                courses = JSON.parse(redoStack.pop());
+                saveData();
+                if (currentView === 'week') renderWeekView(); else renderMonthView();
+                updateUndoRedoButtons();
+                showToast('已恢复下一步操作', 'success');
+            }
+        });
+
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+            let icon = 'ℹ️';
+            if (type === 'success') icon = '✅';
+            if (type === 'warning') icon = '⚠️';
+            if (type === 'error') icon = '❌';
+            toast.innerHTML = `<span>${icon}</span> <span>${message}</span>`;
+            container.appendChild(toast);
+            setTimeout(() => { toast.classList.add('show'); }, 10);
+            setTimeout(() => { toast.classList.remove('show'); setTimeout(() => toast.remove(), 300); }, 3000);
+        }
+
+        let confirmCallback = null;
+        function showConfirm(title, message, onConfirm) {
+            document.getElementById('confirmTitle').textContent = title;
+            document.getElementById('confirmMessage').textContent = message;
+            confirmCallback = onConfirm;
+            document.getElementById('confirmModal').classList.add('active');
+        }
+        document.getElementById('confirmCancelBtn').addEventListener('click', () => {
+            document.getElementById('confirmModal').classList.remove('active'); confirmCallback = null;
+        });
+        document.getElementById('confirmOkBtn').addEventListener('click', () => {
+            document.getElementById('confirmModal').classList.remove('active');
+            if (confirmCallback) { confirmCallback(); confirmCallback = null; }
+        });
+
+        let promptCallback = null;
+        function showPrompt(title, defaultValue, onConfirm) {
+            document.getElementById('promptTitle').textContent = title;
+            document.getElementById('promptInput').value = defaultValue || '';
+            promptCallback = onConfirm;
+            document.getElementById('promptModal').classList.add('active');
+            setTimeout(() => document.getElementById('promptInput').focus(), 150);
+        }
+        document.getElementById('promptCancelBtn').addEventListener('click', () => {
+            document.getElementById('promptModal').classList.remove('active'); promptCallback = null;
+        });
+        document.getElementById('promptOkBtn').addEventListener('click', () => {
+            const val = document.getElementById('promptInput').value.trim();
+            if (promptCallback) { promptCallback(val); }
+            document.getElementById('promptModal').classList.remove('active'); promptCallback = null;
+        });
+
+        let colorPickCallback = null;
+        function showColorPicker(onConfirm) {
+            const palette = document.getElementById('colorPalette'); palette.innerHTML = '';
+            Object.keys(colorGradients).forEach(c => {
+                const div = document.createElement('div');
+                div.className = 'palette-item'; div.style.background = colorGradients[c]; div.dataset.color = c;
+                div.addEventListener('click', () => {
+                    document.querySelectorAll('.palette-item').forEach(el => el.classList.remove('selected'));
+                    div.classList.add('selected');
+                });
+                palette.appendChild(div);
+            });
+            if (palette.firstChild) palette.firstChild.classList.add('selected');
+            colorPickCallback = onConfirm;
+            document.getElementById('colorPickerModal').classList.add('active');
+        }
+        document.getElementById('colorCancelBtn').addEventListener('click', () => {
+            document.getElementById('colorPickerModal').classList.remove('active'); colorPickCallback = null;
+        });
+        document.getElementById('colorOkBtn').addEventListener('click', () => {
+            const selected = document.querySelector('.palette-item.selected');
+            if (selected && colorPickCallback) { colorPickCallback(selected.dataset.color); }
+            document.getElementById('colorPickerModal').classList.remove('active'); colorPickCallback = null;
+        });
+
+        document.querySelectorAll('.close-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => { e.target.closest('.modal-overlay').classList.remove('active'); });
+        });
+        document.querySelectorAll('.modal-overlay').forEach(overlay => {
+            overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.classList.remove('active'); });
+        });
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                document.querySelectorAll('.modal-overlay.active').forEach(el => el.classList.remove('active'));
+                hideContextMenu();
+            }
+            if ((e.ctrlKey || e.metaKey) && e.key === 'z' && !e.shiftKey) { 
+                e.preventDefault(); 
+                if (!document.getElementById('undoBtn').disabled) document.getElementById('undoBtn').click(); 
+            }
+            if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'Z') { 
+                e.preventDefault(); 
+                if (!document.getElementById('redoBtn').disabled) document.getElementById('redoBtn').click(); 
+            }
+        });
+
+        document.getElementById('btnWeekView').addEventListener('click', () => switchView('week'));
+        document.getElementById('btnMonthView').addEventListener('click', () => switchView('month'));
+        function switchView(view) {
+            currentView = view;
+            if (view === 'week') {
+                document.getElementById('week-view').style.display = 'flex';
+                document.getElementById('month-view').style.display = 'none';
+                document.getElementById('btnWeekView').classList.add('active');
+                document.getElementById('btnMonthView').classList.remove('active');
+                document.getElementById('weekNav').style.display = 'flex';
+                renderWeekView();
+            } else {
+                document.getElementById('week-view').style.display = 'none';
+                document.getElementById('month-view').style.display = 'flex';
+                document.getElementById('btnWeekView').classList.remove('active');
+                document.getElementById('btnMonthView').classList.add('active');
+                document.getElementById('weekNav').style.display = 'none';
+                renderMonthView();
+            }
+        }
+
+        document.getElementById('prevWeek').addEventListener('click', () => { currentWeekOffset--; renderWeekView(); });
+        document.getElementById('nextWeek').addEventListener('click', () => { currentWeekOffset++; renderWeekView(); });
+        document.getElementById('todayWeek').addEventListener('click', () => { currentWeekOffset = 0; renderWeekView(); scrollToCurrentTime(); });
+        document.getElementById('scrollNowBtn').addEventListener('click', () => { scrollToCurrentTime(); });
+
+        function scrollToCurrentTime() {
+            if (currentWeekOffset !== 0) { currentWeekOffset = 0; renderWeekView(); }
+            const scrollContainer = document.getElementById('scrollContainer');
+            const now = new Date(); const currentMins = now.getHours() * 60 + now.getMinutes();
+            if (currentMins < START_HOUR * 60 || currentMins > END_HOUR * 60) return;
+            const targetTop = Math.max(0, (currentMins - START_HOUR * 60) * PX_PER_MINUTE - 200);
+            scrollContainer.scrollTo({ top: targetTop, behavior: 'smooth' });
+        }
+
+        const searchInput = document.getElementById('searchInput');
+        searchInput.addEventListener('input', (e) => {
+            const query = e.target.value.trim().toLowerCase();
+            const cards = document.querySelectorAll('.course-card');
+            cards.forEach(card => {
+                const name = card.dataset.name || '';
+                const location = card.dataset.location || '';
+                const note = card.dataset.note || '';
+                if (query && (name.includes(query) || location.includes(query) || note.includes(query))) {
+                    card.classList.add('search-match'); card.classList.remove('search-dim');
+                } else if (query) {
+                    card.classList.remove('search-match'); card.classList.add('search-dim');
+                } else {
+                    card.classList.remove('search-match'); card.classList.remove('search-dim');
+                }
+            });
+        });
+
+        const settingsModal = document.getElementById('settingsModal');
+        const exportTitleInput = document.getElementById('exportTitleInput');
+        const exportHeader = document.getElementById('exportHeader');
+        const weekStartSelect = document.getElementById('weekStartSelect');
+
+        document.getElementById('settingsBtn').addEventListener('click', () => {
+            settingsModal.classList.add('active');
+            exportTitleInput.value = localStorage.getItem('schedule_export_title') || '我的专属课表';
+            weekStartSelect.value = localStorage.getItem('schedule_week_start') || '1';
+        });
+        document.getElementById('saveSettingsBtn').addEventListener('click', () => {
+            const title = exportTitleInput.value.trim() || '我的专属课表';
+            localStorage.setItem('schedule_export_title', title); exportHeader.textContent = title;
+            weekStartDay = parseInt(weekStartSelect.value); localStorage.setItem('schedule_week_start', weekStartDay);
+            settingsModal.classList.remove('active'); showToast('设置已保存', 'success');
+            if (currentView === 'week') renderWeekView(); else renderMonthView();
+        });
+
+        document.getElementById('clearDataBtn').addEventListener('click', () => {
+            showConfirm('清空数据', '确定要清空所有课程数据吗？此操作不可恢复！', () => {
+                saveStateForUndo(); courses = []; saveData();
+                if (currentView === 'week') renderWeekView(); else renderMonthView();
+                settingsModal.classList.remove('active'); showToast('所有数据已清空', 'warning');
+            });
+        });
+
+        document.getElementById('resetDataBtn').addEventListener('click', () => {
+            showConfirm('恢复默认', '确定要恢复默认课程数据吗？当前数据将被覆盖！', () => {
+                saveStateForUndo();
+                courses = [
+                    { id: '1', day: 3, start: '08:00', end: '09:35', name: '高等数学', location: '教三 302', note: '带计算器', color: 'c-mint', startDate: '', endDate: '' },
+                    { id: '2', day: 4, start: '14:00', end: '15:35', name: '大学物理', location: '理科楼 B204', note: '', color: 'c-blue', startDate: '2024-09-01', endDate: '2024-12-31' },
+                    { id: '3', day: 5, start: '10:10', end: '11:45', name: '数据结构', location: '机房 5', note: '准备上机实验', color: 'c-purple', startDate: '', endDate: '' },
+                    { id: '4', day: 6, start: '15:20', end: '16:55', name: '程序设计', location: '实验楼', note: '交大作业', color: 'c-pink', startDate: '', endDate: '' },
+                    { id: '5', day: 1, start: '08:55', end: '09:35', name: '英语', location: '外语楼 201', note: '', color: 'c-yellow', startDate: '', endDate: '' }
+                ];
+                saveData(); if (currentView === 'week') renderWeekView(); else renderMonthView();
+                settingsModal.classList.remove('active'); showToast('已恢复默认数据', 'success');
+            });
+        });
+
+        document.getElementById('exportImageBtn').addEventListener('click', async function() {
+            const btn = this; const originalText = btn.textContent;
+            btn.textContent = '⏳ 生成中...'; btn.disabled = true;
+            const title = localStorage.getItem('schedule_export_title') || '我的专属课表';
+            if (currentView === 'week') { document.getElementById('exportHeader').textContent = title; document.body.classList.add('exporting'); }
+            else { document.getElementById('monthExportHeader').textContent = title; document.body.classList.add('exporting'); }
+            await new Promise(resolve => setTimeout(resolve, 200));
+            const target = currentView === 'week' ? document.getElementById('week-view') : document.getElementById('month-view');
+            try {
+                const canvas = await html2canvas(target, { scale: 2, useCORS: true, backgroundColor: document.body.classList.contains('dark-mode') ? '#0f1115' : '#f8fafc', windowWidth: target.scrollWidth, windowHeight: target.scrollHeight, scrollX: 0, scrollY: 0 });
+                const link = document.createElement('a'); link.download = `${title}.png`; link.href = canvas.toDataURL('image/png'); link.click();
+                showToast('图片导出成功', 'success');
+            } catch (error) { console.error(error); showToast('导出图片失败，请确保网络通畅。', 'error'); }
+            finally { document.body.classList.remove('exporting'); btn.textContent = originalText; btn.disabled = false; settingsModal.classList.remove('active'); }
+        });
+
+        document.getElementById('printBtn').addEventListener('click', () => {
+            const title = localStorage.getItem('schedule_export_title') || '我的专属课表';
+            if (currentView === 'week') document.getElementById('exportHeader').textContent = title;
+            else document.getElementById('monthExportHeader').textContent = title;
+            settingsModal.classList.remove('active');
+            setTimeout(() => window.print(), 300);
+        });
+
+        const ioModal = document.getElementById('ioModal');
+        const ioTextArea = document.getElementById('ioTextArea');
+        const fileInput = document.getElementById('fileInput');
+        document.getElementById('ioBtn').addEventListener('click', () => {
+            settingsModal.classList.remove('active'); ioTextArea.value = JSON.stringify(courses, null, 2); ioModal.classList.add('active');
+        });
+        document.getElementById('exportFileBtn').addEventListener('click', () => {
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(courses, null, 2));
+            const downloadAnchorNode = document.createElement('a');
+            downloadAnchorNode.setAttribute("href", dataStr); downloadAnchorNode.setAttribute("download", "schedule_backup.json");
+            document.body.appendChild(downloadAnchorNode); downloadAnchorNode.click(); downloadAnchorNode.remove(); showToast('备份文件已下载', 'success');
+        });
+        document.getElementById('importFileBtn').addEventListener('click', () => fileInput.click());
+        fileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0]; if (!file) return;
+            const reader = new FileReader(); reader.onload = (event) => { ioTextArea.value = event.target.result; };
+            reader.readAsText(file); fileInput.value = '';
+        });
+        document.getElementById('confirmIoBtn').addEventListener('click', () => {
+            try {
+                const importedData = JSON.parse(ioTextArea.value);
+                if (!Array.isArray(importedData)) throw new Error('数据格式错误，必须是数组');
+                importedData.forEach(item => { if (!item.id || !item.day || !item.start || !item.end || !item.name) throw new Error('数据缺少必要字段'); });
+                saveStateForUndo();
+                courses = importedData.map(c => ({...c, note: c.note || '', startDate: c.startDate || '', endDate: c.endDate || ''}));
+                saveData(); ioModal.classList.remove('active'); 
+                if (currentView === 'week') renderWeekView(); else renderMonthView(); 
+                showToast('数据导入成功', 'success');
+                if (searchInput.value.trim()) searchInput.dispatchEvent(new Event('input'));
+            } catch (err) { showToast('导入失败：' + err.message, 'error'); }
+        });
+
+        const statsModal = document.getElementById('statsModal');
+        document.getElementById('statsBtn').addEventListener('click', () => { statsModal.classList.add('active'); renderStats(); });
+        function renderStats() {
+            const totalCount = courses.length; let totalMinutes = 0; const colorMinutes = {};
+            courses.forEach(c => {
+                const duration = timeToMinutes(c.end) - timeToMinutes(c.start);
+                totalMinutes += duration; colorMinutes[c.color] = (colorMinutes[c.color] || 0) + duration;
+            });
+            document.getElementById('statTotalCount').textContent = `${totalCount} 门`;
+            document.getElementById('statTotalHours').textContent = `${(totalMinutes / 60).toFixed(1)} 小时`;
+            const barContainer = document.getElementById('statBarContainer'); const legend = document.getElementById('statLegend');
+            barContainer.innerHTML = ''; legend.innerHTML = '';
+            Object.keys(colorMinutes).forEach(color => {
+                const minutes = colorMinutes[color]; const percent = (minutes / totalMinutes) * 100;
+                const bar = document.createElement('div'); bar.className = 'stat-bar'; bar.style.width = `${percent}%`;
+                bar.style.background = colorGradients[color] || 'var(--primary)'; barContainer.appendChild(bar);
+                const item = document.createElement('div'); item.style.cssText = 'display:flex; align-items:center; gap:4px; font-size:12px;';
+                item.innerHTML = `<span style="display:inline-block; width:10px; height:10px; border-radius:50%; background:${colorGradients[color] || 'var(--primary)'};"></span> ${(minutes/60).toFixed(1)}h`;
+                legend.appendChild(item);
+            });
+        }
+
+        const lockToggleBtn = document.getElementById('lockToggle');
+        lockToggleBtn.addEventListener('click', () => {
+            isLocked = !isLocked;
+            lockToggleBtn.textContent = isLocked ? '🔒' : '🔓';
+            lockToggleBtn.classList.toggle('active-lock', isLocked);
+            if (currentView === 'week') renderWeekView();
+            showToast(isLocked ? '课程已锁定，无法拖动' : '课程已解锁，可以自由拖动', isLocked ? 'info' : 'warning');
+        });
+
+        const dragCreateToggleBtn = document.getElementById('dragCreateToggle');
+        dragCreateToggleBtn.addEventListener('click', () => {
+            isDragCreateEnabled = !isDragCreateEnabled;
+            dragCreateToggleBtn.classList.toggle('active-drag', isDragCreateEnabled);
+            if (isDragCreateEnabled) {
+                dragCreateToggleBtn.title = "关闭框选添加";
+                showToast("框选添加已开启：在空白网格按住鼠标拖动即可创建课程。", "info");
+            } else {
+                dragCreateToggleBtn.title = "开启框选添加";
+                showToast("框选添加已关闭。", "info");
+            }
+        });
+
+        const themeToggle = document.getElementById('themeToggle');
+        if (localStorage.getItem('schedule_theme') === 'dark') { document.body.classList.add('dark-mode'); themeToggle.textContent = '☀️'; }
+        else { themeToggle.textContent = '🌙'; }
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            const isDark = document.body.classList.contains('dark-mode');
+            themeToggle.textContent = isDark ? '☀️' : '🌙';
+            localStorage.setItem('schedule_theme', isDark ? 'dark' : 'light');
+        });
+
+        // ================= 渲染周视图 =================
+        function renderWeekView() {
+            const today = new Date();
+            const currentDay = today.getDay();
+            
+            // 当前显示周的周一
+            const monday = new Date(today);
+            const diff = today.getDate() - (currentDay === 0 ? 7 : currentDay) + 1;
+            monday.setDate(diff + currentWeekOffset * 7);
+            monday.setHours(0,0,0,0);
+            
+            const weekEnd = new Date(monday);
+            weekEnd.setDate(weekEnd.getDate() + 6);
+            weekEnd.setHours(23,59,59,999);
+
+            const weekStartStr = `${monday.getMonth()+1}/${monday.getDate()}`;
+            const weekEndStr = `${weekEnd.getMonth()+1}/${weekEnd.getDate()}`;
+            document.getElementById('weekRangeLabel').textContent = `${weekStartStr} - ${weekEndStr}`;
+
+            const dayHeaders = document.getElementById('dayHeaders');
+            const timeAxis = document.getElementById('timeAxis');
+            const daysGrid = document.getElementById('daysGrid');
+            
+            Array.from(daysGrid.children).forEach(child => {
+                if (!child.classList.contains('selection-box')) child.remove();
+            });
+            dayHeaders.innerHTML = ''; timeAxis.innerHTML = '';
+
+            const weekdays = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
+            const weekdaysOrder = weekStartDay === 1 ? [1,2,3,4,5,6,0] : [0,1,2,3,4,5,6];
+
+            weekdaysOrder.forEach((dayIndex, index) => {
+                const date = new Date(monday); date.setDate(monday.getDate() + index);
+                const dateStr = `${date.getMonth() + 1}/${date.getDate().toString().padStart(2, '0')}`;
+                const div = document.createElement('div');
+                const isToday = date.toDateString() === today.toDateString();
+                div.className = `day-header ${isToday ? 'today' : ''}`;
+                div.innerHTML = `<span>${weekdays[dayIndex]}</span><span class="date">${dateStr}</span>`;
+                dayHeaders.appendChild(div);
+            });
+
+            const startMins = START_HOUR * 60, endMins = END_HOUR * 60;
+            for (let mins = startMins; mins <= endMins; mins += 30) {
+                const isHour = mins % 60 === 0;
+                const slot = document.createElement('div');
+                slot.className = `time-slot ${isHour ? 'hour-mark' : ''}`;
+                slot.setAttribute('data-time', minutesToTime(mins));
+                if (mins === endMins) slot.style.borderBottom = 'none';
+                timeAxis.appendChild(slot);
+            }
+
+            FIXED_PERIODS.forEach((period, index) => {
+                const badge = document.createElement('div'); badge.className = 'period-badge';
+                badge.style.top = getTopPixels(period.start) + 'px'; badge.textContent = index + 1;
+                badge.title = `${period.name} ${period.start} - ${period.end}`; timeAxis.appendChild(badge);
+            });
+
+            for (let d = 0; d < 7; d++) {
+                const actualDay = weekdaysOrder[d];
+                const displayDay = actualDay === 0 ? 7 : actualDay;
+                
+                const col = document.createElement('div');
+                col.className = `day-column day-${displayDay}`;
+                col.dataset.day = displayDay;
+                
+                const colDate = new Date(monday); colDate.setDate(monday.getDate() + d);
+                if (colDate.toDateString() === today.toDateString()) col.classList.add('today-col');
+
+                if (displayDay >= 3 && displayDay <= 6) {
+                    const periodsToRender = displayDay === 6 ? FIXED_PERIODS.slice(0, 6) : FIXED_PERIODS;
+                    periodsToRender.forEach((period) => {
+                        const block = document.createElement('div'); block.className = 'fixed-period-block';
+                        block.style.top = getTopPixels(period.start) + 'px'; block.style.height = getHeightPixels(period.start, period.end) + 'px';
+                        col.appendChild(block);
+                    });
+                }
+
+                for (let mins = startMins + 30; mins <= endMins; mins += 30) {
+                    const line = document.createElement('div'); line.className = `bg-line ${mins % 60 === 0 ? 'hour-line' : ''}`;
+                    line.style.top = getTopPixels(minutesToTime(mins)) + 'px'; col.appendChild(line);
+                }
+
+                col.addEventListener('mousedown', (e) => {
+                    if (!isDragCreateEnabled || e.button !== 0 || e.target.closest('.course-card')) return;
+                    const rect = col.getBoundingClientRect();
+                    const startY = e.clientY - rect.top;
+                    let hasMoved = false;
+                    
+                    const selectionBox = document.createElement('div');
+                    selectionBox.className = 'selection-box';
+                    selectionBox.style.top = '0px'; selectionBox.style.height = '0px';
+                    col.appendChild(selectionBox);
+                    
+                    let startMinutes = Math.floor((startY / PX_PER_MINUTE) / SNAP_MINUTES) * SNAP_MINUTES + startMins;
+                    startMinutes = Math.max(startMins, Math.min(startMinutes, endMins - 15));
+                    
+                    selectionBox.style.top = getTopPixels(minutesToTime(startMinutes)) + 'px';
+                    let currentMins = startMinutes;
+
+                    const onMouseMove = (moveEvent) => {
+                        hasMoved = true;
+                        const moveY = moveEvent.clientY - rect.top;
+                        let endMinutes = Math.floor((moveY / PX_PER_MINUTE) / SNAP_MINUTES) * SNAP_MINUTES + startMins;
+                        endMinutes = Math.max(startMins, Math.min(endMinutes, endMins));
+                        const boxTop = Math.min(startMinutes, endMinutes);
+                        const boxBottom = Math.max(startMinutes, endMinutes);
+                        selectionBox.style.top = getTopPixels(minutesToTime(boxTop)) + 'px';
+                        selectionBox.style.height = getHeightPixels(minutesToTime(boxTop), minutesToTime(boxBottom)) + 'px';
+                        currentMins = boxBottom;
+                    };
+
+                    const onMouseUp = () => {
+                        document.removeEventListener('mousemove', onMouseMove);
+                        document.removeEventListener('mouseup', onMouseUp);
+                        selectionBox.remove();
+                        if (hasMoved) {
+                            let finalStart = Math.min(startMinutes, currentMins);
+                            let finalEnd = Math.max(startMinutes, currentMins);
+                            if (finalEnd - finalStart < 15) finalEnd = finalStart + 15;
+                            document.body.dataset.suppressDblClick = 'true';
+                            setTimeout(() => { delete document.body.dataset.suppressDblClick; }, 200);
+                            openModal({ day: displayDay, start: minutesToTime(finalStart), end: minutesToTime(finalEnd), color: 'c-mint', startDate: '', endDate: '' });
+                        }
+                    };
+                    document.addEventListener('mousemove', onMouseMove);
+                    document.addEventListener('mouseup', onMouseUp);
+                });
+
+                col.addEventListener('dblclick', (e) => {
+                    if (document.body.dataset.suppressDblClick) return;
+                    if (e.target.closest('.course-card')) return;
+                    const rect = col.getBoundingClientRect();
+                    const clickY = e.clientY - rect.top;
+                    let clickedMinutes = Math.floor((clickY / PX_PER_MINUTE) / SNAP_MINUTES) * SNAP_MINUTES + startMins;
+                    clickedMinutes = Math.max(startMins, Math.min(clickedMinutes, endMins - 60));
+                    let startTime = minutesToTime(clickedMinutes);
+                    let endTime = minutesToTime(clickedMinutes + 90);
+                    if (displayDay >= 3 && displayDay <= 6) {
+                        const periodsToCheck = displayDay === 6 ? FIXED_PERIODS.slice(0, 6) : FIXED_PERIODS;
+                        for (let p of periodsToCheck) {
+                            const pStart = timeToMinutes(p.start); const pEnd = timeToMinutes(p.end);
+                            if (clickedMinutes >= pStart - 5 && clickedMinutes <= pEnd + 5) { startTime = p.start; endTime = p.end; break; }
+                        }
+                    }
+                    openModal({ day: displayDay, start: startTime, end: endTime, color: 'c-mint', startDate: '', endDate: '' });
+                });
+
+                col.addEventListener('contextmenu', (e) => {
+                    if (copiedCourse && !e.target.closest('.course-card')) {
+                        e.preventDefault();
+                        const rect = col.getBoundingClientRect();
+                        const clickY = e.clientY - rect.top;
+                        let clickedMinutes = Math.floor((clickY / PX_PER_MINUTE) / SNAP_MINUTES) * SNAP_MINUTES + startMins;
+                        clickedMinutes = Math.max(startMins, Math.min(clickedMinutes, endMins - 30));
+                        saveStateForUndo();
+                        copiedCourse.day = displayDay;
+                        copiedCourse.start = minutesToTime(clickedMinutes);
+                        copiedCourse.end = minutesToTime(clickedMinutes + (timeToMinutes(copiedCourse.end) - timeToMinutes(copiedCourse.start)));
+                        courses.push({...copiedCourse, id: Date.now().toString()});
+                        saveData(); renderWeekView(); copiedCourse = null;
+                        showToast('课程已粘贴', 'success');
+                    }
+                });
+                daysGrid.appendChild(col);
+            }
+
+            // 今天凌晨0点，用于判断"未开始"
+            const todayStart = new Date(today); todayStart.setHours(0,0,0,0);
+
+            courses.forEach(course => {
+                // ===== 过滤：仅过滤掉已经结束的课程 =====
+                // 已结束定义：课程结束日期 < 当前显示周的周一
+                if (course.endDate) {
+                    const cEnd = new Date(course.endDate);
+                    cEnd.setHours(23,59,59,999);
+                    if (cEnd < monday) return; // 已结束，不显示
+                }
+
+                // ===== 判断是否为"未开始"（未来课程）=====
+                // 定义：课程的开始日期晚于今天
+                let isFuture = false;
+                if (course.startDate) {
+                    const courseStartDate = new Date(course.startDate);
+                    courseStartDate.setHours(0,0,0,0);
+                    if (courseStartDate > todayStart) {
+                        isFuture = true;
+                    }
+                }
+
+                const col = daysGrid.querySelector(`.day-${course.day}`);
+                if (!col) return;
+                const card = document.createElement('div');
+                card.className = `course-card ${isLocked ? 'locked' : ''}`;
+                if (isFuture) card.classList.add('future-diluted');
+                
+                card.dataset.id = course.id;
+                card.dataset.name = course.name.toLowerCase();
+                card.dataset.location = (course.location || '').toLowerCase();
+                card.dataset.note = (course.note || '').toLowerCase();
+                
+                card.style.background = colorGradients[course.color] || colorGradients['c-blue'];
+                card.style.top = getTopPixels(course.start) + 'px'; card.style.height = getHeightPixels(course.start, course.end) + 'px';
+                
+                let dateRangeHtml = '';
+                if (course.startDate || course.endDate) {
+                    const startStr = course.startDate ? course.startDate.substring(5) : '';
+                    const endStr = course.endDate ? course.endDate.substring(5) : '';
+                    const displayText = startStr && endStr ? `${startStr}~${endStr}` : (startStr ? `${startStr}起` : `至${endStr}`);
+                    dateRangeHtml = `<div class="course-date-range">📅 ${displayText}</div>`;
+                }
+
+                card.innerHTML = `
+                    <div class="course-title">${course.name}</div>
+                    ${course.location ? `<div class="course-location">${course.location}</div>` : ''}
+                    ${dateRangeHtml}
+                    ${course.note ? `<div class="course-note">备注: ${course.note}</div>` : ''}
+                    <div class="course-time">${course.start} - ${course.end}</div>
+                    <div class="resize-handle" title="拖拽调整时长"></div>
+                `;
+
+                if (!isLocked) {
+                    const delBtn = document.createElement('button');
+                    delBtn.className = 'card-delete-btn';
+                    delBtn.innerHTML = '×';
+                    delBtn.title = '删除课程';
+                    delBtn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        showConfirm('删除课程', `确定要删除课程 "${course.name}" 吗？`, () => {
+                            saveStateForUndo();
+                            courses = courses.filter(c => c.id !== course.id);
+                            saveData(); renderWeekView(); showToast('课程已删除', 'success');
+                        });
+                    });
+                    card.appendChild(delBtn);
+                }
+                
+                card.addEventListener('dblclick', (e) => { 
+                    if (card.dataset.dragged === 'true') { card.dataset.dragged = 'false'; return; }
+                    e.stopPropagation(); openModal(course); 
+                });
+                card.addEventListener('contextmenu', (e) => { e.preventDefault(); e.stopPropagation(); contextTargetId = course.id; showContextMenu(e.pageX, e.pageY); });
+                if (!isLocked) initDragAndResize(card, course, col);
+                col.appendChild(card);
+            });
+            updateTimeLine();
+        }
+
+        let currentMonthDate = new Date();
+        document.getElementById('prevMonth').addEventListener('click', () => { currentMonthDate.setMonth(currentMonthDate.getMonth() - 1); renderMonthView(); });
+        document.getElementById('nextMonth').addEventListener('click', () => { currentMonthDate.setMonth(currentMonthDate.getMonth() + 1); renderMonthView(); });
+        document.getElementById('todayMonth').addEventListener('click', () => { currentMonthDate = new Date(); renderMonthView(); });
+
+        function renderMonthView() {
+            const year = currentMonthDate.getFullYear(); const month = currentMonthDate.getMonth();
+            document.getElementById('monthTitle').textContent = `${year}年 ${month + 1}月`;
+            const firstDay = new Date(year, month, 1); const lastDay = new Date(year, month + 1, 0);
+            const startDayOfWeek = firstDay.getDay(); const totalDays = lastDay.getDate();
+            const monthGrid = document.getElementById('monthGrid'); monthGrid.innerHTML = '';
+
+            const weekdays = weekStartDay === 1 ? ['一', '二', '三', '四', '五', '六', '日'] : ['日', '一', '二', '三', '四', '五', '六'];
+            weekdays.forEach(day => { const header = document.createElement('div'); header.className = 'month-day-header'; header.textContent = `周${day}`; monthGrid.appendChild(header); });
+
+            let startDay = startDayOfWeek;
+            if (weekStartDay === 1) { startDay = startDayOfWeek === 0 ? 6 : startDayOfWeek - 1; }
+            else { startDay = startDayOfWeek; }
+
+            const prevMonthLastDay = new Date(year, month, 0).getDate();
+            for (let i = startDay - 1; i >= 0; i--) { const cell = document.createElement('div'); cell.className = 'month-day-cell other-month'; cell.innerHTML = `<div class="month-date">${prevMonthLastDay - i}</div>`; monthGrid.appendChild(cell); }
+
+            const today = new Date();
+            for (let d = 1; d <= totalDays; d++) {
+                const cell = document.createElement('div');
+                const isToday = year === today.getFullYear() && month === today.getMonth() && d === today.getDate();
+                cell.className = `month-day-cell ${isToday ? 'today' : ''}`;
+                
+                const dateObj = new Date(year, month, d); 
+                let dayOfWeek = dateObj.getDay() === 0 ? 7 : dateObj.getDay();
+
+                const dayCourses = courses.filter(c => {
+                    if (c.day !== dayOfWeek) return false;
+                    if (c.startDate || c.endDate) {
+                        const cStart = c.startDate ? new Date(c.startDate) : new Date('1970-01-01');
+                        const cEnd = c.endDate ? new Date(c.endDate) : new Date('2099-12-31');
+                        cStart.setHours(0,0,0,0); cEnd.setHours(23,59,59,999);
+                        if (dateObj < cStart || dateObj > cEnd) return false;
+                    }
+                    return true;
+                }).sort((a, b) => timeToMinutes(a.start) - timeToMinutes(b.start));
+
+                let coursesHtml = '';
+                dayCourses.slice(0, 3).forEach(c => { coursesHtml += `<div class="month-course-item" style="background: ${colorGradients[c.color]}" data-id="${c.id}">${c.name} ${c.start}</div>`; });
+                if (dayCourses.length > 3) coursesHtml += `<div class="more-courses">+${dayCourses.length - 3} 更多...</div>`;
+                cell.innerHTML = `<div class="month-date">${d}</div>${coursesHtml}`;
+
+                cell.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const selectedDate = new Date(year, month, d); selectedDate.setHours(0,0,0,0);
+                    const todayNorm = new Date(); todayNorm.setHours(0,0,0,0);
+                    const diffTime = selectedDate - todayNorm;
+                    const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24));
+                    let selectedWeekOffset = Math.floor(diffDays / 7);
+                    if (weekStartDay === 1) {
+                        const selectedDayOfWeek = selectedDate.getDay();
+                        if (selectedDayOfWeek === 0) selectedWeekOffset = Math.round((diffDays - 1) / 7);
+                    }
+                    currentWeekOffset = selectedWeekOffset;
+                    switchView('week');
+                });
+
+                cell.querySelectorAll('.month-course-item').forEach(item => {
+                    item.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        const course = courses.find(c => c.id === item.dataset.id);
+                        if (course) { switchView('week'); openModal(course); }
+                    });
+                });
+                monthGrid.appendChild(cell);
+            }
+
+            const totalCells = startDay + totalDays;
+            const remainingCells = (Math.ceil(totalCells / 7) * 7) - totalCells;
+            for (let i = 1; i <= remainingCells; i++) { const cell = document.createElement('div'); cell.className = 'month-day-cell other-month'; cell.innerHTML = `<div class="month-date">${i}</div>`; monthGrid.appendChild(cell); }
+        }
+
+        const contextMenu = document.getElementById('contextMenu');
+        function showContextMenu(x, y) { contextMenu.style.left = x + 'px'; contextMenu.style.top = y + 'px'; contextMenu.classList.add('active'); document.getElementById('cmPaste').style.display = copiedCourse ? 'flex' : 'none'; }
+        function hideContextMenu() { contextMenu.classList.remove('active'); }
+        document.addEventListener('click', hideContextMenu);
+        document.addEventListener('contextmenu', (e) => { if (!e.target.closest('.course-card') && !e.target.closest('.day-column')) hideContextMenu(); });
+
+        document.getElementById('cmEdit').addEventListener('click', () => { const course = courses.find(c => c.id === contextTargetId); if (course) openModal(course); hideContextMenu(); });
+        document.getElementById('cmCopy').addEventListener('click', () => { const course = courses.find(c => c.id === contextTargetId); if (course) { copiedCourse = { ...course }; showToast(`已复制课程 "${course.name}"，在空白网格右键可粘贴。`, 'info'); } hideContextMenu(); });
+        document.getElementById('cmDelete').addEventListener('click', () => {
+            const course = courses.find(c => c.id === contextTargetId);
+            if (course) {
+                showConfirm('删除课程', `确定要删除课程 "${course.name}" 吗？`, () => {
+                    saveStateForUndo();
+                    courses = courses.filter(c => c.id !== course.id); saveData();
+                    if (currentView === 'week') renderWeekView(); else renderMonthView();
+                    if (searchInput.value.trim()) searchInput.dispatchEvent(new Event('input'));
+                    showToast('课程已删除', 'success');
+                });
+            }
+            hideContextMenu();
+        });
+
+        function initDragAndResize(card, course, originalCol) {
+            let isDragging = false, isResizing = false;
+            let startX, startY, initialRect;
+            let initialStart = course.start, initialEnd = course.end;
+            let hasMoved = false;
+            let isCopyAction = false;
+
+            card.addEventListener('mousedown', (e) => {
+                if (e.button !== 0 || isLocked) return;
+                isCopyAction = e.ctrlKey || e.metaKey;
+
+                if (e.target.classList.contains('resize-handle')) { isResizing = true; e.stopPropagation(); } 
+                else { isDragging = true; }
+
+                startX = e.clientX; startY = e.clientY;
+                initialRect = card.getBoundingClientRect(); hasMoved = false;
+
+                if (isDragging) {
+                    card.style.width = initialRect.width + 'px'; card.style.height = initialRect.height + 'px';
+                    card.style.left = initialRect.left + 'px'; card.style.top = initialRect.top + 'px';
+                    card.classList.add('dragging');
+                    const placeholder = card.cloneNode(true);
+                    placeholder.classList.remove('dragging'); placeholder.classList.add('placeholder');
+                    placeholder.style.position = 'absolute'; placeholder.style.left = '3px'; placeholder.style.right = '3px';
+                    placeholder.style.top = getTopPixels(initialStart) + 'px'; placeholder.style.height = getHeightPixels(initialStart, initialEnd) + 'px';
+                    originalCol.appendChild(placeholder);
+                    card.dataset.placeholderId = 'ph-' + course.id; placeholder.id = card.dataset.placeholderId;
+                }
+                document.addEventListener('mousemove', onMouseMove);
+                document.addEventListener('mouseup', onMouseUp);
+            });
+
+            function onMouseMove(e) {
+                const deltaX = e.clientX - startX, deltaY = e.clientY - startY;
+                if (Math.abs(deltaX) > 3 || Math.abs(deltaY) > 3) hasMoved = true;
+                if (isDragging) { card.style.transform = `translate(${deltaX}px, ${deltaY}px)`; } 
+                else if (isResizing) {
+                    let newHeight = initialRect.height + deltaY; const minHeight = 15 * PX_PER_MINUTE;
+                    if (newHeight < minHeight) newHeight = minHeight;
+                    card.style.height = newHeight + 'px';
+                    let newEndMinutes = timeToMinutes(initialStart) + Math.round((newHeight / PX_PER_MINUTE) / SNAP_MINUTES) * SNAP_MINUTES;
+                    newEndMinutes = Math.min(newEndMinutes, END_HOUR * 60);
+                    card.querySelector('.course-time').textContent = `${initialStart} - ${minutesToTime(newEndMinutes)}`;
+                }
+            }
+
+            function onMouseUp(e) {
+                document.removeEventListener('mousemove', onMouseMove); document.removeEventListener('mouseup', onMouseUp);
+                if (hasMoved) card.dataset.dragged = 'true';
+                if (isDragging) {
+                    card.classList.remove('dragging'); card.style.transform = '';
+                    const ph = document.getElementById(card.dataset.placeholderId); if (ph) ph.remove();
+                    const mouseX = e.clientX, mouseY = e.clientY;
+                    const daysGrid = document.getElementById('daysGrid'); const gridRect = daysGrid.getBoundingClientRect(); const colWidth = gridRect.width / 7;
+                    let targetDayIndex = Math.floor((mouseX - gridRect.left) / colWidth);
+                    const weekdaysOrder = weekStartDay === 1 ? [1,2,3,4,5,6,0] : [0,1,2,3,4,5,6];
+                    let targetDay = weekdaysOrder[Math.max(0, Math.min(6, targetDayIndex))]; if (targetDay === 0) targetDay = 7;
+                    const targetCol = daysGrid.querySelector(`.day-${targetDay}`); const colRect = targetCol.getBoundingClientRect();
+                    let relativeY = mouseY - colRect.top - (startY - initialRect.top); 
+                    let startMinutes = Math.floor((relativeY / PX_PER_MINUTE) / SNAP_MINUTES) * SNAP_MINUTES + START_HOUR * 60;
+                    startMinutes = Math.max(START_HOUR * 60, Math.min(startMinutes, END_HOUR * 60 - 30));
+                    const duration = timeToMinutes(initialEnd) - timeToMinutes(initialStart);
+                    let endMinutes = startMinutes + duration;
+                    if (endMinutes > END_HOUR * 60) { endMinutes = END_HOUR * 60; startMinutes = endMinutes - duration; }
+                    
+                    if (isCopyAction) {
+                        saveStateForUndo();
+                        const newCourse = { ...course, id: Date.now().toString(), day: targetDay, start: minutesToTime(startMinutes), end: minutesToTime(endMinutes) };
+                        courses.push(newCourse);
+                        saveData(); renderWeekView();
+                        showToast('课程已复制到新位置', 'success');
+                    } else {
+                        if (course.day !== targetDay || course.start !== minutesToTime(startMinutes) || course.end !== minutesToTime(endMinutes)) {
+                            saveStateForUndo();
+                        }
+                        course.day = targetDay; course.start = minutesToTime(startMinutes); course.end = minutesToTime(endMinutes);
+                        saveData(); renderWeekView(); 
+                    }
+                    if (searchInput.value.trim()) searchInput.dispatchEvent(new Event('input'));
+                } else if (isResizing) {
+                    let newHeight = card.offsetHeight;
+                    let newEndMinutes = timeToMinutes(initialStart) + Math.round((newHeight / PX_PER_MINUTE) / SNAP_MINUTES) * SNAP_MINUTES;
+                    newEndMinutes = Math.min(newEndMinutes, END_HOUR * 60);
+                    if (newEndMinutes !== timeToMinutes(initialEnd)) { 
+                        saveStateForUndo();
+                        course.end = minutesToTime(newEndMinutes); saveData(); 
+                    }
+                    renderWeekView();
+                    if (searchInput.value.trim()) searchInput.dispatchEvent(new Event('input'));
+                }
+                isDragging = false; isResizing = false;
+            }
+        }
+
+        const modal = document.getElementById('courseModal');
+        const courseIdInput = document.getElementById('courseId');
+        const courseNameInput = document.getElementById('courseName');
+        const courseLocationInput = document.getElementById('courseLocation');
+        const courseNoteInput = document.getElementById('courseNote');
+        const courseDayInput = document.getElementById('courseDay');
+        const courseStartInput = document.getElementById('courseStart');
+        const courseEndInput = document.getElementById('courseEnd');
+        const courseStartDateInput = document.getElementById('courseStartDate');
+        const courseEndDateInput = document.getElementById('courseEndDate');
+        const saveBtn = document.getElementById('saveCourseBtn');
+        const deleteBtn = document.getElementById('deleteCourseBtn');
+        const confirmDeleteWrap = document.getElementById('confirmDeleteWrap');
+        const cancelDeleteBtn = document.getElementById('cancelDeleteBtn');
+        const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
+
+        function openModal(data = null) {
+            modal.classList.add('active');
+            confirmDeleteWrap.style.display = 'none'; saveBtn.style.display = 'block'; deleteBtn.style.display = 'none';
+            if (data && data.id) {
+                document.getElementById('modalTitle').textContent = '编辑课程';
+                courseIdInput.value = data.id; courseNameInput.value = data.name;
+                courseLocationInput.value = data.location || ''; courseNoteInput.value = data.note || '';
+                courseDayInput.value = data.day; courseStartInput.value = data.start; courseEndInput.value = data.end;
+                courseStartDateInput.value = data.startDate || ''; courseEndDateInput.value = data.endDate || '';
+                selectedColor = data.color || 'c-mint'; deleteBtn.style.display = 'block';
+            } else {
+                document.getElementById('modalTitle').textContent = '添加课程';
+                courseIdInput.value = ''; courseNameInput.value = ''; courseLocationInput.value = ''; courseNoteInput.value = '';
+                courseDayInput.value = data?.day || 1; courseStartInput.value = data?.start || '08:00'; courseEndInput.value = data?.end || '09:40';
+                courseStartDateInput.value = data?.startDate || ''; courseEndDateInput.value = data?.endDate || '';
+                selectedColor = data?.color || 'c-mint';
+            }
+            document.querySelectorAll('.color-option').forEach(el => { el.classList.toggle('selected', el.dataset.color === selectedColor); });
+            setTimeout(() => courseNameInput.focus(), 150);
+        }
+
+        function closeModal() { modal.classList.remove('active'); }
+
+        document.getElementById('colorPicker').addEventListener('click', (e) => {
+            if (e.target.classList.contains('color-option')) {
+                document.querySelectorAll('.color-option').forEach(el => el.classList.remove('selected'));
+                e.target.classList.add('selected'); selectedColor = e.target.dataset.color;
+            }
+        });
+
+        function handleSaveCourse(isConfirmed = false) {
+            const name = courseNameInput.value.trim(); const location = courseLocationInput.value.trim();
+            const note = courseNoteInput.value.trim(); const day = parseInt(courseDayInput.value);
+            const start = courseStartInput.value; const end = courseEndInput.value;
+            const startDate = courseStartDateInput.value; const endDate = courseEndDateInput.value;
+
+            if (!name) { showToast('请输入课程名称', 'warning'); return; }
+            if (timeToMinutes(start) >= timeToMinutes(end)) { showToast('结束时间必须大于开始时间', 'warning'); return; }
+            if (startDate && endDate && new Date(startDate) > new Date(endDate)) { showToast('开始日期不能晚于结束日期', 'warning'); return; }
+
+            const id = courseIdInput.value;
+            
+            if (!isConfirmed) {
+                const conflict = courses.find(c => {
+                    if (c.id === id || c.day !== day) return false;
+                    const cStart = timeToMinutes(c.start); const cEnd = timeToMinutes(c.end);
+                    const newStart = timeToMinutes(start); const newEnd = timeToMinutes(end);
+                    return (newStart < cEnd && newEnd > cStart);
+                });
+                if (conflict) {
+                    showConfirm('时间冲突', `课程时间冲突！与 "${conflict.name}" (${conflict.start}-${conflict.end}) 重叠，是否继续保存？`, () => {
+                        handleSaveCourse(true);
+                    });
+                    return;
+                }
+            }
+
+            saveStateForUndo();
+            if (id) {
+                const index = courses.findIndex(c => c.id === id);
+                if (index !== -1) courses[index] = { ...courses[index], name, location, note, day, start, end, color: selectedColor, startDate, endDate };
+            } else {
+                courses.push({ id: Date.now().toString(), day, start, end, name, location, note, color: selectedColor, startDate, endDate });
+            }
+            saveData();
+            if (currentView === 'week') renderWeekView(); else renderMonthView();
+            if (searchInput.value.trim()) searchInput.dispatchEvent(new Event('input'));
+            closeModal();
+            showToast(id ? '课程已更新' : '课程已添加', 'success');
+        }
+
+        saveBtn.addEventListener('click', () => handleSaveCourse(false));
+
+        deleteBtn.addEventListener('click', () => { saveBtn.style.display = 'none'; deleteBtn.style.display = 'none'; confirmDeleteWrap.style.display = 'flex'; });
+        cancelDeleteBtn.addEventListener('click', () => { confirmDeleteWrap.style.display = 'none'; saveBtn.style.display = 'block'; deleteBtn.style.display = 'block'; });
+        confirmDeleteBtn.addEventListener('click', () => {
+            saveStateForUndo();
+            courses = courses.filter(c => c.id !== courseIdInput.value); saveData();
+            if (currentView === 'week') renderWeekView(); else renderMonthView();
+            if (searchInput.value.trim()) searchInput.dispatchEvent(new Event('input'));
+            closeModal(); showToast('课程已删除', 'success');
+        });
+
+        document.getElementById('addCourseBtn').addEventListener('click', () => {
+            const today = new Date().getDay() === 0 ? 7 : new Date().getDay();
+            openModal({ day: today, start: '08:00', end: '09:40', startDate: '', endDate: '' });
+        });
+
+        const batchModal = document.getElementById('batchModal');
+        const batchList = document.getElementById('batchList');
+        const selectAllCourses = document.getElementById('selectAllCourses');
+        const selectedCount = document.getElementById('selectedCount');
+        const batchSearchInput = document.getElementById('batchSearchInput');
+
+        document.getElementById('batchBtn').addEventListener('click', () => { 
+            batchModal.classList.add('active'); 
+            batchSearchInput.value = ''; 
+            renderBatchList(); 
+            selectAllCourses.checked = false; 
+            updateSelectedCount(); 
+        });
+        document.getElementById('closeBatchBtn').addEventListener('click', () => batchModal.classList.remove('active'));
+
+        batchSearchInput.addEventListener('input', renderBatchList);
+
+        function renderBatchList() {
+            batchList.innerHTML = '';
+            if (courses.length === 0) { batchList.innerHTML = '<p style="font-size: 13px; color: var(--text-muted); text-align: center; padding: 20px;">暂无课程</p>'; return; }
+            
+            const query = batchSearchInput.value.trim().toLowerCase();
+            const grouped = {}; 
+            courses.forEach(c => { if (!grouped[c.name]) grouped[c.name] = []; grouped[c.name].push(c); });
+            
+            const filteredNames = Object.keys(grouped).filter(name => !query || name.toLowerCase().includes(query));
+            
+            if (filteredNames.length === 0) {
+                batchList.innerHTML = '<p style="font-size: 13px; color: var(--text-muted); text-align: center; padding: 20px;">没有匹配的课程</p>';
+                return;
+            }
+            
+            filteredNames.forEach(name => {
+                const groupCourses = grouped[name];
+                const item = document.createElement('div'); item.className = 'batch-item';
+                item.style.cssText = 'display:flex; align-items:center; gap:12px; padding:10px; background:var(--input-bg); border-radius:8px; border:1px solid var(--border-color);';
+                const weekdays = ['一', '二', '三', '四', '五', '六', '日'];
+                let timeDetails = groupCourses.map(c => `周${weekdays[c.day - 1]} ${c.start}-${c.end}`).join('，');
+                if (timeDetails.length > 20) timeDetails = timeDetails.substring(0, 20) + '...';
+                item.innerHTML = `<input type="checkbox" class="course-checkbox" value="${name}" style="width:16px; height:16px; accent-color: var(--primary);"><div class="batch-item-info" style="flex:1; font-size:13px;"><strong>${name}</strong> <span style="font-size:11px; color:var(--text-muted); margin-left:8px;">共 ${groupCourses.length} 节 (${timeDetails})</span></div>`;
+                batchList.appendChild(item);
+            });
+            document.querySelectorAll('.course-checkbox').forEach(cb => cb.addEventListener('change', updateSelectedCount));
+        }
+
+        selectAllCourses.addEventListener('change', (e) => { document.querySelectorAll('.course-checkbox').forEach(cb => cb.checked = e.target.checked); updateSelectedCount(); });
+        function getSelectedNames() { const names = []; document.querySelectorAll('.course-checkbox:checked').forEach(cb => names.push(cb.value)); return names; }
+        function updateSelectedCount() { selectedCount.textContent = `已选 ${getSelectedNames().length} 门课`; }
+
+        document.getElementById('batchDeleteBtn').addEventListener('click', () => {
+            const names = getSelectedNames();
+            if (names.length === 0) { showToast('请先选择要删除的课程', 'warning'); return; }
+            showConfirm('批量删除', `确定要批量删除选中的 ${names.length} 门课程（含所有时段）吗？`, () => {
+                saveStateForUndo();
+                courses = courses.filter(c => !names.includes(c.name)); saveData(); renderBatchList(); selectAllCourses.checked = false; updateSelectedCount(); 
+                if (currentView === 'week') renderWeekView(); else renderMonthView();
+                if (searchInput.value.trim()) searchInput.dispatchEvent(new Event('input'));
+                showToast('批量删除成功', 'success');
+            });
+        });
+
+        document.getElementById('batchColorBtn').addEventListener('click', () => {
+            const names = getSelectedNames();
+            if (names.length === 0) { showToast('请先选择课程', 'warning'); return; }
+            showColorPicker((color) => {
+                saveStateForUndo();
+                courses = courses.map(c => names.includes(c.name) ? { ...c, color: color } : c);
+                saveData(); renderBatchList(); 
+                if (currentView === 'week') renderWeekView(); else renderMonthView();
+                if (searchInput.value.trim()) searchInput.dispatchEvent(new Event('input'));
+                showToast('批量改色成功', 'success');
+            });
+        });
+
+        document.getElementById('batchRenameBtn').addEventListener('click', () => {
+            const names = getSelectedNames();
+            if (names.length === 0) { showToast('请先选择课程', 'warning'); return; }
+            showPrompt('批量改名', '', (newName) => {
+                if (!newName || !newName.trim()) return;
+                saveStateForUndo();
+                const trimmedName = newName.trim();
+                courses = courses.map(c => names.includes(c.name) ? { ...c, name: trimmedName } : c); saveData(); renderBatchList(); 
+                if (currentView === 'week') renderWeekView(); else renderMonthView();
+                if (searchInput.value.trim()) searchInput.dispatchEvent(new Event('input'));
+                showToast('批量改名成功', 'success');
+            });
+        });
+
+        const calendarModal = document.getElementById('calendarModal');
+        let calendarDate = new Date();
+        document.getElementById('calendarTrigger').addEventListener('click', () => { calendarDate = new Date(); renderCalendar(); calendarModal.classList.add('active'); });
+        document.getElementById('calPrevMonth').addEventListener('click', () => { calendarDate.setMonth(calendarDate.getMonth() - 1); renderCalendar(); });
+        document.getElementById('calNextMonth').addEventListener('click', () => { calendarDate.setMonth(calendarDate.getMonth() + 1); renderCalendar(); });
+        document.getElementById('calToday').addEventListener('click', () => { calendarDate = new Date(); renderCalendar(); });
+
+        function renderCalendar() {
+            const year = calendarDate.getFullYear(); const month = calendarDate.getMonth();
+            document.getElementById('calTitle').textContent = `${year}年 ${month + 1}月`;
+            const firstDay = new Date(year, month, 1); const lastDay = new Date(year, month + 1, 0);
+            const startDayOfWeek = firstDay.getDay() === 0 ? 7 : firstDay.getDay();
+            const totalDays = lastDay.getDate();
+            const calGrid = document.getElementById('calGrid'); calGrid.innerHTML = '';
+            const weekdays = ['一', '二', '三', '四', '五', '六', '日'];
+            weekdays.forEach(day => { const header = document.createElement('div'); header.className = 'cal-header'; header.textContent = `周${day}`; calGrid.appendChild(header); });
+            const prevMonthLastDay = new Date(year, month, 0).getDate();
+            for (let i = startDayOfWeek - 1; i > 0; i--) { const cell = document.createElement('div'); cell.className = 'cal-day other-month'; cell.textContent = prevMonthLastDay - i + 1; calGrid.appendChild(cell); }
+            const todayReal = new Date(); const isCurrentMonth = todayReal.getFullYear() === year && todayReal.getMonth() === month;
+            for (let d = 1; d <= totalDays; d++) { const cell = document.createElement('div'); const isToday = isCurrentMonth && d === todayReal.getDate(); cell.className = `cal-day ${isToday ? 'today' : ''}`; cell.textContent = d; calGrid.appendChild(cell); }
+            const totalCells = startDayOfWeek - 1 + totalDays;
+            const remainingCells = (Math.ceil(totalCells / 7) * 7) - totalCells;
+            for (let i = 1; i <= remainingCells; i++) { const cell = document.createElement('div'); cell.className = 'cal-day other-month'; cell.textContent = i; calGrid.appendChild(cell); }
+        }
+
+        function updateTimeLine() {
+            const timeLine = document.getElementById('currentTimeLine');
+            const now = new Date(); const currentMins = now.getHours() * 60 + now.getMinutes();
+            const startMins = START_HOUR * 60, endMins = END_HOUR * 60;
+            if (currentWeekOffset === 0 && currentMins >= startMins && currentMins <= endMins) { 
+                timeLine.style.top = ((currentMins - startMins) * PX_PER_MINUTE) + 'px'; timeLine.style.display = 'block'; 
+            } else { timeLine.style.display = 'none'; }
+        }
+
+        function init() {
+            const savedTitle = localStorage.getItem('schedule_export_title') || '我的专属课表';
+            exportHeader.textContent = savedTitle; exportTitleInput.value = savedTitle;
+            const savedWeekStart = localStorage.getItem('schedule_week_start') || '1';
+            weekStartDay = parseInt(savedWeekStart); weekStartSelect.value = weekStartDay;
+            
+            currentWeekOffset = 0;
+            updateUndoRedoButtons();
+            renderWeekView();
+            setInterval(updateTimeLine, 60000);
+        }
+        init();
+    </script>
+</body>
+</html>

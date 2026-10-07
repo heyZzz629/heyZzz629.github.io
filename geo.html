@@ -1,0 +1,3013 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>GeoLab · 地理学习平台</title>
+<style>
+:root[data-theme="dark"]{
+  --bg-0:#050810; --bg-2:#0e1728;
+  --panel:rgba(13,20,34,.88); --panel-2:rgba(19,28,46,.75);
+  --border:rgba(80,140,230,.14); --border-2:rgba(80,140,230,.28);
+  --text:#eef4fb; --text-2:#8fa3be; --text-3:#5a6c85;
+  --blue:#4d9dff; --blue-2:#2076e8; --cyan:#2cd4ff;
+  --green:#3fd672; --yellow:#ffc454; --red:#ff5d6c;
+  --purple:#a984ff; --orange:#ff9050;
+  --glow-blue:rgba(77,157,255,.55); --glow-cyan:rgba(44,212,255,.55);
+  --shadow:0 20px 40px -20px rgba(0,0,0,.9);
+  --code-bg:rgba(8,14,26,.7);
+  --canvas-bg:#050810;
+}
+:root[data-theme="light"]{
+  --bg-0:#f3f6fb; --bg-2:#f7f9fc;
+  --panel:rgba(255,255,255,.94); --panel-2:rgba(247,250,254,.85);
+  --border:rgba(80,120,190,.16); --border-2:rgba(80,120,190,.3);
+  --text:#0f1d38; --text-2:#5b6b8a; --text-3:#8b98b3;
+  --blue:#2076e8; --blue-2:#1a63c8; --cyan:#0a9fd4;
+  --green:#1a9d52; --yellow:#c78a0f; --red:#e33d4f;
+  --purple:#7a4be0; --orange:#e5631a;
+  --glow-blue:rgba(32,118,232,.3); --glow-cyan:rgba(10,159,212,.3);
+  --shadow:0 20px 40px -20px rgba(30,50,90,.18);
+  --code-bg:rgba(240,245,252,.9);
+  --canvas-bg:#eef4fc;
+}
+:root{
+  --mono:'JetBrains Mono','SF Mono',ui-monospace,Menlo,Consolas,monospace;
+  --sans:-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;
+  --ease:cubic-bezier(.4,0,.2,1);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden;background:var(--bg-0)}
+body{font-family:var(--sans);font-size:13px;color:var(--text);-webkit-font-smoothing:antialiased;transition:background .3s,color .3s}
+.app{display:flex;flex-direction:column;height:100vh;overflow:hidden}
+
+/* TOPNAV */
+.topnav{flex:none;height:56px;display:flex;align-items:center;padding:0 18px;gap:16px;
+  background:var(--panel);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);position:relative;z-index:30}
+.topnav::after{content:'';position:absolute;left:0;right:0;bottom:-1px;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(77,157,255,.4) 50%,transparent);opacity:.6}
+.brand{display:flex;align-items:center;gap:11px;flex:none}
+.brand-logo{width:36px;height:36px;border-radius:10px;display:grid;place-items:center;font-size:19px;
+  background:linear-gradient(135deg,#2076e8,#4d9dff 50%,#2cd4ff);
+  box-shadow:0 4px 18px -4px var(--glow-blue),inset 0 1px 0 rgba(255,255,255,.25)}
+.brand-text{display:flex;flex-direction:column;gap:1px}
+.brand-text .name{font-size:13.5px;font-weight:700;
+  background:linear-gradient(92deg,var(--text),var(--blue));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.brand-text .tagline{font-size:10px;color:var(--text-3);font-family:var(--mono);letter-spacing:.5px}
+.tabs{display:flex;gap:4px;padding:4px;border-radius:12px;background:var(--code-bg);border:1px solid var(--border);margin-left:8px}
+.tab-btn{padding:8px 16px;border-radius:9px;background:transparent;border:none;color:var(--text-2);
+  font-family:inherit;font-size:12.5px;font-weight:600;cursor:pointer;transition:all .22s var(--ease);
+  display:flex;align-items:center;gap:7px;position:relative;white-space:nowrap}
+.tab-btn .ico{font-size:14px;line-height:1}
+.tab-btn:hover{color:var(--text)}
+.tab-btn.active{color:#fff;background:linear-gradient(135deg,rgba(32,118,232,.35),rgba(44,212,255,.2));
+  box-shadow:0 2px 12px -3px var(--glow-blue)}
+.tab-btn.active::before{content:'';position:absolute;left:50%;bottom:-5px;transform:translateX(-50%);
+  width:20px;height:2px;border-radius:2px;background:linear-gradient(90deg,var(--blue),var(--cyan))}
+.nav-right{margin-left:auto;display:flex;align-items:center;gap:10px}
+.theme-toggle{width:36px;height:36px;border-radius:10px;background:var(--code-bg);border:1px solid var(--border);
+  color:var(--text-2);cursor:pointer;display:grid;place-items:center;font-size:16px;transition:all .22s var(--ease);position:relative;overflow:hidden}
+.theme-toggle:hover{background:var(--panel-2);color:var(--text);transform:translateY(-1px)}
+.theme-toggle .sun,.theme-toggle .moon{position:absolute;transition:all .4s var(--ease)}
+.theme-toggle .sun{opacity:0;transform:rotate(-90deg) scale(.5)}
+.theme-toggle .moon{opacity:1}
+:root[data-theme="light"] .theme-toggle .sun{opacity:1;transform:none}
+:root[data-theme="light"] .theme-toggle .moon{opacity:0;transform:rotate(90deg) scale(.5)}
+.status-chip{display:flex;align-items:center;gap:7px;padding:5px 11px;border-radius:20px;
+  background:rgba(63,214,114,.08);border:1px solid rgba(63,214,114,.2);
+  font-family:var(--mono);font-size:10.5px;color:var(--green)}
+.status-chip .pulse{width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+
+/* PAGES */
+.pages{flex:1;position:relative;overflow:hidden}
+.page{position:absolute;inset:0;display:none}
+.page.active{display:block}
+.page[data-page="globe"].active,.page[data-page="seasons"].active{display:flex}
+.layout{display:flex;width:100%;height:100%;overflow:hidden}
+
+/* SIDEBAR */
+.sidebar{width:256px;flex:none;height:100%;background:var(--panel);
+  backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
+  border-right:1px solid var(--border);display:flex;flex-direction:column}
+.scroll{flex:1;overflow-y:auto;padding:16px 14px 30px}
+.scroll::-webkit-scrollbar{width:8px}
+.scroll::-webkit-scrollbar-thumb{background:rgba(77,157,255,.3);border-radius:4px;border:2px solid transparent;background-clip:content-box}
+.group{margin-bottom:18px}
+.group-title{display:flex;align-items:center;gap:8px;font-size:10.5px;font-weight:700;
+  letter-spacing:1.4px;color:var(--text-3);text-transform:uppercase;margin-bottom:10px;padding-left:3px}
+.group-title::before{content:'';width:3px;height:11px;border-radius:2px;background:linear-gradient(180deg,var(--blue),var(--cyan))}
+.group-title::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,var(--border),transparent)}
+.sw{display:flex;align-items:center;gap:10px;padding:9px 11px;border-radius:9px;cursor:pointer;
+  user-select:none;font-size:12.5px;color:var(--text-2);transition:all .18s var(--ease);margin-bottom:3px}
+.sw:hover{background:rgba(77,157,255,.06);color:var(--text)}
+.sw input{display:none}
+.sw .track{width:32px;height:18px;border-radius:10px;flex:none;background:var(--code-bg);
+  border:1px solid var(--border);position:relative;transition:all .26s var(--ease)}
+.sw .track::after{content:'';position:absolute;top:2px;left:2px;width:12px;height:12px;border-radius:50%;
+  background:var(--text-3);transition:all .26s var(--ease)}
+.sw input:checked + .track{background:linear-gradient(135deg,var(--blue-2),var(--cyan));border-color:rgba(44,212,255,.5)}
+.sw input:checked + .track::after{transform:translateX(14px);background:#fff}
+.sw .txt{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sw .dot{width:7px;height:7px;border-radius:50%;flex:none;box-shadow:0 0 7px currentColor}
+.seg{display:flex;gap:3px;padding:3px;border-radius:9px;background:var(--code-bg);border:1px solid var(--border);margin-bottom:9px}
+.seg button{flex:1;padding:7px 0;border-radius:6px;background:transparent;border:none;color:var(--text-2);
+  font-family:var(--mono);font-size:11.5px;font-weight:600;cursor:pointer;transition:all .16s}
+.seg button:hover{background:rgba(77,157,255,.1);color:var(--text)}
+.seg button.on{background:linear-gradient(135deg,rgba(32,118,232,.4),rgba(44,212,255,.25));color:#fff}
+.inputs{display:flex;gap:6px;margin-bottom:8px}
+.inputs input{flex:1;min-width:0;padding:9px 11px;border-radius:9px;background:var(--code-bg);
+  border:1px solid var(--border);color:var(--text);font-family:var(--mono);font-size:11.5px;outline:none}
+.inputs input:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(77,157,255,.14)}
+.btn{width:100%;padding:9px;border-radius:9px;font-family:inherit;font-size:12px;font-weight:600;
+  cursor:pointer;transition:all .18s var(--ease);border:1px solid var(--border);background:var(--panel-2);
+  color:var(--text-2);margin-bottom:6px;display:flex;align-items:center;justify-content:center;gap:7px}
+.btn:hover{background:rgba(77,157,255,.1);color:var(--text);border-color:var(--border-2)}
+.btn.primary{background:linear-gradient(135deg,var(--blue-2),var(--blue));border-color:transparent;color:#fff;
+  box-shadow:0 4px 14px -4px var(--glow-blue)}
+.btn.primary:hover{background:linear-gradient(135deg,#2b8aff,#5aa5ff)}
+.cities{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.city{padding:9px 4px;border-radius:9px;background:var(--panel-2);border:1px solid var(--border);
+  color:var(--text-2);font-family:inherit;font-size:11.5px;font-weight:500;cursor:pointer;
+  transition:all .16s;text-align:center}
+.city:hover{background:rgba(77,157,255,.1);border-color:var(--border-2);color:var(--blue);transform:translateY(-1px)}
+.slider-row{display:flex;align-items:center;gap:10px;padding:8px 11px;font-size:10.5px;color:var(--text-3);font-family:var(--mono)}
+input[type=range]{flex:1;-webkit-appearance:none;height:4px;border-radius:2px;
+  background:linear-gradient(90deg,rgba(77,157,255,.4),rgba(44,212,255,.15));outline:none;cursor:pointer}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:15px;height:15px;border-radius:50%;
+  background:linear-gradient(135deg,#fff,#d0e8ff);border:2px solid var(--blue);cursor:pointer;
+  box-shadow:0 0 12px -1px var(--glow-blue)}
+input[type=range]::-moz-range-thumb{width:15px;height:15px;border-radius:50%;background:#fff;border:2px solid var(--blue);cursor:pointer}
+
+/* STAGE */
+.stage{flex:1;position:relative;min-width:0;background:var(--canvas-bg);overflow:hidden}
+#globeCanvas,#orbitCanvas{display:block;width:100%;height:100%;cursor:grab;touch-action:none}
+#globeCanvas:active{cursor:grabbing}
+#tooltip{position:absolute;pointer-events:none;padding:7px 12px;border-radius:9px;background:var(--panel);
+  border:1px solid var(--border-2);font-family:var(--mono);font-size:12px;color:var(--cyan);
+  white-space:nowrap;opacity:0;transition:opacity .14s;z-index:20;transform:translate(14px,-50%);
+  box-shadow:var(--shadow)}
+#tooltip::before{content:'';position:absolute;left:-5px;top:50%;transform:translateY(-50%) rotate(45deg);
+  width:9px;height:9px;background:var(--panel);border-left:1px solid var(--border-2);border-bottom:1px solid var(--border-2)}
+#lineTip{position:absolute;pointer-events:none;padding:8px 14px;border-radius:10px;
+  background:var(--panel);border:1.5px solid var(--line-color, var(--cyan));
+  font-family:var(--sans);font-size:12.5px;font-weight:700;color:var(--line-color, var(--cyan));
+  white-space:nowrap;opacity:0;transition:opacity .18s;z-index:21;
+  box-shadow:var(--shadow),0 0 24px -6px var(--line-color);
+  letter-spacing:.3px}
+#lineTip.show{opacity:1}
+#lineTip .lab{font-family:var(--mono);font-size:10.5px;color:var(--text-3);font-weight:500;
+  display:block;margin-top:3px;letter-spacing:.5px}
+#hud{position:absolute;left:18px;top:18px;padding:9px 14px;border-radius:11px;background:var(--panel);
+  border:1px solid var(--border);font-family:var(--mono);font-size:12px;color:var(--cyan);
+  pointer-events:none;z-index:5;display:flex;align-items:center;gap:9px;box-shadow:var(--shadow)}
+#hud::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--cyan);box-shadow:0 0 10px var(--cyan)}
+#tips{position:absolute;right:18px;bottom:18px;padding:8px 14px;border-radius:10px;background:var(--panel);
+  border:1px solid var(--border);font-family:var(--mono);font-size:10.5px;color:var(--text-3);
+  pointer-events:none;display:flex;gap:14px;z-index:5}
+#tips b{color:var(--text-2);font-weight:600;padding:1px 6px;border-radius:4px;background:rgba(77,157,255,.1)}
+
+/* INFO */
+.info{width:300px;flex:none;height:100%;background:var(--panel);
+  backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
+  border-left:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden}
+.info-head{padding:18px 20px 16px;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;gap:12px}
+.info-head h2{font-size:13.5px;font-weight:700;display:flex;align-items:center;gap:8px}
+.status{font-family:var(--mono);font-size:10px;padding:4px 10px;border-radius:20px;
+  background:var(--code-bg);border:1px solid var(--border);color:var(--text-3)}
+.status.on{background:linear-gradient(135deg,rgba(32,118,232,.2),rgba(44,212,255,.12));
+  border-color:rgba(77,157,255,.45);color:var(--cyan)}
+.info-body{flex:1;overflow-y:auto;padding:16px 18px 24px}
+.info-body::-webkit-scrollbar{width:8px}
+.info-body::-webkit-scrollbar-thumb{background:rgba(77,157,255,.3);border-radius:4px;border:2px solid transparent;background-clip:content-box}
+.coord-big{padding:18px;border-radius:14px;background:linear-gradient(145deg,
+  rgba(32,118,232,.15),rgba(44,212,255,.06) 50%,var(--panel-2));
+  border:1px solid var(--border-2);margin-bottom:14px}
+.coord-big .lbl{font-size:10px;color:var(--text-3);letter-spacing:1.6px;font-family:var(--mono);margin-bottom:12px}
+.coord-big .line{display:flex;align-items:baseline;gap:10px;font-family:var(--mono);margin-bottom:7px}
+.coord-big .k{font-size:11px;color:var(--text-3);width:32px;flex:none}
+.coord-big .v{font-size:22px;font-weight:700;color:var(--cyan);letter-spacing:.5px}
+.coord-big .v.lon{color:var(--blue)}
+.coord-big .empty{font-size:16px;color:var(--text-3)}
+.card{padding:13px 15px;border-radius:11px;background:var(--panel-2);border:1px solid var(--border);
+  margin-bottom:9px;transition:all .2s}
+.card:hover{border-color:var(--border-2);background:var(--bg-2)}
+.card .key{font-size:10px;color:var(--text-3);letter-spacing:1px;text-transform:uppercase;
+  font-family:var(--mono);margin-bottom:6px}
+.card .val{font-size:14px;font-weight:600;color:var(--text)}
+.card .val.cyan{color:var(--cyan)}.card .val.blue{color:var(--blue)}
+.card .val.green{color:var(--green)}.card .val.yellow{color:var(--yellow)}
+.card .val.orange{color:var(--orange)}.card .val.purple{color:var(--purple)}
+.card .note{font-size:11px;color:var(--text-3);margin-top:6px;line-height:1.55}
+.badge{display:inline-block;padding:2px 9px;border-radius:20px;font-size:10px;font-weight:600;
+  font-family:var(--mono);margin-left:6px;vertical-align:middle;border:1px solid}
+.badge.blue{background:rgba(77,157,255,.14);color:var(--blue);border-color:rgba(77,157,255,.35)}
+.badge.green{background:rgba(63,214,114,.14);color:var(--green);border-color:rgba(63,214,114,.35)}
+.badge.yellow{background:rgba(255,196,84,.14);color:var(--yellow);border-color:rgba(255,196,84,.35)}
+.badge.orange{background:rgba(255,144,80,.14);color:var(--orange);border-color:rgba(255,144,80,.35)}
+.badge.purple{background:rgba(169,132,255,.14);color:var(--purple);border-color:rgba(169,132,255,.35)}
+.empty-state{padding:40px 20px;text-align:center;color:var(--text-3);font-size:12.5px;line-height:1.9}
+.empty-state .ico{font-size:34px;margin-bottom:12px;display:block;opacity:.4}
+.date-display{padding:14px 16px;border-radius:12px;background:linear-gradient(145deg,
+  rgba(32,118,232,.1),rgba(44,212,255,.05),var(--panel-2));
+  border:1px solid var(--border-2);text-align:center;margin-bottom:10px}
+.date-display .d{font-family:var(--mono);font-size:24px;font-weight:700;color:var(--cyan)}
+.date-display .t{font-size:12px;color:var(--text-2);margin-top:5px}
+.term-btns{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.term-btn{padding:10px 6px;border-radius:9px;background:var(--panel-2);border:1px solid var(--border);
+  color:var(--text-2);font-family:inherit;font-size:11.5px;font-weight:600;cursor:pointer;transition:all .18s}
+.term-btn:hover{background:rgba(77,157,255,.1);color:var(--text)}
+.term-btn.on{color:#fff;border-color:transparent;box-shadow:0 4px 14px -4px currentColor}
+.term-btn.spring.on{background:linear-gradient(135deg,#2fa055,#3fd672);color:#0a0e14}
+.term-btn.summer.on{background:linear-gradient(135deg,#e07030,#ff9050);color:#0a0e14}
+.term-btn.autumn.on{background:linear-gradient(135deg,#d9a544,#ffc454);color:#0a0e14}
+.term-btn.winter.on{background:linear-gradient(135deg,#2b8aff,#4d9dff);color:#fff}
+.day-bar{height:9px;border-radius:5px;margin-top:8px;background:var(--code-bg);
+  position:relative;overflow:hidden;border:1px solid var(--border)}
+.day-bar .fill{position:absolute;top:0;left:0;height:100%;
+  background:linear-gradient(90deg,#ffc454,#ff9050);border-radius:5px;transition:width .3s}
+.day-bar .fill.night{background:linear-gradient(90deg,#4d9dff,#a984ff)}
+
+/* LEARN */
+.learn-page{height:100%;display:flex;flex-direction:column;overflow:hidden}
+.learn-header{flex:none;padding:24px 32px 18px;background:var(--panel);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border)}
+.learn-header-top{display:flex;align-items:center;justify-content:space-between;
+  gap:28px;margin-bottom:18px;flex-wrap:wrap}
+.learn-title{display:flex;align-items:center;gap:14px}
+.learn-title .badge-ico{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;font-size:22px;
+  background:linear-gradient(135deg,rgba(32,118,232,.3),rgba(44,212,255,.15));border:1px solid var(--border-2)}
+.learn-title h1{font-size:23px;font-weight:700;
+  background:linear-gradient(92deg,var(--text),var(--blue));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.learn-title .sub{font-size:12px;color:var(--text-3);margin-top:3px}
+.progress-box{display:flex;align-items:center;gap:14px;padding:9px 15px;border-radius:11px;
+  background:var(--panel-2);border:1px solid var(--border)}
+.progress-ring{width:44px;height:44px;position:relative;flex:none}
+.progress-ring svg{width:100%;height:100%;transform:rotate(-90deg)}
+.progress-ring .bg-circle{fill:none;stroke:rgba(77,157,255,.15);stroke-width:4}
+.progress-ring .fill-circle{fill:none;stroke:url(#pg);stroke-width:4;stroke-linecap:round;transition:stroke-dashoffset .4s}
+.progress-ring .pct{position:absolute;inset:0;display:grid;place-items:center;font-family:var(--mono);font-size:11px;font-weight:700;color:var(--cyan)}
+.progress-info{display:flex;flex-direction:column;gap:2px}
+.progress-info .count{font-family:var(--mono);font-size:13px;font-weight:600;color:var(--text)}
+.progress-info .label{font-size:10.5px;color:var(--text-3);letter-spacing:.5px;font-family:var(--mono)}
+.learn-toolbar{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.search-box{flex:1;min-width:240px;max-width:400px;position:relative}
+.search-box input{width:100%;padding:10px 38px 10px 38px;border-radius:10px;background:var(--code-bg);
+  border:1px solid var(--border);color:var(--text);font-family:inherit;font-size:12.5px;outline:none}
+.search-box input:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(77,157,255,.14)}
+.search-box .search-ico{position:absolute;left:13px;top:50%;transform:translateY(-50%);color:var(--text-3);font-size:14px;pointer-events:none}
+.search-box .clear-btn{position:absolute;right:10px;top:50%;transform:translateY(-50%);width:20px;height:20px;
+  border-radius:6px;background:rgba(255,255,255,.06);border:none;color:var(--text-3);cursor:pointer;display:none;align-items:center;justify-content:center}
+.search-box .clear-btn.show{display:flex}
+.cat-tabs{display:flex;gap:6px;flex-wrap:wrap}
+.cat-tab{padding:7px 15px;border-radius:20px;background:var(--panel-2);border:1px solid var(--border);
+  color:var(--text-2);font-family:inherit;font-size:12px;font-weight:600;cursor:pointer;transition:all .18s}
+.cat-tab:hover{background:rgba(77,157,255,.1);color:var(--text)}
+.cat-tab.active{color:#fff;background:linear-gradient(135deg,var(--blue-2),var(--cyan));border-color:transparent}
+.learn-body{flex:1;overflow-y:auto;padding:26px 32px 60px}
+.learn-body::-webkit-scrollbar{width:10px}
+.learn-body::-webkit-scrollbar-thumb{background:rgba(77,157,255,.3);border-radius:5px;border:3px solid transparent;background-clip:content-box}
+.kc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:18px}
+.kc{padding:20px;border-radius:16px;background:linear-gradient(155deg,var(--panel-2),var(--panel));
+  border:1px solid var(--border);transition:all .24s;cursor:pointer;position:relative;overflow:hidden}
+.kc::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:var(--accent-color,var(--blue));opacity:.9}
+.kc:hover{border-color:var(--border-2);transform:translateY(-3px);box-shadow:var(--shadow)}
+.kc.done{opacity:.72}
+.kc-top{display:flex;align-items:flex-start;gap:13px;margin-bottom:13px}
+.kc-ico{width:42px;height:42px;flex:none;border-radius:11px;display:grid;place-items:center;font-size:20px;
+  background:linear-gradient(135deg,color-mix(in srgb,var(--accent-color) 22%,transparent),var(--panel-2));
+  border:1px solid color-mix(in srgb,var(--accent-color) 40%,transparent)}
+.kc-title{font-size:14.5px;font-weight:700;line-height:1.35;color:var(--text);margin-bottom:4px}
+.kc-cat{display:inline-block;font-family:var(--mono);font-size:9.5px;letter-spacing:.6px;font-weight:600;
+  padding:2px 8px;border-radius:10px;background:color-mix(in srgb,var(--accent-color) 15%,transparent);
+  color:var(--accent-color);border:1px solid color-mix(in srgb,var(--accent-color) 30%,transparent)}
+.kc-summary{font-size:12.5px;color:var(--text-2);line-height:1.75}
+.kc-actions{display:flex;gap:8px;margin-top:14px;padding-top:13px;border-top:1px dashed var(--border)}
+.kc-btn{flex:1;padding:7px 10px;border-radius:8px;font-family:inherit;font-size:11.5px;font-weight:600;
+  background:var(--code-bg);border:1px solid var(--border);color:var(--text-2);cursor:pointer;transition:all .16s;
+  display:flex;align-items:center;justify-content:center;gap:6px}
+.kc-btn:hover{background:rgba(77,157,255,.1);color:var(--text)}
+.kc-btn.on{background:linear-gradient(135deg,rgba(63,214,114,.2),rgba(63,214,114,.08));
+  border-color:rgba(63,214,114,.4);color:var(--green)}
+.kc-detail{grid-column:1/-1;display:none}
+.kc-detail.show{display:block}
+.kc-detail .inner{padding:26px 30px;border-radius:16px;background:linear-gradient(155deg,var(--panel-2),var(--panel));
+  border:1px solid var(--border-2);font-size:13px;line-height:1.95;color:var(--text-2);animation:fadein .3s}
+@keyframes fadein{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
+.kc-detail .inner h4{font-size:14px;color:var(--text);font-weight:700;margin:16px 0 10px;
+  display:flex;align-items:center;gap:9px}
+.kc-detail .inner h4::before{content:'';width:3px;height:14px;border-radius:2px;background:linear-gradient(180deg,var(--blue),var(--cyan))}
+.kc-detail .inner h4:first-child{margin-top:0}
+.kc-detail .inner ul{margin:10px 0 10px 22px}
+.kc-detail .inner li{margin:5px 0}
+.kc-detail .inner li::marker{color:var(--cyan)}
+.kc-detail .inner b{color:var(--text);font-weight:600}
+.kc-detail .inner table{width:100%;border-collapse:collapse;margin:14px 0;border-radius:10px;overflow:hidden;border:1px solid var(--border)}
+.kc-detail .inner th{text-align:left;padding:10px 14px;background:rgba(32,118,232,.1);color:var(--text-2);
+  font-weight:600;font-size:11.5px;border-bottom:1px solid var(--border)}
+.kc-detail .inner td{padding:10px 14px;color:var(--text-2);border-bottom:1px solid var(--border);font-size:12.5px}
+.kc-detail .inner tr:last-child td{border-bottom:none}
+.no-result{grid-column:1/-1;padding:80px 20px;text-align:center;color:var(--text-3)}
+
+/* EMBED 折叠 */
+.embed-details{
+  margin:18px 0 6px;
+  border-radius:14px;
+  overflow:hidden;
+  border:1px solid color-mix(in srgb,var(--accent-color,#4d9dff) 28%,var(--border));
+  background:linear-gradient(155deg,
+    color-mix(in srgb,var(--accent-color,#4d9dff) 6%,var(--panel-2)),
+    var(--panel));
+  transition:border-color .2s;
+}
+.embed-details[open]{box-shadow:0 8px 24px -14px color-mix(in srgb,var(--accent-color) 50%,transparent)}
+.embed-summary{
+  padding:14px 18px;
+  font-size:13px;font-weight:600;color:var(--text);
+  cursor:pointer;user-select:none;list-style:none;
+  display:flex;align-items:center;gap:10px;
+  background:color-mix(in srgb,var(--accent-color,#4d9dff) 8%,transparent);
+  transition:.2s;
+}
+.embed-summary::-webkit-details-marker{display:none}
+.embed-summary:hover{background:color-mix(in srgb,var(--accent-color,#4d9dff) 16%,transparent)}
+.embed-summary .ico{font-size:17px;flex:none}
+.embed-summary .title{flex:1;font-weight:700;letter-spacing:.2px}
+.embed-summary .hint{
+  font-family:var(--mono);font-size:10.5px;font-weight:500;
+  color:var(--text-3);letter-spacing:.4px;
+}
+.embed-summary .chev{
+  font-size:12px;color:var(--text-3);flex:none;
+  transition:transform .28s var(--ease);
+}
+.embed-details[open] .embed-summary .chev{transform:rotate(180deg)}
+.embed-details[open] .embed-summary{border-bottom:1px solid color-mix(in srgb,var(--accent-color,#4d9dff) 22%,var(--border))}
+.embed-body{padding:20px 20px 20px}
+
+/* EMBED 内画布 */
+.embed canvas{display:block;border-radius:10px;background:var(--canvas-bg);transition:background .3s}
+.embed .note{font-size:11.5px;color:var(--text-3);text-align:center;margin-top:10px;line-height:1.7}
+.embed .legend{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-top:12px;font-size:11px;color:var(--text-2)}
+.embed .legend span{display:flex;align-items:center;gap:5px}
+.embed .legend i{width:12px;height:12px;border-radius:3px;display:inline-block}
+.embed .row{display:flex;gap:10px;align-items:center;margin-top:12px;flex-wrap:wrap}
+.embed .row .lbl{font-size:11px;color:var(--text-3);font-family:var(--mono);flex:none}
+.embed .readout{display:inline-flex;align-items:center;gap:8px;padding:5px 12px;border-radius:8px;
+  background:var(--code-bg);border:1px solid var(--border);font-family:var(--mono);
+  font-size:12.5px;font-weight:600;color:var(--cyan)}
+.embed-title{display:none} /* 折叠框已包含标题 */
+
+.svg-defs{position:absolute;width:0;height:0}
+
+@media(max-width:1100px){.info{width:280px}.sidebar{width:238px}}
+@media(max-width:820px){
+  body{overflow:auto}.app{height:auto;min-height:100vh;overflow:visible}
+  .pages{overflow:visible;position:relative}
+  .page{position:relative;height:auto;min-height:calc(100vh - 56px)}
+  .page.active{display:block}
+  .page[data-page="globe"].active,.page[data-page="seasons"].active{display:block}
+  .layout{flex-direction:column;height:auto}
+  .sidebar{width:100%;height:auto;flex:none;border-right:none;border-bottom:1px solid var(--border)}
+  .scroll{display:grid;grid-template-columns:1fr 1fr;gap:0 16px;padding:12px}
+  .stage{height:52vh;min-height:380px;flex:none}
+  .info{width:100%;height:auto;flex:none;border-left:none;border-top:1px solid var(--border)}
+  #tips{display:none}.brand-text{display:none}
+  .learn-header{padding:16px 18px 14px}
+  .learn-body{padding:16px 18px 40px}
+  .kc-grid{grid-template-columns:1fr}
+}
+@media(max-width:520px){.scroll{grid-template-columns:1fr}.cities{grid-template-columns:repeat(3,1fr)}.status-chip{display:none}}
+</style>
+</head>
+<body>
+<svg class="svg-defs"><defs>
+  <linearGradient id="pg" x1="0%" y1="0%" x2="100%" y2="100%">
+    <stop offset="0%" stop-color="#2076e8"/><stop offset="50%" stop-color="#4d9dff"/><stop offset="100%" stop-color="#2cd4ff"/>
+  </linearGradient>
+</defs></svg>
+
+<div class="app">
+  <nav class="topnav">
+    <div class="brand"><div class="brand-logo">🌏</div>
+      <div class="brand-text"><span class="name">GeoLab 地理实验室</span><span class="tagline">GRADE 7 · GEOGRAPHY</span></div>
+    </div>
+    <div class="tabs">
+      <button class="tab-btn active" data-page="globe"><span class="ico">🌍</span><span>地球仪</span></button>
+      <button class="tab-btn" data-page="seasons"><span class="ico">☀️</span><span>四季公转</span></button>
+      <button class="tab-btn" data-page="learn"><span class="ico">📚</span><span>知识卡片</span></button>
+    </div>
+    <div class="nav-right">
+      <button class="theme-toggle" id="themeToggle"><span class="moon">🌙</span><span class="sun">☀️</span></button>
+      <div class="status-chip"><span class="pulse"></span><span>ONLINE</span></div>
+    </div>
+  </nav>
+
+  <div class="pages">
+    <!-- ============ 地球仪 ============ -->
+    <div class="page active" data-page="globe">
+      <div class="layout">
+        <aside class="sidebar"><div class="scroll">
+          <div class="group"><div class="group-title">显示图层</div>
+            <label class="sw"><input type="checkbox" data-opt="grid" checked><span class="track"></span><span class="dot" style="background:#4d9dff;color:#4d9dff"></span><span class="txt">经纬网</span></label>
+            <label class="sw"><input type="checkbox" data-opt="land" checked><span class="track"></span><span class="dot" style="background:#3fd672;color:#3fd672"></span><span class="txt">大陆轮廓</span></label>
+            <label class="sw"><input type="checkbox" data-opt="special" checked><span class="track"></span><span class="dot" style="background:#ff5d6c;color:#ff5d6c"></span><span class="txt">重要纬线经线</span></label>
+            <label class="sw"><input type="checkbox" data-opt="hemiNS"><span class="track"></span><span class="dot" style="background:#4d9dff;color:#4d9dff"></span><span class="txt">南北半球</span></label>
+            <label class="sw"><input type="checkbox" data-opt="hemiEW"><span class="track"></span><span class="dot" style="background:#a984ff;color:#a984ff"></span><span class="txt">东西半球</span></label>
+            <label class="sw"><input type="checkbox" data-opt="zones"><span class="track"></span><span class="dot" style="background:#ffc454;color:#ffc454"></span><span class="txt">低/中/高纬带</span></label>
+            <label class="sw"><input type="checkbox" data-opt="belts"><span class="track"></span><span class="dot" style="background:#ff9050;color:#ff9050"></span><span class="txt">五带划分</span></label>
+            <label class="sw"><input type="checkbox" data-opt="axis" checked><span class="track"></span><span class="dot" style="background:#eef4fb;color:#eef4fb"></span><span class="txt">地轴与两极</span></label>
+            <label class="sw"><input type="checkbox" data-opt="night" checked><span class="track"></span><span class="dot" style="background:#a984ff;color:#a984ff"></span><span class="txt">昼夜光照</span></label>
+            <label class="sw"><input type="checkbox" data-opt="lineHover" checked><span class="track"></span><span class="dot" style="background:#2cd4ff;color:#2cd4ff"></span><span class="txt">线条悬停提示</span></label>
+          </div>
+          <div class="group"><div class="group-title">经纬网密度</div>
+            <div class="seg"><button class="on" data-step="10">10°</button><button data-step="15">15°</button><button data-step="30">30°</button></div>
+          </div>
+          <div class="group"><div class="group-title">输入经纬度定位</div>
+            <div class="inputs"><input id="inLat" type="number" placeholder="纬度" step="0.1"><input id="inLon" type="number" placeholder="经度" step="0.1"></div>
+            <button class="btn primary" id="btnLocate"><span>🎯</span><span>定位并取点</span></button>
+            <button class="btn" id="btnClear"><span>✕</span><span>清除标记</span></button>
+          </div>
+          <div class="group"><div class="group-title">快捷定位</div>
+            <div class="cities">
+              <button class="city" data-lat="39.9" data-lon="116.4" data-name="北京"><span>北京</span></button>
+              <button class="city" data-lat="31.2" data-lon="121.5" data-name="上海"><span>上海</span></button>
+              <button class="city" data-lat="29.9" data-lon="121.6" data-name="宁波"><span>宁波</span></button>
+              <button class="city" data-lat="51.5" data-lon="-0.1" data-name="伦敦"><span>伦敦</span></button>
+              <button class="city" data-lat="40.7" data-lon="-74.0" data-name="纽约"><span>纽约</span></button>
+              <button class="city" data-lat="-33.9" data-lon="151.2" data-name="悉尼"><span>悉尼</span></button>
+              <button class="city" data-lat="30.0" data-lon="31.2" data-name="开罗"><span>开罗</span></button>
+              <button class="city" data-lat="-22.9" data-lon="-43.2" data-name="里约"><span>里约</span></button>
+              <button class="city" data-lat="1.3" data-lon="103.8" data-name="新加坡"><span>新加坡</span></button>
+              <button class="city" data-lat="35.7" data-lon="139.7" data-name="东京"><span>东京</span></button>
+              <button class="city" data-lat="55.8" data-lon="37.6" data-name="莫斯科"><span>莫斯科</span></button>
+              <button class="city" data-lat="-1.3" data-lon="36.8" data-name="内罗毕"><span>内罗毕</span></button>
+            </div>
+          </div>
+          <div class="group"><div class="group-title">自转控制</div>
+            <label class="sw"><input type="checkbox" id="autoRot" checked><span class="track"></span><span class="dot" style="background:#a984ff;color:#a984ff"></span><span class="txt">自动旋转</span></label>
+            <div class="slider-row"><span>慢</span><input type="range" id="spinSpeed" min="0.2" max="3" step="0.1" value="1"><span>快</span></div>
+            <button class="btn" id="btnReset"><span>↻</span><span>重置视角</span></button>
+          </div>
+        </div></aside>
+        <main class="stage">
+          <canvas id="globeCanvas"></canvas>
+          <div id="hud">移动鼠标查看经纬度</div>
+          <div id="tooltip"></div>
+          <div id="lineTip"></div>
+          <div id="tips"><span><b>拖动</b>旋转</span><span><b>滚轮</b>缩放</span><span><b>单击</b>取点</span></div>
+        </main>
+        <aside class="info">
+          <div class="info-head"><h2><span>📍</span>地点信息</h2><span class="status" id="infoStatus">未取点</span></div>
+          <div class="info-body">
+            <div class="coord-big">
+              <div class="lbl">COORDINATES · 经纬度坐标</div>
+              <div class="line"><span class="k">纬</span><span class="v lat empty" id="cLat">— — —</span></div>
+              <div class="line"><span class="k">经</span><span class="v lon empty" id="cLon">— — —</span></div>
+            </div>
+            <div id="infoContent"><div class="empty-state"><span class="ico">🖱️</span>单击地球仪上的任意位置<br>即可查看该点的地理信息</div></div>
+          </div>
+        </aside>
+      </div>
+    </div>
+
+    <!-- ============ 四季公转 ============ -->
+    <div class="page" data-page="seasons">
+      <div class="layout">
+        <aside class="sidebar"><div class="scroll">
+          <div class="group"><div class="group-title">日期控制</div>
+            <div class="date-display"><div class="d" id="dateVal">3月21日</div><div class="t" id="dateTerm">春分</div></div>
+            <input type="range" id="dateSlider" min="1" max="365" value="80" style="width:100%">
+            <div class="term-btns" style="margin-top:10px">
+              <button class="term-btn spring" data-day="80">春分 3.21</button>
+              <button class="term-btn summer" data-day="173">夏至 6.22</button>
+              <button class="term-btn autumn" data-day="266">秋分 9.23</button>
+              <button class="term-btn winter" data-day="356">冬至 12.22</button>
+            </div>
+          </div>
+          <div class="group"><div class="group-title">观察点纬度</div>
+            <div class="date-display" style="padding:12px"><div class="d" id="obsLatVal" style="font-size:18px">30.0°N</div></div>
+            <input type="range" id="obsLat" min="-90" max="90" step="1" value="30" style="width:100%">
+            <div class="term-btns" style="margin-top:10px">
+              <button class="term-btn" data-lat="0">赤道 0°</button>
+              <button class="term-btn" data-lat="30">30°N</button>
+              <button class="term-btn" data-lat="45">45°N</button>
+              <button class="term-btn" data-lat="66.5">北极圈</button>
+            </div>
+          </div>
+          <div class="group"><div class="group-title">显示选项</div>
+            <label class="sw"><input type="checkbox" data-sopt="orbit" checked><span class="track"></span><span class="dot" style="background:#4d9dff;color:#4d9dff"></span><span class="txt">公转轨道</span></label>
+            <label class="sw"><input type="checkbox" data-sopt="rays" checked><span class="track"></span><span class="dot" style="background:#ffc454;color:#ffc454"></span><span class="txt">阳光射线</span></label>
+            <label class="sw"><input type="checkbox" data-sopt="detail" checked><span class="track"></span><span class="dot" style="background:#2cd4ff;color:#2cd4ff"></span><span class="txt">剖面示意图</span></label>
+            <label class="sw"><input type="checkbox" data-sopt="curve" checked><span class="track"></span><span class="dot" style="background:#a984ff;color:#a984ff"></span><span class="txt">昼夜曲线</span></label>
+          </div>
+          <div class="group"><div class="group-title">动画播放</div>
+            <label class="sw"><input type="checkbox" id="orbitPlay"><span class="track"></span><span class="dot" style="background:#a984ff;color:#a984ff"></span><span class="txt">自动播放一年</span></label>
+          </div>
+        </div></aside>
+        <main class="stage">
+          <canvas id="orbitCanvas"></canvas>
+          <div id="tips"><span><b>拖动滑块</b>改变日期</span><span><b>点击节气</b>快速跳转</span></div>
+        </main>
+        <aside class="info">
+          <div class="info-head"><h2><span>☀️</span>实时数据</h2><span class="status on" id="seasonStatus">春分</span></div>
+          <div class="info-body">
+            <div class="coord-big">
+              <div class="lbl">SOLAR DECLINATION · 太阳直射点</div>
+              <div class="line"><span class="k">纬度</span><span class="v" id="declVal">0.0°</span></div>
+            </div>
+            <div class="card"><div class="key">当前节气</div><div class="val cyan" id="seasonName">春分</div><div class="note" id="seasonNote">太阳直射赤道，全球昼夜平分</div></div>
+            <div class="card"><div class="key">观察点昼夜长短</div><div class="val" id="dayLenText">12.0 小时</div>
+              <div class="day-bar"><div class="fill" id="dayLenBar" style="width:50%"></div></div>
+              <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--text-3);font-family:var(--mono);margin-top:6px">
+                <span>0h</span><span id="dayLenStatus">昼夜平分</span><span>24h</span></div></div>
+            <div class="card"><div class="key">正午太阳高度</div><div class="val yellow" id="sunAltVal">60.0°</div></div>
+            <div class="card"><div class="key">极昼极夜范围</div><div class="val" id="polarVal" style="font-size:12.5px;line-height:1.6">无</div></div>
+            <div class="card"><div class="key">南半球季节</div><div class="val" id="southSeason">秋季</div></div>
+            <div class="card"><div class="key">📈 昼夜变化趋势</div><div class="val" id="trendVal" style="font-size:13px">—</div><div class="note" id="trendNote">—</div></div>
+          </div>
+        </aside>
+      </div>
+    </div>
+
+    <!-- ============ 知识卡片 ============ -->
+    <div class="page" data-page="learn">
+      <div class="learn-page">
+        <header class="learn-header">
+          <div class="learn-header-top">
+            <div class="learn-title"><div class="badge-ico">📚</div>
+              <div><h1>地理知识卡片</h1><div class="sub">展开卡片 · 内嵌互动演示 · 与地球仪/公转同步</div></div>
+            </div>
+            <div class="progress-box">
+              <div class="progress-ring">
+                <svg viewBox="0 0 40 40">
+                  <circle class="bg-circle" cx="20" cy="20" r="16"/>
+                  <circle class="fill-circle" cx="20" cy="20" r="16" id="progressCircle"
+                    stroke-dasharray="100.5" stroke-dashoffset="100.5"/>
+                </svg>
+                <div class="pct" id="progressPct">0%</div>
+              </div>
+              <div class="progress-info"><span class="count" id="progressCount">0 / 0</span><span class="label">已掌握</span></div>
+            </div>
+          </div>
+          <div class="learn-toolbar">
+            <div class="search-box"><span class="search-ico">🔍</span>
+              <input id="searchInput" type="text" placeholder="搜索知识点，例如：经纬网、五带、自转……">
+              <button class="clear-btn" id="clearSearch">✕</button></div>
+            <div class="cat-tabs" id="catTabs"></div>
+          </div>
+        </header>
+        <div class="learn-body"><div class="kc-grid" id="kcGrid"></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+'use strict';
+
+/* ============================================================
+   工具
+   ============================================================ */
+const TAU = Math.PI*2, DEG = Math.PI/180, RAD = 180/Math.PI;
+const $ = s => document.querySelector(s);
+const $$ = s => Array.from(document.querySelectorAll(s));
+const clamp = (v,a,b) => Math.max(a, Math.min(b, v));
+const dot = (a,b) => a.x*b.x + a.y*b.y + a.z*b.z;
+const cross = (a,b) => ({ x:a.y*b.z - a.z*b.y, y:a.z*b.x - a.x*b.z, z:a.x*b.y - a.y*b.x });
+function ll2v(lat, lon){
+  const la = lat*DEG, lo = lon*DEG, c = Math.cos(la);
+  return { x: c*Math.sin(lo), y: Math.sin(la), z: c*Math.cos(lo) };
+}
+function v2ll(v){ return { lat: Math.asin(clamp(v.y,-1,1))*RAD, lon: Math.atan2(v.x,v.z)*RAD }; }
+function slerp(a, b, t){
+  const d = clamp(dot(a,b), -1, 1);
+  const th = Math.acos(d);
+  if (th < 1e-5) return a;
+  const s = Math.sin(th);
+  return { x:a.x*Math.sin((1-t)*th)/s + b.x*Math.sin(t*th)/s,
+           y:a.y*Math.sin((1-t)*th)/s + b.y*Math.sin(t*th)/s,
+           z:a.z*Math.sin((1-t)*th)/s + b.z*Math.sin(t*th)/s };
+}
+function smoothClosed(pts, sub){
+  const out = [], n = pts.length;
+  for (let i = 0; i < n; i++){
+    const a = pts[i], b = pts[(i+1)%n];
+    out.push(a);
+    for (let j = 1; j <= sub; j++) out.push(slerp(a, b, j/(sub+1)));
+  }
+  return out;
+}
+function isLight(){ return document.documentElement.getAttribute('data-theme') === 'light'; }
+
+/* 主题色彩工厂：所有 canvas 用这套 */
+function C(){
+  const L = isLight();
+  return {
+    bgIn:    L ? '#f0f6fd' : '#0a1222',
+    bgOut:   L ? '#dde8f5' : '#050810',
+    sphere:  L ? ['#b8e0f8','#6fb0e0','#3a82c0','#1e5a98'] : ['#8fd6fa','#4d9bda','#1e588c','#0a2444'],
+    land:    L ? 'rgba(88,165,110,.85)' : 'rgba(72,166,110,.72)',
+    antarctica: L ? 'rgba(228,238,248,.9)' : 'rgba(224,240,255,.6)',
+    grid:    L ? 'rgba(70,110,170,.3)' : 'rgba(175,215,255,.14)',
+    grid2:   L ? 'rgba(70,110,170,.22)' : 'rgba(175,215,255,.1)',
+    equator: L ? 'rgba(220,50,70,.95)' : 'rgba(255,93,108,.9)',
+    prime:   L ? 'rgba(200,130,15,.95)' : 'rgba(255,196,84,.9)',
+    tropic:  L ? 'rgba(220,140,20,.75)' : 'rgba(255,196,84,.8)',
+    polar:   L ? 'rgba(80,140,220,.8)' : 'rgba(150,214,255,.8)',
+    hemiLon: L ? 'rgba(20,140,180,.9)' : 'rgba(58,214,255,.9)',
+    nightFill: L ? 'rgba(35,55,100,.42)' : 'rgba(3,9,24,.68)',
+    nightGrad: L ? ['rgba(35,55,100,.35)','rgba(15,30,60,.6)'] : ['rgba(3,9,24,.62)','rgba(2,6,18,.9)'],
+    terminator: L ? 'rgba(220,140,30,.9)' : 'rgba(255,226,150,.85)',
+    outline: L ? 'rgba(70,130,190,.6)' : 'rgba(140,215,255,.5)',
+    axis:    L ? 'rgba(80,110,160,.55)' : 'rgba(220,238,255,.45)',
+    glow:    L ? 'rgba(120,180,230,.25)' : 'rgba(80,175,255,.28)',
+    glowOut: L ? 'rgba(80,150,220,0)' : 'rgba(30,80,180,0)',
+    pole:    L ? '#1a4a80' : '#fff',
+    poleText:L ? 'rgba(30,60,110,.9)' : 'rgba(220,238,255,.9)',
+    spec:    L ? ['rgba(255,255,255,.5)','rgba(180,220,255,.06)'] : ['rgba(255,255,255,.32)','rgba(180,220,255,.03)'],
+    beltTrop: L ? 'rgba(255,140,70,.28)' : 'rgba(255,144,80,.42)',
+    beltTemp: L ? 'rgba(63,180,100,.22)' : 'rgba(63,214,114,.3)',
+    beltPolar: L ? 'rgba(90,160,240,.28)' : 'rgba(120,190,255,.42)',
+    zoneLow: L ? 'rgba(230,160,40,.28)' : 'rgba(255,196,84,.36)',
+    zoneMid: L ? 'rgba(50,180,110,.24)' : 'rgba(63,214,114,.3)',
+    zoneHigh: L ? 'rgba(80,140,220,.28)' : 'rgba(120,170,255,.36)',
+    hemiE: L ? 'rgba(60,150,240,.32)' : 'rgba(77,157,255,.4)',
+    hemiW: L ? 'rgba(140,100,220,.32)' : 'rgba(169,132,255,.4)',
+    hemiN: L ? 'rgba(77,157,255,.32)' : 'rgba(77,157,255,.4)',
+    hemiS: L ? 'rgba(169,132,255,.32)' : 'rgba(169,132,255,.4)',
+    skyIn: L ? '#e8f0fa' : '#0a1222',
+    skyOut: L ? '#d8e3f2' : '#03050a',
+    star: L ? 'rgba(120,160,220,.4)' : 'rgba(205,228,255,.8)',
+  };
+}
+
+/* ============================================================
+   主题
+   ============================================================ */
+function initTheme(){
+  const saved = localStorage.getItem('geolab-theme') || 'dark';
+  document.documentElement.setAttribute('data-theme', saved);
+  $('#themeToggle').addEventListener('click', () => {
+    const cur = document.documentElement.getAttribute('data-theme');
+    const next = cur === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', next);
+    localStorage.setItem('geolab-theme', next);
+    setTimeout(() => {
+      // 重建星空
+      if (Globe.rebuildSky) Globe.rebuildSky();
+      // 重建所有 canvas 上的互动
+      document.querySelectorAll('.embed-details').forEach(d => {
+        d.querySelectorAll('canvas').forEach(cv => {
+          const bg = isLight() ? '#eef4fc' : '#050810';
+          cv.style.background = bg;
+        });
+      });
+    }, 50);
+  });
+}
+
+/* ============================================================
+   天文
+   ============================================================ */
+const STATE = { day: 80, observerLat: 30, sunWorld: null };
+function updateSunWorld(){ STATE.sunWorld = ll2v(dayToDecl(STATE.day), -50); }
+const MONTH_DAYS = [31,28,31,30,31,30,31,31,30,31,30,31];
+const TERM_DAYS = [
+  { day:80, name:'春分', note:'太阳直射赤道，全球昼夜平分' },
+  { day:173, name:'夏至', note:'太阳直射北回归线，北半球昼最长' },
+  { day:266, name:'秋分', note:'太阳直射赤道，全球昼夜平分' },
+  { day:356, name:'冬至', note:'太阳直射南回归线，北半球昼最短' }
+];
+function dayToDateStr(day){
+  let d = clamp(day, 1, 365);
+  for (let m = 0; m < 12; m++){ if (d <= MONTH_DAYS[m]) return (m+1) + '月' + d + '日'; d -= MONTH_DAYS[m]; }
+  return '12月31日';
+}
+function dayToTerm(day){
+  for (const t of TERM_DAYS){
+    const dd = Math.min(Math.abs(day - t.day), 365 - Math.abs(day - t.day));
+    if (dd <= 1) return t;
+  }
+  if (day >= 80 && day < 173) return { name:'春分→夏至', note:'北半球春季，昼渐长夜渐短' };
+  if (day >= 173 && day < 266) return { name:'夏至→秋分', note:'北半球夏季，昼渐短夜渐长' };
+  if (day >= 266 && day < 356) return { name:'秋分→冬至', note:'北半球秋季，昼渐短夜渐长' };
+  return { name:'冬至→春分', note:'北半球冬季，昼渐长夜渐短' };
+}
+function dayToOrbit(day){ return ((day - 80) / 365) * 360; }
+function dayToDecl(day){ return 23.44 * Math.sin(dayToOrbit(day) * DEG); }
+function dayLength(latDeg, declDeg){
+  const lat = latDeg*DEG, decl = declDeg*DEG;
+  const c = -Math.tan(lat) * Math.tan(decl);
+  if (c <= -1) return 24;
+  if (c >= 1) return 0;
+  return 2 * Math.acos(c) / DEG / 15;
+}
+function sunAltitude(latDeg, declDeg){ return 90 - Math.abs(latDeg - declDeg); }
+
+/* ============================================================
+   公共地球轮廓
+   ============================================================ */
+const LAND_RAW = [
+  [[15,-17],[25,-15],[32,0],[32,20],[30,32],[20,35],[12,42],[12,50],[-1,42],[-15,40],[-25,35],[-34,25],[-34,18],[-18,12],[-1,9],[5,10],[5,-8],[10,-13],[15,-17]],
+  [[35,-10],[45,-10],[52,4],[58,8],[62,5],[65,12],[70,30],[70,50],[75,70],[75,100],[70,130],[65,160],[60,180],[55,170],[50,155],[45,142],[42,130],[30,122],[22,115],[20,105],[13,100],[8,98],[17,95],[22,90],[15,80],[20,72],[25,65],[30,50],[38,45],[36,36],[36,28],[40,20],[38,15],[45,12],[42,3],[35,-10]],
+  [[65,-165],[70,-155],[70,-130],[70,-110],[70,-90],[65,-80],[60,-70],[50,-60],[45,-65],[40,-75],[30,-80],[25,-80],[25,-95],[20,-105],[28,-115],[35,-120],[45,-125],[55,-130],[60,-140],[60,-155],[65,-165]],
+  [[10,-75],[10,-60],[5,-50],[0,-45],[-5,-35],[-15,-40],[-25,-45],[-35,-55],[-45,-65],[-52,-70],[-50,-75],[-40,-72],[-30,-70],[-20,-70],[-10,-75],[0,-78],[10,-75]],
+  [[-12,130],[-20,115],[-30,115],[-35,125],[-38,140],[-35,150],[-25,155],[-15,145],[-12,135],[-12,130]],
+];
+const LAND = LAND_RAW.map(p => smoothClosed(p.map(v => ll2v(v[0], v[1])), 2));
+
+/* ============================================================
+   迷你地球仪组件
+   ============================================================ */
+const MiniGlobe = (function(){
+  return function(container, opts){
+    opts = Object.assign({
+      mode:'default', height:320, autoRotate:true, interactive:true,
+      showLand:true, showGrid:true, spinSpeed:0.0005,
+      rotY0:-1.15, rotX0:0.28, getLat:null, getLon:null, onClick:null
+    }, opts);
+
+    const canvas = document.createElement('canvas');
+    canvas.style.cssText = 'display:block;width:100%;height:' + opts.height + 'px;border-radius:10px;cursor:' + (opts.interactive ? 'grab' : 'default') + ';touch-action:none;background:var(--canvas-bg);transition:background .3s';
+    container.appendChild(canvas);
+    const ctx = canvas.getContext('2d');
+
+    let W = 0, H = opts.height, cx = 0, cy = 0, R = 100;
+    let rotY = opts.rotY0, rotX = opts.rotX0;
+    let isDown = false, moved = false, lastX = 0, lastY = 0, dX = 0, dY = 0;
+    let running = true, pin = null, themeVersion = 0;
+    let _ca=1, _sa=0, _cb=1, _sb=0;
+
+    function resize(){
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const rect = canvas.getBoundingClientRect();
+      W = rect.width || 300;
+      if (W < 10) return;
+      canvas.width = W * dpr; canvas.height = H * dpr;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      cx = W / 2; cy = H / 2; R = Math.min(W, H) * 0.36;
+    }
+    function updRot(){
+      _ca = Math.cos(rotY); _sa = Math.sin(rotY);
+      _cb = Math.cos(rotX); _sb = Math.sin(rotX);
+    }
+    function toCam(v){
+      const x1 =  v.x*_ca + v.z*_sa;
+      const z1 = -v.x*_sa + v.z*_ca;
+      return { x: x1, y: v.y*_cb - z1*_sb, z: v.y*_sb + z1*_cb };
+    }
+    function toScreen(c){ return { x: cx + c.x*R, y: cy - c.y*R, z: c.z }; }
+    function camToWorld(c){
+      const y1 = c.y*_cb + c.z*_sb;
+      const z1 = -c.y*_sb + c.z*_cb;
+      return { x: c.x*_ca - z1*_sa, y: y1, z: c.x*_sa + z1*_ca };
+    }
+    function clipZ(pts){
+      const out = [], n = pts.length;
+      for (let i = 0; i < n; i++){
+        const a = pts[i], b = pts[(i+1)%n];
+        const ain = a.z >= 0, bin = b.z >= 0;
+        if (ain) out.push(a);
+        if (ain !== bin){
+          const t = a.z/(a.z-b.z);
+          out.push({ x:a.x+(b.x-a.x)*t, y:a.y+(b.y-a.y)*t, z:0 });
+        }
+      }
+      return out;
+    }
+    function fillPoly(pts3, fill){
+      if (!pts3 || pts3.length < 3) return;
+      const cl = clipZ(pts3.map(toCam));
+      if (cl.length < 3) return;
+      ctx.beginPath();
+      cl.forEach((p, i) => {
+        const s = toScreen(p);
+        if (i === 0) ctx.moveTo(s.x, s.y); else ctx.lineTo(s.x, s.y);
+      });
+      ctx.closePath();
+      ctx.fillStyle = fill; ctx.fill();
+    }
+    function strokeLine(pts3, style, width, dash){
+      if (!pts3 || pts3.length < 2) return;
+      ctx.save();
+      ctx.strokeStyle = style; ctx.lineWidth = width || 1;
+      ctx.lineCap = 'round';
+      if (dash) ctx.setLineDash(dash);
+      ctx.beginPath();
+      let pen = false;
+      for (const p of pts3){
+        const c = toCam(p);
+        if (c.z > 0){
+          const s = toScreen(c);
+          if (pen) ctx.lineTo(s.x, s.y); else { ctx.moveTo(s.x, s.y); pen = true; }
+        } else pen = false;
+      }
+      ctx.stroke();
+      ctx.restore();
+    }
+    function latLine(lat, step){
+      step = step || 5;
+      const a = [];
+      for (let lon = -180; lon <= 180; lon += step) a.push(ll2v(lat, lon));
+      return a;
+    }
+    function lonLine(lon, step){
+      step = step || 5;
+      const a = [];
+      for (let lat = -90; lat <= 90; lat += step) a.push(ll2v(lat, lon));
+      return a;
+    }
+    function bandPoly(a, b, step){
+      step = step || 5;
+      const pts = [];
+      if (Math.abs(Math.cos(a*DEG)) > 1e-6){
+        for (let lon = -180; lon <= 180; lon += step) pts.push(ll2v(a, lon));
+      } else pts.push(ll2v(a, 0));
+      if (Math.abs(Math.cos(b*DEG)) > 1e-6){
+        for (let lon = 180; lon >= -180; lon -= step) pts.push(ll2v(b, lon));
+      } else pts.push(ll2v(b, 0));
+      return pts;
+    }
+    function hemiPoly(lonStart, lonEnd){
+      const pts = [ll2v(90, 0)];
+      for (let lat = 85; lat >= -85; lat -= 5) pts.push(ll2v(lat, lonStart));
+      pts.push(ll2v(-90, 0));
+      for (let lat = -85; lat <= 85; lat += 5) pts.push(ll2v(lat, lonEnd));
+      return pts;
+    }
+
+    function drawNightOverlay(){
+      const c = C();
+      const sunWorld = ll2v(0, 90);
+      const worldV = camToWorld({ x:0, y:0, z:1 });
+      const P1 = cross(sunWorld, worldV);
+      const L = Math.hypot(P1.x, P1.y, P1.z);
+      if (L < 1e-4) return;
+      const nP1 = { x:P1.x/L, y:P1.y/L, z:P1.z/L };
+      const P2 = { x:-nP1.x, y:-nP1.y, z:-nP1.z };
+      const N = 48, pts = [];
+      const e2a = cross(sunWorld, nP1);
+      const e2 = dot(e2a, worldV) > 0 ? e2a : { x:-e2a.x, y:-e2a.y, z:-e2a.z };
+      for (let i = 0; i <= N; i++){
+        const th = Math.PI*i/N, cc = Math.cos(th), ss = Math.sin(th);
+        pts.push({ x:nP1.x*cc+e2.x*ss, y:nP1.y*cc+e2.y*ss, z:nP1.z*cc+e2.z*ss });
+      }
+      const f2a = cross(worldV, P2);
+      const f2 = dot(f2a, sunWorld) < 0 ? f2a : { x:-f2a.x, y:-f2a.y, z:-f2a.z };
+      for (let i = 1; i < N; i++){
+        const th = Math.PI*i/N, cc = Math.cos(th), ss = Math.sin(th);
+        pts.push({ x:P2.x*cc+f2.x*ss, y:P2.y*cc+f2.y*ss, z:P2.z*cc+f2.z*ss });
+      }
+      ctx.beginPath();
+      pts.forEach((p, i) => {
+        const s = toScreen(toCam(p));
+        if (i === 0) ctx.moveTo(s.x, s.y); else ctx.lineTo(s.x, s.y);
+      });
+      ctx.closePath();
+      ctx.fillStyle = c.nightFill; ctx.fill();
+      ctx.beginPath();
+      for (let i = 0; i <= N; i++){
+        const s = toScreen(toCam(pts[i]));
+        if (i === 0) ctx.moveTo(s.x, s.y); else ctx.lineTo(s.x, s.y);
+      }
+      ctx.strokeStyle = c.terminator; ctx.lineWidth = 1.5; ctx.stroke();
+    }
+
+    function draw(){
+      if (W < 10) return;
+      const c = C();
+      updRot();
+      ctx.clearRect(0, 0, W, H);
+      const bg = ctx.createRadialGradient(cx, cy, 0, cx, cy, Math.max(W,H)*0.7);
+      bg.addColorStop(0, c.bgIn); bg.addColorStop(1, c.bgOut);
+      ctx.fillStyle = bg; ctx.fillRect(0, 0, W, H);
+
+      const glow = ctx.createRadialGradient(cx, cy, R*0.9, cx, cy, R*1.4);
+      glow.addColorStop(0, 'rgba(70,160,255,0)');
+      glow.addColorStop(0.3, c.glow);
+      glow.addColorStop(1, c.glowOut);
+      ctx.beginPath(); ctx.arc(cx, cy, R*1.4, 0, TAU);
+      ctx.fillStyle = glow; ctx.fill();
+
+      const sg = ctx.createRadialGradient(cx - R*0.35, cy - R*0.4, R*0.05, cx, cy, R*1.05);
+      sg.addColorStop(0, c.sphere[0]); sg.addColorStop(0.3, c.sphere[1]);
+      sg.addColorStop(0.65, c.sphere[2]); sg.addColorStop(1, c.sphere[3]);
+      ctx.beginPath(); ctx.arc(cx, cy, R, 0, TAU);
+      ctx.fillStyle = sg; ctx.fill();
+
+      ctx.save();
+      ctx.beginPath(); ctx.arc(cx, cy, R, 0, TAU); ctx.clip();
+
+      const mode = opts.mode;
+      if (mode === 'belts'){
+        [[-23.5,23.5,c.beltTrop],[23.5,66.5,c.beltTemp],
+         [-66.5,-23.5,c.beltTemp],[66.5,90,c.beltPolar],[-90,-66.5,c.beltPolar]]
+         .forEach(([a,b,col]) => fillPoly(bandPoly(a,b), col));
+      } else if (mode === 'zones'){
+        [[-30,30,c.zoneLow],[30,60,c.zoneMid],[-60,-30,c.zoneMid],
+         [60,90,c.zoneHigh],[-90,-60,c.zoneHigh]].forEach(([a,b,col]) => fillPoly(bandPoly(a,b), col));
+      } else if (mode === 'hemisphere'){
+        fillPoly(hemiPoly(-20, 160), c.hemiE);
+        fillPoly(hemiPoly(160, 340), c.hemiW);
+      } else if (mode === 'hemiNS'){
+        fillPoly(bandPoly(0, 90, 6), c.hemiN);
+        fillPoly(bandPoly(-90, 0, 6), c.hemiS);
+      } else if (mode === 'night'){
+        drawNightOverlay();
+      }
+
+      if (opts.showLand){
+        const alpha = ['belts','zones','hemisphere','hemiNS','night'].indexOf(mode) >= 0 ? 0.55 : 1;
+        ctx.globalAlpha = alpha;
+        if (mode !== 'night' && Math.abs(cx) >= 0){
+          // 南极洲
+          fillPoly(bandPoly(-90, -70, 5), c.antarctica);
+        }
+        LAND.forEach(poly => fillPoly(poly, c.land));
+        ctx.globalAlpha = 1;
+      }
+
+      if (opts.showGrid){
+        for (let lat = -60; lat <= 60; lat += 30){
+          if (lat === 0) continue;
+          strokeLine(latLine(lat), c.grid, 1);
+        }
+        for (let lon = -180; lon < 180; lon += 30){
+          if (lon === 0) continue;
+          strokeLine(lonLine(lon), c.grid2, 1);
+        }
+      }
+
+      if (mode === 'lat' && opts.getLat){
+        strokeLine(latLine(opts.getLat()), '#38d8ff', 3);
+      } else if (mode === 'lon' && opts.getLon){
+        strokeLine(lonLine(opts.getLon()), c.prime, 3);
+      } else {
+        strokeLine(latLine(0), c.equator, 2.4);
+        strokeLine(lonLine(0), c.prime, 2.4);
+      }
+
+      if (mode === 'belts' || mode === 'zones'){
+        strokeLine(latLine(23.5), c.tropic, 1.2, [5,4]);
+        strokeLine(latLine(-23.5), c.tropic, 1.2, [5,4]);
+        strokeLine(latLine(66.5), c.polar, 1.2, [5,4]);
+        strokeLine(latLine(-66.5), c.polar, 1.2, [5,4]);
+      }
+      if (mode === 'hemisphere'){
+        strokeLine(lonLine(-20), c.hemiLon, 2.2, [7,5]);
+        strokeLine(lonLine(160), c.hemiLon, 2.2, [7,5]);
+      }
+      if (mode === 'hemiNS'){
+        strokeLine(latLine(0), c.equator, 2.4);
+      }
+      ctx.restore();
+
+      ctx.beginPath(); ctx.arc(cx, cy, R, 0, TAU);
+      ctx.strokeStyle = c.outline; ctx.lineWidth = 1.5; ctx.stroke();
+
+      // 地轴
+      const np = toCam({ x:0, y:1, z:0 });
+      const sp = toCam({ x:0, y:-1, z:0 });
+      ctx.save();
+      ctx.strokeStyle = c.axis; ctx.lineWidth = 1.3;
+      ctx.setLineDash([4,3]);
+      if (np.z > -0.15){
+        const a = toScreen(np), b = toScreen({ x:np.x*1.18, y:np.y*1.18, z:np.z*1.18 });
+        ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
+      }
+      if (sp.z > -0.15){
+        const a = toScreen(sp), b = toScreen({ x:sp.x*1.18, y:sp.y*1.18, z:sp.z*1.18 });
+        ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
+      }
+      ctx.restore();
+
+      [[90,'N'],[-90,'S']].forEach(([lat, name]) => {
+        const cc = toCam(ll2v(lat, 0));
+        if (cc.z <= 0.02) return;
+        const s = toScreen(cc);
+        ctx.beginPath(); ctx.arc(s.x, s.y, 3.5, 0, TAU);
+        ctx.fillStyle = c.pole; ctx.fill();
+        ctx.font = '600 11px -apple-system,sans-serif';
+        ctx.fillStyle = c.poleText;
+        ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+        const dx = s.x - cx, dy = s.y - cy, len = Math.hypot(dx, dy) || 1;
+        ctx.fillText(name, s.x + dx/len*22, s.y + dy/len*22);
+      });
+
+      if (pin){
+        const cc = toCam(ll2v(pin.lat, pin.lon));
+        if (cc.z > 0){
+          const s = toScreen(cc);
+          const t = (performance.now() % 1500) / 1500;
+          ctx.beginPath(); ctx.arc(s.x, s.y, 6 + t*14, 0, TAU);
+          ctx.strokeStyle = 'rgba(255,144,80,' + (0.85*(1-t)) + ')';
+          ctx.lineWidth = 2; ctx.stroke();
+          ctx.beginPath(); ctx.arc(s.x, s.y, 5.5, 0, TAU);
+          ctx.fillStyle = '#ff9050';
+          ctx.shadowColor = '#ff9050'; ctx.shadowBlur = 14;
+          ctx.fill(); ctx.shadowBlur = 0;
+          ctx.strokeStyle = '#fff'; ctx.lineWidth = 1.5; ctx.stroke();
+        }
+      }
+    }
+
+    canvas.addEventListener('pointerdown', e => {
+      if (!opts.interactive) return;
+      isDown = true; moved = false;
+      lastX = e.clientX; lastY = e.clientY;
+      dX = e.clientX; dY = e.clientY;
+      try { canvas.setPointerCapture(e.pointerId); } catch(err){}
+    });
+    canvas.addEventListener('pointermove', e => {
+      if (!isDown) return;
+      const dx = e.clientX - lastX, dy = e.clientY - lastY;
+      if (Math.abs(e.clientX - dX) > 4 || Math.abs(e.clientY - dY) > 4) moved = true;
+      if (moved){
+        rotY += dx * 0.008;
+        rotX = clamp(rotX + dy * 0.008, -1.4, 1.4);
+      }
+      lastX = e.clientX; lastY = e.clientY;
+    });
+    canvas.addEventListener('pointerup', e => {
+      if (!isDown) return;
+      isDown = false;
+      if (opts.onClick && !moved){
+        const rect = canvas.getBoundingClientRect();
+        const mx = e.clientX - rect.left, my = e.clientY - rect.top;
+        const x2 = (mx - cx)/R, y2 = (cy - my)/R;
+        const d2 = x2*x2 + y2*y2;
+        if (d2 > 1) return;
+        const z2 = Math.sqrt(1 - d2);
+        const y1 = y2*_cb + z2*_sb;
+        const z1 = -y2*_sb + z2*_cb;
+        const x1 = x2*_ca - z1*_sa;
+        const z1b = x2*_sa + z1*_ca;
+        const lat = Math.asin(clamp(y1, -1, 1)) * RAD;
+        const lon = Math.atan2(x1, z1b) * RAD;
+        pin = { lat, lon };
+        opts.onClick({ lat, lon });
+      }
+    });
+    canvas.addEventListener('pointercancel', () => { isDown = false; });
+
+    let last = 0;
+    function loop(t){
+      if (!running) return;
+      const dt = Math.min(50, t - last);
+      last = t;
+      if (opts.autoRotate && !isDown){
+        rotY += opts.spinSpeed * dt;
+        if (rotY > TAU) rotY -= TAU;
+      }
+      draw();
+      requestAnimationFrame(loop);
+    }
+    setTimeout(() => { resize(); requestAnimationFrame(loop); }, 20);
+    new ResizeObserver(() => resize()).observe(container);
+    new IntersectionObserver(entries => {
+      running = entries[0].isIntersecting;
+      if (running) requestAnimationFrame(loop);
+    }, { threshold: 0 }).observe(canvas);
+
+    return { setRotY(v){ rotY = v; }, setPin(p){ pin = p; }, clearPin(){ pin = null; } };
+  };
+})();
+
+/* ============================================================
+   迷你公转组件
+   ============================================================ */
+const MiniOrbit = (function(){
+  return function(container, opts){
+    opts = Object.assign({ height: 340, autoPlay: true }, opts);
+
+    const canvas = document.createElement('canvas');
+    canvas.style.cssText = 'display:block;width:100%;height:' + opts.height + 'px;border-radius:10px;cursor:pointer;background:var(--canvas-bg);transition:background .3s';
+    container.appendChild(canvas);
+    const ctx = canvas.getContext('2d');
+
+    let W, H, cx, cy, A, B;
+    let day = 80, playing = opts.autoPlay, running = true;
+
+    function resize(){
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const rect = canvas.getBoundingClientRect();
+      W = rect.width; H = opts.height;
+      if (W < 10) return;
+      canvas.width = W * dpr; canvas.height = H * dpr;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      cx = W/2; cy = H/2 + 4;
+      A = Math.min(W*0.32, H*0.4);
+      B = A * 0.62;
+    }
+    function drawEarth(ex, ey, size, isActive, decl){
+      const c = C();
+      const sunDx = cx - ex, sunDy = cy - ey;
+      const dist = Math.hypot(sunDx, sunDy) || 1;
+      const nx = sunDx/dist, ny = sunDy/dist;
+      if (isActive){
+        const pulse = 1 + 0.12 * Math.sin(performance.now()/350);
+        const g = ctx.createRadialGradient(ex, ey, size*0.7, ex, ey, size*2.4*pulse);
+        g.addColorStop(0, 'rgba(44,212,255,.35)');
+        g.addColorStop(1, 'rgba(44,212,255,0)');
+        ctx.beginPath(); ctx.arc(ex, ey, size*2.4*pulse, 0, TAU);
+        ctx.fillStyle = g; ctx.fill();
+      }
+      ctx.beginPath(); ctx.arc(ex, ey, size, 0, TAU);
+      const bg = ctx.createRadialGradient(ex - nx*size*0.4, ey - ny*size*0.4, size*0.1, ex, ey, size);
+      bg.addColorStop(0, isActive ? (isLight()?'#3a5a80':'#1e3050') : (isLight()?'#2a3f5e':'#17253c'));
+      bg.addColorStop(1, isLight() ? '#1a2f48' : '#0a1424');
+      ctx.fillStyle = bg; ctx.fill();
+      ctx.save();
+      ctx.beginPath(); ctx.arc(ex, ey, size, 0, TAU); ctx.clip();
+      const pa = Math.atan2(ny, nx) + Math.PI/2;
+      ctx.beginPath();
+      ctx.arc(ex, ey, size, pa, pa + Math.PI);
+      ctx.lineTo(ex, ey); ctx.closePath();
+      const lg = ctx.createRadialGradient(ex + nx*size*0.5, ey + ny*size*0.5, 0, ex, ey, size);
+      lg.addColorStop(0, isActive ? '#6bb8ea' : '#4a90c8');
+      lg.addColorStop(1, isActive ? '#2d6fa8' : '#1e5088');
+      ctx.fillStyle = lg; ctx.fill();
+      ctx.restore();
+      const axDx = Math.sin(23.5*DEG), axDy = -Math.cos(23.5*DEG);
+      const aLen = size * 1.6;
+      ctx.beginPath();
+      ctx.moveTo(ex - axDx*aLen, ey - axDy*aLen);
+      ctx.lineTo(ex + axDx*aLen, ey + axDy*aLen);
+      ctx.strokeStyle = isActive ? 'rgba(230,245,255,.95)' : (isLight() ? 'rgba(60,100,150,.7)' : 'rgba(180,200,220,.55)');
+      ctx.lineWidth = isActive ? 1.8 : 1.2;
+      ctx.setLineDash([4,3]); ctx.stroke(); ctx.setLineDash([]);
+      ctx.beginPath(); ctx.arc(ex, ey, size, 0, TAU);
+      ctx.strokeStyle = isActive ? 'rgba(100,180,240,.9)' : c.outline;
+      ctx.lineWidth = isActive ? 1.6 : 1; ctx.stroke();
+      ctx.beginPath();
+      const eqDx = Math.cos(23.5*DEG), eqDy = Math.sin(23.5*DEG);
+      ctx.moveTo(ex - eqDx*size*0.7, ey - eqDy*size*0.7);
+      ctx.lineTo(ex + eqDx*size*0.7, ey + eqDy*size*0.7);
+      ctx.strokeStyle = c.equator; ctx.lineWidth = 1; ctx.stroke();
+    }
+    function draw(){
+      if (W < 10) return;
+      const c = C();
+      ctx.clearRect(0, 0, W, H);
+      const bg = ctx.createRadialGradient(cx, cy, 0, cx, cy, Math.max(W,H)*0.7);
+      bg.addColorStop(0, c.bgIn); bg.addColorStop(1, c.bgOut);
+      ctx.fillStyle = bg; ctx.fillRect(0, 0, W, H);
+
+      ctx.beginPath();
+      ctx.ellipse(cx, cy, A, B, 0, 0, TAU);
+      ctx.strokeStyle = isLight() ? 'rgba(60,120,200,.35)' : 'rgba(88,166,255,.28)';
+      ctx.lineWidth = 1.4; ctx.setLineDash([7,5]);
+      ctx.stroke(); ctx.setLineDash([]);
+
+      const orbitAngle = dayToOrbit(day);
+      const decl = dayToDecl(day);
+
+      const seasons = [
+        { angle:0, name:'春分', color:'#3fd672' },
+        { angle:90, name:'夏至', color:'#ff9050' },
+        { angle:180, name:'秋分', color:'#ffc454' },
+        { angle:270, name:'冬至', color:'#4d9dff' },
+      ];
+      for (const s of seasons){
+        const a = s.angle * DEG;
+        const px = cx + A * Math.cos(a);
+        const py = cy - B * Math.sin(a);
+        const isActive = Math.abs(((orbitAngle - s.angle) % 360 + 360) % 360) < 8 ||
+                         Math.abs(((orbitAngle - s.angle) % 360 + 360) % 360 - 360) < 8;
+        drawEarth(px, py, isActive ? 22 : 16, isActive, decl);
+        ctx.font = (isActive ? '700 ' : '600 ') + '11px -apple-system,sans-serif';
+        ctx.fillStyle = isActive ? s.color : (isLight() ? 'rgba(80,110,150,.7)' : 'rgba(139,148,158,.7)');
+        ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+        const offX = (px - cx)/A * 48, offY = (py - cy)/B * 48;
+        ctx.fillText(s.name, px + offX, py + offY);
+      }
+
+      const sg = ctx.createRadialGradient(cx, cy, 0, cx, cy, 50);
+      sg.addColorStop(0, 'rgba(255,240,180,.9)');
+      sg.addColorStop(0.4, 'rgba(255,200,80,.5)');
+      sg.addColorStop(1, 'rgba(255,150,40,0)');
+      ctx.beginPath(); ctx.arc(cx, cy, 50, 0, TAU);
+      ctx.fillStyle = sg; ctx.fill();
+      ctx.beginPath(); ctx.arc(cx, cy, 16, 0, TAU);
+      ctx.fillStyle = '#ffd970';
+      ctx.shadowColor = '#ffd970'; ctx.shadowBlur = 20;
+      ctx.fill(); ctx.shadowBlur = 0;
+      ctx.font = '700 10px -apple-system,sans-serif';
+      ctx.fillStyle = 'rgba(13,17,23,.9)';
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillText('太阳', cx, cy);
+
+      const phi = orbitAngle * DEG;
+      const ex = cx + A * Math.cos(phi);
+      const ey = cy - B * Math.sin(phi);
+      const sunDx = ex - cx, sunDy = ey - cy;
+      const dist = Math.hypot(sunDx, sunDy) || 1;
+      const nx = sunDx/dist, ny = sunDy/dist;
+      ctx.strokeStyle = isLight() ? 'rgba(220,150,30,.55)' : 'rgba(255,196,84,.4)';
+      ctx.lineWidth = 1.2;
+      ctx.setLineDash([5,5]);
+      ctx.beginPath();
+      ctx.moveTo(cx + nx*20, cy + ny*20);
+      ctx.lineTo(ex - nx*26, ey - ny*26);
+      ctx.stroke(); ctx.setLineDash([]);
+      drawEarth(ex, ey, 22, true, decl);
+
+      const termName = (() => {
+        for (const t of [{d:80,n:'春分'},{d:173,n:'夏至'},{d:266,n:'秋分'},{d:356,n:'冬至'}]){
+          const dd = Math.min(Math.abs(day - t.d), 365 - Math.abs(day - t.d));
+          if (dd <= 2) return t.n;
+        }
+        if (day >= 80 && day < 173) return '春季';
+        if (day >= 173 && day < 266) return '夏季';
+        if (day >= 266 && day < 356) return '秋季';
+        return '冬季';
+      })();
+      ctx.fillStyle = isLight() ? 'rgba(20,80,140,.9)' : 'rgba(44,212,255,.9)';
+      ctx.font = '600 11.5px -apple-system,sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText(dayToDateStr(day) + ' · ' + termName + (playing ? '' : '（已暂停）'), cx, H - 8);
+    }
+    canvas.addEventListener('click', () => { playing = !playing; });
+    let last = 0;
+    function loop(t){
+      if (!running) return;
+      const dt = Math.min(50, t - last);
+      last = t;
+      if (playing){
+        day += 0.35 * (dt/16);
+        if (day > 365) day -= 365;
+      }
+      draw();
+      requestAnimationFrame(loop);
+    }
+    setTimeout(() => { resize(); requestAnimationFrame(loop); }, 20);
+    new ResizeObserver(() => resize()).observe(container);
+    new IntersectionObserver(entries => {
+      running = entries[0].isIntersecting;
+      if (running) requestAnimationFrame(loop);
+    }, { threshold: 0 }).observe(canvas);
+
+    return { setDay(d){ day = d; }, setPlaying(v){ playing = v; } };
+  };
+})();
+
+/* ============================================================
+   主地球仪
+   ============================================================ */
+const Globe = (function(){
+  const canvas = $('#globeCanvas');
+  let ctx = null, W = 0, H = 0, cx = 0, cy = 0, R = 200, baseR = 200;
+  let rotY = -1.15, rotX = 0.30, zoom = 1;
+  let autoRot = true, spinSpeed = 1;
+  let isDown = false, dragMoved = false;
+  let lastX = 0, lastY = 0, downX = 0, downY = 0;
+  let hoverLL = null, pin = null, gridStep = 10;
+  const opt = { grid:true, land:true, special:true, hemiNS:false, hemiEW:false,
+                zones:false, belts:false, axis:true, night:true, lineHover:true };
+  let _ca=1,_sa=0,_cb=1,_sb=0;
+  const lineTip = $('#lineTip');
+
+  function updRot(){
+    _ca = Math.cos(rotY); _sa = Math.sin(rotY);
+    _cb = Math.cos(rotX); _sb = Math.sin(rotX);
+  }
+  function toCam(v){
+    const x1 =  v.x*_ca + v.z*_sa;
+    const z1 = -v.x*_sa + v.z*_ca;
+    return { x:x1, y:v.y*_cb - z1*_sb, z:v.y*_sb + z1*_cb };
+  }
+  function toScreen(c){ return { x:cx + c.x*R, y:cy - c.y*R, z:c.z }; }
+  function camToWorld(c){
+    const y1 =  c.y*_cb + c.z*_sb;
+    const z1 = -c.y*_sb + c.z*_cb;
+    return { x:c.x*_ca - z1*_sa, y:y1, z:c.x*_sa + z1*_ca };
+  }
+  function unproject(sx, sy){
+    const x2 = (sx-cx)/R, y2 = (cy-sy)/R;
+    const d2 = x2*x2 + y2*y2;
+    if (d2 > 1) return null;
+    const z2 = Math.sqrt(1-d2);
+    const y1 =  y2*_cb + z2*_sb;
+    const z1 = -y2*_sb + z2*_cb;
+    return { x:x2*_ca - z1*_sa, y:y1, z:x2*_sa + z1*_ca };
+  }
+  function clipZ(pts){
+    const out = [], n = pts.length;
+    for (let i = 0; i < n; i++){
+      const a = pts[i], b = pts[(i+1)%n];
+      const ain = a.z >= 0, bin = b.z >= 0;
+      if (ain) out.push(a);
+      if (ain !== bin){
+        const t = a.z/(a.z-b.z);
+        out.push({ x:a.x+(b.x-a.x)*t, y:a.y+(b.y-a.y)*t, z:0 });
+      }
+    }
+    return out;
+  }
+  function drawPoly(pts3, fill){
+    if (!pts3 || pts3.length < 3) return;
+    const cl = clipZ(pts3.map(toCam));
+    if (cl.length < 3) return;
+    ctx.beginPath();
+    cl.forEach((p, i) => {
+      const s = toScreen(p);
+      if (i === 0) ctx.moveTo(s.x, s.y); else ctx.lineTo(s.x, s.y);
+    });
+    ctx.closePath();
+    ctx.fillStyle = fill; ctx.fill();
+  }
+  function line3(pts3, style, width, dash){
+    if (!pts3 || pts3.length < 2) return;
+    ctx.save();
+    ctx.strokeStyle = style; ctx.lineWidth = width || 1;
+    ctx.lineCap = 'round';
+    if (dash) ctx.setLineDash(dash);
+    ctx.beginPath();
+    let pen = false;
+    for (const p of pts3){
+      const c = toCam(p);
+      if (c.z > 0){
+        const s = toScreen(c);
+        if (pen) ctx.lineTo(s.x, s.y); else { ctx.moveTo(s.x, s.y); pen = true; }
+      } else pen = false;
+    }
+    ctx.stroke();
+    ctx.restore();
+  }
+  function latLine(lat, step){
+    step = step || 4;
+    const a = [];
+    for (let lon = -180; lon <= 180; lon += step) a.push(ll2v(lat, lon));
+    return a;
+  }
+  function lonLine(lon, step){
+    step = step || 4;
+    const a = [];
+    for (let lat = -90; lat <= 90; lat += step) a.push(ll2v(lat, lon));
+    return a;
+  }
+  function bandPoly(a, b, step){
+    step = step || 5;
+    const pts = [];
+    if (Math.abs(Math.cos(a*DEG)) > 1e-6){
+      for (let lon = -180; lon <= 180; lon += step) pts.push(ll2v(a, lon));
+    } else pts.push(ll2v(a, 0));
+    if (Math.abs(Math.cos(b*DEG)) > 1e-6){
+      for (let lon = 180; lon >= -180; lon -= step) pts.push(ll2v(b, lon));
+    } else pts.push(ll2v(b, 0));
+    return pts;
+  }
+  function hemiPolyLon(start, end){
+    const pts = [ll2v(90, 0)];
+    for (let lat = 85; lat >= -85; lat -= 5) pts.push(ll2v(lat, start));
+    pts.push(ll2v(-90, 0));
+    for (let lat = -85; lat <= 85; lat += 5) pts.push(ll2v(lat, end));
+    return pts;
+  }
+
+  /* 星空 */
+  const sky = document.createElement('canvas');
+  const skyCtx = sky.getContext('2d');
+  function buildSky(){
+    if (!sky.width || !sky.height){ sky.width = 100; sky.height = 100; }
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    sky.width = Math.round(W*dpr); sky.height = Math.round(H*dpr);
+    skyCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    skyCtx.clearRect(0, 0, W, H);
+    const c = C();
+    const g = skyCtx.createRadialGradient(cx, cy, 0, cx, cy, Math.max(W,H)*0.85);
+    g.addColorStop(0, c.skyIn); g.addColorStop(1, c.skyOut);
+    skyCtx.fillStyle = g; skyCtx.fillRect(0, 0, W, H);
+    if (isLight()) return;
+    const count = Math.round(W*H/3600);
+    for (let i = 0; i < count; i++){
+      const x = Math.random()*W, y = Math.random()*H;
+      const r = Math.random()*1.3 + 0.25;
+      const a = Math.random()*0.65 + 0.15;
+      skyCtx.beginPath(); skyCtx.arc(x, y, r, 0, TAU);
+      skyCtx.fillStyle = 'rgba(205,228,255,'+a.toFixed(2)+')';
+      skyCtx.fill();
+    }
+  }
+
+  /* 检测鼠标靠近哪条特殊线 */
+  function detectLine(lat, lon){
+    const tol = 3;
+    let L = lon;
+    while (L > 180) L -= 360;
+    while (L < -180) L += 360;
+    const checks = [
+      { name:'赤道', deg:'0° 纬线', color:'#ff5d6c',
+        hit: Math.abs(lat) < tol },
+      { name:'本初子午线', deg:'0° 经线', color:'#ffc454',
+        hit: Math.abs(L) < tol },
+      { name:'北回归线', deg:'23.5°N', color:'#ffc454',
+        hit: Math.abs(lat - 23.5) < tol },
+      { name:'南回归线', deg:'23.5°S', color:'#ffc454',
+        hit: Math.abs(lat + 23.5) < tol },
+      { name:'北极圈', deg:'66.5°N', color:'#96d6ff',
+        hit: Math.abs(lat - 66.5) < tol },
+      { name:'南极圈', deg:'66.5°S', color:'#96d6ff',
+        hit: Math.abs(lat + 66.5) < tol },
+      { name:'20°W 经线', deg:'东西半球分界', color:'#3ad6ff',
+        hit: Math.abs(L + 20) < tol },
+      { name:'160°E 经线', deg:'东西半球分界', color:'#3ad6ff',
+        hit: Math.abs(L - 160) < tol },
+      { name:'180° 经线', deg:'日期变更线附近', color:'#3ad6ff',
+        hit: Math.abs(Math.abs(L) - 180) < tol },
+    ];
+    for (const c of checks){
+      if (c.hit) return c;
+    }
+    return null;
+  }
+
+  function render(){
+    if (!ctx || W < 10 || H < 10) return;
+    const c = C();
+    updRot();
+    R = baseR * zoom;
+    ctx.clearRect(0, 0, W, H);
+    ctx.drawImage(sky, 0, 0, W, H);
+
+    const glow = ctx.createRadialGradient(cx, cy, R*0.88, cx, cy, R*1.5);
+    glow.addColorStop(0, 'rgba(70,160,255,0)');
+    glow.addColorStop(0.2, c.glow);
+    glow.addColorStop(1, c.glowOut);
+    ctx.beginPath(); ctx.arc(cx, cy, R*1.5, 0, TAU);
+    ctx.fillStyle = glow; ctx.fill();
+
+    const sunCam = toCam(STATE.sunWorld);
+    const hx = cx + sunCam.x * R * 0.55;
+    const hy = cy - sunCam.y * R * 0.55;
+    const sg = ctx.createRadialGradient(hx, hy, R*0.05, cx, cy, R*1.05);
+    sg.addColorStop(0, c.sphere[0]); sg.addColorStop(0.3, c.sphere[1]);
+    sg.addColorStop(0.65, c.sphere[2]); sg.addColorStop(1, c.sphere[3]);
+    ctx.beginPath(); ctx.arc(cx, cy, R, 0, TAU);
+    ctx.fillStyle = sg; ctx.fill();
+
+    ctx.save();
+    ctx.beginPath(); ctx.arc(cx, cy, R, 0, TAU); ctx.clip();
+
+    if (opt.hemiNS){
+      drawPoly(bandPoly(0, 90, 6), c.hemiN);
+      drawPoly(bandPoly(-90, 0, 6), c.hemiS);
+    }
+    if (opt.hemiEW){
+      drawPoly(hemiPolyLon(-20, 160), c.hemiE);
+      drawPoly(hemiPolyLon(160, 340), c.hemiW);
+    }
+    if (opt.zones){
+      [[-30,30,c.zoneLow],[30,60,c.zoneMid],[-60,-30,c.zoneMid],
+       [60,90,c.zoneHigh],[-90,-60,c.zoneHigh]].forEach(([a,b,col]) => drawPoly(bandPoly(a,b), col));
+    }
+    if (opt.belts){
+      [[-23.5,23.5,c.beltTrop],[23.5,66.5,c.beltTemp],
+       [-66.5,-23.5,c.beltTemp],[66.5,90,c.beltPolar],[-90,-66.5,c.beltPolar]]
+       .forEach(([a,b,col]) => drawPoly(bandPoly(a,b), col));
+    }
+    if (opt.land){
+      drawPoly(bandPoly(-90, -70, 5), c.antarctica);
+      LAND.forEach(poly => drawPoly(poly, c.land));
+    }
+    if (opt.grid){
+      for (let lat = -90+gridStep; lat < 90; lat += gridStep){
+        if (Math.abs(lat) < 0.01) continue;
+        line3(latLine(lat, 5), c.grid, 1);
+      }
+      for (let lon = -180; lon < 180; lon += gridStep){
+        if (Math.abs(lon) < 0.01) continue;
+        line3(lonLine(lon, 5), c.grid2, 1);
+      }
+    }
+    if (opt.night){
+      const V = camToWorld({ x:0, y:0, z:1 });
+      const S = STATE.sunWorld;
+      let P1 = cross(S, V);
+      const L = Math.hypot(P1.x, P1.y, P1.z);
+      if (L > 1e-4){
+        const nP1 = { x:P1.x/L, y:P1.y/L, z:P1.z/L };
+        const P2 = { x:-nP1.x, y:-nP1.y, z:-nP1.z };
+        const N = 64, pts = [];
+        const e2a = cross(S, nP1);
+        const e2 = dot(e2a, V) > 0 ? e2a : { x:-e2a.x, y:-e2a.y, z:-e2a.z };
+        for (let i = 0; i <= N; i++){
+          const t = Math.PI*i/N, cc = Math.cos(t), ss = Math.sin(t);
+          pts.push({ x:nP1.x*cc+e2.x*ss, y:nP1.y*cc+e2.y*ss, z:nP1.z*cc+e2.z*ss });
+        }
+        const f2a = cross(V, P2);
+        const f2 = dot(f2a, S) < 0 ? f2a : { x:-f2a.x, y:-f2a.y, z:-f2a.z };
+        for (let i = 1; i < N; i++){
+          const t = Math.PI*i/N, cc = Math.cos(t), ss = Math.sin(t);
+          pts.push({ x:P2.x*cc+f2.x*ss, y:P2.y*cc+f2.y*ss, z:P2.z*cc+f2.z*ss });
+        }
+        ctx.beginPath();
+        pts.forEach((p, i) => {
+          const s = toScreen(toCam(p));
+          if (i === 0) ctx.moveTo(s.x, s.y); else ctx.lineTo(s.x, s.y);
+        });
+        ctx.closePath();
+        const ng = ctx.createRadialGradient(cx, cy, R*0.1, cx, cy, R*1.15);
+        ng.addColorStop(0, c.nightGrad[0]);
+        ng.addColorStop(1, c.nightGrad[1]);
+        ctx.fillStyle = ng; ctx.fill();
+        // 晨昏线
+        ctx.beginPath();
+        for (let i = 0; i <= N; i++){
+          const s = toScreen(toCam(pts[i]));
+          if (i === 0) ctx.moveTo(s.x, s.y); else ctx.lineTo(s.x, s.y);
+        }
+        ctx.strokeStyle = c.terminator;
+        ctx.lineWidth = 1.5; ctx.stroke();
+      }
+    }
+    ctx.restore();
+
+    // 高光
+    const spec = ctx.createRadialGradient(hx, hy, 0, hx, hy, R*0.95);
+    spec.addColorStop(0, c.spec[0]);
+    spec.addColorStop(0.5, c.spec[1]);
+    spec.addColorStop(1, 'rgba(255,255,255,0)');
+    ctx.save();
+    ctx.beginPath(); ctx.arc(cx, cy, R, 0, TAU); ctx.clip();
+    ctx.fillStyle = spec; ctx.fillRect(0, 0, W, H);
+    ctx.restore();
+
+    // 特殊线
+    if (opt.special){
+      ctx.save();
+      ctx.beginPath(); ctx.arc(cx, cy, R, 0, TAU); ctx.clip();
+      line3(latLine(23.5), c.tropic, 1.5, [7,5]);
+      line3(latLine(-23.5), c.tropic, 1.5, [7,5]);
+      line3(latLine(66.5), c.polar, 1.5, [7,5]);
+      line3(latLine(-66.5), c.polar, 1.5, [7,5]);
+      line3(lonLine(-20), c.hemiLon, 2, [9,6]);
+      line3(lonLine(160), c.hemiLon, 2, [9,6]);
+      ctx.save(); ctx.shadowColor = isLight()?'rgba(220,50,70,.6)':'rgba(255,93,108,.95)'; ctx.shadowBlur = 14;
+      line3(latLine(0), c.equator, 3.2); ctx.restore();
+      ctx.save(); ctx.shadowColor = isLight()?'rgba(200,130,15,.6)':'rgba(255,196,84,.95)'; ctx.shadowBlur = 14;
+      line3(lonLine(0), c.prime, 3.2); ctx.restore();
+      ctx.restore();
+    }
+
+    // 轮廓
+    ctx.beginPath(); ctx.arc(cx, cy, R, 0, TAU);
+    ctx.strokeStyle = c.outline; ctx.lineWidth = 1.5;
+    ctx.shadowColor = isLight()?'rgba(70,130,190,.5)':'rgba(80,180,255,.9)';
+    ctx.shadowBlur = 20;
+    ctx.stroke(); ctx.shadowBlur = 0;
+
+    // 地轴与极点
+    if (opt.axis){
+      const np = toCam({ x:0, y:1, z:0 });
+      const sp = toCam({ x:0, y:-1, z:0 });
+      ctx.save();
+      ctx.strokeStyle = c.axis; ctx.lineWidth = 1.6;
+      ctx.setLineDash([5,4]);
+      if (np.z > -0.15){
+        const a = toScreen(np), b = toScreen({ x:np.x*1.25, y:np.y*1.25, z:np.z*1.25 });
+        ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
+      }
+      if (sp.z > -0.15){
+        const a = toScreen(sp), b = toScreen({ x:sp.x*1.25, y:sp.y*1.25, z:sp.z*1.25 });
+        ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
+      }
+      ctx.restore();
+      [[90,'N 北极'],[-90,'S 南极']].forEach(([lat, name]) => {
+        const cc = toCam(ll2v(lat, 0));
+        if (cc.z <= 0.02) return;
+        const s = toScreen(cc);
+        ctx.beginPath(); ctx.arc(s.x, s.y, 4, 0, TAU);
+        ctx.fillStyle = c.pole;
+        ctx.shadowColor = isLight()?'rgba(60,130,200,.8)':'rgba(160,220,255,1)'; ctx.shadowBlur = 12;
+        ctx.fill(); ctx.shadowBlur = 0;
+        const dx = s.x-cx, dy = s.y-cy, len = Math.hypot(dx, dy) || 1;
+        const tx = s.x + dx/len*42, ty = s.y + dy/len*42;
+        ctx.font = '600 11.5px -apple-system,sans-serif';
+        ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+        const tw = ctx.measureText(name).width + 20;
+        const r = 8;
+        ctx.beginPath();
+        ctx.moveTo(tx - tw/2 + r, ty - 11);
+        ctx.arcTo(tx + tw/2, ty - 11, tx + tw/2, ty + 11, r);
+        ctx.arcTo(tx + tw/2, ty + 11, tx - tw/2, ty + 11, r);
+        ctx.arcTo(tx - tw/2, ty + 11, tx - tw/2, ty - 11, r);
+        ctx.arcTo(tx - tw/2, ty - 11, tx + tw/2, ty - 11, r);
+        ctx.closePath();
+        ctx.fillStyle = isLight() ? 'rgba(255,255,255,.92)' : 'rgba(8,14,26,.85)';
+        ctx.fill();
+        ctx.strokeStyle = isLight() ? 'rgba(60,120,200,.5)' : 'rgba(77,157,255,.45)';
+        ctx.lineWidth = 1; ctx.stroke();
+        ctx.fillStyle = c.poleText;
+        ctx.fillText(name, tx, ty + 0.5);
+      });
+    }
+
+    // 标记点
+    if (pin){
+      const cc = toCam(ll2v(pin.lat, pin.lon));
+      if (cc.z > 0){
+        const s = toScreen(cc);
+        const t = (performance.now() % 1500) / 1500;
+        ctx.beginPath(); ctx.arc(s.x, s.y, 7 + t*20, 0, TAU);
+        ctx.strokeStyle = 'rgba(255,144,80,' + (0.9*(1-t)) + ')';
+        ctx.lineWidth = 2; ctx.stroke();
+        ctx.beginPath(); ctx.arc(s.x, s.y, 6, 0, TAU);
+        ctx.fillStyle = '#ff9050';
+        ctx.shadowColor = '#ff9050'; ctx.shadowBlur = 18;
+        ctx.fill(); ctx.shadowBlur = 0;
+        ctx.strokeStyle = '#fff'; ctx.lineWidth = 1.8; ctx.stroke();
+      }
+    }
+
+    // 悬停十字
+    if (hoverLL && !isDown){
+      const cc = toCam(ll2v(hoverLL.lat, hoverLL.lon));
+      if (cc.z > 0){
+        const s = toScreen(cc);
+        ctx.save();
+        ctx.strokeStyle = isLight() ? 'rgba(20,140,180,.95)' : 'rgba(44,212,255,.95)';
+        ctx.lineWidth = 1.4;
+        ctx.shadowColor = isLight() ? 'rgba(20,140,180,.7)' : 'rgba(44,212,255,.95)';
+        ctx.shadowBlur = 12;
+        ctx.beginPath(); ctx.arc(s.x, s.y, 7, 0, TAU); ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(s.x-15, s.y); ctx.lineTo(s.x-5, s.y);
+        ctx.moveTo(s.x+5, s.y);  ctx.lineTo(s.x+15, s.y);
+        ctx.moveTo(s.x, s.y-15); ctx.lineTo(s.x, s.y-5);
+        ctx.moveTo(s.x, s.y+5);  ctx.lineTo(s.x, s.y+15);
+        ctx.stroke();
+        ctx.restore();
+      }
+    }
+  }
+
+  function resize(){
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const rect = canvas.parentElement.getBoundingClientRect();
+    W = rect.width || 800; H = rect.height || 600;
+    canvas.width = Math.round(W*dpr); canvas.height = Math.round(H*dpr);
+    ctx = canvas.getContext('2d');
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    cx = W/2; cy = H/2; baseR = Math.min(W, H) * 0.37;
+    buildSky();
+  }
+  function fmtLat(v){
+    if (Math.abs(v) < 0.05) return '0.0°';
+    return Math.abs(v).toFixed(1)+'°'+(v > 0 ? 'N' : 'S');
+  }
+  function fmtLon(v){
+    let l = v;
+    while (l >  180) l -= 360;
+    while (l < -180) l += 360;
+    if (Math.abs(l) < 0.05) return '0.0°';
+    if (Math.abs(l) > 179.95) return '180.0°';
+    return Math.abs(l).toFixed(1)+'°'+(l > 0 ? 'E' : 'W');
+  }
+  function ns(lat){
+    if (Math.abs(lat) < 1e-6) return { text:'赤道（南北分界）', cls:'orange', badge:'赤道' };
+    return lat > 0 ? { text:'北半球', cls:'blue', badge:'N' } : { text:'南半球', cls:'purple', badge:'S' };
+  }
+  function ew(lon){
+    let l = lon;
+    while (l > 180) l -= 360;
+    while (l < -180) l += 360;
+    if (Math.abs(l+20) < 1e-6 || Math.abs(l-160) < 1e-6) return { text:'东西半球分界线上', cls:'orange', badge:'分界' };
+    return (l > -20 && l < 160) ? { text:'东半球', cls:'blue', badge:'E' } : { text:'西半球', cls:'purple', badge:'W' };
+  }
+  function zone(lat){
+    const a = Math.abs(lat);
+    if (Math.abs(a-30) < 1e-6) return { text:'低 / 中纬分界线', cls:'yellow', badge:'30°' };
+    if (Math.abs(a-60) < 1e-6) return { text:'中 / 高纬分界线', cls:'yellow', badge:'60°' };
+    if (a < 30) return { text:'低纬度（0°~30°）', cls:'yellow', badge:'低纬' };
+    if (a < 60) return { text:'中纬度（30°~60°）', cls:'green', badge:'中纬' };
+    return { text:'高纬度（60°~90°）', cls:'blue', badge:'高纬' };
+  }
+  function belt(lat){
+    const a = Math.abs(lat);
+    if (Math.abs(a-23.5) < 1e-6) return { text:'回归线（热带/温带分界）', cls:'orange', badge:'回归线' };
+    if (Math.abs(a-66.5) < 1e-6) return { text:'极圈（温带/寒带分界）', cls:'blue', badge:'极圈' };
+    if (a < 23.5) return { text:'热带（有阳光直射）', cls:'orange', badge:'热' };
+    if (a < 66.5) return { text: lat > 0 ? '北温带（四季分明）' : '南温带（四季分明）', cls:'green', badge:'温' };
+    return { text: lat > 0 ? '北寒带（有极昼极夜）' : '南寒带（有极昼极夜）', cls:'blue', badge:'寒' };
+  }
+  function tz(lon){
+    let l = lon;
+    while (l > 180) l -= 360;
+    while (l < -180) l += 360;
+    const z = Math.round(l / 15);
+    if (z === 0) return { text:'中时区（UTC±0）', cls:'cyan', note:'本初子午线附近' };
+    const s = z >= 0 ? '东' : '西';
+    return { text: s + Math.abs(z) + '区（UTC' + (z >= 0 ? '+' : '') + z + '）', cls:'cyan', note:'经度每 15° 相差 1 小时' };
+  }
+  function isDay(lat, lon){ return dot(ll2v(lat, lon), STATE.sunWorld) > 0; }
+
+  function setPoint(ll, name){
+    pin = { lat: ll.lat, lon: ll.lon, name: name || null };
+    updateInfo();
+  }
+  function clearPin(){ pin = null; updateInfo(); }
+  function updateInfo(){
+    const statusEl = $('#infoStatus'), latEl = $('#cLat'), lonEl = $('#cLon'), contentEl = $('#infoContent');
+    if (!pin){
+      statusEl.textContent = '未取点'; statusEl.className = 'status';
+      latEl.textContent = '— — —'; latEl.className = 'v lat empty';
+      lonEl.textContent = '— — —'; lonEl.className = 'v lon empty';
+      contentEl.innerHTML = '<div class="empty-state"><span class="ico">🖱️</span>单击地球仪上的任意位置<br>即可查看该点的地理信息</div>';
+      return;
+    }
+    statusEl.textContent = pin.name || '已取点'; statusEl.className = 'status on';
+    latEl.textContent = fmtLat(pin.lat); latEl.className = 'v lat';
+    lonEl.textContent = fmtLon(pin.lon); lonEl.className = 'v lon';
+    const a = ns(pin.lat), b = ew(pin.lon), c = zone(pin.lat), d = belt(pin.lat);
+    const t = tz(pin.lon), day = isDay(pin.lat, pin.lon);
+    const decl = dayToDecl(STATE.day);
+    const dl = dayLength(pin.lat, decl);
+    const alt = sunAltitude(pin.lat, decl);
+    contentEl.innerHTML = `
+      <div class="card"><div class="key">所属半球 · 南北</div><div class="val ${a.cls}">${a.text}<span class="badge ${a.cls}">${a.badge}</span></div></div>
+      <div class="card"><div class="key">所属半球 · 东西</div><div class="val ${b.cls}">${b.text}<span class="badge ${b.cls}">${b.badge}</span></div></div>
+      <div class="card"><div class="key">纬度带</div><div class="val ${c.cls}">${c.text}<span class="badge ${c.cls}">${c.badge}</span></div></div>
+      <div class="card"><div class="key">五带</div><div class="val ${d.cls}">${d.text}<span class="badge ${d.cls}">${d.badge}</span></div></div>
+      <div class="card"><div class="key">时区估算</div><div class="val ${t.cls}">${t.text}</div>${t.note?'<div class="note">'+t.note+'</div>':''}</div>
+      <div class="card"><div class="key">当前昼夜状态</div><div class="val ${day?'yellow':'purple'}">${day?'☀️ 白昼':'🌙 黑夜'}</div><div class="note">基于当前日期：${dayToDateStr(STATE.day)}</div></div>
+      <div class="card"><div class="key">当日昼夜长短</div><div class="val cyan">昼长 ${dl.toFixed(1)} 小时</div><div class="note">夜长 ${(24-dl).toFixed(1)} 小时</div></div>
+      <div class="card"><div class="key">当日正午太阳高度</div><div class="val yellow">${alt.toFixed(1)}°</div></div>
+    `;
+  }
+  function pointerPos(e){
+    const r = canvas.getBoundingClientRect();
+    return { x: e.clientX - r.left, y: e.clientY - r.top };
+  }
+  function flyTo(lat, lon){
+    rotY = -lon * DEG;
+    rotX = clamp(lat * DEG, -1.45, 1.45);
+    autoRot = false;
+    $('#autoRot').checked = false;
+  }
+
+  return {
+    init(){
+      resize(); updateInfo();
+      canvas.addEventListener('pointerdown', e => {
+        isDown = true; dragMoved = false;
+        downX = e.clientX; downY = e.clientY;
+        lastX = e.clientX; lastY = e.clientY;
+        try { canvas.setPointerCapture(e.pointerId); } catch(err){}
+      });
+      canvas.addEventListener('pointermove', e => {
+        const p = pointerPos(e);
+        if (isDown){
+          const dx = e.clientX - lastX, dy = e.clientY - lastY;
+          if (Math.abs(e.clientX - downX) > 4 || Math.abs(e.clientY - downY) > 4) dragMoved = true;
+          if (dragMoved){
+            rotY += dx * 0.0078;
+            rotX = clamp(rotX + dy * 0.0078, -1.45, 1.45);
+          }
+          lastX = e.clientX; lastY = e.clientY;
+          hoverLL = null; $('#tooltip').style.opacity = '0';
+          lineTip.classList.remove('show');
+          $('#hud').textContent = '拖动中…';
+        } else {
+          const v = unproject(p.x, p.y);
+          hoverLL = v ? v2ll(v) : null;
+          const tt = $('#tooltip');
+          if (hoverLL){
+            tt.style.opacity = '1';
+            tt.style.left = p.x + 'px';
+            tt.style.top = p.y + 'px';
+            tt.textContent = fmtLat(hoverLL.lat) + '  ' + fmtLon(hoverLL.lon);
+            $('#hud').textContent = 'lat ' + fmtLat(hoverLL.lat) + '  lon ' + fmtLon(hoverLL.lon);
+            // 悬停检测重要线
+            if (opt.lineHover){
+              const info = detectLine(hoverLL.lat, hoverLL.lon);
+              if (info){
+                lineTip.style.left = (p.x + 24) + 'px';
+                lineTip.style.top = (p.y - 44) + 'px';
+                lineTip.style.setProperty('--line-color', info.color);
+                lineTip.innerHTML = `📏 ${info.name}<span class="lab">${info.deg}</span>`;
+                lineTip.classList.add('show');
+              } else {
+                lineTip.classList.remove('show');
+              }
+            } else {
+              lineTip.classList.remove('show');
+            }
+          } else {
+            tt.style.opacity = '0';
+            lineTip.classList.remove('show');
+            $('#hud').textContent = '移动鼠标查看经纬度';
+          }
+        }
+      });
+      function endDrag(e){
+        if (isDown && !dragMoved){
+          const p = pointerPos(e);
+          const v = unproject(p.x, p.y);
+          if (v) setPoint(v2ll(v)); else clearPin();
+        }
+        isDown = false;
+        try { if (e && canvas.hasPointerCapture && canvas.hasPointerCapture(e.pointerId)) canvas.releasePointerCapture(e.pointerId); } catch(err){}
+      }
+      canvas.addEventListener('pointerup', endDrag);
+      canvas.addEventListener('pointercancel', endDrag);
+      canvas.addEventListener('pointerleave', () => {
+        if (!isDown){
+          hoverLL = null;
+          $('#tooltip').style.opacity = '0';
+          lineTip.classList.remove('show');
+          $('#hud').textContent = '移动鼠标查看经纬度';
+        }
+      });
+      canvas.addEventListener('wheel', e => {
+        e.preventDefault();
+        zoom *= Math.exp(-e.deltaY * 0.0011);
+        zoom = clamp(zoom, 0.55, 2.8);
+      }, { passive:false });
+
+      $$('[data-opt]').forEach(el => {
+        const k = el.dataset.opt; el.checked = !!opt[k];
+        el.addEventListener('change', () => { opt[k] = el.checked; });
+      });
+      $$('[data-step]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          gridStep = parseInt(btn.dataset.step, 10);
+          $$('[data-step]').forEach(b => b.classList.toggle('on', b === btn));
+        });
+      });
+      $('#btnLocate').addEventListener('click', () => {
+        let lat = parseFloat($('#inLat').value), lon = parseFloat($('#inLon').value);
+        if (isNaN(lat) || isNaN(lon)){ $('#inLat').focus(); return; }
+        lat = clamp(lat, -90, 90);
+        while (lon >  180) lon -= 360;
+        while (lon < -180) lon += 360;
+        flyTo(lat, lon); setPoint({ lat, lon });
+      });
+      $('#btnClear').addEventListener('click', clearPin);
+      $$('.city').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const lat = parseFloat(btn.dataset.lat), lon = parseFloat(btn.dataset.lon);
+          flyTo(lat, lon); setPoint({ lat, lon }, btn.dataset.name || btn.textContent);
+        });
+      });
+      $('#autoRot').addEventListener('change', e => { autoRot = e.target.checked; });
+      $('#spinSpeed').addEventListener('input', e => { spinSpeed = parseFloat(e.target.value); });
+      $('#btnReset').addEventListener('click', () => {
+        rotY = -1.15; rotX = 0.30; zoom = 1; clearPin();
+        autoRot = true; spinSpeed = 1;
+        $('#autoRot').checked = true; $('#spinSpeed').value = 1;
+        hoverLL = null; $('#tooltip').style.opacity = '0';
+        lineTip.classList.remove('show');
+        $('#hud').textContent = '移动鼠标查看经纬度';
+      });
+      let last = 0;
+      function loop(t){
+        const dt = Math.min(60, t - last); last = t;
+        if (autoRot && !isDown){
+          rotY += 0.00030 * spinSpeed * dt;
+          if (rotY > TAU) rotY -= TAU;
+        }
+        render(); requestAnimationFrame(loop);
+      }
+      requestAnimationFrame(loop);
+    },
+    resize, refreshInfo(){ if (pin) updateInfo(); },
+    ensureReady(){ if (W < 10) resize(); },
+    rebuildSky(){ buildSky(); }
+  };
+})();
+
+/* ============================================================
+   四季公转（主）
+   ============================================================ */
+const Orbit = (function(){
+  const canvas = $('#orbitCanvas');
+  let ctx = null, W = 0, H = 0, cx = 0, cy = 0, A = 200, B = 120;
+  const sopt = { orbit:true, rays:true, detail:true, curve:true };
+  let playing = false, playSpeed = 2, lastT = 0;
+
+  function resize(){
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const rect = canvas.parentElement.getBoundingClientRect();
+    W = rect.width || 800; H = rect.height || 600;
+    canvas.width = W * dpr; canvas.height = H * dpr;
+    ctx = canvas.getContext('2d');
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    cx = W/2; cy = H/2 + 8;
+    A = Math.min(W*0.34, H*0.44); B = A*0.62;
+  }
+  function drawEarth(ex, ey, size, isActive, decl){
+    const sunDx = cx-ex, sunDy = cy-ey;
+    const dist = Math.hypot(sunDx, sunDy) || 1;
+    const nx = sunDx/dist, ny = sunDy/dist;
+    if (isActive){
+      const pulse = 1 + 0.12*Math.sin(performance.now()/350);
+      const g = ctx.createRadialGradient(ex, ey, size*0.7, ex, ey, size*2.5*pulse);
+      g.addColorStop(0, 'rgba(44,212,255,.35)');
+      g.addColorStop(1, 'rgba(44,212,255,0)');
+      ctx.beginPath(); ctx.arc(ex, ey, size*2.5*pulse, 0, TAU); ctx.fillStyle = g; ctx.fill();
+    }
+    ctx.beginPath(); ctx.arc(ex, ey, size, 0, TAU);
+    const bg = ctx.createRadialGradient(ex - nx*size*0.4, ey - ny*size*0.4, size*0.1, ex, ey, size);
+    bg.addColorStop(0, isActive ? (isLight()?'#3a5a80':'#1e3050') : (isLight()?'#2a3f5e':'#17253c'));
+    bg.addColorStop(1, isLight() ? '#1a2f48' : '#0a1424');
+    ctx.fillStyle = bg; ctx.fill();
+    ctx.save();
+    ctx.beginPath(); ctx.arc(ex, ey, size, 0, TAU); ctx.clip();
+    const pa = Math.atan2(ny, nx) + Math.PI/2;
+    ctx.beginPath();
+    ctx.arc(ex, ey, size, pa, pa + Math.PI);
+    ctx.lineTo(ex, ey); ctx.closePath();
+    const lg = ctx.createRadialGradient(ex + nx*size*0.5, ey + ny*size*0.5, 0, ex, ey, size);
+    lg.addColorStop(0, isActive ? '#6bb8ea' : '#4a90c8');
+    lg.addColorStop(1, isActive ? '#2d6fa8' : '#1e5088');
+    ctx.fillStyle = lg; ctx.fill();
+    ctx.restore();
+    const axDx = Math.sin(23.5*DEG), axDy = -Math.cos(23.5*DEG);
+    const aLen = size*1.65;
+    ctx.beginPath();
+    ctx.moveTo(ex - axDx*aLen, ey - axDy*aLen);
+    ctx.lineTo(ex + axDx*aLen, ey + axDy*aLen);
+    ctx.strokeStyle = isActive ? 'rgba(230,245,255,.95)' : (isLight()?'rgba(60,100,150,.7)':'rgba(180,200,220,.55)');
+    ctx.lineWidth = isActive ? 2 : 1.3;
+    ctx.setLineDash([4,3]); ctx.stroke(); ctx.setLineDash([]);
+    ctx.beginPath();
+    ctx.arc(ex + axDx*aLen, ey + axDy*aLen, isActive ? 3.5 : 2.5, 0, TAU);
+    ctx.fillStyle = '#fff';
+    if (isActive){ ctx.shadowColor = '#a0dcff'; ctx.shadowBlur = 12; }
+    ctx.fill(); ctx.shadowBlur = 0;
+    ctx.beginPath(); ctx.arc(ex, ey, size, 0, TAU);
+    ctx.strokeStyle = isActive ? 'rgba(140,215,255,.9)' : C().outline;
+    ctx.lineWidth = isActive ? 1.8 : 1; ctx.stroke();
+  }
+  function drawRays(ex, ey){
+    const sunDx = ex-cx, sunDy = ey-cy;
+    const dist = Math.hypot(sunDx, sunDy) || 1;
+    const nx = sunDx/dist, ny = sunDy/dist;
+    ctx.save();
+    ctx.strokeStyle = isLight() ? 'rgba(220,150,30,.55)' : 'rgba(255,196,84,.5)';
+    ctx.lineWidth = 1.5;
+    ctx.setLineDash([6,6]);
+    const sx = cx + nx*34, sy = cy + ny*34;
+    const eX = ex - nx*36, eY = ey - ny*36;
+    ctx.beginPath(); ctx.moveTo(sx, sy); ctx.lineTo(eX, eY); ctx.stroke();
+    const px = -ny, py = nx;
+    for (const off of [-22, 22]){
+      ctx.beginPath();
+      ctx.moveTo(sx + px*off, sy + py*off);
+      ctx.lineTo(eX + px*off, eY + py*off);
+      ctx.stroke();
+    }
+    ctx.restore();
+  }
+  function drawSun(){
+    const glow = ctx.createRadialGradient(cx, cy, 0, cx, cy, 95);
+    glow.addColorStop(0, 'rgba(255,240,180,.9)');
+    glow.addColorStop(0.3, 'rgba(255,200,80,.5)');
+    glow.addColorStop(0.7, 'rgba(255,150,40,.14)');
+    glow.addColorStop(1, 'rgba(255,120,20,0)');
+    ctx.beginPath(); ctx.arc(cx, cy, 95, 0, TAU); ctx.fillStyle = glow; ctx.fill();
+    ctx.beginPath(); ctx.arc(cx, cy, 22, 0, TAU);
+    ctx.fillStyle = '#ffd970';
+    ctx.shadowColor = '#ffd970'; ctx.shadowBlur = 24;
+    ctx.fill(); ctx.shadowBlur = 0;
+    ctx.font = '700 12px -apple-system,sans-serif';
+    ctx.fillStyle = 'rgba(13,17,23,.9)';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText('太阳', cx, cy);
+  }
+  function render(){
+    if (!ctx || W < 10) return;
+    const c = C();
+    ctx.clearRect(0, 0, W, H);
+    const bg = ctx.createRadialGradient(cx, cy, 0, cx, cy, Math.max(W,H)*0.7);
+    bg.addColorStop(0, c.bgIn); bg.addColorStop(1, c.bgOut);
+    ctx.fillStyle = bg; ctx.fillRect(0, 0, W, H);
+
+    if (sopt.orbit){
+      ctx.beginPath();
+      ctx.ellipse(cx, cy, A, B, 0, 0, TAU);
+      ctx.strokeStyle = isLight() ? 'rgba(60,120,200,.35)' : 'rgba(88,166,255,.28)';
+      ctx.lineWidth = 1.4; ctx.setLineDash([8,6]);
+      ctx.stroke(); ctx.setLineDash([]);
+    }
+    const orbitAngle = dayToOrbit(STATE.day);
+    const decl = dayToDecl(STATE.day);
+    const seasons = [
+      { angle:0, name:'春分', day:'3.21', color:'#3fd672' },
+      { angle:90, name:'夏至', day:'6.22', color:'#ff9050' },
+      { angle:180, name:'秋分', day:'9.23', color:'#ffc454' },
+      { angle:270, name:'冬至', day:'12.22', color:'#4d9dff' },
+    ];
+    for (const s of seasons){
+      const a = s.angle * DEG;
+      const px = cx + A*Math.cos(a);
+      const py = cy - B*Math.sin(a);
+      const isActive = Math.abs(((orbitAngle - s.angle) % 360 + 360) % 360) < 6 ||
+                       Math.abs(((orbitAngle - s.angle) % 360 + 360) % 360 - 360) < 6;
+      drawEarth(px, py, isActive ? 26 : 20, isActive, decl);
+      ctx.font = (isActive ? '700 ' : '600 ') + '12px -apple-system,sans-serif';
+      ctx.fillStyle = isActive ? s.color : (isLight()?'rgba(80,110,150,.7)':'rgba(139,148,158,.7)');
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      const offX = (px-cx)/A*60, offY = (py-cy)/B*60;
+      const tx = px + offX, ty = py + offY;
+      const tw = ctx.measureText(s.name).width + 22;
+      const r = 7;
+      ctx.beginPath();
+      ctx.moveTo(tx - tw/2 + r, ty - 11);
+      ctx.arcTo(tx + tw/2, ty - 11, tx + tw/2, ty + 11, r);
+      ctx.arcTo(tx + tw/2, ty + 11, tx - tw/2, ty + 11, r);
+      ctx.arcTo(tx - tw/2, ty + 11, tx - tw/2, ty - 11, r);
+      ctx.arcTo(tx - tw/2, ty - 11, tx + tw/2, ty - 11, r);
+      ctx.closePath();
+      ctx.fillStyle = isActive ? (isLight()?'rgba(255,255,255,.95)':'rgba(8,14,26,.92)') : (isLight()?'rgba(255,255,255,.7)':'rgba(8,14,26,.65)');
+      ctx.fill();
+      if (isActive){ ctx.strokeStyle = s.color; ctx.lineWidth = 1.4; ctx.stroke(); }
+      ctx.fillStyle = isActive ? s.color : (isLight()?'rgba(80,110,150,.8)':'rgba(180,195,215,.75)');
+      ctx.fillText(s.name, tx, ty - 2);
+      ctx.font = '10px ui-monospace,monospace';
+      ctx.fillStyle = isActive ? (isLight()?'rgba(20,40,80,.9)':'rgba(230,240,255,.85)') : (isLight()?'rgba(120,140,170,.7)':'rgba(139,148,158,.6)');
+      ctx.fillText(s.day, tx, ty + 10);
+    }
+    const phi = orbitAngle * DEG;
+    const ex = cx + A*Math.cos(phi), ey = cy - B*Math.sin(phi);
+    if (sopt.rays) drawRays(ex, ey);
+    drawEarth(ex, ey, 28, true, decl);
+    drawSun();
+
+    if (sopt.detail){
+      const dw = 250, dh = 290, dx0 = W - dw - 18, dy0 = 18;
+      ctx.save();
+      ctx.beginPath();
+      const r = 12;
+      ctx.moveTo(dx0 + r, dy0);
+      ctx.arcTo(dx0 + dw, dy0, dx0 + dw, dy0 + dh, r);
+      ctx.arcTo(dx0 + dw, dy0 + dh, dx0, dy0 + dh, r);
+      ctx.arcTo(dx0, dy0 + dh, dx0, dy0, r);
+      ctx.arcTo(dx0, dy0, dx0 + dw, dy0, r);
+      ctx.closePath();
+      ctx.fillStyle = isLight() ? 'rgba(255,255,255,.92)' : 'rgba(8,14,26,.88)';
+      ctx.fill();
+      ctx.strokeStyle = isLight() ? 'rgba(60,120,200,.3)' : 'rgba(77,157,255,.28)';
+      ctx.lineWidth = 1; ctx.stroke();
+      ctx.restore();
+      ctx.font = '600 11px -apple-system,sans-serif';
+      ctx.fillStyle = isLight() ? 'rgba(60,90,140,.9)' : 'rgba(143,163,190,.9)';
+      ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+      ctx.fillText('地球剖面 · 直射点位置', dx0 + 14, dy0 + 20);
+      const ecx = dx0 + dw/2, ecy = dy0 + dh/2 + 24, er = 78;
+      ctx.save();
+      ctx.strokeStyle = isLight() ? 'rgba(220,150,30,.7)' : 'rgba(255,196,84,.6)';
+      ctx.lineWidth = 1.5;
+      for (const ry of [ecy - 40, ecy - 15, ecy, ecy + 15, ecy + 40]){
+        ctx.beginPath(); ctx.moveTo(dx0 + dw - 14, ry); ctx.lineTo(ecx + er + 4, ry); ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(ecx + er + 4, ry);
+        ctx.lineTo(ecx + er + 12, ry - 4);
+        ctx.lineTo(ecx + er + 12, ry + 4);
+        ctx.closePath();
+        ctx.fillStyle = isLight() ? 'rgba(220,150,30,.85)' : 'rgba(255,196,84,.75)';
+        ctx.fill();
+      }
+      ctx.restore();
+      ctx.beginPath(); ctx.arc(ecx, ecy, er, 0, TAU);
+      const eg = ctx.createRadialGradient(ecx - er*0.4, ecy - er*0.4, er*0.1, ecx, ecy, er);
+      eg.addColorStop(0, '#4a90c8'); eg.addColorStop(0.7, '#20598f'); eg.addColorStop(1, '#0d2e52');
+      ctx.fillStyle = eg; ctx.fill();
+      ctx.strokeStyle = isLight() ? 'rgba(60,120,200,.6)' : 'rgba(140,215,255,.6)';
+      ctx.lineWidth = 1.3; ctx.stroke();
+      function lineY(lat, cc, dash){
+        const y = ecy - er*Math.sin(lat*DEG);
+        const hw = er*Math.cos(lat*DEG);
+        ctx.save();
+        ctx.beginPath(); ctx.moveTo(ecx - hw, y); ctx.lineTo(ecx + hw, y);
+        ctx.strokeStyle = cc; ctx.lineWidth = 1.2;
+        if (dash) ctx.setLineDash(dash);
+        ctx.stroke(); ctx.restore();
+      }
+      lineY(0, c.equator, null);
+      lineY(23.5, c.tropic, [5,4]);
+      lineY(-23.5, c.tropic, [5,4]);
+      lineY(66.5, c.polar, [4,4]);
+      lineY(-66.5, c.polar, [4,4]);
+      const axDx = Math.sin(23.5*DEG), axDy = -Math.cos(23.5*DEG);
+      const aLen = er*1.15;
+      ctx.beginPath();
+      ctx.moveTo(ecx - axDx*aLen, ecy - axDy*aLen);
+      ctx.lineTo(ecx + axDx*aLen, ecy + axDy*aLen);
+      ctx.strokeStyle = isLight() ? 'rgba(60,100,150,.75)' : 'rgba(230,245,255,.75)';
+      ctx.lineWidth = 1.5; ctx.setLineDash([5,4]);
+      ctx.stroke(); ctx.setLineDash([]);
+      ctx.font = '600 9.5px -apple-system,sans-serif';
+      ctx.fillStyle = isLight() ? 'rgba(30,60,110,.9)' : 'rgba(230,240,255,.9)';
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.beginPath(); ctx.arc(ecx + axDx*aLen, ecy + axDy*aLen, 3, 0, TAU);
+      ctx.fillStyle = isLight() ? '#1a4a80' : '#fff';
+      ctx.shadowColor = '#a0dcff'; ctx.shadowBlur = 10; ctx.fill(); ctx.shadowBlur = 0;
+      ctx.fillText('N', ecx + axDx*aLen + 8, ecy + axDy*aLen - 4);
+      ctx.beginPath(); ctx.arc(ecx - axDx*aLen, ecy - axDy*aLen, 3, 0, TAU);
+      ctx.fillStyle = isLight() ? '#1a4a80' : '#fff';
+      ctx.shadowColor = '#a0dcff'; ctx.shadowBlur = 10; ctx.fill(); ctx.shadowBlur = 0;
+      ctx.fillText('S', ecx - axDx*aLen - 8, ecy - axDy*aLen + 4);
+      const dpX = ecx + er*Math.cos(decl*DEG);
+      const dpY = ecy - er*Math.sin(decl*DEG);
+      ctx.beginPath(); ctx.arc(dpX, dpY, 8, 0, TAU);
+      ctx.fillStyle = '#ffc454';
+      ctx.shadowColor = '#ffc454'; ctx.shadowBlur = 18;
+      ctx.fill(); ctx.shadowBlur = 0;
+      ctx.strokeStyle = '#fff'; ctx.lineWidth = 1.5; ctx.stroke();
+      ctx.font = '600 11px -apple-system,sans-serif';
+      ctx.fillStyle = isLight() ? '#a06a0a' : '#ffd970';
+      ctx.textAlign = 'left';
+      const declAbs = Math.abs(decl).toFixed(1);
+      const dir = decl > 0.1 ? 'N' : decl < -0.1 ? 'S' : '';
+      ctx.fillText('直射点 ' + (Math.abs(decl) < 0.1 ? '0°' : declAbs + '°' + dir), ecx + er + 22, ecy);
+    }
+
+    if (sopt.curve){
+      const cw = 280, ch = 130, dx0 = 18, dy0 = H - ch - 18;
+      ctx.save();
+      ctx.beginPath();
+      const r = 12;
+      ctx.moveTo(dx0 + r, dy0);
+      ctx.arcTo(dx0 + cw, dy0, dx0 + cw, dy0 + ch, r);
+      ctx.arcTo(dx0 + cw, dy0 + ch, dx0, dy0 + ch, r);
+      ctx.arcTo(dx0, dy0 + ch, dx0, dy0, r);
+      ctx.arcTo(dx0, dy0, dx0 + cw, dy0, r);
+      ctx.closePath();
+      ctx.fillStyle = isLight() ? 'rgba(255,255,255,.92)' : 'rgba(8,14,26,.88)';
+      ctx.fill();
+      ctx.strokeStyle = isLight() ? 'rgba(60,120,200,.3)' : 'rgba(77,157,255,.28)';
+      ctx.lineWidth = 1; ctx.stroke();
+      ctx.restore();
+      ctx.font = '600 10.5px -apple-system,sans-serif';
+      ctx.fillStyle = isLight() ? 'rgba(60,90,140,.9)' : 'rgba(143,163,190,.9)';
+      ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+      ctx.fillText('观察点昼长年变化曲线', dx0 + 12, dy0 + 16);
+      const plotX = dx0 + 36, plotY = dy0 + 26, plotW = cw - 50, plotH = ch - 44;
+      ctx.strokeStyle = isLight() ? 'rgba(60,120,200,.14)' : 'rgba(77,157,255,.12)';
+      ctx.lineWidth = 1;
+      for (let h = 0; h <= 24; h += 6){
+        const y = plotY + plotH*(1 - h/24);
+        ctx.beginPath(); ctx.moveTo(plotX, y); ctx.lineTo(plotX + plotW, y); ctx.stroke();
+        ctx.font = '9px ui-monospace,monospace';
+        ctx.fillStyle = isLight() ? 'rgba(100,130,170,.8)' : 'rgba(110,118,129,.7)';
+        ctx.textAlign = 'right';
+        ctx.fillText(h + 'h', plotX - 4, y + 3);
+      }
+      ctx.textAlign = 'center';
+      for (let i = 0; i < 4; i++){
+        const x = plotX + plotW*i/3;
+        ctx.fillText(['3月','6月','9月','12月'][i], x, plotY + plotH + 12);
+      }
+      ctx.beginPath();
+      for (let i = 0; i <= 120; i++){
+        const dd = 1 + (365 - 1)*i/120;
+        const dcl = dayToDecl(dd);
+        const dl = dayLength(STATE.observerLat, dcl);
+        const x = plotX + (dd - 1)/364*plotW;
+        const y = plotY + plotH*(1 - dl/24);
+        if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+      }
+      ctx.strokeStyle = isLight() ? '#d9a544' : '#ffc454';
+      ctx.lineWidth = 2;
+      ctx.shadowColor = 'rgba(255,196,84,.7)'; ctx.shadowBlur = 10;
+      ctx.stroke(); ctx.shadowBlur = 0;
+      const curX = plotX + (STATE.day - 1)/364*plotW;
+      const curDL = dayLength(STATE.observerLat, decl);
+      const curY = plotY + plotH*(1 - curDL/24);
+      ctx.beginPath(); ctx.arc(curX, curY, 5, 0, TAU);
+      ctx.fillStyle = isLight() ? '#0a9fd4' : '#2cd4ff';
+      ctx.shadowColor = '#2cd4ff'; ctx.shadowBlur = 14;
+      ctx.fill(); ctx.shadowBlur = 0;
+      ctx.strokeStyle = '#fff'; ctx.lineWidth = 1.5; ctx.stroke();
+    }
+  }
+  function loop(t){
+    const dt = Math.min(60, t - lastT); lastT = t;
+    if (playing){
+      STATE.day += dt * 0.06 * playSpeed;
+      if (STATE.day > 365) STATE.day -= 365;
+      updateSunWorld(); updateUI();
+    }
+    render(); requestAnimationFrame(loop);
+  }
+  function updateUI(){
+    const term = dayToTerm(STATE.day);
+    const decl = dayToDecl(STATE.day);
+    $('#dateVal').textContent = dayToDateStr(STATE.day);
+    $('#dateTerm').textContent = term.name;
+    $('#dateSlider').value = Math.round(STATE.day);
+    $('#seasonStatus').textContent = term.name;
+    $('#seasonName').textContent = term.name;
+    $('#seasonNote').textContent = term.note || '';
+    $('#declVal').textContent = (Math.abs(decl) < 0.1 ? '0.0°' : Math.abs(decl).toFixed(1) + '°' + (decl > 0 ? 'N' : 'S'));
+    const dl = dayLength(STATE.observerLat, decl);
+    $('#dayLenText').textContent = dl.toFixed(1) + ' 小时';
+    const f = $('#dayLenBar');
+    f.style.width = (dl/24*100) + '%';
+    f.className = 'fill' + (dl < 12 ? ' night' : '');
+    let st;
+    if (dl >= 23.9) st = '极昼';
+    else if (dl <= 0.1) st = '极夜';
+    else if (dl > 12.2) st = '昼长夜短';
+    else if (dl < 11.8) st = '昼短夜长';
+    else st = '昼夜平分';
+    $('#dayLenStatus').textContent = st;
+    $('#sunAltVal').textContent = sunAltitude(STATE.observerLat, decl).toFixed(1) + '°';
+    let polarText = '无';
+    if (decl > 0.1){
+      const lat = 90 - decl;
+      polarText = '北纬 ' + lat.toFixed(1) + '° 以北极昼\n南纬 ' + lat.toFixed(1) + '° 以南极夜';
+    } else if (decl < -0.1){
+      const lat = 90 + decl;
+      polarText = '北纬 ' + lat.toFixed(1) + '° 以北极夜\n南纬 ' + lat.toFixed(1) + '° 以南极昼';
+    }
+    $('#polarVal').textContent = polarText;
+    const d = STATE.day;
+    let nsx = d >= 80 && d < 173 ? '春' : d >= 173 && d < 266 ? '夏' : d >= 266 && d < 356 ? '秋' : '冬';
+    const sm = { '春':'秋', '夏':'冬', '秋':'春', '冬':'夏' };
+    $('#southSeason').textContent = sm[nsx] + '季';
+    const dlT = dayLength(STATE.observerLat, dayToDecl(STATE.day + 1));
+    const diff = dlT - dl;
+    let trend, trendNote;
+    if (Math.abs(diff) < 0.05){ trend = '昼夜平分 / 变化极小'; trendNote = '接近二分点'; }
+    else if (diff > 0){ trend = '昼渐长，夜渐短'; trendNote = '直射点向' + (STATE.observerLat > 0 ? '北' : '南') + '移动'; }
+    else { trend = '昼渐短，夜渐长'; trendNote = '直射点向' + (STATE.observerLat > 0 ? '南' : '北') + '移动'; }
+    $('#trendVal').textContent = trend;
+    $('#trendNote').textContent = trendNote;
+    $$('.term-btn[data-day]').forEach(b => {
+      const d2 = parseInt(b.dataset.day, 10);
+      const dd = Math.min(Math.abs(STATE.day - d2), 365 - Math.abs(STATE.day - d2));
+      b.classList.toggle('on', dd < 3);
+    });
+    $$('.term-btn[data-lat]').forEach(b => {
+      b.classList.toggle('on', Math.abs(STATE.observerLat - parseFloat(b.dataset.lat)) < 0.5);
+    });
+    Globe.refreshInfo();
+  }
+  return {
+    init(){
+      resize(); updateSunWorld(); updateUI();
+      $('#dateSlider').addEventListener('input', e => {
+        STATE.day = parseFloat(e.target.value); updateSunWorld(); updateUI();
+      });
+      $$('.term-btn[data-day]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          STATE.day = parseInt(btn.dataset.day, 10); updateSunWorld(); updateUI();
+        });
+      });
+      $('#obsLat').addEventListener('input', e => {
+        STATE.observerLat = parseFloat(e.target.value);
+        $('#obsLatVal').textContent = (Math.abs(STATE.observerLat) < 0.1 ? '0.0°' :
+          Math.abs(STATE.observerLat).toFixed(1) + '°' + (STATE.observerLat > 0 ? 'N' : 'S'));
+        updateUI();
+      });
+      $$('.term-btn[data-lat]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          STATE.observerLat = parseFloat(btn.dataset.lat);
+          $('#obsLat').value = STATE.observerLat;
+          $('#obsLatVal').textContent = (Math.abs(STATE.observerLat) < 0.1 ? '0.0°' :
+            Math.abs(STATE.observerLat).toFixed(1) + '°' + (STATE.observerLat > 0 ? 'N' : 'S'));
+          updateUI();
+        });
+      });
+      $$('[data-sopt]').forEach(el => {
+        const k = el.dataset.sopt; el.checked = !!sopt[k];
+        el.addEventListener('change', () => { sopt[k] = el.checked; });
+      });
+      $('#orbitPlay').addEventListener('change', e => { playing = e.target.checked; });
+      requestAnimationFrame(loop);
+    },
+    resize, updateUI,
+    ensureReady(){ if (W < 10) resize(); }
+  };
+})();
+
+/* ============================================================
+   内嵌互动组件（学习型可视化）
+   ============================================================ */
+const Embeds = {
+
+  shape(c){
+    MiniGlobe(c, { mode:'default', autoRotate:true, height:280 });
+    addNote(c, '🖱️ 拖动地球仪旋转 · <span style="color:var(--cyan)">赤道半径 6378km</span> > <span style="color:var(--orange)">极半径 6357km</span>');
+  },
+
+  lat(c){
+    let latVal = 30;
+    const row = mkRow(c, '纬度', 'range', {min:-85, max:85, value:30, step:1}, '30°N');
+    MiniGlobe(c, { mode:'lat', autoRotate:true, height:320, getLat: () => latVal });
+    const sl = row.querySelector('input'), vv = row.querySelector('.readout');
+    sl.addEventListener('input', () => {
+      latVal = parseFloat(sl.value);
+      vv.textContent = latVal === 0 ? '0°' : Math.abs(latVal) + '°' + (latVal > 0 ? 'N' : 'S');
+    });
+    addNote(c, '拖动滑块 · 观察不同纬线长度变化（赤道最长）');
+  },
+
+  lon(c){
+    let lonVal = 0;
+    const row = mkRow(c, '经度', 'range', {min:-180, max:180, value:0, step:1}, '0°');
+    const g = MiniGlobe(c, { mode:'lon', autoRotate:false, height:320, getLon: () => lonVal, rotY0: 0 });
+    const sl = row.querySelector('input'), vv = row.querySelector('.readout');
+    sl.addEventListener('input', () => {
+      lonVal = parseFloat(sl.value);
+      vv.textContent = lonVal === 0 ? '0°' : Math.abs(lonVal) + '°' + (lonVal > 0 ? 'E' : 'W');
+      g.setRotY(-lonVal * DEG);
+    });
+    addNote(c, '拖动滑块 · 观察所有经线都汇聚于南北两极');
+  },
+
+  hemisphere(c){
+    MiniGlobe(c, { mode:'hemisphere', autoRotate:true, height:320, showGrid:false });
+    addLegend(c, [
+      ['rgba(77,157,255,.8)', '东半球 20°W→160°E'],
+      ['rgba(169,132,255,.8)', '西半球 160°E→20°W'],
+    ]);
+    addNote(c, '🖱️ 拖动地球仪 · 观察蓝色与紫色区域的范围');
+  },
+
+  hemiNS(c){
+    MiniGlobe(c, { mode:'hemiNS', autoRotate:true, height:320, showGrid:false });
+    addLegend(c, [
+      ['rgba(77,157,255,.8)', '北半球'],
+      ['rgba(169,132,255,.8)', '南半球'],
+    ]);
+    addNote(c, '赤道是南北半球的分界线');
+  },
+
+  belts(c){
+    MiniGlobe(c, { mode:'belts', autoRotate:true, height:320, showGrid:false });
+    addLegend(c, [
+      ['rgba(255,144,80,.9)', '热带'],
+      ['rgba(63,214,114,.8)', '温带'],
+      ['rgba(120,190,255,.9)', '寒带'],
+    ]);
+    addNote(c, '🖱️ 拖动 · 虚线为回归线（23.5°）和极圈（66.5°）');
+  },
+
+  zones(c){
+    MiniGlobe(c, { mode:'zones', autoRotate:true, height:320, showGrid:false });
+    addLegend(c, [
+      ['rgba(255,196,84,.9)', '低纬 0°~30°'],
+      ['rgba(63,214,114,.8)', '中纬 30°~60°'],
+      ['rgba(120,170,255,.9)', '高纬 60°~90°'],
+    ]);
+  },
+
+  rotation(c){
+    MiniGlobe(c, { mode:'night', autoRotate:true, spinSpeed:0.0009, height:320, showGrid:false });
+    addNote(c, '☀️ 面向太阳的半球是<span style="color:var(--yellow)">白昼</span> · 🌙 背向太阳的半球是<span style="color:var(--purple)">黑夜</span><br>观察地球自转，昼夜不断交替');
+  },
+
+  dayNight(c){
+    MiniGlobe(c, { mode:'night', autoRotate:false, height:320, showGrid:false, rotY0:-1.2 });
+    addNote(c, '昼夜半球分界处为晨昏线 · 拖动手动观察');
+  },
+
+  timezone(c){
+    let lonVal = 116;
+    const row = mkRow(c, '经度', 'range', {min:-180, max:180, value:116, step:5}, '116°E · 东8区');
+    const g = MiniGlobe(c, { mode:'lon', autoRotate:false, height:280, getLon: () => lonVal, rotY0: -116*DEG });
+    const sl = row.querySelector('input'), vv = row.querySelector('.readout');
+    function update(){
+      lonVal = parseFloat(sl.value);
+      const tz = Math.round(lonVal/15);
+      const sign = tz === 0 ? '' : tz > 0 ? '东' : '西';
+      const tzText = tz === 0 ? '中时区' : sign + Math.abs(tz) + '区';
+      vv.textContent = (lonVal === 0 ? '0°' : Math.abs(lonVal) + '°' + (lonVal > 0 ? 'E' : 'W')) + ' · ' + tzText;
+      g.setRotY(-lonVal * DEG);
+    }
+    sl.addEventListener('input', update);
+    update();
+    addNote(c, '每 15° 为一个时区 · 拖动滑块观察经线');
+  },
+
+  continents(c){
+    MiniGlobe(c, { mode:'default', autoRotate:true, height:340, showGrid:false, spinSpeed:0.0007 });
+    addNote(c, '🖱️ 拖动观察七大洲 · 按面积排序：<span style="color:var(--cyan)">亚非北南美，南极欧大洋</span>');
+  },
+
+  drift(c){
+    MiniGlobe(c, { mode:'default', autoRotate:true, height:280, showGrid:false, spinSpeed:0.001 });
+    addNote(c, '🌍 地球表面 71% 海洋 · 29% 陆地<br>大陆在漫长的地质年代中不断漂移');
+  },
+
+  orbit(c){
+    MiniOrbit(c, { height:340, autoPlay:true });
+    addNote(c, '🖱️ 点击暂停/继续 · 观察地轴始终倾斜且指向不变');
+  },
+
+  contour(c){
+    c.innerHTML = '';
+    const cv = document.createElement('canvas');
+    cv.style.cssText = 'display:block;width:100%;height:280px;border-radius:10px';
+    c.appendChild(cv);
+    const row = document.createElement('div');
+    row.className = 'row';
+    row.style.justifyContent = 'space-between';
+    row.innerHTML = '<span class="readout" id="__ctH">海拔 —</span><span class="readout" id="__ctP" style="color:var(--yellow)">部位 —</span>';
+    c.appendChild(row);
+
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const rect = cv.getBoundingClientRect();
+    cv.width = rect.width * dpr; cv.height = 280 * dpr;
+    const ctx = cv.getContext('2d');
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    const W = rect.width, H = 280;
+
+    function hh(x, y){
+      let h = 0;
+      h += 900 * Math.exp(-((x-0.32)*(x-0.32)/0.02 + (y-0.4)*(y-0.4)/0.03));
+      h += 650 * Math.exp(-((x-0.67)*(x-0.67)/0.022 + (y-0.54)*(y-0.54)/0.025));
+      h += 200 * Math.exp(-((x-0.5)*(x-0.5)/0.1 + (y-0.82)*(y-0.82)/0.03));
+      const dx = x-0.52, dy = y-0.68;
+      const perp = -dx*0.57 + dy*0.82;
+      h -= 380 * Math.exp(-(perp*perp)/0.0016) * Math.exp(-((dx*0.82+dy*0.57)*(dx*0.82+dy*0.57))/0.055);
+      return Math.max(0, h);
+    }
+    const NX = 80, NY = 50;
+    const g2 = [];
+    for (let j = 0; j < NY; j++){
+      g2[j] = new Float32Array(NX);
+      for (let i = 0; i < NX; i++) g2[j][i] = hh(i/(NX-1), j/(NY-1));
+    }
+    function extract(level){
+      const segs = [];
+      for (let j = 0; j < NY-1; j++){
+        for (let i = 0; i < NX-1; i++){
+          const v = [g2[j][i], g2[j][i+1], g2[j+1][i+1], g2[j+1][i]];
+          const px = [i/(NX-1), (i+1)/(NX-1), (i+1)/(NX-1), i/(NX-1)];
+          const py = [j/(NY-1), j/(NY-1), (j+1)/(NY-1), (j+1)/(NY-1)];
+          let idx = 0;
+          for (let k = 0; k < 4; k++) if (v[k] > level) idx |= (1 << k);
+          if (idx === 0 || idx === 15) continue;
+          const edges = [[0,1],[1,2],[2,3],[3,0]];
+          const pts = [];
+          for (const [a,b] of edges){
+            if ((v[a] > level) !== (v[b] > level)){
+              const t = (level - v[a]) / (v[b] - v[a]);
+              pts.push([px[a] + (px[b]-px[a])*t, py[a] + (py[b]-py[a])*t]);
+            }
+          }
+          if (pts.length === 2) segs.push([pts[0], pts[1]]);
+          else if (pts.length === 4){
+            const cc = (v[0]+v[1]+v[2]+v[3])/4;
+            if (cc > level){ segs.push([pts[0], pts[1]]); segs.push([pts[2], pts[3]]); }
+            else { segs.push([pts[0], pts[3]]); segs.push([pts[1], pts[2]]); }
+          }
+        }
+      }
+      return segs;
+    }
+    function colorOf(h){
+      const stops = [[0,[46,125,76]],[200,[88,160,90]],[400,[180,190,100]],
+        [600,[200,160,80]],[850,[170,120,70]],[1050,[220,200,180]],[1200,[255,255,255]]];
+      for (let i = 0; i < stops.length-1; i++){
+        const a = stops[i], b = stops[i+1];
+        if (h <= b[0]){
+          const t = (h - a[0])/(b[0]-a[0]);
+          return [Math.round(a[1][0]+(b[1][0]-a[1][0])*t),
+                  Math.round(a[1][1]+(b[1][1]-a[1][1])*t),
+                  Math.round(a[1][2]+(b[1][2]-a[1][2])*t)];
+        }
+      }
+      return stops[stops.length-1][1];
+    }
+    const tcv = document.createElement('canvas');
+    tcv.width = W*dpr; tcv.height = H*dpr;
+    const tctx = tcv.getContext('2d');
+    tctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    const img = tctx.createImageData(W, H);
+    for (let y = 0; y < H; y++){
+      for (let x = 0; x < W; x++){
+        const h = hh(x/(W-1), y/(H-1));
+        const col = colorOf(h);
+        const idx = (y*W + x)*4;
+        img.data[idx] = col[0]; img.data[idx+1] = col[1]; img.data[idx+2] = col[2]; img.data[idx+3] = 255;
+      }
+    }
+    tctx.putImageData(img, 0, 0);
+    let hx = -1, hy = -1;
+    function draw(){
+      ctx.clearRect(0, 0, W, H);
+      ctx.drawImage(tcv, 0, 0, W, H);
+      for (let level = 100; level <= 1100; level += 100){
+        const segs = extract(level);
+        const major = (level % 500 === 0);
+        ctx.beginPath();
+        for (const [a,b] of segs){
+          ctx.moveTo(a[0]*W, a[1]*H);
+          ctx.lineTo(b[0]*W, b[1]*H);
+        }
+        ctx.strokeStyle = major ? 'rgba(30,40,55,.9)' : 'rgba(60,75,95,.6)';
+        ctx.lineWidth = major ? 1.6 : 0.9;
+        ctx.stroke();
+      }
+      if (hx >= 0){
+        ctx.beginPath(); ctx.arc(hx, hy, 6, 0, TAU);
+        ctx.strokeStyle = '#2cd4ff'; ctx.lineWidth = 1.5;
+        ctx.shadowColor = '#2cd4ff'; ctx.shadowBlur = 10;
+        ctx.stroke(); ctx.shadowBlur = 0;
+        ctx.beginPath(); ctx.arc(hx, hy, 3, 0, TAU);
+        ctx.fillStyle = '#2cd4ff'; ctx.fill();
+      }
+    }
+    cv.addEventListener('mousemove', e => {
+      const r = cv.getBoundingClientRect();
+      hx = e.clientX - r.left; hy = e.clientY - r.top;
+      const h = hh(hx/(W-1), hy/(H-1));
+      row.querySelector('#__ctH').textContent = '海拔 ' + h.toFixed(0) + ' m';
+      const nx = hx/W, ny = hy/H;
+      const parts = [{n:'山峰',x:0.32,y:0.4,r:0.08},{n:'山峰',x:0.67,y:0.54,r:0.08},{n:'山谷',x:0.62,y:0.68,r:0.12}];
+      let found = null;
+      for (const p of parts) if (Math.hypot(nx-p.x, ny-p.y) < p.r) { found = p.n; break; }
+      row.querySelector('#__ctP').textContent = '部位 ' + (found || '缓坡');
+      draw();
+    });
+    cv.addEventListener('mouseleave', () => {
+      hx = -1; hy = -1;
+      row.querySelector('#__ctH').textContent = '海拔 —';
+      row.querySelector('#__ctP').textContent = '部位 —';
+      draw();
+    });
+    draw();
+  },
+};
+
+/* 辅助 */
+function mkRow(container, label, type, attrs, initText){
+  const row = document.createElement('div');
+  row.className = 'row';
+  let input = '';
+  if (type === 'range'){
+    input = `<input type="range" min="${attrs.min}" max="${attrs.max}" value="${attrs.value}" step="${attrs.step}" style="flex:1">`;
+  }
+  row.innerHTML = `<span class="lbl">${label}</span>${input}<span class="readout">${initText}</span>`;
+  container.appendChild(row);
+  return row;
+}
+function addNote(c, html){
+  const n = document.createElement('div');
+  n.className = 'note';
+  n.innerHTML = html;
+  c.appendChild(n);
+}
+function addLegend(c, items){
+  const l = document.createElement('div');
+  l.className = 'legend';
+  l.innerHTML = items.map(([col, txt]) => `<span><i style="background:${col}"></i>${txt}</span>`).join('');
+  c.appendChild(l);
+}
+
+/* ============================================================
+   知识卡片数据
+   ============================================================ */
+const CARDS = [
+  { cat:'基础', color:'#4d9dff', ico:'🌍', title:'地球的形状与大小',
+    summary:'两极稍扁、赤道略鼓的不规则球体',
+    keywords:'形状 大小 半径 周长 麦哲伦',
+    detail:`<h4>人类认识历程</h4>
+      <ul><li><b>天圆地方</b>：古代人的直觉猜想</li>
+        <li><b>麦哲伦环球航行</b>（1519-1522）：第一次用实践证明地球是球体</li>
+        <li><b>卫星照片</b>：从太空直接看到地球是个球体</li></ul>
+      <h4>地球的大小</h4>
+      <table><tr><th>项目</th><th>数据</th></tr>
+        <tr><td>平均半径</td><td><b>6371 千米</b></td></tr>
+        <tr><td>赤道周长</td><td><b>约 4 万千米</b></td></tr>
+        <tr><td>表面积</td><td><b>5.1 亿平方千米</b></td></tr>
+        <tr><td>赤道半径</td><td>6378 千米</td></tr>
+        <tr><td>极半径</td><td>6357 千米</td></tr></table>
+      <h4>生活证据</h4>
+      <ul><li>站得高看得远</li><li>海边看帆船先见桅杆</li><li>月食时地球影子是圆弧形</li></ul>`,
+    embed: Embeds.shape },
+
+  { cat:'基础', color:'#3fd672', ico:'📏', title:'纬线和纬度',
+    summary:'与赤道平行的圆圈，指示东西方向',
+    keywords:'纬线 纬度 赤道 平行 低纬 中纬 高纬',
+    detail:`<h4>纬线的特点</h4>
+      <ul><li><b>形状</b>：圆（除极点外）</li><li><b>指示方向</b>：东西方向</li>
+        <li><b>长度</b>：赤道最长，向两极逐渐变短</li><li><b>关系</b>：所有纬线互相平行</li></ul>
+      <h4>纬度的划分</h4>
+      <ul><li>赤道是 <b>0°</b> 纬线，南北半球的分界线</li>
+        <li>赤道以北是 <b>北纬（N）</b>，以南是 <b>南纬（S）</b></li>
+        <li>南北纬各有 90°，北极 90°N，南极 90°S</li></ul>
+      <h4>低、中、高纬度</h4>
+      <table><tr><th>纬度范围</th><th>名称</th></tr>
+        <tr><td>0° ~ 30°</td><td><b style="color:#ffcc54">低纬度</b></td></tr>
+        <tr><td>30° ~ 60°</td><td><b style="color:#3fd672">中纬度</b></td></tr>
+        <tr><td>60° ~ 90°</td><td><b style="color:#4d9dff">高纬度</b></td></tr></table>`,
+    embed: Embeds.lat },
+
+  { cat:'基础', color:'#ffc454', ico:'🧭', title:'经线和经度',
+    summary:'连接南北两极的半圆，指示南北方向',
+    keywords:'经线 经度 本初子午线 半圆 子午线',
+    detail:`<h4>经线的特点</h4>
+      <ul><li><b>形状</b>：半圆</li><li><b>指示方向</b>：南北方向</li>
+        <li><b>长度</b>：都相等</li><li><b>关系</b>：任意两条相对经线组成一个经线圈</li></ul>
+      <h4>经度的划分</h4>
+      <ul><li>本初子午线是 <b>0°</b> 经线，东西经度的起点</li>
+        <li>向东是 <b>东经（E）</b>，向西是 <b>西经（W）</b></li>
+        <li>东西经各分 180°，180° 经线只有一条</li></ul>
+      <h4>经线与纬线对比</h4>
+      <table><tr><th>项目</th><th>经线</th><th>纬线</th></tr>
+        <tr><td>形状</td><td>半圆</td><td>圆</td></tr>
+        <tr><td>长度</td><td>都相等</td><td>赤道最长</td></tr>
+        <tr><td>方向</td><td>南北</td><td>东西</td></tr></table>`,
+    embed: Embeds.lon },
+
+  { cat:'基础', color:'#a984ff', ico:'🌐', title:'东西半球划分',
+    summary:'20°W 和 160°E 组成的经线圈',
+    keywords:'东西半球 20°W 160°E 南北半球 赤道',
+    detail:`<h4>南北半球</h4>
+      <p>以 <b>赤道（0° 纬线）</b>为界，赤道以北是北半球，以南是南半球。</p>
+      <h4>东西半球</h4>
+      <ul><li><b>20°W</b> 和 <b>160°E</b> 组成的经线圈为界</li>
+        <li><b>20°W 向东 → 160°E</b>：东半球</li>
+        <li><b>20°W 向西 → 160°E</b>：西半球</li></ul>
+      <h4>为什么不用 0° 和 180°？</h4>
+      <p>为了避免把欧洲、非洲的一些国家分割在两个半球，国际上采用 20°W 和 160°E 作为东西半球的分界线。</p>
+      <h4>判断口诀</h4>
+      <p><b>小小为东，大大为西</b>：小于 20° 的经度在东半球；大于 160° 的经度在西半球。</p>`,
+    embed: Embeds.hemisphere },
+
+  { cat:'基础', color:'#ff9050', ico:'🌡️', title:'五带划分',
+    summary:'热带、温带、寒带，由直射和极昼极夜决定',
+    keywords:'五带 热带 温带 寒带 回归线 极圈',
+    detail:`<h4>五带的划分依据</h4>
+      <p>根据太阳热量在地表分布不均，把地球表面划分为五个温度带。</p>
+      <table><tr><th>温度带</th><th>范围</th><th>特点</th></tr>
+        <tr><td><b style="color:#ff9050">热带</b></td><td>23.5°N ~ 23.5°S</td><td>有阳光直射，终年炎热</td></tr>
+        <tr><td><b style="color:#3fd672">北温带</b></td><td>23.5°N ~ 66.5°N</td><td>四季分明</td></tr>
+        <tr><td><b style="color:#3fd672">南温带</b></td><td>23.5°S ~ 66.5°S</td><td>四季分明</td></tr>
+        <tr><td><b style="color:#4d9dff">北寒带</b></td><td>66.5°N ~ 90°N</td><td>有极昼极夜</td></tr>
+        <tr><td><b style="color:#4d9dff">南寒带</b></td><td>66.5°S ~ 90°S</td><td>有极昼极夜</td></tr></table>`,
+    embed: Embeds.belts },
+
+  { cat:'基础', color:'#4d9dff', ico:'📐', title:'经纬网定位',
+    summary:'地球上的坐标系，先纬后经',
+    keywords:'经纬网 定位 坐标 方向 判断',
+    detail:`<h4>经纬网</h4>
+      <p>经线和纬线相互交织，构成经纬网。它是地球上的坐标系统，可以确定地球表面任何一点的位置。</p>
+      <h4>经纬度的写法</h4>
+      <p>一个地点的位置用"<b>纬度，经度</b>"表示，简称<b>先纬后经</b>。</p>
+      <ul><li>北京：40°N, 116°E</li><li>伦敦：51.5°N, 0°</li><li>纽约：41°N, 74°W</li></ul>
+      <h4>经纬网上的方向</h4>
+      <ul><li>沿经线走：向南或向北</li><li>沿纬线走：向东或向西</li>
+        <li>同一条经线上只有南北方向</li><li>同一条纬线上只有东西方向</li></ul>
+      <h4>度数变化规律</h4>
+      <ul><li>纬度向北增大 → 北纬 N</li><li>纬度向南增大 → 南纬 S</li>
+        <li>经度向东增大 → 东经 E</li><li>经度向西增大 → 西经 W</li></ul>`,
+    embed: (c) => {
+      const box = document.createElement('div');
+      box.className = 'readout';
+      box.style.marginTop = '12px';
+      box.style.textAlign = 'center';
+      box.style.display = 'block';
+      box.innerHTML = '<span style="color:var(--text-3);font-size:11px">👆 单击地球仪任意位置取点</span>';
+      MiniGlobe(c, {
+        mode:'default', autoRotate:true, height:280,
+        onClick: (ll) => {
+          box.innerHTML = `你点击了：<span style="color:var(--cyan)">${ll.lat>0?ll.lat.toFixed(0)+'°N':Math.abs(ll.lat).toFixed(0)+'°S'}, ${ll.lon>0?ll.lon.toFixed(0)+'°E':Math.abs(ll.lon).toFixed(0)+'°W'}</span>`;
+        }
+      });
+      c.appendChild(box);
+    }
+  },
+
+  { cat:'地球运动', color:'#2cd4ff', ico:'🔄', title:'地球的自转',
+    summary:'绕地轴旋转，产生昼夜交替',
+    keywords:'自转 地轴 昼夜 晨昏线 时间差异',
+    detail:`<h4>自转的基本特征</h4>
+      <ul><li><b>绕转中心</b>：地轴</li>
+        <li><b>方向</b>：自西向东（从北极上空看是逆时针）</li>
+        <li><b>周期</b>：约 24 小时（一天）</li>
+        <li><b>产生现象</b>：昼夜交替、时间差异</li></ul>
+      <h4>昼夜交替</h4>
+      <p>地球是不透明的球体，太阳只能照亮地球表面的一半。面向太阳的半球是<b>昼半球</b>，背向太阳的半球是<b>夜半球</b>，两者的分界线叫<b>晨昏线</b>。</p>
+      <h4>时间差异</h4>
+      <p>由于地球自西向东自转，东边的地点比西边的地点先看到日出，时间更早。经度每相差 15°，时间相差 1 小时。</p>`,
+    embed: Embeds.rotation },
+
+  { cat:'地球运动', color:'#ffc454', ico:'☀️', title:'地球的公转与四季',
+    summary:'绕太阳旋转，产生四季变化',
+    keywords:'公转 四季 春分 夏至 秋分 冬至 直射点',
+    detail:`<h4>公转的基本特征</h4>
+      <ul><li><b>绕转中心</b>：太阳</li><li><b>方向</b>：自西向东</li>
+        <li><b>周期</b>：一年（约 365 天）</li>
+        <li><b>特点</b>：地轴倾斜 23.5°，且指向不变</li>
+        <li><b>产生现象</b>：四季变化、五带划分</li></ul>
+      <h4>四个重要节气</h4>
+      <table><tr><th>节气</th><th>日期</th><th>太阳直射</th></tr>
+        <tr><td><b style="color:#3fd672">春分</b></td><td>3月21日前后</td><td>赤道</td></tr>
+        <tr><td><b style="color:#ff9050">夏至</b></td><td>6月22日前后</td><td>北回归线</td></tr>
+        <tr><td><b style="color:#ffc454">秋分</b></td><td>9月23日前后</td><td>赤道</td></tr>
+        <tr><td><b style="color:#4d9dff">冬至</b></td><td>12月22日前后</td><td>南回归线</td></tr></table>
+      <h4>直射点移动规律</h4>
+      <p>太阳直射点在南北回归线之间往返移动，一年一个周期。</p>`,
+    embed: Embeds.orbit },
+
+  { cat:'地球运动', color:'#a984ff', ico:'🌗', title:'昼夜长短与极昼极夜',
+    summary:'太阳直射点移动带来的昼夜变化',
+    keywords:'昼夜长短 极昼 极夜 直射点 晨昏线',
+    detail:`<h4>昼夜长短的变化规律</h4>
+      <ul><li><b>春分</b>：全球昼夜平分（各 12 小时）</li>
+        <li><b>夏至</b>：北半球昼最长，北极圈内出现极昼</li>
+        <li><b>秋分</b>：全球昼夜平分</li>
+        <li><b>冬至</b>：北半球昼最短，北极圈内出现极夜</li></ul>
+      <h4>极昼与极夜</h4>
+      <p><b>极昼</b>：太阳终日不落，一天 24 小时都是白天。</p>
+      <p><b>极夜</b>：太阳终日不升，一天 24 小时都是黑夜。</p>
+      <h4>正午太阳高度</h4>
+      <p><b>正午太阳高度 = 90° − |当地纬度 − 太阳直射点纬度|</b></p>`,
+    embed: Embeds.dayNight },
+
+  { cat:'地球运动', color:'#ff5d6c', ico:'📅', title:'时区与日界线',
+    summary:'全球划分为 24 个时区',
+    keywords:'时区 区时 日界线 东经 西经',
+    detail:`<h4>时区的划分</h4>
+      <ul><li>全球划分为 <b>24 个时区</b>，每个时区跨经度 <b>15°</b></li>
+        <li>以本初子午线为中央经线的是<b>中时区</b></li>
+        <li>向东为东 1 区至东 12 区，向西为西 1 区至西 12 区</li></ul>
+      <h4>时区计算</h4>
+      <p><b>时区 = 经度 ÷ 15°</b>（四舍五入）</p>
+      <p>东边时区比西边时区早，相差几个时区，时间相差几小时。</p>
+      <h4>国际日期变更线</h4>
+      <p>大致沿 <b>180° 经线</b>，为避免穿过陆地有几处弯曲。</p>
+      <ul><li>自西向东越过日界线：日期<b>减一天</b></li>
+        <li>自东向西越过日界线：日期<b>加一天</b></li></ul>`,
+    embed: Embeds.timezone },
+
+  { cat:'地图', color:'#3fd672', ico:'🗺️', title:'地图三要素',
+    summary:'比例尺、方向、图例',
+    keywords:'地图 比例尺 方向 图例 大小',
+    detail:`<h4>比例尺</h4>
+      <p>表示图上距离与实地距离的比。</p>
+      <ul><li><b>数字式</b>：如 1 : 100000</li>
+        <li><b>线段式</b>：0 — 1 — 2 千米</li>
+        <li><b>文字式</b>：图上 1 厘米代表实地 1 千米</li></ul>
+      <p><b>比例尺大小与内容详略：</b></p>
+      <ul><li>比例尺<b>大</b>：分母小，范围小，内容<b>详细</b></li>
+        <li>比例尺<b>小</b>：分母大，范围大，内容<b>简略</b></li></ul>
+      <h4>方向</h4>
+      <ul><li><b>一般定向</b>：上北下南，左西右东</li>
+        <li><b>指向标定向</b>：箭头指向北方</li>
+        <li><b>经纬网定向</b>：经线指示南北，纬线指示东西</li></ul>` },
+
+  { cat:'地图', color:'#ff9050', ico:'⛰️', title:'等高线地形图',
+    summary:'用等高线表示地面高低起伏',
+    keywords:'等高线 海拔 山峰 山脊 山谷 鞍部 陡崖',
+    detail:`<h4>基本概念</h4>
+      <ul><li><b>海拔</b>：地面某点高出海平面的垂直距离</li>
+        <li><b>相对高度</b>：两点海拔之差</li>
+        <li><b>等高线</b>：海拔相同的点连成的线</li>
+        <li><b>等高距</b>：相邻两条等高线的高度差</li></ul>
+      <h4>等高线疏密与坡度</h4>
+      <ul><li>等高线<b>密集</b>：坡<b>陡</b></li><li>等高线<b>稀疏</b>：坡<b>缓</b></li></ul>
+      <h4>常见地形部位</h4>
+      <table><tr><th>部位</th><th>特征</th></tr>
+        <tr><td><b>山峰</b></td><td>闭合曲线，数值内高外低</td></tr>
+        <tr><td><b>山脊</b></td><td>等高线向低处凸出</td></tr>
+        <tr><td><b>山谷</b></td><td>等高线向高处凸出</td></tr>
+        <tr><td><b>鞍部</b></td><td>两个山峰之间的低地</td></tr>
+        <tr><td><b>陡崖</b></td><td>多条等高线重合处</td></tr></table>`,
+    embed: Embeds.contour },
+
+  { cat:'地图', color:'#4d9dff', ico:'🌏', title:'大洲与大洋',
+    summary:'七大洲、四大洋的分布与分界',
+    keywords:'大洲 大洋 亚洲 非洲 太平洋 苏伊士',
+    detail:`<h4>七大洲（按面积排序）</h4>
+      <p>亚洲 &gt; 非洲 &gt; 北美洲 &gt; 南美洲 &gt; 南极洲 &gt; 欧洲 &gt; 大洋洲</p>
+      <h4>四大洋（按面积排序）</h4>
+      <p>太平洋 &gt; 大西洋 &gt; 印度洋 &gt; 北冰洋</p>
+      <h4>重要分界线</h4>
+      <ul><li><b>亚欧分界</b>：乌拉尔山—乌拉尔河—里海—大高加索山—黑海—土耳其海峡</li>
+        <li><b>亚非分界</b>：苏伊士运河</li>
+        <li><b>南北美洲分界</b>：巴拿马运河</li></ul>
+      <h4>海陆分布</h4>
+      <p>地球表面 <b>71%</b> 是海洋，<b>29%</b> 是陆地。</p>`,
+    embed: Embeds.continents },
+
+  { cat:'地图', color:'#a984ff', ico:'🌋', title:'海陆变迁',
+    summary:'大陆漂移、板块构造与火山地震',
+    keywords:'大陆漂移 板块 火山 地震 魏格纳',
+    detail:`<h4>大陆漂移说</h4>
+      <p>德国科学家<b>魏格纳</b>提出：大约 2 亿年前，地球上各大洲是相互连接的一块大陆，后来分裂、漂移，形成现在的七大洲。</p>
+      <h4>板块构造学说</h4>
+      <ul><li>地球岩石圈由<b>六大板块</b>组成</li>
+        <li>板块内部比较稳定，板块交界处地壳活跃</li></ul>
+      <h4>板块运动</h4>
+      <ul><li><b>碰撞挤压</b>：形成山脉（如喜马拉雅山）</li>
+        <li><b>张裂拉伸</b>：形成裂谷或海洋（如东非大裂谷）</li></ul>
+      <h4>火山与地震</h4>
+      <p>主要分布在板块交界处，尤其是<b>环太平洋火山地震带</b>和<b>地中海—喜马拉雅火山地震带</b>。</p>`,
+    embed: Embeds.drift },
+];
+
+/* ============================================================
+   知识卡片渲染
+   ============================================================ */
+const Learn = (function(){
+  let state = {
+    cat: '全部',
+    search: '',
+    done: new Set(JSON.parse(localStorage.getItem('geolab-done') || '[]')),
+  };
+  let activeEmbedDoms = [];
+
+  function saveDone(){ localStorage.setItem('geolab-done', JSON.stringify(Array.from(state.done))); }
+  function getCats(){
+    const s = new Set(['全部']);
+    CARDS.forEach(c => s.add(c.cat));
+    return Array.from(s);
+  }
+  function renderCats(){
+    const tabs = $('#catTabs');
+    tabs.innerHTML = '';
+    getCats().forEach(cat => {
+      const b = document.createElement('button');
+      b.className = 'cat-tab' + (state.cat === cat ? ' active' : '');
+      b.textContent = cat;
+      b.addEventListener('click', () => { state.cat = cat; renderCats(); renderCards(); });
+      tabs.appendChild(b);
+    });
+  }
+  function match(c){
+    if (!state.search) return true;
+    const q = state.search.toLowerCase();
+    return (c.title + c.summary + (c.keywords||'') + (c.detail||'')).toLowerCase().indexOf(q) >= 0;
+  }
+  function renderCards(){
+    // 清理已打开卡片的互动
+    activeEmbedDoms = [];
+    const grid = $('#kcGrid');
+    grid.innerHTML = '';
+    const filtered = CARDS.filter(c => {
+      const cOK = state.cat === '全部' || c.cat === state.cat;
+      return cOK && match(c);
+    });
+    if (!filtered.length){
+      grid.innerHTML = '<div class="no-result"><span style="font-size:40px;opacity:.3;display:block">🔍</span>没有找到匹配的知识卡片<br>试试其他关键词或切换分类</div>';
+      return;
+    }
+    filtered.forEach(card => {
+      const idx = CARDS.indexOf(card);
+      const isDone = state.done.has(idx);
+      const el = document.createElement('div');
+      el.className = 'kc' + (isDone ? ' done' : '');
+      el.style.setProperty('--accent-color', card.color);
+      el.innerHTML = `
+        <div class="kc-top">
+          <div class="kc-ico" style="color:${card.color}">${card.ico}</div>
+          <div style="flex:1;min-width:0">
+            <div class="kc-title">${card.title}</div>
+            <div class="kc-cat">${card.cat}</div>
+          </div>
+        </div>
+        <div class="kc-summary">${card.summary}</div>
+        <div class="kc-actions">
+          <button class="kc-btn done-btn ${isDone ? 'on' : ''}">
+            <span>${isDone ? '✓' : '○'}</span>
+            <span>${isDone ? '已掌握' : '标记已掌握'}</span>
+          </button>
+        </div>`;
+
+      el.addEventListener('click', e => {
+        if (e.target.closest('.kc-btn')) return;
+        const existing = grid.querySelector('.kc-detail.show');
+        if (existing && existing.dataset.idx === String(idx)){
+          existing.remove();
+          activeEmbedDoms = [];
+          return;
+        }
+        if (existing) existing.remove();
+        activeEmbedDoms = [];
+
+        const detail = document.createElement('div');
+        detail.className = 'kc-detail show';
+        detail.dataset.idx = String(idx);
+        detail.innerHTML = `<div class="inner">${card.detail}</div>`;
+        el.after(detail);
+
+        if (card.embed){
+          const det = document.createElement('details');
+          det.className = 'embed-details';
+          det.open = true;
+          det.style.setProperty('--accent-color', card.color);
+
+          const sum = document.createElement('summary');
+          sum.className = 'embed-summary';
+          sum.innerHTML = `<span class="ico">${card.ico}</span>
+            <span class="title">🌐 互动演示 · 拖动/点击探索</span>
+            <span class="hint">与地球仪/公转同步</span>
+            <span class="chev">▾</span>`;
+          det.appendChild(sum);
+
+          const body = document.createElement('div');
+          body.className = 'embed-body';
+          const embedBox = document.createElement('div');
+          embedBox.className = 'embed';
+          embedBox.style.setProperty('--accent-color', card.color);
+          body.appendChild(embedBox);
+          det.appendChild(body);
+          detail.querySelector('.inner').appendChild(det);
+          activeEmbedDoms.push(det);
+          try { card.embed(embedBox); } catch(err){ console.warn(err); }
+        }
+        detail.scrollIntoView({ behavior:'smooth', block:'nearest' });
+      });
+
+      el.querySelector('.done-btn').addEventListener('click', e => {
+        e.stopPropagation();
+        if (state.done.has(idx)) state.done.delete(idx);
+        else state.done.add(idx);
+        saveDone();
+        renderCards();
+        updateProgress();
+      });
+
+      grid.appendChild(el);
+    });
+  }
+  function updateProgress(){
+    const total = CARDS.length, done = state.done.size;
+    const pct = total ? Math.round(done/total*100) : 0;
+    $('#progressCount').textContent = done + ' / ' + total;
+    $('#progressPct').textContent = pct + '%';
+    const c = 100.53;
+    $('#progressCircle').style.strokeDashoffset = (c * (1 - done/total)).toFixed(2);
+  }
+  return {
+    init(){
+      renderCats(); renderCards(); updateProgress();
+      $('#searchInput').addEventListener('input', e => {
+        state.search = e.target.value.trim();
+        $('#clearSearch').classList.toggle('show', state.search.length > 0);
+        renderCards();
+      });
+      $('#clearSearch').addEventListener('click', () => {
+        $('#searchInput').value = ''; state.search = '';
+        $('#clearSearch').classList.remove('show');
+        renderCards();
+      });
+    },
+    refresh(){ renderCards(); }
+  };
+})();
+
+/* ============================================================
+   页面切换
+   ============================================================ */
+let currentPage = 'globe';
+function switchPage(name){
+  currentPage = name;
+  $$('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.page === name));
+  $$('.page').forEach(p => p.classList.toggle('active', p.dataset.page === name));
+  const doR = () => {
+    if (name === 'globe'){ Globe.ensureReady(); Globe.rebuildSky(); }
+    if (name === 'seasons') Orbit.ensureReady();
+  };
+  requestAnimationFrame(doR);
+  setTimeout(doR, 60);
+  setTimeout(doR, 220);
+}
+
+/* ============================================================
+   启动
+   ============================================================ */
+function boot(){
+  initTheme();
+  $$('.tab-btn').forEach(b => b.addEventListener('click', () => switchPage(b.dataset.page)));
+  updateSunWorld();
+  Globe.init();
+  Orbit.init();
+  Learn.init();
+  if (window.ResizeObserver){
+    new ResizeObserver(() => { if (currentPage === 'globe') Globe.ensureReady(); })
+      .observe($('#globeCanvas').parentElement);
+    new ResizeObserver(() => { if (currentPage === 'seasons') Orbit.ensureReady(); })
+      .observe($('#orbitCanvas').parentElement);
+  }
+  let rz = null;
+  window.addEventListener('resize', () => {
+    clearTimeout(rz);
+    rz = setTimeout(() => {
+      if (currentPage === 'globe') Globe.ensureReady();
+      if (currentPage === 'seasons') Orbit.ensureReady();
+    }, 80);
+  });
+}
+if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
+else boot();
+
+})();
+</script>
+</body>
+</html>
