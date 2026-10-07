@@ -1089,11 +1089,12 @@ body::after {
 </div>
 
 <!-- ==================== 云同步 Modal ==================== -->
+<!-- ==================== 云同步 Modal ==================== -->
 <div class="modal" id="syncModal">
   <div class="modal-box">
     <button class="modal-close" id="syncClose">×</button>
-    <div class="modal-title">☁️ GitHub 云同步</div>
-    <div class="modal-sub">跨设备同步数据。数据存在你自己的 GitHub 私有仓库里。</div>
+    <div class="modal-title">☁️ 云同步</div>
+    <div class="modal-sub">数据自动加密存储在 Supabase，跨设备无缝同步。</div>
 
     <div class="auth-error" id="syncError">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -1104,24 +1105,7 @@ body::after {
       <span id="syncErrorText"></span>
     </div>
 
-    <div class="field">
-      <label class="field-label">Personal Access Token</label>
-      <input class="field-input" id="syncToken" type="password" placeholder="github_pat_... 或 ghp_...">
-      <div class="field-hint">在 GitHub → Settings → Developer settings → Fine-grained tokens 创建，权限只需 Contents: Read and write</div>
-    </div>
-    <div class="field">
-      <label class="field-label">仓库所有者</label>
-      <input class="field-input" id="syncOwner" type="text" placeholder="heyZzz629">
-    </div>
-    <div class="field">
-      <label class="field-label">仓库名称</label>
-      <input class="field-input" id="syncRepo" type="text" placeholder="heyZzz629.github.io">
-    </div>
-    <div class="field">
-      <label class="field-label">分支</label>
-      <input class="field-input" id="syncBranch" type="text" placeholder="main" value="main">
-    </div>
-    <label class="check-row" style="margin-top:14px">
+    <label class="check-row" style="margin-top:0">
       <input type="checkbox" id="syncAuto" checked>
       <span>启用自动同步（修改后 <b>30 秒</b>内推送）</span>
     </label>
@@ -1133,9 +1117,8 @@ body::after {
 
     <div class="modal-actions" style="flex-wrap:wrap">
       <button class="btn" id="syncTest">测试连接</button>
-      <button class="btn" id="syncPush">⬆ 推送</button>
-      <button class="btn" id="syncPull">⬇ 拉取</button>
-      <button class="btn primary" id="syncSave">保存配置</button>
+      <button class="btn" id="syncPush">⬆ 立即推送</button>
+      <button class="btn primary" id="syncPull">⬇ 立即拉取</button>
     </div>
   </div>
 </div>
@@ -1575,34 +1558,32 @@ body::after {
     if (e.target === switchModal) closeSwitchModal();
   });
 
-  /* ============================================================
-     云同步
+    /* ============================================================
+     云同步（Supabase 版）
      ============================================================ */
   var syncModal = $('#syncModal');
+
   function openSyncModal() {
-    if (!window.Sync) {
-      alert('同步模块未加载');
+    if (!window.Sync) { alert('同步模块未加载'); return; }
+    if (!Auth.current()) {
+      alert('请先登录账户');
+      openAuthModal('login');
       return;
     }
     var st = Sync.status();
-    $('#syncToken').value = '';
-    $('#syncOwner').value = st.owner || '';
-    $('#syncRepo').value = st.repo || 'heyZzz629.github.io';
-    $('#syncBranch').value = st.branch || 'main';
     $('#syncAuto').checked = st.auto !== false;
     updateSyncStatusUI(st);
     hideSyncError();
     syncModal.classList.add('open');
   }
-  function closeSyncModal() {
-    syncModal.classList.remove('open');
-  }
+  function closeSyncModal() { syncModal.classList.remove('open'); }
+
   function updateSyncStatusUI(st) {
     var box = $('#syncStatus');
     var txt = $('#syncStatusText');
     box.classList.remove('ok', 'err', 'syncing');
     if (!st.configured) {
-      txt.textContent = '尚未配置同步';
+      txt.textContent = '尚未登录';
     } else if (st.lastError) {
       box.classList.add('err');
       txt.textContent = '⚠️ ' + st.lastError;
@@ -1610,7 +1591,7 @@ body::after {
       box.classList.add('ok');
       txt.textContent = '✅ 上次同步：' + relTime(st.lastSync);
     } else {
-      txt.textContent = '已配置，尚未同步';
+      txt.textContent = '已登录，等待首次同步';
     }
   }
   function showSyncError(msg, isSuccess) {
@@ -1620,48 +1601,21 @@ body::after {
     el.classList.add('show');
     if (isSuccess) setTimeout(hideSyncError, 2500);
   }
-  function hideSyncError() {
-    $('#syncError').classList.remove('show');
-  }
+  function hideSyncError() { $('#syncError').classList.remove('show'); }
+
   $('#syncClose').addEventListener('click', closeSyncModal);
   syncModal.addEventListener('click', function (e) {
     if (e.target === syncModal) closeSyncModal();
   });
 
-  $('#syncSave').addEventListener('click', function () {
-    hideSyncError();
-    var token = $('#syncToken').value.trim();
-    var owner = $('#syncOwner').value.trim();
-    var repo = $('#syncRepo').value.trim();
-    var branch = $('#syncBranch').value.trim() || 'main';
-    if (!token) {
-      // 检查已有
-      var st = Sync.status();
-      if (!st.token || st.token === '未设置') {
-        showSyncError('请填写 Token');
-        return;
-      }
-    }
-    var cfg = { owner, repo, branch };
-    if (token) cfg.token = token;
-    Sync.configure(cfg);
-    Sync.setAuto($('#syncAuto').checked);
-    updateSyncStatusUI(Sync.status());
-    showSyncError('✅ 配置已保存', true);
+  $('#syncAuto').addEventListener('change', function () {
+    Sync.setAuto(this.checked);
+    showSyncError(this.checked ? '✅ 自动同步已开启' : '自动同步已关闭', true);
   });
 
   $('#syncTest').addEventListener('click', async function () {
     hideSyncError();
     try {
-      var token = $('#syncToken').value.trim();
-      if (token) {
-        Sync.configure({
-          token: token,
-          owner: $('#syncOwner').value.trim(),
-          repo: $('#syncRepo').value.trim(),
-          branch: $('#syncBranch').value.trim() || 'main'
-        });
-      }
       var info = await Sync.testConnection();
       showSyncError('✅ 连接成功：' + info.login, true);
     } catch (err) {
@@ -1673,9 +1627,9 @@ body::after {
     hideSyncError();
     if (!confirm('推送会用本地数据覆盖云端，确定继续？')) return;
     try {
-      var r = await Sync.push(true);
+      var r = await Sync.pushAll();
       updateSyncStatusUI(Sync.status());
-      showSyncError('✅ 已推送 ' + r.files + ' 项数据到云端', true);
+      showSyncError('✅ 已推送 ' + r.files + ' 项数据', true);
       updateSyncIndicator();
     } catch (err) {
       showSyncError('⚠️ ' + err.message);
@@ -1686,7 +1640,7 @@ body::after {
     hideSyncError();
     if (!confirm('拉取会用云端数据覆盖本地，确定继续？')) return;
     try {
-      var r = await Sync.pull(true);
+      var r = await Sync.pullAll();
       updateSyncStatusUI(Sync.status());
       showSyncError('✅ 已拉取 ' + r.files + ' 项数据，即将刷新', true);
       setTimeout(function () { location.reload(); }, 1200);

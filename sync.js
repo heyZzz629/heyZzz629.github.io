@@ -1,19 +1,20 @@
 /* ============================================================
-   Study Hub · GitHub 云同步 v2
-   依赖：auth.js（提供 Auth API）
-   功能：数据打包 / GitHub Contents API / 自动同步 / 冲突检测
+   Study Hub · Supabase 云同步 v3
+   依赖：auth.js（提供 Auth API + Supabase 客户端）
+   ------------------------------------------------------------
+   · 数据直接存 Supabase user_data 表（RLS 自动隔离）
+   · 登录后 30 秒防抖自动同步
+   · 不再需要 GitHub Token / 仓库配置
    ============================================================ */
 (function (global) {
   'use strict';
 
   /* ============ 常量 ============ */
-  var CONFIG_KEY = 'shub:sync:config';
-  var STATE_KEY  = 'shub:sync:state';
-  var API_BASE   = 'https://api.github.com';
-  var API_VER    = '2022-11-28';
-  var AUTO_DELAY = 30000; // 30 秒防抖
+  var STATE_KEY   = 'shub:sync:state';
+  var DATA_PREFIX = 'shub:data:';
+  var AUTO_DELAY  = 30000;   // 30 秒防抖
 
-  /* ============ 配置 & 状态 ============ */
+  /* ============ 状态存储 ============ */
   function loadJSON(key, fb) {
     try {
       var raw = localStorage.getItem(key);
@@ -25,120 +26,31 @@
   function saveJSON(key, obj) {
     try { localStorage.setItem(key, JSON.stringify(obj)); } catch (e) {}
   }
-  function loadConfig() { return loadJSON(CONFIG_KEY, {}); }
-  function saveConfig(c) { saveJSON(CONFIG_KEY, c); }
   function loadState() { return loadJSON(STATE_KEY, {}); }
   function saveState(s) { saveJSON(STATE_KEY, s); }
 
-  /* ============ Base64（Unicode 安全） ============ */
-  function b64encode(str) {
-    return btoa(unescape(encodeURIComponent(str)));
-  }
-  function b64decode(str) {
-    return decodeURIComponent(escape(atob(String(str).replace(/\s/g, ''))));
-  }
-
-  /* ============ GitHub API 封装 ============ */
-  async function api(path, options) {
-    options = options || {};
-    var cfg = loadConfig();
-    if (!cfg.token) throw new Error('未配置 Token');
-
-    var headers = {
-      'Authorization': 'Bearer ' + cfg.token,
-      'Accept': 'application/vnd.github+json',
-      'X-GitHub-Api-Version': API_VER
-    };
-    if (options.headers) {
-      Object.keys(options.headers).forEach(function (k) {
-        headers[k] = options.headers[k];
-      });
-    }
-
-    var res;
-    try {
-      res = await fetch(API_BASE + path, {
-        method: options.method || 'GET',
-        headers: headers,
-        body: options.body
-      });
-    } catch (e) {
-      throw new Error('网络请求失败，请检查网络连接');
-    }
-
-    if (!res.ok) {
-      var msg = 'HTTP ' + res.status;
-      try {
-        var errBody = await res.json();
-        if (errBody && errBody.message) msg = errBody.message;
-      } catch (e) {}
-      if (res.status === 401) msg = 'Token 无效或已过期';
-      if (res.status === 403) msg = '权限不足（需要 Contents: Read and write）';
-      if (res.status === 404) msg = '文件不存在';
-      if (res.status === 409) msg = '内容冲突，请稍后重试';
-      if (res.status === 422) msg = '请求数据格式错误';
-      var err = new Error(msg);
-      err.status = res.status;
-      throw err;
-    }
-    if (res.status === 204) return null;
-    return res.json();
-  }
-
-  /* ============ 远程文件读写 ============ */
-  async function readRemote(path) {
-    var cfg = loadConfig();
-    var url = '/repos/' + cfg.owner + '/' + cfg.repo +
-              '/contents/' + encodeURIComponent(path) +
-              '?ref=' + encodeURIComponent(cfg.branch || 'main');
-    try {
-      var data = await api(url, { method: 'GET' });
-      return {
-        content: JSON.parse(b64decode(data.content)),
-        sha: data.sha
-      };
-    } catch (e) {
-      // 文件不存在（首次同步正常）
-      if (e.status === 404) return null;
-      throw e;
-    }
-  }
-
-  async function writeRemote(path, content) {
-    var cfg = loadConfig();
-    var url = '/repos/' + cfg.owner + '/' + cfg.repo +
-              '/contents/' + encodeURIComponent(path);
-
-    // 检查现有文件，获取 SHA（更新必需）
-    var sha = null;
-    try {
-      var existing = await api(url + '?ref=' + encodeURIComponent(cfg.branch || 'main'), { method: 'GET' });
-      sha = existing.sha;
-    } catch (e) {
-      if (e.status !== 404) throw e;
-    }
-
-    var body = {
-      message: 'sync: ' + new Date().toISOString(),
-      content: b64encode(JSON.stringify(content, null, 2)),
-      branch: cfg.branch || 'main'
-    };
-    if (sha) body.sha = sha;
-
-    var res = await api(url, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(body)
+  /* ============ 事件 ============ */
+  var listeners = new Set();
+  function emit(event, payload) {
+    listeners.forEach(function (fn) {
+      try { fn(event, payload); } catch (e) {}
     });
-    return res.content.sha;
   }
 
-  /* ============ 数据打包 / 还原 ============ */
+  /* ============ Supabase 客户端 ============ */
+  function getClient() {
+    if (!global.Auth || !Auth.getClient) {
+      throw new Error('auth.js 未加载或版本过旧，请更新 auth.js');
+    }
+    return Auth.getClient();
+  }
+
+  /* ============ 本地数据打包 ============ */
   function collectLocalData() {
-    var data = {};
     var u = Auth.current();
-    if (!u) return data;
-    var prefix = 'shub:data:' + u + ':';
+    if (!u) return {};
+    var prefix = DATA_PREFIX + u + ':';
+    var data = {};
     for (var i = 0; i < localStorage.length; i++) {
       var k = localStorage.key(i);
       if (!k || k.indexOf(prefix) !== 0) continue;
@@ -153,10 +65,10 @@
   function applyRemoteData(data) {
     var u = Auth.current();
     if (!u) throw new Error('未登录');
-    var prefix = 'shub:data:' + u + ':';
+    var prefix = DATA_PREFIX + u + ':';
     var count = 0;
     Object.keys(data).forEach(function (k) {
-      if (k.charAt(0) === '_') return; // 跳过元数据字段
+      if (k.charAt(0) === '_') return;   // 跳过元数据字段
       try {
         localStorage.setItem(prefix + k, JSON.stringify(data[k]));
         count++;
@@ -165,12 +77,75 @@
     return count;
   }
 
-  /* ============ 事件系统 ============ */
-  var listeners = new Set();
-  function emit(event, payload) {
-    listeners.forEach(function (fn) {
-      try { fn(event, payload); } catch (e) {}
+  /* ============ 云端读写 ============ */
+  async function getUserId() {
+    var client = getClient();
+    var resp = await client.auth.getUser();
+    var user = resp.data && resp.data.user;
+    if (!user) throw new Error('请先登录账户');
+    return user.id;
+  }
+
+  async function pushToCloud() {
+    var client = getClient();
+    var userId = await getUserId();
+    var localData = collectLocalData();
+    var keys = Object.keys(localData);
+    if (!keys.length) return { files: 0 };
+
+    var now = new Date().toISOString();
+    var rows = keys.map(function (k) {
+      return {
+        user_id: userId,
+        key: k,
+        value: localData[k],
+        updated_at: now
+      };
     });
+
+    var res = await client
+      .from('user_data')
+      .upsert(rows, { onConflict: 'user_id,key' });
+
+    if (res.error) throw new Error(res.error.message || '推送失败');
+    return { files: rows.length };
+  }
+
+  async function pullFromCloud() {
+    var client = getClient();
+    var userId = await getUserId();   // 权限校验（RLS 会再次过滤）
+
+    var res = await client
+      .from('user_data')
+      .select('key, value, updated_at');
+
+    if (res.error) throw new Error(res.error.message || '拉取失败');
+
+    var data = {};
+    var maxTs = 0;
+    (res.data || []).forEach(function (row) {
+      data[row.key] = row.value;
+      var ts = new Date(row.updated_at).getTime();
+      if (ts > maxTs) maxTs = ts;
+    });
+
+    if (!Object.keys(data).length) {
+      return { files: 0, remoteTs: 0 };
+    }
+
+    var count = applyRemoteData(data);
+    return { files: count, remoteTs: maxTs };
+  }
+
+  async function getRemoteLatestTs() {
+    var client = getClient();
+    var res = await client
+      .from('user_data')
+      .select('updated_at')
+      .order('updated_at', { ascending: false })
+      .limit(1);
+    if (res.error || !res.data || !res.data.length) return 0;
+    return new Date(res.data[0].updated_at).getTime();
   }
 
   /* ============ 核心 Sync 对象 ============ */
@@ -178,14 +153,12 @@
 
     /* 当前状态 */
     status: function () {
-      var cfg = loadConfig();
       var st = loadState();
+      var username = Auth.current();
       return {
-        configured: !!(cfg.token && cfg.owner && cfg.repo),
-        token: cfg.token ? '已设置' : '未设置',
-        owner: cfg.owner || '',
-        repo: cfg.repo || '',
-        branch: cfg.branch || 'main',
+        configured: !!username,
+        provider: 'supabase',
+        user: username || '',
         auto: st.auto !== false,
         lastSync: st.lastSync || 0,
         lastError: st.lastError || null,
@@ -193,64 +166,35 @@
       };
     },
 
-    /* 保存配置 */
+    /* 兼容旧 API：旧版保存 GitHub 配置，现在只处理 auto */
     configure: function (partial) {
-      var cur = loadConfig();
-      Object.keys(partial).forEach(function (k) {
-        cur[k] = partial[k];
-      });
-      saveConfig(cur);
-      return cur;
+      var st = loadState();
+      if (partial && typeof partial.auto === 'boolean') {
+        st.auto = partial.auto;
+      }
+      saveState(st);
+      return st;
     },
 
     /* 测试连接 */
     testConnection: async function () {
-      var cfg = loadConfig();
-      if (!cfg.token) throw new Error('请先设置 Token');
-      var user = await api('/user', { method: 'GET' });
-      if (!user || !user.login) throw new Error('Token 无效');
-      if (cfg.owner && cfg.repo) {
-        await api('/repos/' + cfg.owner + '/' + cfg.repo, { method: 'GET' });
-      }
-      return { login: user.login, avatar: user.avatar_url };
-    },
+      var client = getClient();
+      var resp = await client.auth.getUser();
+      var user = resp.data && resp.data.user;
+      if (!user) throw new Error('请先登录账户');
 
-    /* 文件路径（按当前用户） */
-    filePath: function () {
-      var u = Auth.current();
-      if (!u) throw new Error('未登录');
-      var safe = u.replace(/[^a-zA-Z0-9_\u4e00-\u9fa5-]/g, '_');
-      return 'sync-data/' + safe + '.json';
+      // 探测 user_data 表是否可访问
+      var probe = await client.from('user_data').select('key').limit(1);
+      if (probe.error) {
+        throw new Error('无法访问数据库：' + probe.error.message);
+      }
+      return { login: Auth.current() || user.email, avatar: null };
     },
 
     /* 推送本地 → 云端 */
     push: async function (force) {
-      var cfg = loadConfig();
-      var u = Auth.current();
-      if (!u) throw new Error('请先登录账户');
-      if (!cfg.token) throw new Error('请先配置 Token');
-
-      var localData = collectLocalData();
-      var remote = await readRemote(Sync.filePath());
-
-      // 冲突检测
-      if (remote && !force) {
-        var remoteTs = (remote.content && remote.content._syncedAt) || 0;
-        var localTs = loadState().lastSync || 0;
-        if (remoteTs > localTs) {
-          throw new Error('云端数据更新，请先「拉取」或强制推送');
-        }
-      }
-
-      var payload = {
-        _version:  'shub-sync-2',
-        _user:     u,
-        _syncedAt: Date.now(),
-        _device:   (navigator.userAgent || '').slice(0, 100),
-        data:      localData
-      };
-
-      await writeRemote(Sync.filePath(), payload);
+      if (!Auth.current()) throw new Error('请先登录账户');
+      var result = await pushToCloud();
 
       var st = loadState();
       st.lastSync = Date.now();
@@ -258,76 +202,53 @@
       st.dirty = false;
       saveState(st);
 
-      emit('pushed', { files: Object.keys(localData).length });
-      return { files: Object.keys(localData).length, syncedAt: st.lastSync };
+      emit('pushed', { files: result.files });
+      return { files: result.files, syncedAt: st.lastSync };
     },
 
     /* 拉取云端 → 本地 */
     pull: async function (force) {
-      var cfg = loadConfig();
-      var u = Auth.current();
-      if (!u) throw new Error('请先登录账户');
-      if (!cfg.token) throw new Error('请先配置 Token');
-
-      var remote = await readRemote(Sync.filePath());
-      if (!remote) throw new Error('云端还没有同步数据');
-
-      var payload = remote.content;
-      if (!payload || !payload.data) throw new Error('云端数据格式错误');
-
-      // 本地有未推送修改 → 需强制
-      if (!force && loadState().dirty === true) {
-        throw new Error('本地有未推送修改，请先「推送」或强制拉取');
-      }
-
-      var count = applyRemoteData(payload.data);
+      if (!Auth.current()) throw new Error('请先登录账户');
+      var result = await pullFromCloud();
 
       var st = loadState();
-      st.lastSync = payload._syncedAt || Date.now();
+      st.lastSync = result.remoteTs || Date.now();
       st.lastError = null;
       st.dirty = false;
       saveState(st);
 
-      emit('pulled', { files: count });
-      return { files: count, syncedAt: st.lastSync };
+      emit('pulled', { files: result.files });
+      return { files: result.files, syncedAt: st.lastSync };
     },
 
     /* 双向智能同步 */
     sync: async function () {
-      var remote = await readRemote(Sync.filePath());
+      if (!Auth.current()) throw new Error('请先登录账户');
+
       var st = loadState();
-
-      // 云端无数据 → 直接推送
-      if (!remote) {
-        return Object.assign({ action: 'pushed' }, await Sync.push(true));
-      }
-
-      var remoteTs = (remote.content && remote.content._syncedAt) || 0;
-      var localTs = st.lastSync || 0;
       var isDirty = st.dirty === true;
 
-      // 冲突：两边都改了
-      if (isDirty && remoteTs > localTs) {
-        emit('conflict', { local: localTs, remote: remoteTs });
-        return { action: 'conflict', local: localTs, remote: remoteTs };
-      }
-      // 只有本地改了 → 推送
+      // 本地有修改 → 推送
       if (isDirty) {
         return Object.assign({ action: 'pushed' }, await Sync.push(true));
       }
-      // 只有云端改了 → 拉取
-      if (remoteTs > localTs) {
+
+      // 检查云端是否有更新
+      var remoteTs = await getRemoteLatestTs();
+      var localTs  = st.lastSync || 0;
+
+      if (remoteTs > localTs + 1000) {
         return Object.assign({ action: 'pulled' }, await Sync.pull(true));
       }
-      // 一致
+
       emit('in-sync');
       return { action: 'in-sync' };
     },
 
-    /* 标记本地已修改，触发自动同步 */
+    /* 标记本地已修改 */
     markDirty: function () {
       var st = loadState();
-      if (st.dirty) return; // 已在队列中
+      if (st.dirty) return;
       st.dirty = true;
       saveState(st);
       Sync.scheduleAuto();
@@ -339,6 +260,7 @@
     scheduleAuto: function () {
       var st = loadState();
       if (st.auto === false) return;
+      if (!Auth.current()) return;        // 未登录不同步
       if (Sync._timer) clearTimeout(Sync._timer);
       Sync._timer = setTimeout(async function () {
         Sync._timer = null;
@@ -367,9 +289,8 @@
       }
     },
 
-    /* 清空配置 */
+    /* 清空同步状态（不影响账户） */
     reset: function () {
-      localStorage.removeItem(CONFIG_KEY);
       localStorage.removeItem(STATE_KEY);
       emit('reset');
     },
@@ -378,7 +299,11 @@
     on: function (fn) {
       listeners.add(fn);
       return function () { listeners.delete(fn); };
-    }
+    },
+
+    /* 手动全量操作（设置界面用） */
+    pushAll: async function () { return Sync.push(true); },
+    pullAll: async function () { return Sync.pull(true); }
   };
 
   /* ============ 拦截 localStorage 自动标记 dirty ============ */
@@ -386,9 +311,9 @@
     var _set = localStorage.setItem.bind(localStorage);
     localStorage.setItem = function (k, v) {
       var r = _set(k, v);
-      // 只标记业务数据（shub:data:<user>:*），避免自己触发自己
-      if (typeof k === 'string' && k.indexOf('shub:data:') === 0) {
-        if (typeof Sync !== 'undefined' && Sync.markDirty) {
+      // 只标记业务数据（shub:data:<user>:*），且仅在已登录时
+      if (typeof k === 'string' && k.indexOf(DATA_PREFIX) === 0) {
+        if (Auth.current() && typeof Sync !== 'undefined' && Sync.markDirty) {
           Sync.markDirty();
         }
       }
@@ -396,18 +321,25 @@
     };
   }
 
-  /* ============ 跨标签页同步脏标记 ============ */
+  /* ============ 跨标签页同步 ============ */
   function installStorageListener() {
     global.addEventListener('storage', function (e) {
-      // 另一个标签页修改了会话 → 通知自身刷新
+      // 另一个标签页登录/登出 → 本页也调整同步状态
       if (e.key === 'shub:session') {
         emit('session-change', e.newValue);
+        if (e.newValue) {
+          // 换了用户 → 清掉脏标记，重新安排同步
+          var st = loadState();
+          st.dirty = false;
+          saveState(st);
+          Sync.scheduleAuto();
+        }
       }
       // 其他标签页标记 dirty → 本页也参与同步队列
       if (e.key === STATE_KEY && e.newValue) {
         try {
-          var st = JSON.parse(e.newValue);
-          if (st.dirty === true) {
+          var s = JSON.parse(e.newValue);
+          if (s.dirty === true && Auth.current()) {
             Sync.scheduleAuto();
           }
         } catch (err) {}
@@ -418,17 +350,19 @@
   /* ============ 初始化 ============ */
   global.Sync = Sync;
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', function () {
-      installDirtyHook();
-      installStorageListener();
-      // 启动时若已有脏数据，安排一次同步
-      if (loadState().dirty === true) Sync.scheduleAuto();
-    });
-  } else {
+  function boot() {
     installDirtyHook();
     installStorageListener();
-    if (loadState().dirty === true) Sync.scheduleAuto();
+    // 启动时若已有脏数据且已登录 → 安排一次同步
+    if (Auth.current() && loadState().dirty === true) {
+      Sync.scheduleAuto();
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', boot);
+  } else {
+    boot();
   }
 
 })(window);
