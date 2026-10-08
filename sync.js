@@ -163,7 +163,7 @@
         configured: !!username,
         provider: 'supabase',
         user: username || '',
-        auto: st.auto !== false,
+        auto: st.auto === true,   // 默认关闭，改为手动保存
         lastSync: st.lastSync || 0,
         lastError: st.lastError || null,
         dirty: st.dirty === true
@@ -259,7 +259,7 @@
     _timer: null,
     scheduleAuto: function () {
       var st = loadState();
-      if (st.auto === false) return;
+      if (st.auto !== true) return;   // 默认不开
       if (!Auth.current()) return;        // 未登录不同步
       if (Sync._timer) clearTimeout(Sync._timer);
       Sync._timer = setTimeout(async function () {
@@ -309,11 +309,13 @@
   /* ============ 拦截 localStorage 自动标记 dirty ============ */
   function installDirtyHook() {
     var _set = localStorage.setItem.bind(localStorage);
+    var SCOPED = ['smart_schedule_', 'schedule_', 'q7-', 'q7g-', 'geolab-'];
     localStorage.setItem = function (k, v) {
       var r = _set(k, v);
-      // 只标记业务数据（shub:data:<user>:*），且仅在已登录时
-      if (typeof k === 'string' && k.indexOf(DATA_PREFIX) === 0) {
-        if (Auth.current() && typeof Sync !== 'undefined' && Sync.markDirty) {
+      if (typeof k === 'string' && k.indexOf('shub:') !== 0) {
+        var isScoped = SCOPED.some(function (p) { return k.indexOf(p) === 0; });
+        if (isScoped && global.Auth && global.Auth.current()
+            && typeof Sync !== 'undefined' && Sync.markDirty) {
           Sync.markDirty();
         }
       }

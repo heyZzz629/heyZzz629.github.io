@@ -86,6 +86,43 @@
         .shub-widget.guest .w-avatar { background: #1b2230; color: #8b96ad; }
       }
 
+      .shub-widget .w-save {
+        width: 22px; height: 22px;
+        border-radius: 6px;
+        border: none;
+        background: transparent;
+        color: #64748b;
+        cursor: pointer;
+        display: grid;
+        place-items: center;
+        font-size: 12px;
+        padding: 0;
+        transition: all .18s ease;
+        flex-shrink: 0;
+        font-family: inherit;
+        line-height: 1;
+      }
+      .shub-widget .w-save:hover {
+        background: rgba(0,0,0,.06);
+        color: #1e293b;
+      }
+      .shub-widget .w-save.dirty {
+        background: linear-gradient(135deg, #6366f1, #8b5cf6);
+        color: #fff;
+        animation: shub-save-pulse 2s infinite;
+      }
+      .shub-widget .w-save.dirty:hover { filter: brightness(1.08); }
+      @keyframes shub-save-pulse {
+        0%   { box-shadow: 0 0 0 0 rgba(99,102,241,.5); }
+        70%  { box-shadow: 0 0 0 6px rgba(99,102,241,0); }
+        100% { box-shadow: 0 0 0 0 rgba(99,102,241,0); }
+      }
+      [data-theme="dark"] .shub-widget .w-save { color: #8b96ad; }
+      [data-theme="dark"] .shub-widget .w-save:hover {
+        background: rgba(255,255,255,.06);
+        color: #f4f6fa;
+      }
+
       /* Tooltip */
       .shub-widget-tip {
         position: fixed; top: 52px; left: 12px;
@@ -144,6 +181,7 @@
         w.innerHTML = `
           <span class="w-avatar">${escape(u[0].toUpperCase())}</span>
           <span class="w-text">${escape(u)}</span>
+          <button class="w-save" id="shub-widget-save" type="button" title="保存到云端">✓</button>
           <span class="w-dot" id="shub-widget-dot"></span>
         `;
         tip.textContent = `已登录为 ${u} · 点击返回首页`;
@@ -155,10 +193,63 @@
         `;
         tip.textContent = '未登录 · 点击前往登录 / 注册';
       }
+      updateSaveButton();
     }
 
     w.addEventListener('mouseenter', () => tip.classList.add('show'));
     w.addEventListener('mouseleave', () => tip.classList.remove('show'));
+
+    function updateSaveButton() {
+      var btn = document.getElementById('shub-widget-save');
+      if (!btn) return;
+      if (!window.Sync || !window.Auth.current()) {
+        btn.style.display = 'none';
+        return;
+      }
+      btn.style.display = '';
+      var st = window.Sync.status();
+      if (st.dirty) {
+        btn.classList.add('dirty');
+        btn.textContent = '💾';
+        btn.title = '有未保存的改动 · 点击保存到云端';
+      } else {
+        btn.classList.remove('dirty');
+        btn.textContent = '✓';
+        btn.title = '已与云端同步';
+      }
+    }
+
+    w.addEventListener('click', function (e) {
+      var t = e.target;
+      var btn = t && t.closest ? t.closest('#shub-widget-save') : null;
+      if (!btn) return;
+      e.preventDefault();
+      e.stopPropagation();
+      if (btn.dataset.saving === '1') return;
+      if (!window.Sync || !window.Auth.current()) return;
+      btn.dataset.saving = '1';
+      btn.textContent = '⏳';
+      btn.classList.remove('dirty');
+      window.Sync.push(true).then(function (r) {
+        btn.textContent = '✅';
+        btn.title = '已保存 ' + r.files + ' 项';
+        setTimeout(function () { btn.dataset.saving = '0'; updateSaveButton(); }, 1200);
+      }).catch(function (err) {
+        btn.textContent = '❌';
+        btn.title = '保存失败：' + ((err && err.message) || '未知错误');
+        btn.classList.add('dirty');
+        setTimeout(function () { btn.dataset.saving = '0'; updateSaveButton(); }, 1800);
+      });
+    });
+
+    if (window.Sync) {
+      window.Sync.on(function (event) {
+        if (event === 'dirty' || event === 'pushed' || event === 'pulled' || event === 'auto-sync') {
+          updateSaveButton();
+        }
+      });
+    }
+    setInterval(updateSaveButton, 2500);
 
     /* 监听同步状态（如果 sync.js 存在） */
     if (window.Sync) {
@@ -186,7 +277,15 @@
       }
     }
 
-    window.Auth.onChange(refresh);
+    var lastUser = window.Auth.current();
+    window.Auth.onChange(function (u) {
+      refresh();
+      // 从未登录 → 已登录：reload 让页面重新读取账户数据
+      if (!lastUser && u) {
+        setTimeout(function () { location.reload(); }, 600);
+      }
+      lastUser = u;
+    });
     refresh();
   }
 

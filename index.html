@@ -834,6 +834,51 @@ body::after {
   .hero-stats { gap: 18px; }
   .stat-num { font-size: 20px; }
 }
+.nav-save-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-sub);
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  box-shadow: var(--shadow-1);
+  transition: all .25s var(--ease);
+  white-space: nowrap;
+}
+.nav-save-btn:hover {
+  border-color: var(--border-strong);
+  color: var(--text);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-2);
+}
+.nav-save-btn:active { transform: translateY(0) scale(.97); }
+.nav-save-btn svg { width: 15px; height: 15px; flex-shrink: 0; }
+.nav-save-btn.dirty {
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  color: #fff;
+  border-color: transparent;
+  box-shadow: 0 4px 14px var(--primary-glow);
+  animation: navSavePulse 2s infinite;
+}
+.nav-save-btn.dirty:hover { filter: brightness(1.06); }
+.nav-save-btn.saving { pointer-events: none; opacity: .75; }
+@keyframes navSavePulse {
+  0%   { box-shadow: 0 4px 14px var(--primary-glow), 0 0 0 0 rgba(99,102,241,.5); }
+  70%  { box-shadow: 0 4px 14px var(--primary-glow), 0 0 0 8px rgba(99,102,241,0); }
+  100% { box-shadow: 0 4px 14px var(--primary-glow), 0 0 0 0 rgba(99,102,241,0); }
+}
+@media (max-width: 720px) {
+  .nav-save-btn { padding: 8px 10px; font-size: 12px; }
+  .nav-save-btn span { display: none; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: .01ms !important;
@@ -869,6 +914,14 @@ body::after {
           <circle cx="12" cy="12" r="4"/>
           <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>
         </svg>
+      </button>
+      <button class="nav-save-btn" id="navSaveBtn" type="button" style="display:none" title="保存到云端">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+          <polyline points="17 21 17 13 7 13 7 21"/>
+          <polyline points="7 3 7 8 15 8"/>
+        </svg>
+        <span>已同步</span>
       </button>
       <div id="accountSlot"></div>
     </div>
@@ -1843,6 +1896,56 @@ body::after {
   /* ============================================================
      初始化
      ============================================================ */
+  (function initSaveButton() {
+    var btn = document.getElementById('navSaveBtn');
+    if (!btn) return;
+    var label = btn.querySelector('span');
+
+    function update() {
+      if (!window.Sync || !Auth.current()) {
+        btn.style.display = 'none';
+        return;
+      }
+      btn.style.display = '';
+      var st = Sync.status();
+      if (st.dirty) {
+        btn.classList.add('dirty');
+        if (label) label.textContent = '保存';
+        btn.title = '有未保存的改动 · 点击保存到云端';
+      } else {
+        btn.classList.remove('dirty');
+        if (label) label.textContent = '已同步';
+        btn.title = '已与云端同步';
+      }
+    }
+
+    btn.addEventListener('click', function () {
+      if (btn.classList.contains('saving')) return;
+      if (!window.Sync || !Auth.current()) return;
+      btn.classList.add('saving');
+      if (label) label.textContent = '保存中…';
+      Sync.push(true).then(function (r) {
+        if (label) label.textContent = '已保存';
+        btn.classList.remove('dirty');
+        setTimeout(function () { btn.classList.remove('saving'); update(); }, 800);
+      }).catch(function (err) {
+        if (label) label.textContent = '失败';
+        btn.title = '保存失败：' + ((err && err.message) || '未知错误');
+        setTimeout(function () { btn.classList.remove('saving'); update(); }, 1500);
+      });
+    });
+
+    if (window.Sync) {
+      window.Sync.on(function (event) {
+        if (event === 'dirty' || event === 'pushed' || event === 'pulled' || event === 'auto-sync') {
+          update();
+        }
+      });
+    }
+    setInterval(update, 2500);
+    update();
+  })();
+
   Auth.onChange(function () {
     renderAccountButton();
   });
