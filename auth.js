@@ -70,7 +70,7 @@
 
   /* 用户名 → 虚拟邮箱 */
   function usernameToEmail(username) {
-    return username.trim().toLowerCase().replace(/[^a-z0-9_-]/g, '_') + '@shub.local';
+    return username.trim().toLowerCase().replace(/[^a-z0-9_-]/g, '_') + '@shub.app';
   }
 
   function setSession(username) {
