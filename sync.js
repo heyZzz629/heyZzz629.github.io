@@ -78,17 +78,18 @@
   }
 
   /* ============ 云端读写 ============ */
-  async function getUserId() {
-    var client = getClient();
-    var resp = await client.auth.getUser();
-    var user = resp.data && resp.data.user;
-    if (!user) throw new Error('请先登录账户');
-    return user.id;
+    function getUserKey() {
+    if (!global.Auth || !Auth.getUserKey) {
+      throw new Error('auth.js 未加载或版本过旧');
+    }
+    var key = Auth.getUserKey();
+    if (!key) throw new Error('请先登录账户');
+    return key;
   }
 
   async function pushToCloud() {
     var client = getClient();
-    var userId = await getUserId();
+    var userKey = getUserKey();
     var localData = collectLocalData();
     var keys = Object.keys(localData);
     if (!keys.length) return { files: 0 };
@@ -96,7 +97,7 @@
     var now = new Date().toISOString();
     var rows = keys.map(function (k) {
       return {
-        user_id: userId,
+        user_key: userKey,
         key: k,
         value: localData[k],
         updated_at: now
@@ -105,19 +106,20 @@
 
     var res = await client
       .from('user_data')
-      .upsert(rows, { onConflict: 'user_id,key' });
+      .upsert(rows, { onConflict: 'user_key,key' });
 
     if (res.error) throw new Error(res.error.message || '推送失败');
     return { files: rows.length };
   }
 
-  async function pullFromCloud() {
+    async function pullFromCloud() {
     var client = getClient();
-    var userId = await getUserId();   // 权限校验（RLS 会再次过滤）
+    var userKey = getUserKey();
 
     var res = await client
       .from('user_data')
-      .select('key, value, updated_at');
+      .select('key, value, updated_at')
+      .eq('user_key', userKey);
 
     if (res.error) throw new Error(res.error.message || '拉取失败');
 
@@ -137,11 +139,13 @@
     return { files: count, remoteTs: maxTs };
   }
 
-  async function getRemoteLatestTs() {
+    async function getRemoteLatestTs() {
     var client = getClient();
+    var userKey = getUserKey();
     var res = await client
       .from('user_data')
       .select('updated_at')
+      .eq('user_key', userKey)
       .order('updated_at', { ascending: false })
       .limit(1);
     if (res.error || !res.data || !res.data.length) return 0;
@@ -179,16 +183,12 @@
     /* 测试连接 */
     testConnection: async function () {
       var client = getClient();
-      var resp = await client.auth.getUser();
-      var user = resp.data && resp.data.user;
-      if (!user) throw new Error('请先登录账户');
-
-      // 探测 user_data 表是否可访问
+      getUserKey();   // 校验已登录
       var probe = await client.from('user_data').select('key').limit(1);
       if (probe.error) {
         throw new Error('无法访问数据库：' + probe.error.message);
       }
-      return { login: Auth.current() || user.email, avatar: null };
+      return { login: Auth.current() || '', avatar: null };
     },
 
     /* 推送本地 → 云端 */

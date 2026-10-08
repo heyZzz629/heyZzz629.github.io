@@ -1,16 +1,17 @@
 /* ============================================================
-   Study Hub · 账户核心 v3（Supabase 版）
+   Study Hub · 账户核心 v3（自定义表 + RPC）
    ------------------------------------------------------------
-   · 认证由 Supabase Auth 提供
-   · 数据存储在 Supabase Postgres（带 RLS 隔离）
-   · 对外 API 与 v2 完全兼容
+   · 不用 Supabase Auth，无邮件、无 rate limit
+   · 密码 bcrypt 哈希存服务端
+   · 业务数据用随机 user_key 隔离
    ============================================================ */
 (function (global) {
   'use strict';
 
   const NS          = 'shub';
-  const SESSION_KEY = NS + ':session';       // 当前用户名（UI 同步读取）
-  const KNOWN_KEY   = NS + ':known-users';   // 本机记住的账户
+  const SESSION_KEY = NS + ':session';
+  const USERKEY_KEY = NS + ':userkey';
+  const KNOWN_KEY   = NS + ':known-users';
   const RATE_KEY    = NS + ':rate';
   const FAIL_KEY    = NS + ':fail';
   const DATA_PREFIX = NS + ':data:';
@@ -68,18 +69,16 @@
     try { localStorage.removeItem(key); } catch (_) {}
   }
 
-  /* 用户名 → 虚拟邮箱 */
-  function usernameToEmail(username) {
-    return username.trim().toLowerCase().replace(/[^a-z0-9_-]/g, '_') + '@shub.app';
-  }
-
-  function setSession(username) {
+  function setSession(username, userKey) {
     writeStr(SESSION_KEY, username);
+    if (userKey) writeStr(USERKEY_KEY, userKey);
   }
   function clearSession() {
     delStr(SESSION_KEY);
+    delStr(USERKEY_KEY);
     notify();
   }
+  function getUserKey() { return readStr(USERKEY_KEY, ''); }
 
   /* ============ 密码强度 ============ */
   function checkStrength(pwd) {
@@ -116,14 +115,14 @@
     saveJSON(KNOWN_KEY, known);
   }
 
-  /* ============ 本地限流（UX 层） ============ */
+  /* ============ 本地限流 ============ */
   function getRate() { return loadJSON(RATE_KEY, {}); }
   function checkRegisterRate() {
     const rate = getRate();
     const now = Date.now();
     if (rate.lastRegister && now - rate.lastRegister < LIMITS.registerCooldown) {
       const remain = Math.ceil((LIMITS.registerCooldown - (now - rate.lastRegister)) / 1000);
-      throw new Error(`操作过于频繁，请 ${remain} 秒后再试`);
+      throw new Error('操作过于频繁，请 ' + remain + ' 秒后再试');
     }
   }
   function recordRegister() {
@@ -151,16 +150,17 @@
     const f = getFail(user);
     if (f.lockedUntil && Date.now() < f.lockedUntil) {
       const remain = Math.ceil((f.lockedUntil - Date.now()) / 1000);
-      throw new Error(`账户已锁定，请 ${remain} 秒后再试`);
+      throw new Error('账户已锁定，请 ' + remain + ' 秒后再试');
     }
   }
 
-  /* ============ 数据同步到 Supabase ============ */
+  /* ============ 数据同步 ============ */
   async function pushLocalToCloud() {
     const username = Auth.current();
-    if (!username) return;
-    initSupabase();
+    const userKey = getUserKey();
+    if (!username || !userKey) return;
 
+    const client = initSupabase();
     const prefix = DATA_PREFIX + username + ':';
     const rows = [];
     for (let i = 0; i < localStorage.length; i++) {
@@ -170,35 +170,31 @@
       let value;
       try { value = JSON.parse(localStorage.getItem(k)); }
       catch (_) { value = localStorage.getItem(k); }
-      rows.push({ key: short, value });
+      rows.push({ user_key: userKey, key: short, value });
     }
     if (!rows.length) return;
 
-    /* 先取一次 user，不要在 map 里 await */
-    const resp = await sb.auth.getUser();
-    const user = resp.data && resp.data.user;
-    if (!user) throw new Error('未登录');
-
-    const payload = rows.map(function (r) {
-      return { user_id: user.id, key: r.key, value: r.value };
-    });
-
-    const { error } = await sb.from('user_data').upsert(
-      payload,
-      { onConflict: 'user_id,key' }
-    );
-    if (error) throw error;
+    const { error } = await client
+      .from('user_data')
+      .upsert(rows, { onConflict: 'user_key,key' });
+    if (error) throw new Error(error.message);
   }
 
   async function pullCloudToLocal() {
     const username = Auth.current();
-    if (!username) return 0;
-    initSupabase();
-    const { data, error } = await sb.from('user_data').select('key, value');
-    if (error) throw error;
+    const userKey = getUserKey();
+    if (!username || !userKey) return 0;
+
+    const client = initSupabase();
+    const { data, error } = await client
+      .from('user_data')
+      .select('key, value')
+      .eq('user_key', userKey);
+    if (error) throw new Error(error.message);
+
     const prefix = DATA_PREFIX + username + ':';
     let count = 0;
-    (data || []).forEach(function (row) {
+    (data || []).forEach(row => {
       try {
         localStorage.setItem(prefix + row.key, JSON.stringify(row.value));
         count++;
@@ -213,7 +209,6 @@
     checkStrength: checkStrength,
     strengthLabel: strengthLabel,
 
-    /* ---------- 注册 ---------- */
     register: async function (username, password) {
       username = String(username || '').trim();
       if (!username) throw new Error('请输入用户名');
@@ -232,87 +227,63 @@
         throw new Error('密码太弱，请使用「字母 + 数字」组合');
       }
 
-      initSupabase();
-
-      /* 检查用户名是否已被占用（可选，失败不阻塞） */
-      try {
-        const { data: existing } = await sb.rpc('get_email_by_username', { p_username: username });
-        if (existing) throw new Error('用户名已存在');
-      } catch (e) {
-        /* 若 RPC 不存在或报错，让后面的 signUp 决定成败 */
-        if (e && e.message === '用户名已存在') throw e;
-      }
-
-      const email = usernameToEmail(username);
-      const { data, error } = await sb.auth.signUp({
-        email: email,
-        password: password,
-        options: { data: { username: username } },
+      const client = initSupabase();
+      const { data, error } = await client.rpc('register_user', {
+        p_username: username,
+        p_password: password,
       });
-      if (error) throw new Error(error.message);
-      if (!data || !data.user) throw new Error('注册失败，请稍后重试');
+      if (error) throw new Error(error.message || '注册失败');
+      if (!data) throw new Error('注册失败');
+      if (data.error) throw new Error(data.error);
 
       recordRegister();
-      setSession(username);
-      rememberUser(username, Date.now());
+      setSession(data.username, data.user_key);
+      rememberUser(data.username, Date.now());
       notify();
-      return { username: username };
+      return { username: data.username };
     },
 
-    /* ---------- 登录 ---------- */
     login: async function (username, password) {
       username = String(username || '').trim();
       if (!username) throw new Error('请输入用户名');
       if (!password) throw new Error('请输入密码');
       checkLoginLock(username);
-      initSupabase();
 
-      /* 通过用户名查虚拟邮箱 */
-      let email = null;
-      try {
-        const { data } = await sb.rpc('get_email_by_username', { p_username: username });
-        email = data;
-      } catch (_) { email = null; }
-
-      /* 若 RPC 不可用，退化为直接拼虚拟邮箱 */
-      if (!email) email = usernameToEmail(username);
-
-      const { data, error } = await sb.auth.signInWithPassword({
-        email: email,
-        password: password,
+      const client = initSupabase();
+      const { data, error } = await client.rpc('login_user', {
+        p_username: username,
+        p_password: password,
       });
       if (error) {
         recordFail(username);
-        throw new Error('用户名或密码错误');
+        throw new Error(error.message || '登录失败');
+      }
+      if (!data || data.error) {
+        recordFail(username);
+        throw new Error((data && data.error) || '用户名或密码错误');
       }
 
       clearFail(username);
-      setSession(username);
-      if (data && data.user) rememberUser(username, data.user.created_at);
-      else rememberUser(username, Date.now());
+      setSession(data.username, data.user_key);
+      rememberUser(data.username, Date.now());
       notify();
 
-      /* 拉取云端数据到本地 */
-      try { await pullCloudToLocal(); } catch (_) {}
+      try { await pullCloudToLocal(); } catch (e) { console.warn('拉取失败:', e); }
 
-      return { username: username };
+      return { username: data.username };
     },
 
-    /* ---------- 登出 ---------- */
     logout: async function () {
       const username = Auth.current();
-      if (username) {
+      if (username && getUserKey()) {
         try { await pushLocalToCloud(); } catch (_) {}
       }
-      try { initSupabase(); await sb.auth.signOut(); } catch (_) {}
       clearSession();
       notify();
     },
 
-    /* ---------- 当前用户（同步） ---------- */
     current: function () { return readStr(SESSION_KEY, null); },
 
-    /* ---------- 本机记住的账户 ---------- */
     list: function () {
       const known = getKnown();
       return Object.values(known)
@@ -333,46 +304,37 @@
       return Math.max(0, Math.ceil(left / 1000));
     },
 
-    /* ---------- 修改密码 ---------- */
     changePassword: async function (oldPwd, newPwd) {
       if (!Auth.current()) throw new Error('未登录');
       if (newPwd.length < LIMITS.minPwdLength) {
         throw new Error('新密码至少 ' + LIMITS.minPwdLength + ' 位');
       }
       if (checkStrength(newPwd) < 2) throw new Error('新密码太弱');
-      initSupabase();
-      const { error } = await sb.auth.updateUser({ password: newPwd });
+
+      const client = initSupabase();
+      const { data, error } = await client.rpc('change_password', {
+        p_username: Auth.current(),
+        p_old_password: oldPwd,
+        p_new_password: newPwd,
+      });
       if (error) throw new Error(error.message);
+      if (data && data.error) throw new Error(data.error);
       notify();
       return true;
     },
 
-    /* ---------- 删除账户 ---------- */
     remove: async function (username, password) {
       username = String(username || '').trim();
       if (!username) throw new Error('账户不存在');
-      initSupabase();
 
-      /* 若当前登录的不是要删的账户，先登录 */
-      if (Auth.current() !== username) {
-        await Auth.login(username, password);
-      }
+      const client = initSupabase();
+      const { data, error } = await client.rpc('delete_user', {
+        p_username: username,
+        p_password: password,
+      });
+      if (error) throw new Error(error.message);
+      if (data && data.error) throw new Error(data.error);
 
-      /* 拿当前 user id */
-      const resp = await sb.auth.getUser();
-      const user = resp.data && resp.data.user;
-      if (!user) throw new Error('未登录');
-
-      /* 删除云端数据（RLS 保证只能删自己的） */
-      await sb.from('user_data').delete().eq('user_id', user.id);
-      await sb.from('profiles').delete().eq('id', user.id);
-
-      /* 注意：auth.users 记录的删除需要 service_role key，
-         前端无法完成。若需彻底删除请到 Supabase 控制台手动操作。 */
-
-      await sb.auth.signOut();
-
-      /* 清本地数据 */
       const prefix = DATA_PREFIX + username + ':';
       const toDel = [];
       for (let i = 0; i < localStorage.length; i++) {
@@ -387,7 +349,6 @@
       return true;
     },
 
-    /* ---------- 导出（本地隔离数据 → JSON） ---------- */
     export: function () {
       const u = Auth.current();
       if (!u) return null;
@@ -401,14 +362,13 @@
         catch (_) { data[short] = localStorage.getItem(k); }
       }
       return {
-        version: 'shub-backup-3',
+        version: 'shub-backup-4',
         username: u,
         exportedAt: new Date().toISOString(),
         data: data,
       };
     },
 
-    /* ---------- 导入（JSON → 本地隔离数据） ---------- */
     import: function (payload) {
       const u = Auth.current();
       if (!u) throw new Error('请先登录');
@@ -424,42 +384,30 @@
       return count;
     },
 
-    /* ---------- 供 sync.js 使用的客户端 ---------- */
     getClient: function () { return initSupabase(); },
+    getUserKey: getUserKey,
 
-    /* ---------- 会话校验 ---------- */
+    /* 纯本地校验，绝不联网，避免误登出 */
     verify: async function () {
-      try {
-        initSupabase();
-        const resp = await sb.auth.getUser();
-        const user = resp.data && resp.data.user;
-        if (!user) { clearSession(); return false; }
-
-        const { data: profile } = await sb
-          .from('profiles')
-          .select('username')
-          .eq('id', user.id)
-          .single();
-
-        if (profile && profile.username) {
-          setSession(profile.username);
-          rememberUser(profile.username, user.created_at);
-          return profile.username;
-        }
-        return false;
-      } catch (_) {
+      const username = Auth.current();
+      const userKey = getUserKey();
+      if (!username || !userKey) {
+        if (username) delStr(SESSION_KEY);
         return false;
       }
+      return username;
     },
 
-    /* ---------- 事件订阅 ---------- */
     onChange: function (fn) {
       listeners.add(fn);
       return function () { listeners.delete(fn); };
     },
+
+    pushToCloud: pushLocalToCloud,
+    pullFromCloud: pullCloudToLocal,
   };
 
-  /* ============ localStorage 劫持（按用户隔离） ============ */
+  /* ============ localStorage 劫持 ============ */
   function installHook() {
     const _set = localStorage.setItem.bind(localStorage);
     const _get = localStorage.getItem.bind(localStorage);
@@ -495,20 +443,14 @@
   global.Auth = Auth;
   installHook();
 
-  /* 页面加载后异步校验会话 */
-  (function autoVerify() {
-    if (!Auth.current()) return;
-    const run = function () {
-      Auth.verify().then(function (name) {
-        if (!name) console.info('[auth] 会话已过期，需要重新登录');
-      }).catch(function () {});
-    };
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', function () {
-        setTimeout(run, 300);
-      });
-    } else {
-      setTimeout(run, 300);
+  /* 启动时清理无效会话（本地检查，不联网） */
+  (function bootstrap() {
+    const username = Auth.current();
+    const userKey = getUserKey();
+    if (username && !userKey) {
+      /* 老版本遗留的 session，没 userkey，清掉 */
+      delStr(SESSION_KEY);
+      console.info('[auth] 检测到旧版会话，已清理');
     }
   })();
 

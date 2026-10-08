@@ -107,7 +107,6 @@ body::after {
 .brand-sub { font-size: 10px; font-weight: 600; color: var(--text-dim); letter-spacing: 1px; text-transform: uppercase; }
 .nav-actions { display: flex; align-items: center; gap: 10px; }
 
-/* 主题切换 */
 .theme-toggle {
   position: relative; width: 40px; height: 40px;
   border-radius: var(--radius); border: 1px solid var(--border);
@@ -129,7 +128,6 @@ body::after {
 [data-theme="dark"] .theme-toggle .icon-moon { opacity: 0; transform: rotate(-90deg) scale(.4); }
 [data-theme="dark"] .theme-toggle .icon-sun  { opacity: 1; transform: rotate(0) scale(1); }
 
-/* 账户按钮（未登录） */
 .login-btn {
   display: inline-flex; align-items: center; gap: 8px;
   padding: 9px 18px; border-radius: var(--radius);
@@ -148,7 +146,6 @@ body::after {
 .login-btn:active { transform: translateY(0) scale(.97); }
 .login-btn svg { width: 15px; height: 15px; }
 
-/* 用户按钮（已登录） */
 .user-btn {
   position: relative;
   display: inline-flex; align-items: center; gap: 8px;
@@ -175,7 +172,6 @@ body::after {
 .user-btn svg { width: 12px; height: 12px; opacity: .6; transition: transform .25s; }
 .user-btn.open svg { transform: rotate(180deg); }
 
-/* 用户下拉菜单 */
 .user-menu {
   position: absolute; top: calc(100% + 10px); right: 0;
   min-width: 260px;
@@ -223,11 +219,6 @@ body::after {
 .um-item.danger:hover { background: rgba(239,68,68,.08); }
 .um-item svg { width: 15px; height: 15px; flex-shrink: 0; opacity: .75; }
 .um-sep { height: 1px; background: var(--border); margin: 4px 0; }
-.um-badge {
-  margin-left: auto; font-size: 10px; font-weight: 700;
-  padding: 2px 7px; border-radius: 99px;
-  background: var(--primary-soft); color: var(--primary);
-}
 
 /* ============================================================
    Hero
@@ -276,7 +267,6 @@ body::after {
   color: var(--text-dim); text-transform: uppercase;
 }
 
-/* 最近使用 */
 .recent-strip {
   position: relative; z-index: 1;
   max-width: var(--content-w); margin: 0 auto 28px;
@@ -477,9 +467,6 @@ body::after {
 [data-theme="dark"] .card[data-accent="geo"]      { --accent: #67e8f9; }
 [data-theme="dark"] .card[data-accent="english"]  { --accent: #f9a8d4; }
 
-/* ============================================================
-   Footer
-   ============================================================ */
 .footer {
   position: relative; z-index: 1;
   max-width: var(--content-w); margin: 0 auto;
@@ -493,7 +480,7 @@ body::after {
 }
 
 /* ============================================================
-   账户中心 Modal
+   Modal
    ============================================================ */
 .modal {
   position: fixed; inset: 0; z-index: 1000;
@@ -515,6 +502,7 @@ body::after {
   animation: modalIn .35s var(--ease-out);
   position: relative;
   overflow: hidden;
+  transition: box-shadow .4s var(--ease), transform .4s var(--ease);
 }
 @keyframes modalIn {
   from { opacity: 0; transform: translateY(16px) scale(.97); }
@@ -592,6 +580,28 @@ body::after {
 
 .field-hint { font-size: 11px; color: var(--text-dim); margin-top: 6px; line-height: 1.5; }
 
+/* 输入框图标 + 密码眼睛按钮（新增美化） */
+.field-icon-wrap { position: relative; }
+.field-icon-wrap .field-icon {
+  position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
+  color: var(--text-faint); pointer-events: none;
+  transition: color .2s var(--ease);
+}
+.field-icon-wrap .field-icon svg { width: 16px; height: 16px; display: block; }
+.field-icon-wrap .field-input { padding-left: 42px; }
+.field-icon-wrap .field-input:focus ~ .field-icon { color: var(--primary); }
+
+.pwd-wrap { position: relative; }
+.pwd-toggle {
+  position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
+  width: 30px; height: 30px; border-radius: 8px;
+  border: none; background: transparent; color: var(--text-dim);
+  cursor: pointer; display: grid; place-items: center;
+  font-size: 14px; transition: all .18s ease;
+}
+.pwd-toggle:hover { background: var(--surface-sunken); color: var(--text); }
+.pwd-toggle:active { transform: translateY(-50%) scale(.92); }
+
 /* 密码强度条 */
 .strength-bar {
   display: flex; gap: 4px; margin-top: 8px; height: 4px;
@@ -618,22 +628,6 @@ body::after {
 .strength-label .val.v3 { color: #10b981; }
 .strength-label .val.v4 { color: #059669; }
 
-/* 复选框 */
-.check-row {
-  display: flex; align-items: flex-start; gap: 10px;
-  padding: 12px 14px; border-radius: 11px;
-  background: var(--surface-sunken); margin-bottom: 16px;
-  font-size: 12.5px; line-height: 1.6; color: var(--text-sub);
-  cursor: pointer;
-}
-.check-row input[type="checkbox"] {
-  width: 16px; height: 16px; margin-top: 2px;
-  accent-color: var(--primary);
-  cursor: pointer; flex-shrink: 0;
-}
-.check-row b { color: var(--text); font-weight: 700; }
-
-/* 错误提示 */
 .auth-error {
   padding: 11px 14px; border-radius: 10px;
   font-size: 12.5px; font-weight: 600;
@@ -650,7 +644,19 @@ body::after {
   40%,80% { transform: translateX(5px); }
 }
 
-/* Modal 按钮 */
+/* 登录成功光晕效果 */
+.auth-success-shine {
+  animation: successPulse .7s var(--ease-out);
+}
+@keyframes successPulse {
+  0% { transform: scale(1); box-shadow: 0 30px 80px rgba(0,0,0,.35), 0 8px 24px rgba(0,0,0,.15); }
+  40% {
+    transform: scale(1.015);
+    box-shadow: 0 0 0 4px rgba(16,185,129,.15), 0 30px 80px rgba(16,185,129,.25);
+  }
+  100% { transform: scale(1); }
+}
+
 .modal-actions { display: flex; gap: 10px; margin-top: 22px; }
 .btn {
   flex: 1; padding: 13px 20px; border-radius: 12px;
@@ -687,7 +693,6 @@ body::after {
 }
 @keyframes spin { to { transform: rotate(360deg); } }
 
-/* Modal 底部信息 */
 .modal-foot {
   margin-top: 20px; padding-top: 18px;
   border-top: 1px solid var(--border);
@@ -708,13 +713,11 @@ body::after {
   background: rgba(239,68,68,.1); color: var(--danger);
 }
 
-/* 冷却倒计时 */
 .countdown {
   font-family: ui-monospace, monospace;
   font-weight: 700; font-size: 12px;
 }
 
-/* 同步状态 */
 .sync-status {
   padding: 10px 14px; border-radius: 10px;
   background: var(--surface-sunken);
@@ -731,7 +734,6 @@ body::after {
 .sync-status.err .status-dot { background: var(--danger); box-shadow: 0 0 8px rgba(239,68,68,.5); }
 .sync-status.syncing .status-dot { background: var(--warning); animation: pulse 1s infinite; }
 
-/* 账户切换列表 */
 .account-list {
   max-height: 240px; overflow-y: auto; margin-bottom: 16px;
   border: 1px solid var(--border); border-radius: 12px;
@@ -764,7 +766,6 @@ body::after {
   background: var(--primary-soft); color: var(--primary);
 }
 
-/* Animations */
 @keyframes fadeUp {
   from { opacity: 0; transform: translateY(18px); }
   to { opacity: 1; transform: translateY(0); }
@@ -778,7 +779,6 @@ body::after {
   50% { box-shadow: 0 0 0 6px transparent; }
 }
 
-/* Responsive */
 @media (max-width: 900px) {
   :root { --gutter: 24px; }
   .hero { padding-top: 56px; padding-bottom: 32px; }
@@ -845,7 +845,6 @@ body::after {
 </head>
 <body>
 
-<!-- ==================== Navbar ==================== -->
 <nav class="navbar">
   <div class="nav-inner">
     <div class="brand">
@@ -876,7 +875,6 @@ body::after {
   </div>
 </nav>
 
-<!-- ==================== Hero ==================== -->
 <header class="hero">
   <div class="hero-badge">
     <span class="dot"></span>
@@ -892,7 +890,6 @@ body::after {
   </div>
 </header>
 
-<!-- ==================== 最近使用 ==================== -->
 <section class="recent-strip" id="recentStrip">
   <div class="recent-inner">
     <span class="recent-label">
@@ -906,7 +903,6 @@ body::after {
   </div>
 </section>
 
-<!-- ==================== 四宫格 ==================== -->
 <main class="hub-grid" id="hubGrid">
 
   <a class="card" data-accent="schedule" data-key="Schedule.html" href="Schedule.html">
@@ -993,7 +989,7 @@ body::after {
 </main>
 
 <footer class="footer">
-  <p>所有数据存储于浏览器本地 · 登录后按账户隔离 · 支持 GitHub 云同步</p>
+  <p>所有数据存储于浏览器本地 · 登录后按账户隔离 · 支持 Supabase 云同步</p>
   <p class="footer-meta">STUDY HUB · V3 · BUILT WITH CARE</p>
 </footer>
 
@@ -1040,19 +1036,32 @@ body::after {
       <span id="authErrorText"></span>
     </div>
 
+    <!-- 用户名：左侧带图标 -->
     <div class="field">
       <label class="field-label" for="authUsername">
         用户名 <span class="req">*</span>
         <span class="slot" id="usernameHint"></span>
       </label>
-      <input class="field-input" id="authUsername" type="text" autocomplete="username" placeholder="请输入用户名" maxlength="20">
+      <div class="field-icon-wrap">
+        <input class="field-input" id="authUsername" type="text" autocomplete="username" placeholder="请输入用户名" maxlength="20">
+        <span class="field-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+            <circle cx="12" cy="7" r="4"/>
+          </svg>
+        </span>
+      </div>
     </div>
 
+    <!-- 密码：右侧带眼睛按钮 -->
     <div class="field">
       <label class="field-label" for="authPassword">
         密码 <span class="req">*</span>
       </label>
-      <input class="field-input" id="authPassword" type="password" autocomplete="current-password" placeholder="至少 6 位">
+      <div class="pwd-wrap">
+        <input class="field-input" id="authPassword" type="password" autocomplete="current-password" placeholder="至少 6 位" style="padding-right:44px">
+        <button type="button" class="pwd-toggle" data-target="authPassword" tabindex="-1" aria-label="显示密码">👁</button>
+      </div>
       <div id="strengthBox" style="display:none">
         <div class="strength-bar">
           <div class="strength-seg" data-i="0"></div>
@@ -1067,15 +1076,14 @@ body::after {
       </div>
     </div>
 
+    <!-- 确认密码：右侧带眼睛按钮 -->
     <div class="field" id="authConfirmField" style="display:none">
       <label class="field-label" for="authConfirm">确认密码 <span class="req">*</span></label>
-      <input class="field-input" id="authConfirm" type="password" autocomplete="new-password" placeholder="再次输入密码">
+      <div class="pwd-wrap">
+        <input class="field-input" id="authConfirm" type="password" autocomplete="new-password" placeholder="再次输入密码" style="padding-right:44px">
+        <button type="button" class="pwd-toggle" data-target="authConfirm" tabindex="-1" aria-label="显示密码">👁</button>
+      </div>
     </div>
-
-    <label class="check-row" id="authAgree" style="display:none">
-      <input type="checkbox" id="authAgreeCheck">
-      <span>我理解所有数据存储在<b>本地浏览器</b>，清空浏览器数据会导致内容丢失。建议定期使用<b>导出备份</b>或开启<b>云同步</b>。</span>
-    </label>
 
     <div class="modal-actions">
       <button class="btn" id="authCancel">取消</button>
@@ -1089,12 +1097,11 @@ body::after {
 </div>
 
 <!-- ==================== 云同步 Modal ==================== -->
-<!-- ==================== 云同步 Modal ==================== -->
 <div class="modal" id="syncModal">
   <div class="modal-box">
     <button class="modal-close" id="syncClose">×</button>
     <div class="modal-title">☁️ 云同步</div>
-    <div class="modal-sub">数据自动加密存储在 Supabase，跨设备无缝同步。</div>
+    <div class="modal-sub">数据自动存储在 Supabase，跨设备无缝同步。</div>
 
     <div class="auth-error" id="syncError">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -1105,9 +1112,9 @@ body::after {
       <span id="syncErrorText"></span>
     </div>
 
-    <label class="check-row" style="margin-top:0">
-      <input type="checkbox" id="syncAuto" checked>
-      <span>启用自动同步（修改后 <b>30 秒</b>内推送）</span>
+    <label style="display:flex; align-items:flex-start; gap:10px; padding:12px 14px; border-radius:11px; background:var(--surface-sunken); font-size:12.5px; line-height:1.6; color:var(--text-sub); cursor:pointer;">
+      <input type="checkbox" id="syncAuto" checked style="width:16px; height:16px; margin-top:2px; accent-color:var(--primary); cursor:pointer; flex-shrink:0;">
+      <span>启用自动同步（修改后 <b style="color:var(--text); font-weight:700;">30 秒</b>内推送）</span>
     </label>
 
     <div class="sync-status" id="syncStatus">
@@ -1159,7 +1166,6 @@ body::after {
   </div>
 </div>
 
-<!-- ==================== 脚本 ==================== -->
 <script src="supabase.js"></script>
 <script src="supabase-config.js"></script>
 <script src="auth.js"></script>
@@ -1219,7 +1225,26 @@ body::after {
   }
 
   /* ============================================================
-     账户按钮渲染
+     密码显示/隐藏
+     ============================================================ */
+  document.querySelectorAll('.pwd-toggle').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var target = document.getElementById(btn.dataset.target);
+      if (!target) return;
+      var isPwd = target.type === 'password';
+      target.type = isPwd ? 'text' : 'password';
+      btn.textContent = isPwd ? '🙈' : '👁';
+      btn.setAttribute('aria-label', isPwd ? '隐藏密码' : '显示密码');
+      /* 光标回到输入框末尾 */
+      if (!window.matchMedia('(max-width:720px)').matches) {
+        var len = target.value.length;
+        try { target.setSelectionRange(len, len); target.focus(); } catch (e) {}
+      }
+    });
+  });
+
+  /* ============================================================
+     账户按钮
      ============================================================ */
   var accountSlot = $('#accountSlot');
 
@@ -1272,8 +1297,9 @@ body::after {
           var act = it.getAttribute('data-act');
           if (act === 'logout') {
             if (confirm('确定退出登录？')) {
-              Auth.logout();
-              location.reload();
+              Promise.resolve(Auth.logout()).then(function () {
+                location.reload();
+              });
             }
           } else if (act === 'switch') {
             openSwitchModal();
@@ -1285,7 +1311,6 @@ body::after {
         });
       });
 
-      // 更新同步状态
       updateSyncIndicator();
     } else {
       accountSlot.innerHTML =
@@ -1328,12 +1353,10 @@ body::after {
   function openAuthModal(mode) {
     authMode = mode || 'login';
     updateAuthUI();
-    // 检查冷却
     var cd = Auth.registerCooldownLeft();
     if (authMode === 'register' && cd > 0) {
       showAuthError('操作过于频繁，请 ' + cd + ' 秒后再试');
     }
-    // 检查额度
     if (authMode === 'register' && Auth.remainingSlots() === 0) {
       showAuthError('已达本地账户上限（' + Auth.LIMITS.maxAccounts + ' 个），请先删除部分账户');
     }
@@ -1349,7 +1372,11 @@ body::after {
     $('#authUsername').value = '';
     $('#authPassword').value = '';
     $('#authConfirm').value = '';
-    $('#authAgreeCheck').checked = false;
+    /* 重置密码可见性 */
+    var p1 = $('#authPassword'), p2 = $('#authConfirm');
+    if (p1) p1.type = 'password';
+    if (p2) p2.type = 'password';
+    $$('.pwd-toggle').forEach(function (b) { b.textContent = '👁'; });
     hideAuthError();
     $('#strengthBox').style.display = 'none';
   }
@@ -1364,11 +1391,9 @@ body::after {
       ? '一次注册，四个工具同步使用'
       : '登录后四个工具共享同一账户空间';
     $('#authConfirmField').style.display = isReg ? '' : 'none';
-    $('#authAgree').style.display = isReg ? '' : 'none';
     $('#strengthBox').style.display = isReg ? '' : 'none';
     $('#authSubmit').textContent = isReg ? '注册账户' : '登 录';
 
-    // 额度指示
     var used = Auth.totalAccounts();
     var max = Auth.LIMITS.maxAccounts;
     var slot = $('#slotIndicator');
@@ -1376,7 +1401,6 @@ body::after {
     slot.classList.toggle('warn', used >= max - 1 && used < max);
     slot.classList.toggle('full', used >= max);
 
-    // 用户名提示
     var hint = $('#usernameHint');
     if (isReg) {
       var cd = Auth.registerCooldownLeft();
@@ -1410,7 +1434,6 @@ body::after {
     $('#authError').classList.remove('show');
   }
 
-  // 密码强度实时反馈
   $('#authPassword').addEventListener('input', function () {
     if (authMode !== 'register') return;
     var pwd = this.value;
@@ -1425,7 +1448,6 @@ body::after {
     val.className = 'val v' + s;
   });
 
-  // Tab 切换
   $$('.auth-tab', authModal).forEach(function (t) {
     t.addEventListener('click', function () {
       var m = t.getAttribute('data-mode');
@@ -1449,14 +1471,12 @@ body::after {
     if (e.target === authModal) closeAuthModal();
   });
 
-  // 提交
   $('#authSubmit').addEventListener('click', async function () {
     var btn = this;
     var username = $('#authUsername').value.trim();
     var password = $('#authPassword').value;
     hideAuthError();
 
-    // 前置检查
     if (authMode === 'register') {
       if (Auth.remainingSlots() === 0) {
         showAuthError('已达本地账户上限');
@@ -1464,10 +1484,6 @@ body::after {
       }
       if (Auth.registerCooldownLeft() > 0) {
         showAuthError('操作过于频繁，请 ' + Auth.registerCooldownLeft() + ' 秒后再试');
-        return;
-      }
-      if (!$('#authAgreeCheck').checked) {
-        showAuthError('请先勾选同意使用说明');
         return;
       }
       if (password !== $('#authConfirm').value) {
@@ -1487,10 +1503,15 @@ body::after {
         await Auth.login(username, password);
       }
       showAuthError('登录成功，正在跳转...', true);
+      var box = document.querySelector('#authModal .modal-box');
+      if (box) {
+        box.classList.add('auth-success-shine');
+        setTimeout(function () { box.classList.remove('auth-success-shine'); }, 800);
+      }
       setTimeout(function () {
         closeAuthModal();
         location.reload();
-      }, 700);
+      }, 800);
     } catch (err) {
       showAuthError(err.message || '操作失败');
       btn.disabled = false;
@@ -1498,7 +1519,6 @@ body::after {
     }
   });
 
-  // 回车提交
   ['authUsername', 'authPassword', 'authConfirm'].forEach(function (id) {
     $('#' + id).addEventListener('keydown', function (e) {
       if (e.key === 'Enter') $('#authSubmit').click();
@@ -1560,7 +1580,7 @@ body::after {
     if (e.target === switchModal) closeSwitchModal();
   });
 
-    /* ============================================================
+  /* ============================================================
      云同步（Supabase 版）
      ============================================================ */
   var syncModal = $('#syncModal');
@@ -1831,7 +1851,6 @@ body::after {
   renderBadges();
   renderRecent();
 
-  // 页面可见性变化时刷新
   document.addEventListener('visibilitychange', function () {
     if (!document.hidden) {
       renderBadges();
@@ -1840,7 +1859,7 @@ body::after {
     }
   });
 
-  // 打开页面时如果已登录 + 已配置同步，静默拉取
+  /* 已登录 + 有数据 → 静默拉取 */
   if (Auth.current() && window.Sync && Sync.status().configured && Sync.status().auto !== false) {
     setTimeout(function () {
       Sync.sync().then(function (r) {
@@ -1855,6 +1874,7 @@ body::after {
 
 })();
 </script>
+
 <script src="auth-widget.js"></script>
 </body>
 </html>
