@@ -317,7 +317,7 @@ body::after {
   position: relative; z-index: 1;
   max-width: var(--content-w); margin: 0 auto;
   padding: 0 var(--gutter) 72px;
-  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
   gap: 20px;
 }
 .card {
@@ -466,6 +466,16 @@ body::after {
 [data-theme="dark"] .card[data-accent="review"]   { --accent: #6ee7b7; }
 [data-theme="dark"] .card[data-accent="geo"]      { --accent: #67e8f9; }
 [data-theme="dark"] .card[data-accent="english"]  { --accent: #f9a8d4; }
+
+.card[data-accent="todo"] {
+  --accent: #d97706; --accent-soft: rgba(217,119,6,.10);
+  --accent-border: rgba(217,119,6,.42); --accent-border-soft: rgba(217,119,6,.22);
+  --accent-glow: rgba(217,119,6,.13);
+  --icon-from: #f59e0b; --icon-to: #d97706;
+  --icon-shadow: rgba(217,119,6,.35); --icon-border: rgba(217,119,6,.3);
+}
+[data-theme="dark"] .card[data-accent="todo"] { --accent: #fbbf24; }
+
 
 .footer {
   position: relative; z-index: 1;
@@ -1036,6 +1046,26 @@ body::after {
     <div class="card-foot">
       <span class="card-cta">打开练习 <span class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></span>
       <span class="card-file">exscise.html</span>
+    </div>
+  </a>
+
+  <a class="card" data-accent="todo" data-key="todo.html" href="todo.html">
+    <div class="card-spotlight"></div>
+    <div class="card-badge" data-badge="todo.html"><span class="badge-dot"></span><span class="badge-text">刚刚</span></div>
+    <div class="card-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M9 11l3 3L22 4"/>
+        <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+      </svg>
+    </div>
+    <h2 class="card-title">待办清单</h2>
+    <div class="card-tags">
+      <span class="tag">快速添加</span><span class="tag">优先级</span><span class="tag">截止日期</span>
+    </div>
+    <p class="card-desc">记录待办事项，设置优先级和截止日期。支持搜索过滤、双击编辑、一键清除已完成。键盘 <kbd>N</kbd> 新任务 / <kbd>/</kbd> 搜索。</p>
+    <div class="card-foot">
+      <span class="card-cta">打开清单 <span class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></span>
+      <span class="card-file">todo.html</span>
     </div>
   </a>
 
@@ -1788,7 +1818,8 @@ body::after {
     'Schedule.html': { name: '课程表',   accent: '#6366f1' },
     'review.html':   { name: '学习打卡', accent: '#059669' },
     'geo.html':      { name: 'GeoLab',   accent: '#0891b2' },
-    'exscise.html':  { name: '英语语法', accent: '#db2777' }
+    'exscise.html':  { name: '英语语法', accent: '#db2777' },
+    'todo.html':     { name: '待办',    accent: '#d97706' }
   };
 
   function loadHistory() {
@@ -1870,7 +1901,7 @@ body::after {
   /* ============================================================
      键盘快捷键
      ============================================================ */
-  var TOOL_KEYS = ['Schedule.html', 'review.html', 'geo.html', 'exscise.html'];
+  var TOOL_KEYS = ['Schedule.html', 'review.html', 'geo.html', 'exscise.html', 'todo.html'];
   document.addEventListener('keydown', function (e) {
     var tag = (e.target.tagName || '').toLowerCase();
     var editable = tag === 'input' || tag === 'textarea' || e.target.isContentEditable;
@@ -1881,7 +1912,7 @@ body::after {
       return;
     }
     if (!editable && !e.ctrlKey && !e.metaKey && !e.altKey) {
-      var idx = ['1', '2', '3', '4'].indexOf(e.key);
+      var idx = ['1', '2', '3', '4', '5'].indexOf(e.key);
       if (idx !== -1 && TOOL_KEYS[idx]) {
         e.preventDefault();
         recordVisit(TOOL_KEYS[idx]);

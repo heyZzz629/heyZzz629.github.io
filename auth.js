@@ -30,6 +30,7 @@
     'smart_schedule_', 'schedule_',
     'q7-', 'q7g-',
     'geolab-',
+    'todo-',
   ];
 
   /* ============ Supabase 客户端 ============ */

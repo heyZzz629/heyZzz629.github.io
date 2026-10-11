@@ -535,6 +535,14 @@ body.selecting .task-actions { display: none; }
   .task-actions { opacity: 1; }
   .quick-filters { order: 3; width: 100%; }
 }
+
+@keyframes taskComplete {
+  0% { opacity: 1; transform: scale(1); }
+  30% { opacity: .8; transform: scale(1.02); background: color-mix(in srgb, var(--success) 12%, transparent); }
+  100% { opacity: .55; transform: scale(1); }
+}
+.task.just-completed { animation: taskComplete .6s var(--ease-out); }
+.task.focused { box-shadow: 0 0 0 3px var(--accent-soft), var(--shadow-3); border-color: var(--accent); }
 </style>
 </head>
 <body>
@@ -615,6 +623,7 @@ body.selecting .task-actions { display: none; }
       <span><kbd>/</kbd> 搜索</span>
       <span><kbd>Esc</kbd> 清空</span>
       <span>#标签 自动识别</span>
+      <button id="bulkImportBtn" style="margin-left:auto;border:none;background:transparent;color:var(--accent);font-size:11px;font-weight:700;cursor:pointer;padding:2px 8px;border-radius:6px;font-family:inherit">📋 批量导入</button>
     </div>
   </div>
 
@@ -679,6 +688,25 @@ body.selecting .task-actions { display: none; }
   <span id="toastMsg"></span>
   <button class="undo" id="toastUndo" style="display:none">撤销</button>
 </div>
+
+
+<!-- 批量导入 Modal -->
+<div id="bulkModal" style="position:fixed;inset:0;z-index:200;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(15,23,42,.55);backdrop-filter:blur(8px)">
+  <div style="width:100%;max-width:520px;background:var(--surface);border:1px solid var(--border);border-radius:20px;box-shadow:var(--shadow-5);padding:26px 24px;animation:bulkIn .28s var(--ease-out)">
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:6px">
+      <span style="font-size:22px">📋</span>
+      <h3 style="flex:1;font-size:17px;font-weight:800;margin:0">批量导入任务</h3>
+      <button id="bulkClose" style="width:32px;height:32px;border-radius:9px;border:none;background:transparent;color:var(--text-dim);cursor:pointer;font-size:20px;line-height:1;display:grid;place-items:center">×</button>
+    </div>
+    <p style="font-size:12.5px;color:var(--text-dim);margin:0 0 14px;line-height:1.6">每行一个任务。可选语法：<br><code style="background:var(--surface-sunken);padding:2px 6px;border-radius:4px;font-size:11.5px">任务内容 !高 2026-10-15 #学习 #重要</code><br><span style="font-size:11px;opacity:.75">· 优先级：!高 / !中 / !低（可省略）<br>· 日期：YYYY-MM-DD（可省略）<br>· 标签：#标签名</span></p>
+    <textarea id="bulkText" placeholder="买牛奶 !高 2026-10-15 #生活&#10;复习数学 #学习 #重要&#10;给妈妈打电话 !低" style="width:100%;min-height:180px;padding:12px 14px;border:1.5px solid var(--border);border-radius:12px;background:var(--surface-sunken);color:var(--text);font-family:ui-monospace,monospace;font-size:13px;line-height:1.7;outline:none;resize:vertical;transition:all .2s" spellcheck="false"></textarea>
+    <div style="display:flex;gap:10px;margin-top:16px">
+      <button id="bulkCancel" style="flex:1;padding:12px 18px;border-radius:11px;border:1px solid var(--border);background:var(--surface);color:var(--text-sub);font-size:13.5px;font-weight:700;font-family:inherit;cursor:pointer">取消</button>
+      <button id="bulkConfirm" style="flex:1;padding:12px 18px;border-radius:11px;border:none;background:linear-gradient(135deg,#d97706,#f59e0b);color:#fff;font-size:13.5px;font-weight:700;font-family:inherit;cursor:pointer;box-shadow:0 4px 12px rgba(217,119,6,.35)">导入</button>
+    </div>
+  </div>
+</div>
+<style>@keyframes bulkIn{from{opacity:0;transform:translateY(20px) scale(.97)}to{opacity:1;transform:none}}</style>
 
 <script>
 (function () {
@@ -1347,6 +1375,169 @@ body.selecting .task-actions { display: none; }
   window.addEventListener('storage', function (e) {
     if (e.key === STORAGE_KEY) { load(); render(); }
   });
+
+  /* ═══ 键盘导航 ═══ */
+  var focusedTaskId = null;
+
+  function getVisibleTaskEls() {
+    return Array.from(document.querySelectorAll('.task')).filter(function (el) {
+      return el.offsetParent !== null;
+    });
+  }
+
+  function setFocus(id) {
+    focusedTaskId = id;
+    document.querySelectorAll('.task.focused').forEach(function (el) { el.classList.remove('focused'); });
+    if (!id) return;
+    var el = document.querySelector('.task[data-id="' + id + '"]');
+    if (el) {
+      el.classList.add('focused');
+      el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+  }
+
+  document.addEventListener('keydown', function (e) {
+    var tag = (e.target.tagName || '').toLowerCase();
+    var editable = tag === 'input' || tag === 'textarea' || e.target.isContentEditable;
+    if (editable) return;
+
+    var els = getVisibleTaskEls();
+    if (!els.length) return;
+    var idx = focusedTaskId ? els.findIndex(function (el) { return el.dataset.id === focusedTaskId; }) : -1;
+
+    if (e.key === 'ArrowDown' || (e.ctrlKey && e.key === 'j')) {
+      e.preventDefault();
+      idx = Math.min(els.length - 1, idx + 1);
+      setFocus(els[idx].dataset.id);
+      return;
+    }
+    if (e.key === 'ArrowUp' || (e.ctrlKey && e.key === 'k')) {
+      e.preventDefault();
+      idx = Math.max(0, idx - 1);
+      setFocus(els[idx].dataset.id);
+      return;
+    }
+
+    if (idx < 0 || !focusedTaskId) return;
+    var task = tasks.find(function (t) { return t.id === focusedTaskId; });
+    if (!task) return;
+
+    // 空格 → 切换完成
+    if (e.key === ' ' || e.key === 'Spacebar') {
+      e.preventDefault();
+      task.done = !task.done;
+      task.completedAt = task.done ? Date.now() : null;
+      save();
+      var elNow = document.querySelector('.task[data-id="' + task.id + '"]');
+      if (elNow && task.done) elNow.classList.add('just-completed');
+      setTimeout(function () { render(); setFocus(task.id); }, task.done ? 200 : 0);
+      return;
+    }
+    // D → 删除
+    if (e.key === 'd' || e.key === 'D') {
+      e.preventDefault();
+      var id = task.id;
+      deleteTasks([id]);
+      setFocus(null);
+      return;
+    }
+    // E / Enter → 编辑
+    if (e.key === 'e' || e.key === 'E' || e.key === 'Enter') {
+      e.preventDefault();
+      var textEl = document.querySelector('.task[data-id="' + task.id + '"] .task-text');
+      if (textEl) enterEdit(textEl, task);
+      return;
+    }
+    // 数字 1/2/3 → 优先级
+    if (e.key === '1') { task.priority = 'low';    save(); render(); setFocus(task.id); }
+    if (e.key === '2') { task.priority = 'medium'; save(); render(); setFocus(task.id); }
+    if (e.key === '3') { task.priority = 'high';   save(); render(); setFocus(task.id); }
+  });
+
+  /* ═══ 批量导入 ═══ */
+  var bulkModal = document.getElementById('bulkModal');
+  var bulkText = document.getElementById('bulkText');
+  var bulkImportBtn = document.getElementById('bulkImportBtn');
+  if (bulkImportBtn) {
+    bulkImportBtn.addEventListener('click', function () {
+      bulkModal.style.display = 'flex';
+      setTimeout(function () { bulkText.focus(); }, 100);
+    });
+  }
+  var bulkCloseBtn = document.getElementById('bulkClose');
+  var bulkCancelBtn = document.getElementById('bulkCancel');
+  function closeBulk() { if (bulkModal) bulkModal.style.display = 'none'; }
+  if (bulkCloseBtn) bulkCloseBtn.addEventListener('click', closeBulk);
+  if (bulkCancelBtn) bulkCancelBtn.addEventListener('click', closeBulk);
+  if (bulkModal) bulkModal.addEventListener('click', function (e) { if (e.target === bulkModal) closeBulk(); });
+
+  var bulkConfirmBtn = document.getElementById('bulkConfirm');
+  if (bulkConfirmBtn) bulkConfirmBtn.addEventListener('click', function () {
+    var lines = bulkText.value.split('\n').map(function (s) { return s.trim(); }).filter(Boolean);
+    if (!lines.length) { closeBulk(); return; }
+    var added = 0;
+    lines.forEach(function (line) {
+      var pri = 'medium';
+      var priMatch = line.match(/!(高|中|低|high|medium|low)/i);
+      if (priMatch) {
+        var p = priMatch[1].toLowerCase();
+        if (p === '高' || p === 'high') pri = 'high';
+        else if (p === '低' || p === 'low') pri = 'low';
+        line = line.replace(priMatch[0], '').trim();
+      }
+      var date = null;
+      var dateMatch = line.match(/\d{4}-\d{2}-\d{2}/);
+      if (dateMatch) {
+        date = dateMatch[0];
+        line = line.replace(dateMatch[0], '').trim();
+      }
+      var tags = [];
+      line = line.replace(/#([\w\u4e00-\u9fa5-]+)/g, function (_, t) { tags.push(t); return ''; });
+      var text = line.replace(/\s+/g, ' ').trim();
+      if (!text) return;
+      tasks.push({
+        id: uid(), text: text, done: false, priority: pri,
+        dueDate: date, tags: tags, subtasks: [],
+        createdAt: Date.now(), completedAt: null
+      });
+      added++;
+    });
+    save(); render(); closeBulk();
+    bulkText.value = '';
+    showToast('已导入 ' + added + ' 项');
+  });
+
+  /* ═══ 今日进度 ═══ */
+  function updateTodayBadge() {
+    var today = new Date(); today.setHours(0, 0, 0, 0);
+    var todayStr = today.getFullYear() + '-' +
+      String(today.getMonth() + 1).padStart(2, '0') + '-' +
+      String(today.getDate()).padStart(2, '0');
+    var todayTasks = tasks.filter(function (t) { return t.dueDate === todayStr; });
+    var todayDone = todayTasks.filter(function (t) { return t.done; }).length;
+    var badge = document.getElementById('todayBadge');
+    if (!badge) {
+      var head = document.querySelector('.page-head .actions');
+      if (head) {
+        badge = document.createElement('div');
+        badge.id = 'todayBadge';
+        badge.style.cssText = 'font-size:11.5px;font-weight:700;color:var(--text-sub);padding:6px 12px;border-radius:10px;background:var(--surface-sunken);border:1px solid var(--border)';
+        head.insertBefore(badge, head.firstChild);
+      }
+    }
+    if (badge) {
+      if (todayTasks.length === 0) {
+        badge.textContent = '今日无任务';
+        badge.style.opacity = '.6';
+      } else {
+        badge.textContent = '🔥 今日 ' + todayDone + '/' + todayTasks.length;
+        badge.style.opacity = '1';
+        badge.style.color = todayDone === todayTasks.length ? 'var(--success)' : 'var(--accent)';
+      }
+    }
+  }
+  var _origRender = render;
+  render = function () { _origRender(); updateTodayBadge(); };
 
   load();
   render();
