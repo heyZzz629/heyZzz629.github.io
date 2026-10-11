@@ -820,17 +820,36 @@
         document.getElementById('exportImageBtn').addEventListener('click', async function() {
             const btn = this; const originalText = btn.textContent;
             btn.textContent = '⏳ 生成中...'; btn.disabled = true;
+
+            // ★ 先关闭设置弹窗，避免它的 backdrop-filter 干扰 html2canvas 渲染
+            settingsModal.classList.remove('active');
+
             const title = localStorage.getItem('schedule_export_title') || '我的专属课表';
-            if (currentView === 'week') { document.getElementById('exportHeader').textContent = title; document.body.classList.add('exporting'); }
-            else { document.getElementById('monthExportHeader').textContent = title; document.body.classList.add('exporting'); }
-            await new Promise(resolve => setTimeout(resolve, 200));
+            if (currentView === 'week') {
+                document.getElementById('exportHeader').textContent = title;
+                document.body.classList.add('exporting', 'view-week');
+            } else {
+                document.getElementById('monthExportHeader').textContent = title;
+                document.body.classList.add('exporting', 'view-month');
+            }
+            // 等待 modal 完全隐藏 + CSS 生效
+            await new Promise(resolve => setTimeout(resolve, 350));
+
             const target = currentView === 'week' ? document.getElementById('week-view') : document.getElementById('month-view');
             try {
-                const canvas = await html2canvas(target, { scale: 2, useCORS: true, backgroundColor: document.body.classList.contains('dark-mode') ? '#0f1115' : '#f8fafc', windowWidth: target.scrollWidth, windowHeight: target.scrollHeight, scrollX: 0, scrollY: 0 });
+                const canvas = await html2canvas(target, {
+                    scale: 2,
+                    useCORS: true,
+                    backgroundColor: document.body.classList.contains('dark-mode') ? '#0f1115' : '#f8fafc',
+                    onclone: function (clonedDoc) {
+                        // 从克隆文档里删掉所有可能干扰截图的元素
+                        clonedDoc.querySelectorAll('.shub-widget, .shub-widget-tip, .modal-overlay, .toast-container').forEach(function (el) { el.remove(); });
+                    }
+                });
                 const link = document.createElement('a'); link.download = `${title}.png`; link.href = canvas.toDataURL('image/png'); link.click();
                 showToast('图片导出成功', 'success');
             } catch (error) { console.error(error); showToast('导出图片失败，请确保网络通畅。', 'error'); }
-            finally { document.body.classList.remove('exporting'); btn.textContent = originalText; btn.disabled = false; settingsModal.classList.remove('active'); }
+            finally { document.body.classList.remove('exporting', 'view-week', 'view-month'); btn.textContent = originalText; btn.disabled = false; }
         });
 
         document.getElementById('printBtn').addEventListener('click', () => {
