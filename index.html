@@ -466,6 +466,15 @@ body::after {
 [data-theme="dark"] .card[data-accent="review"]   { --accent: #6ee7b7; }
 [data-theme="dark"] .card[data-accent="geo"]      { --accent: #67e8f9; }
 [data-theme="dark"] .card[data-accent="english"]  { --accent: #f9a8d4; }
+.card[data-accent="clock"] {
+  --accent: #0891b2; --accent-soft: rgba(8,145,178,.10);
+  --accent-border: rgba(8,145,178,.42); --accent-border-soft: rgba(8,145,178,.22);
+  --accent-glow: rgba(8,145,178,.13);
+  --icon-from: #22d3ee; --icon-to: #0891b2;
+  --icon-shadow: rgba(8,145,178,.35); --icon-border: rgba(8,145,178,.3);
+}
+[data-theme="dark"] .card[data-accent="clock"] { --accent: #67e8f9; }
+
 
 .card[data-accent="todo"] {
   --accent: #d97706; --accent-soft: rgba(217,119,6,.10);
@@ -1049,7 +1058,27 @@ body::after {
     </div>
   </a>
 
-  <a class="card" data-accent="todo" data-key="todo.html" href="todo.html">
+    <a class="card" data-accent="clock" data-key="clock.html" href="clock.html">
+    <div class="card-spotlight"></div>
+    <div class="card-badge" data-badge="clock.html"><span class="badge-dot"></span><span class="badge-text">刚刚</span></div>
+    <div class="card-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10"/>
+        <polyline points="12 6 12 12 16 14"/>
+      </svg>
+    </div>
+    <h2 class="card-title">ClockLab 电子时钟</h2>
+    <div class="card-tags">
+      <span class="tag">全屏时钟</span><span class="tag">秒表</span><span class="tag">倒计时</span><span class="tag">番茄钟</span>
+    </div>
+    <p class="card-desc">四种模式：时钟 / 秒表 / 倒计时 / 番茄钟。全屏大字显示，6 种主题色，深色浅色切换，屏幕常亮，键盘快捷键，秒表记圈带最快最慢高亮。</p>
+    <div class="card-foot">
+      <span class="card-cta">打开时钟 <span class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></span>
+      <span class="card-file">clock.html</span>
+    </div>
+  </a>
+
+<a class="card" data-accent="todo" data-key="todo.html" href="todo.html">
     <div class="card-spotlight"></div>
     <div class="card-badge" data-badge="todo.html"><span class="badge-dot"></span><span class="badge-text">刚刚</span></div>
     <div class="card-icon">
@@ -1819,7 +1848,8 @@ body::after {
     'review.html':   { name: '学习打卡', accent: '#059669' },
     'geo.html':      { name: 'GeoLab',   accent: '#0891b2' },
     'exscise.html':  { name: '英语语法', accent: '#db2777' },
-    'todo.html':     { name: '待办',    accent: '#d97706' }
+    'todo.html':     { name: '待办',    accent: '#d97706' },
+    'clock.html':    { name: '时钟',    accent: '#0891b2' }
   };
 
   function loadHistory() {
@@ -1901,7 +1931,7 @@ body::after {
   /* ============================================================
      键盘快捷键
      ============================================================ */
-  var TOOL_KEYS = ['Schedule.html', 'review.html', 'geo.html', 'exscise.html', 'todo.html'];
+  var TOOL_KEYS = ['Schedule.html', 'review.html', 'geo.html', 'exscise.html', 'todo.html', 'clock.html'];
   document.addEventListener('keydown', function (e) {
     var tag = (e.target.tagName || '').toLowerCase();
     var editable = tag === 'input' || tag === 'textarea' || e.target.isContentEditable;
@@ -1912,7 +1942,7 @@ body::after {
       return;
     }
     if (!editable && !e.ctrlKey && !e.metaKey && !e.altKey) {
-      var idx = ['1', '2', '3', '4', '5'].indexOf(e.key);
+      var idx = ['1', '2', '3', '4', '5', '6'].indexOf(e.key);
       if (idx !== -1 && TOOL_KEYS[idx]) {
         e.preventDefault();
         recordVisit(TOOL_KEYS[idx]);

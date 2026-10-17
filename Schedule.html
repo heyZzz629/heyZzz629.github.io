@@ -70,10 +70,12 @@
         }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; transition: background-color 0.3s, border-color 0.3s; }
         body { background-color: var(--bg-body); color: var(--text-main); height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+        body.exporting { height: auto !important; min-height: 0 !important; overflow: visible !important; }
         body.exporting .header { display: none !important; }
-        body.exporting .main-container { overflow: visible !important; height: auto !important; }
-        body.exporting .scroll-container { overflow: visible !important; height: auto !important; }
-        body.exporting .grid-area { min-height: auto !important; }
+        body.exporting .main-container { flex: none !important; overflow: visible !important; height: auto !important; display: block !important; }
+        body.exporting #week-view { flex: none !important; overflow: visible !important; height: auto !important; display: block !important; }
+        body.exporting .scroll-container { flex: none !important; overflow: visible !important; height: auto !important; max-height: none !important; display: block !important; }
+        body.exporting .grid-area { min-height: 1040px !important; height: auto !important; }
         body.exporting .course-card { transform: none !important; transition: none !important; }
         body.exporting .current-time-line { display: none !important; }
         body.exporting .day-header.today { background: transparent !important; color: var(--text-main) !important; }
@@ -817,40 +819,88 @@
             });
         });
 
-        document.getElementById('exportImageBtn').addEventListener('click', async function() {
-            const btn = this; const originalText = btn.textContent;
-            btn.textContent = '⏳ 生成中...'; btn.disabled = true;
+        (function patchExport() {
+            var oldBtn = document.getElementById('exportImageBtn');
+            if (!oldBtn) return;
+            var newBtn = oldBtn.cloneNode(true);
+            oldBtn.parentNode.replaceChild(newBtn, oldBtn);
 
-            // ★ 先关闭设置弹窗，避免它的 backdrop-filter 干扰 html2canvas 渲染
-            settingsModal.classList.remove('active');
+            newBtn.addEventListener('click', async function() {
+                var btn = this;
+                var originalText = btn.textContent;
+                btn.textContent = '⏳ 生成中...';
+                btn.disabled = true;
 
-            const title = localStorage.getItem('schedule_export_title') || '我的专属课表';
-            if (currentView === 'week') {
-                document.getElementById('exportHeader').textContent = title;
-                document.body.classList.add('exporting', 'view-week');
-            } else {
-                document.getElementById('monthExportHeader').textContent = title;
-                document.body.classList.add('exporting', 'view-month');
-            }
-            // 等待 modal 完全隐藏 + CSS 生效
-            await new Promise(resolve => setTimeout(resolve, 350));
+                // 关闭设置弹窗
+                settingsModal.classList.remove('active');
 
-            const target = currentView === 'week' ? document.getElementById('week-view') : document.getElementById('month-view');
-            try {
-                const canvas = await html2canvas(target, {
-                    scale: 2,
-                    useCORS: true,
-                    backgroundColor: document.body.classList.contains('dark-mode') ? '#0f1115' : '#f8fafc',
-                    onclone: function (clonedDoc) {
-                        // 从克隆文档里删掉所有可能干扰截图的元素
-                        clonedDoc.querySelectorAll('.shub-widget, .shub-widget-tip, .modal-overlay, .toast-container').forEach(function (el) { el.remove(); });
-                    }
-                });
-                const link = document.createElement('a'); link.download = `${title}.png`; link.href = canvas.toDataURL('image/png'); link.click();
-                showToast('图片导出成功', 'success');
-            } catch (error) { console.error(error); showToast('导出图片失败，请确保网络通畅。', 'error'); }
-            finally { document.body.classList.remove('exporting', 'view-week', 'view-month'); btn.textContent = originalText; btn.disabled = false; }
-        });
+                var title = localStorage.getItem('schedule_export_title') || '我的专属课表';
+                if (currentView === 'week') {
+                    document.getElementById('exportHeader').textContent = title;
+                    document.body.classList.add('exporting', 'view-week');
+                } else {
+                    document.getElementById('monthExportHeader').textContent = title;
+                    document.body.classList.add('exporting', 'view-month');
+                }
+
+                // 强制 reflow，让所有容器展开生效
+                void document.body.offsetHeight;
+                window.scrollTo(0, 0);
+                await new Promise(function(r){ requestAnimationFrame(function(){ setTimeout(r, 450); }); });
+
+                var target = currentView === 'week'
+                    ? document.getElementById('week-view')
+                    : document.getElementById('month-view');
+
+                // 记录完整尺寸
+                var fullW = Math.max(target.scrollWidth, target.offsetWidth);
+                var fullH = Math.max(target.scrollHeight, target.offsetHeight);
+
+                try {
+                    var canvas = await html2canvas(target, {
+                        scale: 2,
+                        useCORS: true,
+                        backgroundColor: document.body.classList.contains('dark-mode') ? '#0f1115' : '#f8fafc',
+                        width: fullW,
+                        height: fullH,
+                        windowWidth: fullW,
+                        windowHeight: fullH,
+                        scrollX: 0,
+                        scrollY: 0,
+                        onclone: function (clonedDoc) {
+                            // 删除浮动挂件
+                            clonedDoc.querySelectorAll('.shub-widget, .shub-widget-tip, .modal-overlay, .toast-container').forEach(function (el) { el.remove(); });
+
+                            // 在克隆文档里注入展开样式（双保险）
+                            var s = clonedDoc.createElement('style');
+                            s.textContent = [
+                                'html, body { height: auto !important; min-height: 0 !important; overflow: visible !important; }',
+                                '.header { display: none !important; }',
+                                '.main-container { flex: none !important; overflow: visible !important; height: auto !important; display: block !important; }',
+                                '#week-view, #month-view { flex: none !important; overflow: visible !important; height: auto !important; display: block !important; }',
+                                '.scroll-container { flex: none !important; overflow: visible !important; height: auto !important; max-height: none !important; display: block !important; }',
+                                '.grid-area { min-height: 1040px !important; height: auto !important; }',
+                                '.current-time-line { display: none !important; }'
+                            ].join('\n');
+                            clonedDoc.head.appendChild(s);
+                        }
+                    });
+
+                    var link = document.createElement('a');
+                    link.download = title + '.png';
+                    link.href = canvas.toDataURL('image/png');
+                    link.click();
+                    showToast('图片导出成功（' + canvas.width + 'x' + canvas.height + '）', 'success');
+                } catch (error) {
+                    console.error(error);
+                    showToast('导出图片失败：' + (error.message || '未知错误'), 'error');
+                } finally {
+                    document.body.classList.remove('exporting', 'view-week', 'view-month');
+                    btn.textContent = originalText;
+                    btn.disabled = false;
+                }
+            });
+        })();
 
         document.getElementById('printBtn').addEventListener('click', () => {
             const title = localStorage.getItem('schedule_export_title') || '我的专属课表';
