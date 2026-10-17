@@ -1,0 +1,1391 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#111214">
+<title>ClockLab</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='42' fill='none' stroke='%23e8e6e0' stroke-width='4'/><line x1='50' y1='50' x2='50' y2='22' stroke='%23ff4a1c' stroke-width='4' stroke-linecap='round'/><line x1='50' y1='50' x2='68' y2='60' stroke='%23e8e6e0' stroke-width='6' stroke-linecap='round'/><line x1='50' y1='50' x2='35' y2='40' stroke='%23e8e6e0' stroke-width='6' stroke-linecap='round'/></svg>">
+<script src="supabase.js"></script>
+<script src="supabase-config.js"></script>
+<script src="auth.js"></script>
+<script src="sync.js"></script>
+<style>
+:root{
+  --bg:#111214;--surface:#1a1b1e;--surface-2:#232428;
+  --line:rgba(255,255,255,.07);--line-2:rgba(255,255,255,.14);
+  --fg:#e8e6e0;--fg-2:#9a9892;--fg-3:#5c5b57;
+  --accent:#ff4a1c;--accent-2:#ff7a4d;
+  --dial:#0f1012;--dial-edge:rgba(255,255,255,.04);
+  --tick-major:rgba(255,255,255,.7);--tick-minor:rgba(255,255,255,.22);
+  --clock-size:min(72vh,560px);
+  --digit-size:clamp(88px,20vw,260px);
+  --digit-sm:clamp(48px,10vw,120px);
+}
+[data-theme="light"]{
+  --bg:#f3f1ec;--surface:#ffffff;--surface-2:#ebe8e1;
+  --line:rgba(0,0,0,.06);--line-2:rgba(0,0,0,.12);
+  --fg:#1a1a1a;--fg-2:#666560;--fg-3:#a8a6a1;
+  --accent:#d32f2f;--accent-2:#e64a19;
+  --dial:#faf9f6;--dial-edge:rgba(0,0,0,.04);
+  --tick-major:rgba(20,20,20,.72);--tick-minor:rgba(20,20,20,.22);
+}
+[data-accent="blue"]{--accent:#3d7eff;--accent-2:#6b9aff}
+[data-accent="green"]{--accent:#2e9d6b;--accent-2:#4cbb87}
+[data-accent="amber"]{--accent:#d97706;--accent-2:#f59e0b}
+[data-accent="violet"]{--accent:#7c5cff;--accent-2:#9c7dff}
+[data-accent="mono"]{--accent:#e8e6e0;--accent-2:#ffffff}
+[data-theme="light"][data-accent="mono"]{--accent:#1a1a1a;--accent-2:#000}
+
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+html{-webkit-text-size-adjust:100%;-webkit-tap-highlight-color:transparent}
+body{
+  font-family:system-ui,-apple-system,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+  background:var(--bg);color:var(--fg);
+  display:flex;flex-direction:column;height:100vh;overflow:hidden;
+  -webkit-font-smoothing:antialiased;
+  font-feature-settings:"tnum","ss01";
+  transition:background-color .4s ease,color .4s ease;
+  user-select:none;position:relative;
+}
+body::before{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:
+    linear-gradient(to right,var(--line) 1px,transparent 1px),
+    linear-gradient(to bottom,var(--line) 1px,transparent 1px);
+  background-size:56px 56px;
+  -webkit-mask-image:radial-gradient(ellipse 70% 65% at 50% 50%,#000 20%,transparent 80%);
+  mask-image:radial-gradient(ellipse 70% 65% at 50% 50%,#000 20%,transparent 80%);
+  opacity:.55;
+}
+.bar{position:relative;z-index:10;display:flex;align-items:center;gap:20px;padding:20px 26px;flex-shrink:0}
+.brand{font-size:12.5px;font-weight:600;letter-spacing:.18em;color:var(--fg-2);text-transform:uppercase;display:flex;align-items:center;gap:10px}
+.brand::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 2px color-mix(in srgb,var(--accent) 22%,transparent)}
+.bar-spacer{flex:1}
+.bar-actions{display:flex;gap:6px}
+.tool{width:36px;height:36px;border-radius:8px;border:1px solid var(--line-2);background:transparent;color:var(--fg-2);cursor:pointer;display:grid;place-items:center;transition:color .18s,border-color .18s;font-family:inherit}
+.tool:hover{color:var(--fg);border-color:var(--fg-3)}
+.tool:active{transform:scale(.96)}
+.tool svg{width:16px;height:16px;stroke-width:1.75}
+
+.modes{position:relative;z-index:10;display:flex;justify-content:center;padding:0 26px 4px;flex-shrink:0}
+.modes-track{display:flex;gap:2px;padding:3px;background:var(--surface);border:1px solid var(--line);border-radius:10px;overflow-x:auto;scrollbar-width:none}
+.modes-track::-webkit-scrollbar{display:none}
+.modes button{border:none;background:transparent;color:var(--fg-2);font-family:inherit;font-size:12.5px;font-weight:600;letter-spacing:.08em;padding:8px 16px;border-radius:7px;cursor:pointer;transition:color .18s,background .18s;text-transform:uppercase;white-space:nowrap}
+.modes button:hover{color:var(--fg)}
+.modes button.active{background:var(--surface-2);color:var(--fg);box-shadow:inset 0 0 0 1px var(--line-2)}
+.modes button.active::before{content:'';display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--accent);margin-right:8px;vertical-align:middle;transform:translateY(-1px)}
+
+.stage{position:relative;z-index:5;flex:1;display:flex;align-items:center;justify-content:center;padding:20px;min-height:0;overflow-y:auto}
+.pane{display:none;flex-direction:column;align-items:center;gap:22px;animation:fadeIn .35s ease;width:100%}
+.pane.active{display:flex}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+/* ═══ 钟表 ═══ */
+.clock-wrap{position:relative;width:var(--clock-size);height:var(--clock-size);max-width:90vw;max-height:60vh}
+.clock-face{width:100%;height:100%;display:block;filter:drop-shadow(0 24px 60px rgba(0,0,0,.5))}
+[data-theme="light"] .clock-face{filter:drop-shadow(0 20px 48px rgba(0,0,0,.08))}
+.dial-bg{fill:var(--dial);stroke:var(--dial-edge);stroke-width:.5}
+.dial-ring{fill:none;stroke:var(--line);stroke-width:.6}
+.tick{stroke:var(--tick-minor);stroke-width:.5;stroke-linecap:round}
+.tick.major{stroke:var(--tick-major);stroke-width:1.4}
+.tick.quarter{stroke:var(--tick-major);stroke-width:2}
+.dot-tick{fill:var(--tick-minor);display:none}
+.dot-tick.major{fill:var(--tick-major)}
+.numeral{fill:var(--fg-2);font-family:'IBM Plex Sans',system-ui,sans-serif;font-size:9px;font-weight:500;text-anchor:middle;dominant-baseline:central;letter-spacing:.06em}
+.hand{stroke:var(--fg);stroke-linecap:round;transition:none}
+.hand.hour{stroke-width:3}
+.hand.minute{stroke-width:1.8}
+.hand.second{stroke:var(--accent);stroke-width:.9}
+.pin{fill:var(--fg)}
+.pin.outer{fill:var(--bg);stroke:var(--fg);stroke-width:.8}
+.pin.accent{fill:var(--accent)}
+/* 表盘风格 */
+[data-dial="minimal"] .tick,[data-dial="minimal"] .numeral,[data-dial="minimal"] .dot-tick{display:none}
+[data-dial="minimal"] .hand.hour{stroke-width:2.2}
+[data-dial="minimal"] .hand.minute{stroke-width:1.2}
+[data-dial="dot"] .tick{display:none}
+[data-dial="dot"] .numeral{display:none}
+[data-dial="dot"] .dot-tick{display:block}
+
+/* 时间进度 */
+.progress-section{width:min(380px,100%);display:flex;flex-direction:column;gap:12px;margin-top:4px}
+.pb-row{display:flex;align-items:center;gap:12px;font-size:11px}
+.pb-label{color:var(--fg-3);width:36px;letter-spacing:.12em;font-weight:600;text-transform:uppercase;font-family:system-ui,sans-serif}
+.pb-track{flex:1;height:2px;background:var(--line);position:relative;border-radius:1px}
+.pb-fill{position:absolute;left:0;top:0;bottom:0;background:var(--accent);border-radius:1px;transition:width .5s ease}
+.pb-pct{color:var(--fg-3);width:38px;text-align:right;font-family:'IBM Plex Mono',monospace;font-size:10px;font-variant-numeric:tabular-nums}
+
+.digital{font-family:'IBM Plex Mono','SF Mono',ui-monospace,Menlo,Consolas,monospace;font-weight:400;letter-spacing:-.02em;font-variant-numeric:tabular-nums;color:var(--fg);line-height:.92;display:flex;align-items:baseline;white-space:nowrap;font-feature-settings:"tnum","zero"}
+.digital .group{display:inline-block}
+.digital .sep{display:inline-block;width:.35em;text-align:center;color:var(--fg-3);font-weight:300;transform:translateY(-.03em)}
+.digital.big{font-size:var(--digit-size)}
+.digital.mid{font-size:var(--digit-sm)}
+.digital .milli{font-size:.35em;color:var(--accent);font-weight:500;margin-left:.08em;letter-spacing:0}
+.subline{font-size:13px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--fg-3);text-align:center;line-height:1.5}
+.subline .strong{color:var(--fg-2)}
+
+/* 秒表记圈 */
+.laps{width:min(460px,100%);max-height:170px;overflow-y:auto;border-top:1px solid var(--line);border-bottom:1px solid var(--line);scrollbar-width:thin;scrollbar-color:var(--fg-3) transparent}
+.laps:empty{display:none}
+.laps::-webkit-scrollbar{width:4px}
+.laps::-webkit-scrollbar-thumb{background:var(--fg-3);border-radius:2px}
+.lap{display:grid;grid-template-columns:36px 1fr auto;align-items:baseline;gap:16px;padding:10px 4px;border-bottom:1px solid var(--line);font-family:'IBM Plex Mono','SF Mono',ui-monospace,monospace;font-size:12.5px;font-variant-numeric:tabular-nums}
+.lap:last-child{border-bottom:none}
+.lap .idx{color:var(--fg-3);font-size:11px;letter-spacing:.05em}
+.lap .diff{color:var(--fg-2)}
+.lap .total{color:var(--fg);font-weight:500}
+.lap.best .total{color:var(--accent)}
+.lap.worst .total{color:var(--fg-3)}
+.lap-head{display:grid;grid-template-columns:36px 1fr auto;gap:16px;padding:8px 4px 6px;font-family:system-ui,sans-serif;font-size:10.5px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--fg-3);border-bottom:1px solid var(--line)}
+
+/* 倒计时输入 */
+.picker{display:flex;gap:14px;align-items:flex-start;justify-content:center;padding:8px}
+.picker .cell{display:flex;flex-direction:column;align-items:center;gap:8px}
+.picker input{width:88px;height:96px;border:1px solid var(--line-2);background:var(--surface);color:var(--fg);font-family:'IBM Plex Mono',monospace;font-size:34px;font-weight:400;text-align:center;font-variant-numeric:tabular-nums;border-radius:12px;outline:none;transition:border-color .18s,background .18s;-moz-appearance:textfield}
+.picker input::-webkit-outer-spin-button,.picker input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+.picker input:focus{border-color:var(--accent);background:var(--surface-2)}
+.picker label{font-size:10.5px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--fg-3)}
+.picker .dots{font-size:34px;color:var(--fg-3);font-family:'IBM Plex Mono',monospace;padding-top:28px;line-height:1}
+
+/* 倒计时预设 */
+.presets{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;max-width:520px}
+.preset{height:32px;padding:0 14px;border:1px solid var(--line-2);background:transparent;color:var(--fg-2);cursor:pointer;font-family:inherit;font-size:12px;font-weight:600;letter-spacing:.04em;border-radius:7px;transition:color .18s,border-color .18s,background .18s}
+.preset:hover{color:var(--fg);border-color:var(--fg-3)}
+.preset:active{transform:scale(.96)}
+.preset.active{background:var(--surface-2);color:var(--fg);border-color:var(--fg-3)}
+
+/* 控制栏 */
+.controls{position:relative;z-index:10;display:flex;justify-content:center;gap:10px;padding:0 26px 24px;flex-shrink:0;flex-wrap:wrap}
+.ctl{height:44px;padding:0 22px;border:1px solid var(--line-2);background:transparent;color:var(--fg-2);cursor:pointer;font-family:inherit;font-size:13px;font-weight:600;letter-spacing:.06em;display:inline-flex;align-items:center;justify-content:center;gap:8px;border-radius:9px;transition:color .18s,border-color .18s,background .18s,transform .12s;min-width:110px;text-transform:uppercase}
+.ctl:hover{color:var(--fg);border-color:var(--fg-3)}
+.ctl:active{transform:scale(.98)}
+.ctl svg{width:13px;height:13px}
+.ctl.primary{background:var(--accent);border-color:var(--accent);color:var(--bg)}
+.ctl.primary:hover{background:var(--accent-2);border-color:var(--accent-2);color:var(--bg)}
+[data-theme="light"] .ctl.primary{color:#fff}
+[data-theme="light"] .ctl.primary:hover{color:#fff}
+
+.hints{position:relative;z-index:10;display:flex;justify-content:center;gap:20px;padding:0 26px 20px;flex-wrap:wrap;flex-shrink:0;font-size:11px;color:var(--fg-3);letter-spacing:.04em}
+.hints span{display:inline-flex;align-items:center;gap:7px}
+.hints kbd{display:inline-block;min-width:20px;height:20px;padding:0 6px;border:1px solid var(--line-2);border-radius:4px;font-family:inherit;font-size:10.5px;font-weight:600;color:var(--fg-2);text-align:center;line-height:18px;background:var(--surface)}
+
+/* 设置面板 */
+.settings{position:fixed;top:68px;right:24px;z-index:100;width:260px;background:var(--surface);border:1px solid var(--line-2);border-radius:12px;padding:18px;box-shadow:0 20px 50px -12px rgba(0,0,0,.5);opacity:0;transform:translateY(-6px) scale(.98);pointer-events:none;transform-origin:top right;transition:opacity .18s,transform .22s cubic-bezier(.16,1,.3,1);max-height:80vh;overflow-y:auto}
+.settings.open{opacity:1;transform:none;pointer-events:auto}
+.settings h4{font-size:10.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--fg-3);margin-bottom:10px}
+.settings h4:not(:first-child){margin-top:18px}
+.swatches{display:flex;gap:6px;flex-wrap:wrap}
+.swatch{width:30px;height:30px;border-radius:8px;border:1px solid var(--line-2);cursor:pointer;position:relative;transition:transform .18s,border-color .18s}
+.swatch:hover{transform:scale(1.08)}
+.swatch.active{border-color:var(--fg);box-shadow:0 0 0 2px var(--bg),0 0 0 3px var(--fg-3)}
+.swatch[data-c="red"]{background:#ff4a1c}
+.swatch[data-c="blue"]{background:#3d7eff}
+.swatch[data-c="green"]{background:#2e9d6b}
+.swatch[data-c="amber"]{background:#d97706}
+.swatch[data-c="violet"]{background:#7c5cff}
+.swatch[data-c="mono"]{background:linear-gradient(135deg,#e8e6e0,#a8a6a1)}
+.theme-switch{display:flex;gap:6px}
+.theme-switch button,.dial-switch button{flex:1;height:34px;border:1px solid var(--line-2);background:transparent;color:var(--fg-2);font-family:inherit;font-size:12px;font-weight:600;cursor:pointer;border-radius:7px;transition:color .18s,border-color .18s,background .18s;letter-spacing:.04em}
+.theme-switch button:hover,.dial-switch button:hover{color:var(--fg)}
+.theme-switch button.active,.dial-switch button.active{background:var(--surface-2);color:var(--fg);border-color:var(--fg-3)}
+.dial-switch{display:flex;gap:6px}
+.option-row{display:flex;align-items:center;justify-content:space-between;padding:9px 0;font-size:12.5px;color:var(--fg-2)}
+.option-row .lbl{font-weight:500;letter-spacing:.02em}
+.switch{width:34px;height:20px;border-radius:10px;background:var(--line-2);position:relative;cursor:pointer;transition:background .2s;flex-shrink:0}
+.switch::after{content:'';position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:var(--fg-2);transition:transform .22s cubic-bezier(.34,1.56,.64,1),background .2s}
+.switch.on{background:var(--accent)}
+.switch.on::after{transform:translateX(14px);background:var(--bg)}
+[data-theme="light"] .switch.on::after{background:#fff}
+
+/* 闹钟列表 */
+.alarm-list{width:min(480px,100%);display:flex;flex-direction:column;gap:8px}
+.alarm-item{display:grid;grid-template-columns:auto 1fr auto auto;align-items:center;gap:16px;padding:16px 20px;border:1px solid var(--line);border-radius:12px;background:var(--surface);transition:border-color .18s}
+.alarm-item.off{opacity:.45}
+.alarm-item:hover{border-color:var(--line-2)}
+.alarm-time{font-family:'IBM Plex Mono',monospace;font-size:32px;font-weight:400;color:var(--fg);font-variant-numeric:tabular-nums;letter-spacing:-.02em;line-height:1}
+.alarm-item.off .alarm-time{color:var(--fg-3)}
+.alarm-label{color:var(--fg-2);font-size:13px;font-weight:500}
+.alarm-days{color:var(--fg-3);font-size:11px;letter-spacing:.06em;margin-top:2px}
+.alarm-del{width:32px;height:32px;border:none;background:transparent;color:var(--fg-3);cursor:pointer;display:grid;place-items:center;border-radius:6px;transition:color .18s,background .18s}
+.alarm-del:hover{color:var(--accent);background:color-mix(in srgb,var(--accent) 10%,transparent)}
+.alarm-del svg{width:14px;height:14px}
+.alarm-empty{padding:40px 20px;text-align:center;color:var(--fg-3);font-size:13px;line-height:1.7}
+.alarm-add{width:min(480px,100%);padding:16px;border:1px dashed var(--line-2);border-radius:12px;background:transparent;display:flex;align-items:center;justify-content:center;gap:8px;color:var(--fg-2);cursor:pointer;font-family:inherit;font-size:13px;font-weight:600;letter-spacing:.06em;transition:color .18s,border-color .18s}
+.alarm-add:hover{color:var(--accent);border-color:var(--accent);background:color-mix(in srgb,var(--accent) 4%,transparent)}
+
+/* 添加闹钟 modal */
+.modal{position:fixed;inset:0;z-index:150;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(0,0,0,.6);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.modal.show{display:flex;animation:modalIn .25s ease}
+@keyframes modalIn{from{opacity:0}to{opacity:1}}
+.modal-box{width:100%;max-width:360px;background:var(--surface);border:1px solid var(--line-2);border-radius:16px;padding:24px;animation:modalSlide .28s cubic-bezier(.16,1,.3,1)}
+@keyframes modalSlide{from{transform:translateY(16px);opacity:0}to{transform:none;opacity:1}}
+.modal-box h3{font-size:15px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--fg-2);margin-bottom:18px}
+.modal-time-input{width:100%;padding:18px 16px;border:1px solid var(--line-2);background:var(--surface-2);color:var(--fg);font-family:'IBM Plex Mono',monospace;font-size:36px;font-weight:400;text-align:center;font-variant-numeric:tabular-nums;border-radius:12px;outline:none;letter-spacing:-.02em;transition:border-color .18s}
+.modal-time-input:focus{border-color:var(--accent)}
+.modal-label-input{width:100%;padding:12px 14px;border:1px solid var(--line-2);background:var(--surface-2);color:var(--fg);font-family:inherit;font-size:14px;border-radius:10px;outline:none;margin-top:12px;transition:border-color .18s}
+.modal-label-input:focus{border-color:var(--accent)}
+.modal-actions{display:flex;gap:10px;margin-top:20px}
+.modal-actions button{flex:1;height:42px;border:1px solid var(--line-2);background:transparent;color:var(--fg-2);cursor:pointer;font-family:inherit;font-size:13px;font-weight:600;letter-spacing:.06em;border-radius:9px;text-transform:uppercase;transition:color .18s,border-color .18s,background .18s}
+.modal-actions button:hover{color:var(--fg);border-color:var(--fg-3)}
+.modal-actions button.primary{background:var(--accent);border-color:var(--accent);color:var(--bg)}
+.modal-actions button.primary:hover{background:var(--accent-2)}
+[data-theme="light"] .modal-actions button.primary{color:#fff}
+
+/* 闹钟响铃 */
+.ringing{position:fixed;inset:0;z-index:300;display:none;align-items:center;justify-content:center;background:var(--bg);padding:20px;animation:ringIn .3s ease}
+@keyframes ringIn{from{opacity:0}to{opacity:1}}
+.ringing.show{display:flex}
+.ringing-inner{text-align:center;animation:ringPulse 1s ease-in-out infinite}
+@keyframes ringPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.02)}}
+.ringing-icon{width:80px;height:80px;border-radius:50%;background:var(--accent);display:grid;place-items:center;margin:0 auto 32px;color:var(--bg);animation:ringShake .6s ease-in-out infinite}
+@keyframes ringShake{0%,100%{transform:rotate(0)}25%{transform:rotate(-10deg)}75%{transform:rotate(10deg)}}
+.ringing-icon svg{width:36px;height:36px}
+[data-theme="light"] .ringing-icon{color:#fff}
+.ringing-time{font-family:'IBM Plex Mono',monospace;font-size:72px;font-weight:400;color:var(--fg);letter-spacing:-.04em;line-height:1;margin-bottom:12px;font-variant-numeric:tabular-nums}
+.ringing-label{font-size:16px;font-weight:600;color:var(--fg-2);letter-spacing:.12em;text-transform:uppercase;margin-bottom:40px;min-height:20px}
+.ringing-actions{display:flex;flex-direction:column;gap:12px;max-width:280px;margin:0 auto}
+.ringing-actions button{height:52px;padding:0 28px;border-radius:12px;border:1px solid var(--line-2);background:transparent;color:var(--fg-2);cursor:pointer;font-family:inherit;font-size:14px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;transition:all .18s}
+.ringing-actions button:hover{color:var(--fg);border-color:var(--fg-3)}
+.ringing-actions button.primary{background:var(--accent);border-color:var(--accent);color:var(--bg);font-size:15px}
+[data-theme="light"] .ringing-actions button.primary{color:#fff}
+
+/* 世界时钟 */
+.world-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px;width:min(720px,100%)}
+.city-card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px 16px;display:flex;flex-direction:column;gap:6px;position:relative;transition:border-color .18s}
+.city-card:hover{border-color:var(--line-2)}
+.city-card.is-day{background:var(--surface)}
+.city-name{font-size:11px;font-weight:700;color:var(--fg-2);letter-spacing:.12em;text-transform:uppercase;display:flex;align-items:center;gap:8px}
+.city-name .badge{font-size:10px;font-weight:500;color:var(--fg-3);letter-spacing:.04em;background:transparent;border:1px solid var(--line-2);padding:1px 5px;border-radius:3px;text-transform:none}
+.city-time{font-family:'IBM Plex Mono',monospace;font-size:28px;font-weight:400;color:var(--fg);letter-spacing:-.02em;line-height:1;font-variant-numeric:tabular-nums;margin-top:4px}
+.city-date{font-size:11px;color:var(--fg-3);letter-spacing:.06em;margin-top:2px}
+.city-status{font-size:10px;color:var(--fg-3);letter-spacing:.14em;text-transform:uppercase;position:absolute;top:14px;right:14px;font-weight:600}
+.city-status.day{color:var(--accent)}
+.city-del{position:absolute;top:44px;right:10px;width:22px;height:22px;border:none;background:transparent;color:var(--fg-3);cursor:pointer;border-radius:4px;opacity:0;transition:opacity .18s,color .18s}
+.city-card:hover .city-del{opacity:1}
+.city-del:hover{color:var(--accent)}
+.city-del svg{width:12px;height:12px}
+.city-add{background:transparent;border:1px dashed var(--line-2);border-radius:12px;padding:18px 16px;display:flex;align-items:center;justify-content:center;gap:8px;color:var(--fg-2);cursor:pointer;font-family:inherit;font-size:12.5px;font-weight:600;letter-spacing:.06em;transition:color .18s,border-color .18s;min-height:100px}
+.city-add:hover{color:var(--accent);border-color:var(--accent)}
+
+/* 城市选择器 */
+.city-picker{max-height:60vh;overflow-y:auto;padding-right:4px;margin:-4px 0}
+.city-picker::-webkit-scrollbar{width:4px}
+.city-picker::-webkit-scrollbar-thumb{background:var(--fg-3);border-radius:2px}
+.city-option{padding:11px 14px;border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;transition:background .15s;font-size:13px;color:var(--fg-2)}
+.city-option:hover{background:var(--surface-2);color:var(--fg)}
+.city-option .tz{font-size:10.5px;color:var(--fg-3);font-family:'IBM Plex Mono',monospace;letter-spacing:.02em}
+
+.toast{position:fixed;left:50%;bottom:32px;transform:translate(-50%,60px);background:var(--fg);color:var(--bg);padding:11px 20px;border-radius:9px;font-size:12.5px;font-weight:600;letter-spacing:.02em;opacity:0;pointer-events:none;transition:transform .35s cubic-bezier(.34,1.56,.64,1),opacity .25s;z-index:200;white-space:nowrap;box-shadow:0 16px 40px -12px rgba(0,0,0,.4)}
+.toast.show{transform:translate(-50%,0);opacity:1}
+
+@media(max-width:720px){
+  .bar{padding:14px 16px;gap:12px}
+  .brand{font-size:11px;letter-spacing:.14em}
+  .modes{padding:0 12px 4px}
+  .modes-track{padding:2px}
+  .modes button{padding:7px 12px;font-size:11.5px;letter-spacing:.06em}
+  .modes button.active::before{display:none}
+  .stage{padding:12px}
+  .clock-wrap{max-height:45vh}
+  .controls{padding:0 16px 16px;gap:8px}
+  .ctl{height:40px;padding:0 16px;font-size:12px;min-width:96px;flex:1}
+  .hints{display:none}
+  .settings{left:12px;right:12px;width:auto;top:auto;bottom:88px;transform-origin:bottom center}
+  .picker{gap:8px}
+  .picker input{width:72px;height:80px;font-size:28px}
+  .picker .dots{padding-top:22px;font-size:28px}
+  .presets{max-width:100%;justify-content:flex-start;padding:0 4px}
+  .preset{font-size:11px;padding:0 10px;height:28px}
+  .laps{max-height:130px}
+  .alarm-item{padding:14px 16px;gap:12px}
+  .alarm-time{font-size:26px}
+  .world-grid{grid-template-columns:1fr}
+  .ringing-time{font-size:56px}
+  .progress-section{width:100%}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}
+}
+</style>
+</head>
+<body>
+
+<header class="bar">
+  <div class="brand">ClockLab</div>
+  <div class="bar-spacer"></div>
+  <div class="bar-actions">
+    <button class="tool" id="settingsBtn" title="设置 (S)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+    </button>
+    <button class="tool" id="fullscreenBtn" title="全屏 (F)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M21 8V5a2 2 0 0 0-2-2h-3"/><path d="M3 16v3a2 2 0 0 0 2 2h3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/></svg>
+    </button>
+  </div>
+</header>
+
+<nav class="modes">
+  <div class="modes-track" id="modesTrack">
+    <button data-mode="clock" class="active">钟表</button>
+    <button data-mode="digital">数字</button>
+    <button data-mode="stopwatch">秒表</button>
+    <button data-mode="countdown">倒计时</button>
+    <button data-mode="pomodoro">番茄钟</button>
+    <button data-mode="alarm">闹钟</button>
+    <button data-mode="world">世界</button>
+  </div>
+</nav>
+
+<main class="stage">
+  <!-- 钟表 -->
+  <section class="pane active" id="pane-clock">
+    <div class="clock-wrap">
+      <svg class="clock-face" viewBox="0 0 200 200" id="clockSvg">
+        <defs>
+          <radialGradient id="dialShade" cx="50%" cy="30%" r="70%">
+            <stop offset="0%" stop-color="rgba(255,255,255,.03)"/>
+            <stop offset="100%" stop-color="rgba(0,0,0,.12)"/>
+          </radialGradient>
+        </defs>
+        <circle class="dial-bg" cx="100" cy="100" r="98"/>
+        <circle cx="100" cy="100" r="98" fill="url(#dialShade)" opacity=".8"/>
+        <circle class="dial-ring" cx="100" cy="100" r="94"/>
+        <g id="ticks"></g>
+        <g id="dotTicks"></g>
+        <g id="numerals"></g>
+        <line class="hand hour" id="handHour" x1="100" y1="100" x2="100" y2="54"/>
+        <line class="hand minute" id="handMin" x1="100" y1="100" x2="100" y2="30"/>
+        <g id="secondGroup">
+          <line class="hand second" x1="100" y1="114" x2="100" y2="22"/>
+        </g>
+        <circle class="pin outer" cx="100" cy="100" r="3.4"/>
+        <circle class="pin accent" cx="100" cy="100" r="1.4"/>
+      </svg>
+    </div>
+    <div class="subline" id="clockSub"></div>
+    <div class="progress-section">
+      <div class="pb-row"><span class="pb-label">今日</span><div class="pb-track"><div class="pb-fill" id="pbDay"></div></div><span class="pb-pct" id="pbDayPct">0%</span></div>
+      <div class="pb-row"><span class="pb-label">本周</span><div class="pb-track"><div class="pb-fill" id="pbWeek"></div></div><span class="pb-pct" id="pbWeekPct">0%</span></div>
+      <div class="pb-row"><span class="pb-label">本月</span><div class="pb-track"><div class="pb-fill" id="pbMonth"></div></div><span class="pb-pct" id="pbMonthPct">0%</span></div>
+    </div>
+  </section>
+
+  <!-- 数字 -->
+  <section class="pane" id="pane-digital">
+    <div class="digital big" id="digitalMain"></div>
+    <div class="subline" id="digitalSub"></div>
+  </section>
+
+  <!-- 秒表 -->
+  <section class="pane" id="pane-stopwatch">
+    <div class="digital mid" id="swMain"></div>
+    <div class="subline" id="swSub">PRESS SPACE TO START</div>
+    <div class="laps" id="laps"></div>
+  </section>
+
+  <!-- 倒计时 -->
+  <section class="pane" id="pane-countdown">
+    <div class="picker" id="picker">
+      <div class="cell"><input type="number" id="cdH" min="0" max="23" value="0" inputmode="numeric"><label>时</label></div>
+      <div class="dots">·</div>
+      <div class="cell"><input type="number" id="cdM" min="0" max="59" value="5" inputmode="numeric"><label>分</label></div>
+      <div class="dots">·</div>
+      <div class="cell"><input type="number" id="cdS" min="0" max="59" value="0" inputmode="numeric"><label>秒</label></div>
+    </div>
+    <div class="presets" id="presets">
+      <button class="preset" data-min="1">1 分钟</button>
+      <button class="preset" data-min="3">3 分钟</button>
+      <button class="preset" data-min="5">5 分钟</button>
+      <button class="preset" data-min="10">10 分钟</button>
+      <button class="preset" data-min="15">15 分钟</button>
+      <button class="preset" data-min="25">25 分钟</button>
+      <button class="preset" data-min="45">45 分钟</button>
+      <button class="preset" data-min="60">1 小时</button>
+    </div>
+    <div class="digital mid" id="cdMain" style="display:none"></div>
+    <div class="subline" id="cdSub"></div>
+  </section>
+
+  <!-- 番茄钟 -->
+  <section class="pane" id="pane-pomodoro">
+    <div class="digital mid" id="pomoMain"></div>
+    <div class="subline" id="pomoSub"></div>
+  </section>
+
+  <!-- 闹钟 -->
+  <section class="pane" id="pane-alarm">
+    <div class="alarm-list" id="alarmList"></div>
+    <button class="alarm-add" id="alarmAddBtn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      添加闹钟
+    </button>
+  </section>
+
+  <!-- 世界时钟 -->
+  <section class="pane" id="pane-world">
+    <div class="world-grid" id="worldGrid"></div>
+  </section>
+</main>
+
+<div class="controls" id="controls">
+  <button class="ctl primary" id="startBtn">
+    <svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="5 3 19 12 5 21"/></svg>
+    开始
+  </button>
+  <button class="ctl" id="lapBtn" style="display:none">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+    记圈
+  </button>
+  <button class="ctl" id="resetBtn">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></svg>
+    重置
+  </button>
+</div>
+
+<div class="hints" id="hints">
+  <span><kbd>Space</kbd>开始 / 暂停</span>
+  <span><kbd>R</kbd>重置</span>
+  <span><kbd>L</kbd>记圈</span>
+  <span><kbd>F</kbd>全屏</span>
+  <span><kbd>1–7</kbd>切换模式</span>
+</div>
+
+<!-- 设置面板 -->
+<div class="settings" id="settings">
+  <h4>强调色</h4>
+  <div class="swatches" id="swatches">
+    <div class="swatch" data-c="red" title="红"></div>
+    <div class="swatch" data-c="blue" title="蓝"></div>
+    <div class="swatch" data-c="green" title="绿"></div>
+    <div class="swatch" data-c="amber" title="琥珀"></div>
+    <div class="swatch" data-c="violet" title="紫"></div>
+    <div class="swatch" data-c="mono" title="单色"></div>
+  </div>
+  <h4>外观</h4>
+  <div class="theme-switch">
+    <button data-theme="dark" id="themeDark">深色</button>
+    <button data-theme="light" id="themeLight">浅色</button>
+  </div>
+  <h4>表盘</h4>
+  <div class="dial-switch">
+    <button data-dial="classic" id="dialClassic">经典</button>
+    <button data-dial="minimal" id="dialMinimal">极简</button>
+    <button data-dial="dot" id="dialDot">点阵</button>
+  </div>
+  <h4>选项</h4>
+  <div class="option-row"><span class="lbl">平滑秒针</span><div class="switch on" id="swSmooth"></div></div>
+  <div class="option-row"><span class="lbl">显示秒数</span><div class="switch on" id="swSeconds"></div></div>
+  <div class="option-row"><span class="lbl">整点报时</span><div class="switch" id="swChime"></div></div>
+  <div class="option-row"><span class="lbl">屏幕常亮</span><div class="switch" id="swWake"></div></div>
+  <div class="option-row"><span class="lbl">同步标题</span><div class="switch on" id="swTitle"></div></div>
+</div>
+
+<!-- 添加闹钟 modal -->
+<div class="modal" id="alarmModal">
+  <div class="modal-box">
+    <h3>添加闹钟</h3>
+    <input type="time" class="modal-time-input" id="alarmTimeInput" value="07:00" step="60">
+    <input type="text" class="modal-label-input" id="alarmLabelInput" placeholder="标签（可选）" maxlength="30">
+    <div class="modal-actions">
+      <button id="alarmCancelBtn">取消</button>
+      <button class="primary" id="alarmConfirmBtn">添加</button>
+    </div>
+  </div>
+</div>
+
+<!-- 添加城市 modal -->
+<div class="modal" id="cityModal">
+  <div class="modal-box">
+    <h3>添加城市</h3>
+    <div class="city-picker" id="cityPicker"></div>
+    <div class="modal-actions">
+      <button id="cityCancelBtn">取消</button>
+    </div>
+  </div>
+</div>
+
+<!-- 闹钟响铃 -->
+<div class="ringing" id="ringing">
+  <div class="ringing-inner">
+    <div class="ringing-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+    </div>
+    <div class="ringing-time" id="ringTime">07:00</div>
+    <div class="ringing-label" id="ringLabel"></div>
+    <div class="ringing-actions">
+      <button class="primary" id="ringStop">停止</button>
+      <button id="ringSnooze">稍后 5 分钟</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+(function () {
+  'use strict';
+
+  var STORAGE_KEY = 'clocklab-prefs-v3';
+  var ALARM_KEY = 'clocklab-alarms-v1';
+  var CITY_KEY = 'clocklab-cities-v1';
+
+  /* ══════ 偏好 ══════ */
+  var prefs = {
+    theme: 'dark', accent: 'red', dial: 'classic', smooth: true,
+    showSeconds: true, chime: false, keepAwake: false, updateTitle: true,
+  };
+  try { Object.assign(prefs, JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}')); } catch (e) {}
+  function savePrefs() { try { localStorage.setItem(STORAGE_KEY, JSON.stringify(prefs)); } catch (e) {} }
+
+  /* ══════ 状态 ══════ */
+  var mode = 'clock';
+  var rafId = null, intervalId = null, timeoutId = null;
+  var wakeLock = null, audioCtx = null;
+  var lastChimeHour = -1;
+
+  var sw = { running: false, startAt: 0, elapsed: 0, laps: [], lastLap: 0 };
+  var cd = { running: false, total: 300, remain: 300, endAt: 0, started: false };
+  var pomo = { running: false, phase: 'focus', remain: 1500, endAt: 0, started: false, count: 0, focus: 25, brk: 5 };
+
+  var alarms = [];
+  try { alarms = JSON.parse(localStorage.getItem(ALARM_KEY) || '[]'); } catch (e) { alarms = []; }
+  if (!Array.isArray(alarms)) alarms = [];
+  function saveAlarms() { try { localStorage.setItem(ALARM_KEY, JSON.stringify(alarms)); } catch (e) {} }
+
+  var cities = [];
+  try { cities = JSON.parse(localStorage.getItem(CITY_KEY) || 'null'); } catch (e) {}
+  if (!Array.isArray(cities) || cities.length === 0) {
+    cities = [
+      { name: '北京', tz: 'Asia/Shanghai' },
+      { name: '纽约', tz: 'America/New_York' },
+      { name: '伦敦', tz: 'Europe/London' },
+      { name: '东京', tz: 'Asia/Tokyo' },
+    ];
+    saveCities();
+  }
+  function saveCities() { try { localStorage.setItem(CITY_KEY, JSON.stringify(cities)); } catch (e) {} }
+
+  var allCities = [
+    { name: '北京', tz: 'Asia/Shanghai' },
+    { name: '上海', tz: 'Asia/Shanghai' },
+    { name: '香港', tz: 'Asia/Hong_Kong' },
+    { name: '台北', tz: 'Asia/Taipei' },
+    { name: '东京', tz: 'Asia/Tokyo' },
+    { name: '首尔', tz: 'Asia/Seoul' },
+    { name: '新加坡', tz: 'Asia/Singapore' },
+    { name: '曼谷', tz: 'Asia/Bangkok' },
+    { name: '孟买', tz: 'Asia/Kolkata' },
+    { name: '迪拜', tz: 'Asia/Dubai' },
+    { name: '莫斯科', tz: 'Europe/Moscow' },
+    { name: '柏林', tz: 'Europe/Berlin' },
+    { name: '巴黎', tz: 'Europe/Paris' },
+    { name: '伦敦', tz: 'Europe/London' },
+    { name: '雷克雅未克', tz: 'Atlantic/Reykjavik' },
+    { name: '纽约', tz: 'America/New_York' },
+    { name: '芝加哥', tz: 'America/Chicago' },
+    { name: '丹佛', tz: 'America/Denver' },
+    { name: '洛杉矶', tz: 'America/Los_Angeles' },
+    { name: '墨西哥城', tz: 'America/Mexico_City' },
+    { name: '圣保罗', tz: 'America/Sao_Paulo' },
+    { name: '悉尼', tz: 'Australia/Sydney' },
+    { name: '奥克兰', tz: 'Pacific/Auckland' },
+    { name: '火奴鲁鲁', tz: 'Pacific/Honolulu' },
+  ];
+
+  /* ══════ DOM ══════ */
+  var $ = function (s) { return document.querySelector(s); };
+  var els = {
+    paneClock: $('#pane-clock'), paneDigital: $('#pane-digital'),
+    paneStopwatch: $('#pane-stopwatch'), paneCountdown: $('#pane-countdown'),
+    panePomodoro: $('#pane-pomodoro'), paneAlarm: $('#pane-alarm'),
+    paneWorld: $('#pane-world'),
+    digitalMain: $('#digitalMain'), digitalSub: $('#digitalSub'),
+    swMain: $('#swMain'), swSub: $('#swSub'), laps: $('#laps'),
+    cdMain: $('#cdMain'), cdSub: $('#cdSub'), picker: $('#picker'),
+    presets: $('#presets'),
+    pomoMain: $('#pomoMain'), pomoSub: $('#pomoSub'),
+    clockSub: $('#clockSub'),
+    startBtn: $('#startBtn'), resetBtn: $('#resetBtn'), lapBtn: $('#lapBtn'),
+    controls: $('#controls'), settings: $('#settings'), toast: $('#toast'),
+    handHour: $('#handHour'), handMin: $('#handMin'), secondGroup: $('#secondGroup'),
+    alarmList: $('#alarmList'), worldGrid: $('#worldGrid'),
+    ringing: $('#ringing'),
+  };
+
+  /* ══════ 表盘刻度 ══════ */
+  (function buildDial() {
+    var NS = 'http://www.w3.org/2000/svg';
+    var ticks = document.getElementById('ticks');
+    var dots = document.getElementById('dotTicks');
+    var nums = document.getElementById('numerals');
+    var cx = 100, cy = 100, rOuter = 94;
+    for (var i = 0; i < 60; i++) {
+      var angle = (i / 60) * Math.PI * 2 - Math.PI / 2;
+      var isQ = i % 15 === 0, isM = i % 5 === 0;
+      var len = isQ ? 11 : (isM ? 7 : 3);
+      var r1 = rOuter - 4, r2 = r1 - len;
+      var line = document.createElementNS(NS, 'line');
+      line.setAttribute('x1', cx + Math.cos(angle) * r1);
+      line.setAttribute('y1', cy + Math.sin(angle) * r1);
+      line.setAttribute('x2', cx + Math.cos(angle) * r2);
+      line.setAttribute('y2', cy + Math.sin(angle) * r2);
+      line.setAttribute('class', 'tick' + (isQ ? ' quarter' : (isM ? ' major' : '')));
+      ticks.appendChild(line);
+      if (isM) {
+        var dot = document.createElementNS(NS, 'circle');
+        dot.setAttribute('cx', cx + Math.cos(angle) * (rOuter - 8));
+        dot.setAttribute('cy', cy + Math.sin(angle) * (rOuter - 8));
+        dot.setAttribute('r', isQ ? 1.6 : 1);
+        dot.setAttribute('class', 'dot-tick' + (isM ? ' major' : ''));
+        dots.appendChild(dot);
+      }
+    }
+    [[12, 0], [3, 90], [6, 180], [9, 270]].forEach(function (n) {
+      var a = n[1] * Math.PI / 180 - Math.PI / 2, r = 72;
+      var t = document.createElementNS(NS, 'text');
+      t.setAttribute('x', cx + Math.cos(a) * r);
+      t.setAttribute('y', cy + Math.sin(a) * r);
+      t.setAttribute('class', 'numeral');
+      t.textContent = n[0];
+      nums.appendChild(t);
+    });
+  })();
+
+  /* ══════ 工具 ══════ */
+  function pad(n, w) { return String(Math.floor(n)).padStart(w || 2, '0'); }
+  function fmtMS(ms, withMs) {
+    var total = Math.floor(ms / 1000);
+    var h = Math.floor(total / 3600);
+    var m = Math.floor((total % 3600) / 60);
+    var s = total % 60;
+    var out = h > 0 ? (pad(h, 1) + ':' + pad(m) + ':' + pad(s)) : (pad(m) + ':' + pad(s));
+    if (withMs) out += '.' + pad(Math.floor(ms % 1000), 3);
+    return out;
+  }
+  function buildDigits(str) {
+    return str.split(/([:.])/).map(function (p) {
+      if (p === ':') return '<span class="sep">:</span>';
+      if (p === '.') return '<span class="milli">.</span>';
+      if (p) return '<span class="group">' + p + '</span>';
+      return '';
+    }).join('');
+  }
+  function showToast(msg) {
+    els.toast.textContent = msg;
+    els.toast.classList.add('show');
+    clearTimeout(els.toast._t);
+    els.toast._t = setTimeout(function () { els.toast.classList.remove('show'); }, 2000);
+  }
+  function stopAllTimers() {
+    if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
+    if (intervalId) { clearInterval(intervalId); intervalId = null; }
+    if (timeoutId) { clearTimeout(timeoutId); timeoutId = null; }
+  }
+
+  /* ══════ 声音 ══════ */
+  function beep(n, freq) {
+    try {
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      n = n || 3; freq = freq || 880;
+      for (var i = 0; i < n; i++) {
+        (function (i) {
+          setTimeout(function () {
+            var t = audioCtx.currentTime;
+            var o = audioCtx.createOscillator(), g = audioCtx.createGain();
+            o.type = 'sine';
+            o.frequency.value = i % 2 === 0 ? freq : freq * 0.75;
+            g.gain.setValueAtTime(0, t);
+            g.gain.linearRampToValueAtTime(0.18, t + 0.01);
+            g.gain.exponentialRampToValueAtTime(0.0001, t + 0.35);
+            o.connect(g); g.connect(audioCtx.destination);
+            o.start(t); o.stop(t + 0.4);
+          }, i * 420);
+        })(i);
+      }
+    } catch (e) {}
+  }
+  var ringInterval = null;
+  function startRinging() {
+    if (ringInterval) return;
+    var play = function () { beep(3, 900); };
+    play();
+    ringInterval = setInterval(play, 3000);
+  }
+  function stopRinging() {
+    if (ringInterval) { clearInterval(ringInterval); ringInterval = null; }
+  }
+
+  /* ══════ 主题 ══════ */
+  function applyTheme() {
+    document.documentElement.setAttribute('data-theme', prefs.theme);
+    document.documentElement.setAttribute('data-accent', prefs.accent);
+    document.documentElement.setAttribute('data-dial', prefs.dial);
+    var meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) meta.setAttribute('content', prefs.theme === 'dark' ? '#111214' : '#f3f1ec');
+    document.getElementById('themeDark').classList.toggle('active', prefs.theme === 'dark');
+    document.getElementById('themeLight').classList.toggle('active', prefs.theme === 'light');
+    document.getElementById('dialClassic').classList.toggle('active', prefs.dial === 'classic');
+    document.getElementById('dialMinimal').classList.toggle('active', prefs.dial === 'minimal');
+    document.getElementById('dialDot').classList.toggle('active', prefs.dial === 'dot');
+    document.querySelectorAll('.swatch').forEach(function (s) { s.classList.toggle('active', s.dataset.c === prefs.accent); });
+    document.getElementById('swSmooth').classList.toggle('on', prefs.smooth);
+    document.getElementById('swSeconds').classList.toggle('on', prefs.showSeconds);
+    document.getElementById('swChime').classList.toggle('on', prefs.chime);
+    document.getElementById('swWake').classList.toggle('on', prefs.keepAwake);
+    document.getElementById('swTitle').classList.toggle('on', prefs.updateTitle);
+  }
+
+  /* ══════ Wake Lock ══════ */
+  async function requestWakeLock() {
+    if (!prefs.keepAwake || !('wakeLock' in navigator)) return;
+    try {
+      wakeLock = await navigator.wakeLock.request('screen');
+      wakeLock.addEventListener('release', function () { wakeLock = null; });
+    } catch (e) {}
+  }
+  function releaseWakeLock() {
+    if (wakeLock) { try { wakeLock.release(); } catch (e) {} wakeLock = null; }
+  }
+  document.addEventListener('visibilitychange', function () {
+    if (document.visibilityState === 'visible' && prefs.keepAwake) requestWakeLock();
+  });
+
+  /* ══════ 模式切换 ══════ */
+  var panes = {
+    clock: els.paneClock, digital: els.paneDigital, stopwatch: els.paneStopwatch,
+    countdown: els.paneCountdown, pomodoro: els.panePomodoro,
+    alarm: els.paneAlarm, world: els.paneWorld,
+  };
+
+  function setMode(m) {
+    mode = m;
+    document.querySelectorAll('#modesTrack button').forEach(function (b) {
+      b.classList.toggle('active', b.dataset.mode === m);
+    });
+    Object.keys(panes).forEach(function (k) {
+      panes[k].classList.toggle('active', k === m);
+    });
+    stopAllTimers();
+    // 控制栏
+    if (m === 'clock' || m === 'digital' || m === 'alarm' || m === 'world') {
+      els.controls.style.display = 'none';
+    } else {
+      els.controls.style.display = '';
+    }
+    els.lapBtn.style.display = m === 'stopwatch' ? '' : 'none';
+    updateStartBtn(false);
+
+    if (m === 'clock') startClockTick();
+    else if (m === 'digital') startDigitalTick();
+    else if (m === 'stopwatch') renderStopwatch();
+    else if (m === 'countdown') {
+      if (cd.running) {
+        els.picker.style.display = 'none';
+        els.cdMain.style.display = '';
+        els.presets.style.display = 'none';
+        startCountdownTick();
+      } else if (cd.started) {
+        els.picker.style.display = 'none';
+        els.cdMain.style.display = '';
+        els.presets.style.display = 'none';
+      } else {
+        els.picker.style.display = '';
+        els.cdMain.style.display = 'none';
+        els.presets.style.display = '';
+        readCdInputs();
+      }
+      renderCountdown();
+    } else if (m === 'pomodoro') {
+      if (!pomo.started) { pomo.remain = pomo.focus * 60; pomo.phase = 'focus'; }
+      renderPomodoro();
+      if (pomo.running) startPomodoroTick();
+    } else if (m === 'alarm') {
+      renderAlarms();
+    } else if (m === 'world') {
+      renderCities();
+      intervalId = setInterval(renderCities, 1000);
+    }
+    updateTitle();
+  }
+
+  /* ══════ 钟表 ══════ */
+  function startClockTick() {
+    var lastProgress = 0;
+    function tick() {
+      var now = new Date();
+      var ms = now.getMilliseconds();
+      var sFloat = now.getSeconds() + (prefs.smooth ? ms / 1000 : 0);
+      var s = prefs.smooth ? sFloat : now.getSeconds();
+      var m = now.getMinutes() + s / 60;
+      var h = (now.getHours() % 12) + m / 60;
+      els.handHour.setAttribute('transform', 'rotate(' + (h * 30) + ' 100 100)');
+      els.handMin.setAttribute('transform', 'rotate(' + (m * 6) + ' 100 100)');
+      els.secondGroup.setAttribute('transform', 'rotate(' + (s * 6) + ' 100 100)');
+      // 整点报时
+      if (prefs.chime) {
+        var curH = now.getHours();
+        if (lastChimeHour !== curH && now.getMinutes() === 0 && now.getSeconds() < 2) {
+          lastChimeHour = curH;
+          var n = curH % 12 === 0 ? 12 : curH % 12;
+          n = Math.min(n, 4); // 最多响 4 声，避免太长
+          beep(n, 880);
+        }
+      }
+      rafId = requestAnimationFrame(tick);
+    }
+    tick();
+    updateClockSub();
+    updateProgress();
+    intervalId = setInterval(function () { updateClockSub(); updateProgress(); }, 30000);
+  }
+  function updateClockSub() {
+    var now = new Date();
+    var wd = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'][now.getDay()];
+    els.clockSub.innerHTML = '<span class="strong">' + now.getFullYear() + ' · ' + pad(now.getMonth() + 1) + ' · ' + pad(now.getDate()) + '</span>&nbsp;&nbsp;·&nbsp;&nbsp;' + wd;
+  }
+  function updateProgress() {
+    var now = new Date();
+    // 今日
+    var dayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
+    var dayEnd = dayStart + 86400000;
+    var dayPct = Math.min(100, Math.max(0, (now.getTime() - dayStart) / (dayEnd - dayStart) * 100));
+    // 本周（周一开始）
+    var dow = now.getDay() === 0 ? 7 : now.getDay();
+    var weekStart = new Date(now.getFullYear(), now.getMonth(), now.getDate() - (dow - 1)).getTime();
+    var weekEnd = weekStart + 7 * 86400000;
+    var weekPct = Math.min(100, Math.max(0, (now.getTime() - weekStart) / (weekEnd - weekStart) * 100));
+    // 本月
+    var monthStart = new Date(now.getFullYear(), now.getMonth(), 1).getTime();
+    var monthEnd = new Date(now.getFullYear(), now.getMonth() + 1, 1).getTime();
+    var monthPct = Math.min(100, Math.max(0, (now.getTime() - monthStart) / (monthEnd - monthStart) * 100));
+    document.getElementById('pbDay').style.width = dayPct + '%';
+    document.getElementById('pbWeek').style.width = weekPct + '%';
+    document.getElementById('pbMonth').style.width = monthPct + '%';
+    document.getElementById('pbDayPct').textContent = Math.floor(dayPct) + '%';
+    document.getElementById('pbWeekPct').textContent = Math.floor(weekPct) + '%';
+    document.getElementById('pbMonthPct').textContent = Math.floor(monthPct) + '%';
+  }
+
+  /* ══════ 数字 ══════ */
+  function startDigitalTick() {
+    function tick() {
+      var now = new Date();
+      var str = pad(now.getHours()) + ':' + pad(now.getMinutes()) + (prefs.showSeconds ? ':' + pad(now.getSeconds()) : '');
+      els.digitalMain.innerHTML = buildDigits(str);
+      els.digitalSub.innerHTML = '<span class="strong">' + now.getFullYear() + ' · ' + pad(now.getMonth() + 1) + ' · ' + pad(now.getDate()) + '</span>&nbsp;&nbsp;·&nbsp;&nbsp;' + ['周日', '周一', '周二', '周三', '周四', '周五', '周六'][now.getDay()];
+      updateTitle();
+      timeoutId = setTimeout(tick, 1000 - (now.getTime() % 1000));
+    }
+    tick();
+  }
+
+  /* ══════ 秒表 ══════ */
+  function startStopwatch() {
+    if (sw.running) return;
+    sw.running = true;
+    sw.startAt = performance.now() - sw.elapsed;
+    updateStartBtn(true);
+    function tick() {
+      sw.elapsed = performance.now() - sw.startAt;
+      renderStopwatchDigits();
+      rafId = requestAnimationFrame(tick);
+    }
+    rafId = requestAnimationFrame(tick);
+  }
+  function stopStopwatch() {
+    if (!sw.running) return;
+    sw.running = false;
+    sw.elapsed = performance.now() - sw.startAt;
+    if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
+    updateStartBtn(false);
+  }
+  function resetStopwatch() {
+    stopStopwatch();
+    sw.elapsed = 0; sw.laps = []; sw.lastLap = 0; sw.startAt = 0;
+    renderStopwatch();
+  }
+  function renderStopwatch() { renderStopwatchDigits(); renderLaps(); updateTitle(); }
+  function renderStopwatchDigits() {
+    var ms = sw.elapsed;
+    var total = Math.floor(ms / 1000);
+    var m = Math.floor(total / 60), s = total % 60;
+    var cs = Math.floor((ms % 1000) / 10);
+    els.swMain.innerHTML = '<span class="group">' + pad(m) + '</span><span class="sep">:</span><span class="group">' + pad(s) + '</span><span class="milli">.' + pad(cs) + '</span>';
+    els.swSub.textContent = sw.laps.length ? sw.laps.length + ' LAPS' : 'PRESS SPACE TO START';
+  }
+  function addLap() {
+    if (!sw.running && sw.elapsed === 0) return;
+    var now = sw.elapsed, diff = now - sw.lastLap;
+    sw.lastLap = now;
+    sw.laps.unshift({ total: now, diff: diff, idx: sw.laps.length + 1 });
+    renderLaps();
+    els.swSub.textContent = sw.laps.length + ' LAPS';
+  }
+  function renderLaps() {
+    if (!sw.laps.length) { els.laps.innerHTML = ''; return; }
+    var diffs = sw.laps.map(function (l) { return l.diff; });
+    var minD = Math.min.apply(null, diffs), maxD = Math.max.apply(null, diffs);
+    var html = '<div class="lap-head"><span>#</span><span>LAP</span><span>TOTAL</span></div>';
+    sw.laps.forEach(function (l) {
+      var cls = '';
+      if (sw.laps.length >= 3) { if (l.diff === minD) cls = ' best'; else if (l.diff === maxD) cls = ' worst'; }
+      html += '<div class="lap' + cls + '"><span class="idx">' + pad(l.idx) + '</span><span class="diff">+' + fmtMS(l.diff, true) + '</span><span class="total">' + fmtMS(l.total, true) + '</span></div>';
+    });
+    els.laps.innerHTML = html;
+  }
+
+  /* ══════ 倒计时 ══════ */
+  function readCdInputs() {
+    var h = Math.max(0, Math.min(23, parseInt(document.getElementById('cdH').value, 10) || 0));
+    var m = Math.max(0, Math.min(59, parseInt(document.getElementById('cdM').value, 10) || 0));
+    var s = Math.max(0, Math.min(59, parseInt(document.getElementById('cdS').value, 10) || 0));
+    cd.total = h * 3600 + m * 60 + s;
+    cd.remain = cd.total;
+  }
+  function startCountdown() {
+    if (cd.running) return;
+    if (!cd.started) {
+      readCdInputs();
+      if (cd.total <= 0) { showToast('请设置时长'); return; }
+      cd.started = true;
+      cd.endAt = Date.now() + cd.total * 1000;
+      els.picker.style.display = 'none';
+      els.cdMain.style.display = '';
+      els.presets.style.display = 'none';
+    } else {
+      cd.endAt = Date.now() + cd.remain * 1000;
+    }
+    cd.running = true;
+    updateStartBtn(true);
+    startCountdownTick();
+    renderCountdown();
+  }
+  function startCountdownTick() {
+    if (intervalId) clearInterval(intervalId);
+    intervalId = setInterval(function () {
+      cd.remain = Math.max(0, Math.floor((cd.endAt - Date.now()) / 1000));
+      renderCountdown();
+      if (cd.remain <= 0) {
+        clearInterval(intervalId); intervalId = null;
+        cd.running = false; cd.started = false;
+        beep(4);
+        showToast('时间到');
+        updateStartBtn(false);
+        setTimeout(function () {
+          els.picker.style.display = '';
+          els.cdMain.style.display = 'none';
+          els.presets.style.display = '';
+          readCdInputs();
+          renderCountdown();
+        }, 900);
+      }
+    }, 200);
+  }
+  function stopCountdown() {
+    if (!cd.running) return;
+    cd.running = false;
+    if (intervalId) { clearInterval(intervalId); intervalId = null; }
+    cd.remain = Math.max(0, Math.floor((cd.endAt - Date.now()) / 1000));
+    updateStartBtn(false);
+  }
+  function resetCountdown() {
+    stopCountdown();
+    cd.started = false;
+    els.picker.style.display = '';
+    els.cdMain.style.display = 'none';
+    els.presets.style.display = '';
+    readCdInputs();
+    renderCountdown();
+  }
+  function renderCountdown() {
+    var total = cd.remain;
+    var h = Math.floor(total / 3600), m = Math.floor((total % 3600) / 60), s = total % 60;
+    var str = h > 0 ? (pad(h, 1) + ':' + pad(m) + ':' + pad(s)) : (pad(m) + ':' + pad(s));
+    els.cdMain.innerHTML = buildDigits(str);
+    if (cd.running) els.cdSub.textContent = 'COUNTING DOWN';
+    else if (cd.remain > 0 && cd.started) els.cdSub.textContent = 'PAUSED';
+    else if (cd.total > 0) els.cdSub.textContent = 'PRESS SPACE TO START';
+    else els.cdSub.textContent = 'SET DURATION';
+    updateTitle();
+  }
+
+  /* ══════ 番茄钟 ══════ */
+  function startPomodoro() {
+    if (pomo.running) return;
+    pomo.started = true;
+    pomo.endAt = Date.now() + pomo.remain * 1000;
+    pomo.running = true;
+    updateStartBtn(true);
+    startPomodoroTick();
+    renderPomodoro();
+  }
+  function startPomodoroTick() {
+    if (intervalId) clearInterval(intervalId);
+    intervalId = setInterval(function () {
+      pomo.remain = Math.max(0, Math.floor((pomo.endAt - Date.now()) / 1000));
+      renderPomodoro();
+      if (pomo.remain <= 0) {
+        clearInterval(intervalId); intervalId = null;
+        pomo.running = false; pomo.started = false;
+        beep(4);
+        if (pomo.phase === 'focus') {
+          pomo.count++; pomo.phase = 'break'; pomo.remain = pomo.brk * 60;
+          showToast('专注完成 · 休息 ' + pomo.brk + ' 分钟');
+        } else {
+          pomo.phase = 'focus'; pomo.remain = pomo.focus * 60;
+          showToast('休息结束 · 继续专注');
+        }
+        updateStartBtn(false);
+        renderPomodoro();
+      }
+    }, 200);
+  }
+  function stopPomodoro() {
+    if (!pomo.running) return;
+    pomo.running = false;
+    if (intervalId) { clearInterval(intervalId); intervalId = null; }
+    pomo.remain = Math.max(0, Math.floor((pomo.endAt - Date.now()) / 1000));
+    updateStartBtn(false);
+  }
+  function resetPomodoro() {
+    stopPomodoro();
+    pomo.started = false; pomo.phase = 'focus'; pomo.remain = pomo.focus * 60;
+    renderPomodoro();
+  }
+  function renderPomodoro() {
+    var total = pomo.remain;
+    var m = Math.floor(total / 60), s = total % 60;
+    els.pomoMain.innerHTML = buildDigits(pad(m) + ':' + pad(s));
+    if (pomo.phase === 'focus') {
+      els.pomoSub.innerHTML = pomo.running ? 'FOCUS &nbsp;·&nbsp; <span class="strong">' + pomo.count + ' completed</span>' : (pomo.started ? 'PAUSED' : 'PRESS SPACE TO FOCUS');
+    } else {
+      els.pomoSub.innerHTML = pomo.running ? 'BREAK &nbsp;·&nbsp; <span class="strong">' + pomo.count + ' completed</span>' : 'PAUSED';
+    }
+    updateTitle();
+  }
+
+  /* ══════ 闹钟 ══════ */
+  function renderAlarms() {
+    if (!alarms.length) {
+      els.alarmList.innerHTML = '<div class="alarm-empty">还没有闹钟<br><span style="font-size:11.5px;opacity:.7">点击下方按钮添加</span></div>';
+      return;
+    }
+    var html = '';
+    alarms.slice().sort(function (a, b) { return a.time.localeCompare(b.time); }).forEach(function (a) {
+      html += '<div class="alarm-item' + (a.enabled ? '' : ' off') + '" data-id="' + a.id + '">' +
+        '<div class="alarm-time">' + a.time + '</div>' +
+        '<div><div class="alarm-label">' + escHtml(a.label || '闹钟') + '</div><div class="alarm-days">' + (a.enabled ? '已开启' : '已关闭') + '</div></div>' +
+        '<div class="switch' + (a.enabled ? ' on' : '') + '" data-act="toggle"></div>' +
+        '<button class="alarm-del" data-act="del" title="删除"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg></button>' +
+      '</div>';
+    });
+    els.alarmList.innerHTML = html;
+    els.alarmList.querySelectorAll('.alarm-item').forEach(function (el) {
+      var id = el.dataset.id;
+      el.querySelector('[data-act="toggle"]').addEventListener('click', function (e) {
+        e.stopPropagation();
+        var a = alarms.find(function (x) { return x.id === id; });
+        if (a) { a.enabled = !a.enabled; saveAlarms(); renderAlarms(); }
+      });
+      el.querySelector('[data-act="del"]').addEventListener('click', function (e) {
+        e.stopPropagation();
+        alarms = alarms.filter(function (x) { return x.id !== id; });
+        saveAlarms(); renderAlarms(); showToast('闹钟已删除');
+      });
+    });
+  }
+  function escHtml(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+
+  var lastAlarmCheck = '';
+  var ringingAlarm = null;
+  function checkAlarms() {
+    var now = new Date();
+    var key = pad(now.getHours()) + ':' + pad(now.getMinutes());
+    if (key === lastAlarmCheck) return;
+    lastAlarmCheck = key;
+    alarms.forEach(function (a) {
+      if (!a.enabled) return;
+      if (a.time === key) {
+        triggerRinging(a);
+      }
+    });
+  }
+  function triggerRinging(alarm) {
+    ringingAlarm = alarm;
+    var now = new Date();
+    document.getElementById('ringTime').textContent = pad(now.getHours()) + ':' + pad(now.getMinutes());
+    document.getElementById('ringLabel').textContent = alarm.label || '闹钟';
+    els.ringing.classList.add('show');
+    startRinging();
+    // 系统通知
+    if ('Notification' in window && Notification.permission === 'granted') {
+      try { new Notification('闹钟：' + (alarm.label || '时间到'), { body: alarm.time, requireInteraction: true }); } catch (e) {}
+    }
+  }
+  function stopAlarm() {
+    els.ringing.classList.remove('show');
+    stopRinging();
+    if (ringingAlarm) {
+      // 如果是一次性闹钟，自动关闭
+      var a = alarms.find(function (x) { return x.id === ringingAlarm.id; });
+      if (a) { a.enabled = false; saveAlarms(); renderAlarms(); }
+      ringingAlarm = null;
+    }
+  }
+  function snoozeAlarm() {
+    els.ringing.classList.remove('show');
+    stopRinging();
+    if (ringingAlarm) {
+      var now = new Date();
+      var future = new Date(now.getTime() + 5 * 60000);
+      alarms.push({
+        id: 'a' + Date.now() + '_snooze',
+        time: pad(future.getHours()) + ':' + pad(future.getMinutes()),
+        label: (ringingAlarm.label || '闹钟') + '（稍后）',
+        enabled: true,
+      });
+      saveAlarms(); renderAlarms();
+      showToast('已延迟 5 分钟');
+      ringingAlarm = null;
+    }
+  }
+  setInterval(checkAlarms, 5000);
+
+  /* ══════ 世界时钟 ══════ */
+  function getCityTime(tz) {
+    var now = new Date();
+    try {
+      var parts = new Intl.DateTimeFormat('en-US', {
+        timeZone: tz, hour12: false,
+        year: 'numeric', month: '2-digit', day: '2-digit',
+        hour: '2-digit', minute: '2-digit', second: '2-digit',
+      }).formatToParts(now);
+      var o = {};
+      parts.forEach(function (p) { o[p.type] = p.value; });
+      return {
+        h: parseInt(o.hour, 10), m: parseInt(o.minute, 10), s: parseInt(o.second, 10),
+        y: o.year, mo: o.month, d: o.day,
+      };
+    } catch (e) {
+      return { h: now.getHours(), m: now.getMinutes(), s: now.getSeconds(), y: now.getFullYear(), mo: pad(now.getMonth() + 1), d: pad(now.getDate()) };
+    }
+  }
+  function renderCities() {
+    var html = '';
+    cities.forEach(function (c, idx) {
+      var t = getCityTime(c.tz);
+      var isDay = t.h >= 6 && t.h < 18;
+      html += '<div class="city-card' + (isDay ? ' is-day' : '') + '" data-idx="' + idx + '">' +
+        '<div class="city-name">' + escHtml(c.name) + '</div>' +
+        '<div class="city-status' + (isDay ? ' day' : '') + '">' + (isDay ? '☀' : '☾') + '</div>' +
+        '<div class="city-time">' + pad(t.h) + ':' + pad(t.m) + ':' + pad(t.s) + '</div>' +
+        '<div class="city-date">' + t.mo + '/' + t.d + '</div>' +
+        '<button class="city-del" data-del="' + idx + '" title="移除"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>' +
+      '</div>';
+    });
+    html += '<button class="city-add" id="cityAddBtn" style="grid-column:span 1">' +
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="width:14px;height:14px"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>' +
+      '添加城市</button>';
+    els.worldGrid.innerHTML = html;
+    els.worldGrid.querySelectorAll('[data-del]').forEach(function (b) {
+      b.addEventListener('click', function (e) {
+        e.stopPropagation();
+        var i = parseInt(b.dataset.del, 10);
+        cities.splice(i, 1);
+        saveCities(); renderCities();
+      });
+    });
+    var addBtn = document.getElementById('cityAddBtn');
+    if (addBtn) addBtn.addEventListener('click', openCityPicker);
+  }
+  function openCityPicker() {
+    var picker = document.getElementById('cityPicker');
+    var html = '';
+    allCities.forEach(function (c) {
+      if (cities.some(function (x) { return x.name === c.name; })) return;
+      html += '<div class="city-option" data-name="' + escHtml(c.name) + '" data-tz="' + escHtml(c.tz) + '">' +
+        '<span>' + escHtml(c.name) + '</span>' +
+        '<span class="tz">' + escHtml(c.tz) + '</span>' +
+      '</div>';
+    });
+    if (!html) html = '<div style="text-align:center;padding:24px;color:var(--fg-3);font-size:13px">没有更多可选城市</div>';
+    picker.innerHTML = html;
+    picker.querySelectorAll('.city-option').forEach(function (opt) {
+      opt.addEventListener('click', function () {
+        cities.push({ name: opt.dataset.name, tz: opt.dataset.tz });
+        saveCities(); closeModal('cityModal'); renderCities();
+      });
+    });
+    openModal('cityModal');
+  }
+
+  /* ══════ Modal 辅助 ══════ */
+  function openModal(id) { document.getElementById(id).classList.add('show'); }
+  function closeModal(id) { document.getElementById(id).classList.remove('show'); }
+
+  /* ══════ 通用控制 ══════ */
+  function updateStartBtn(isRunning) {
+    var svg = isRunning
+      ? '<svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg>'
+      : '<svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="5 3 19 12 5 21"/></svg>';
+    els.startBtn.innerHTML = svg + (isRunning ? '暂停' : '开始');
+    els.startBtn.classList.toggle('primary', !isRunning);
+  }
+  function handleStart() {
+    if (mode === 'stopwatch') sw.running ? stopStopwatch() : startStopwatch();
+    else if (mode === 'countdown') cd.running ? stopCountdown() : startCountdown();
+    else if (mode === 'pomodoro') pomo.running ? stopPomodoro() : startPomodoro();
+  }
+  function handleReset() {
+    if (mode === 'stopwatch') resetStopwatch();
+    else if (mode === 'countdown') resetCountdown();
+    else if (mode === 'pomodoro') resetPomodoro();
+  }
+
+  /* ══════ 标题 ══════ */
+  function updateTitle() {
+    if (!prefs.updateTitle) { document.title = 'ClockLab'; return; }
+    if (mode === 'clock' || mode === 'digital') {
+      var n = new Date();
+      document.title = pad(n.getHours()) + ':' + pad(n.getMinutes()) + (prefs.showSeconds ? ':' + pad(n.getSeconds()) : '') + ' · ClockLab';
+    } else if (mode === 'stopwatch') document.title = (sw.running ? '▶ ' : '⏸ ') + fmtMS(sw.elapsed, false);
+    else if (mode === 'countdown') {
+      var r = cd.remain, h = Math.floor(r / 3600), m = Math.floor((r % 3600) / 60), s = r % 60;
+      document.title = (cd.running ? '▶ ' : '⏸ ') + (h > 0 ? pad(h, 1) + ':' + pad(m) + ':' + pad(s) : pad(m) + ':' + pad(s));
+    } else if (mode === 'pomodoro') {
+      var m2 = Math.floor(pomo.remain / 60), s2 = pomo.remain % 60;
+      document.title = (pomo.phase === 'focus' ? '◆ ' : '◇ ') + pad(m2) + ':' + pad(s2);
+    }
+  }
+
+  /* ══════ 事件 ══════ */
+  document.getElementById('modesTrack').addEventListener('click', function (e) {
+    var b = e.target.closest('button[data-mode]');
+    if (b) setMode(b.dataset.mode);
+  });
+  els.startBtn.addEventListener('click', handleStart);
+  els.resetBtn.addEventListener('click', handleReset);
+  els.lapBtn.addEventListener('click', addLap);
+
+  ['cdH', 'cdM', 'cdS'].forEach(function (id) {
+    document.getElementById(id).addEventListener('input', function () {
+      if (!cd.running && !cd.started) { readCdInputs(); renderCountdown(); }
+    });
+  });
+
+  els.presets.addEventListener('click', function (e) {
+    var b = e.target.closest('.preset');
+    if (!b) return;
+    var min = parseInt(b.dataset.min, 10);
+    document.getElementById('cdH').value = 0;
+    document.getElementById('cdM').value = min;
+    document.getElementById('cdS').value = 0;
+    readCdInputs(); renderCountdown();
+    els.presets.querySelectorAll('.preset').forEach(function (x) { x.classList.remove('active'); });
+    b.classList.add('active');
+    // 自动开始
+    startCountdown();
+  });
+
+  // 闹钟 modal
+  document.getElementById('alarmAddBtn').addEventListener('click', function () {
+    var now = new Date();
+    document.getElementById('alarmTimeInput').value = pad(now.getHours()) + ':' + pad(now.getMinutes());
+    document.getElementById('alarmLabelInput').value = '';
+    openModal('alarmModal');
+    setTimeout(function () { document.getElementById('alarmTimeInput').focus(); }, 100);
+  });
+  document.getElementById('alarmCancelBtn').addEventListener('click', function () { closeModal('alarmModal'); });
+  document.getElementById('alarmConfirmBtn').addEventListener('click', function () {
+    var t = document.getElementById('alarmTimeInput').value;
+    var label = document.getElementById('alarmLabelInput').value.trim();
+    if (!t) { showToast('请选择时间'); return; }
+    alarms.push({ id: 'a' + Date.now(), time: t, label: label, enabled: true });
+    saveAlarms(); closeModal('alarmModal'); renderAlarms();
+    showToast('闹钟已添加');
+    // 请求通知权限
+    if ('Notification' in window && Notification.permission === 'default') Notification.requestPermission();
+  });
+  document.getElementById('alarmModal').addEventListener('click', function (e) {
+    if (e.target === this) closeModal('alarmModal');
+  });
+
+  // 城市 modal
+  document.getElementById('cityCancelBtn').addEventListener('click', function () { closeModal('cityModal'); });
+  document.getElementById('cityModal').addEventListener('click', function (e) {
+    if (e.target === this) closeModal('cityModal');
+  });
+
+  // 响铃
+  document.getElementById('ringStop').addEventListener('click', stopAlarm);
+  document.getElementById('ringSnooze').addEventListener('click', snoozeAlarm);
+
+  // 设置
+  document.getElementById('settingsBtn').addEventListener('click', function (e) {
+    e.stopPropagation();
+    els.settings.classList.toggle('open');
+  });
+  els.settings.addEventListener('click', function (e) { e.stopPropagation(); });
+  document.addEventListener('click', function () { els.settings.classList.remove('open'); });
+
+  document.getElementById('swatches').addEventListener('click', function (e) {
+    var s = e.target.closest('.swatch');
+    if (!s) return;
+    prefs.accent = s.dataset.c; savePrefs(); applyTheme();
+  });
+  document.getElementById('themeDark').addEventListener('click', function () { prefs.theme = 'dark'; savePrefs(); applyTheme(); });
+  document.getElementById('themeLight').addEventListener('click', function () { prefs.theme = 'light'; savePrefs(); applyTheme(); });
+  document.getElementById('dialClassic').addEventListener('click', function () { prefs.dial = 'classic'; savePrefs(); applyTheme(); });
+  document.getElementById('dialMinimal').addEventListener('click', function () { prefs.dial = 'minimal'; savePrefs(); applyTheme(); });
+  document.getElementById('dialDot').addEventListener('click', function () { prefs.dial = 'dot'; savePrefs(); applyTheme(); });
+  document.getElementById('swSmooth').addEventListener('click', function () { prefs.smooth = !prefs.smooth; savePrefs(); applyTheme(); });
+  document.getElementById('swSeconds').addEventListener('click', function () { prefs.showSeconds = !prefs.showSeconds; savePrefs(); applyTheme(); });
+  document.getElementById('swChime').addEventListener('click', function () {
+    prefs.chime = !prefs.chime; savePrefs(); applyTheme();
+    if (prefs.chime) { showToast('整点报时已开启'); beep(2); }
+  });
+  document.getElementById('swWake').addEventListener('click', function () {
+    prefs.keepAwake = !prefs.keepAwake; savePrefs(); applyTheme();
+    if (prefs.keepAwake) { requestWakeLock(); showToast('屏幕常亮已开启'); }
+    else { releaseWakeLock(); showToast('屏幕常亮已关闭'); }
+  });
+  document.getElementById('swTitle').addEventListener('click', function () { prefs.updateTitle = !prefs.updateTitle; savePrefs(); applyTheme(); updateTitle(); });
+
+  document.getElementById('fullscreenBtn').addEventListener('click', toggleFullscreen);
+  document.addEventListener('dblclick', function (e) {
+    if (e.target.closest('input,button,.settings,.modal')) return;
+    toggleFullscreen();
+  });
+  function toggleFullscreen() {
+    if (!document.fullscreenElement) (document.documentElement.requestFullscreen || document.documentElement.webkitRequestFullscreen).call(document.documentElement);
+    else (document.exitFullscreen || document.webkitExitFullscreen).call(document);
+  }
+
+  document.addEventListener('keydown', function (e) {
+    var tag = (e.target.tagName || '').toLowerCase();
+    if (tag === 'input') { if (e.key === 'Enter') e.target.blur(); return; }
+    if (e.key === ' ' || e.code === 'Space') { e.preventDefault(); handleStart(); }
+    else if (e.key === 'r' || e.key === 'R') handleReset();
+    else if ((e.key === 'l' || e.key === 'L') && mode === 'stopwatch') addLap();
+    else if (e.key === 'f' || e.key === 'F') toggleFullscreen();
+    else if (e.key === 's' || e.key === 'S') { e.preventDefault(); els.settings.classList.toggle('open'); }
+    else if (e.key === '1') setMode('clock');
+    else if (e.key === '2') setMode('digital');
+    else if (e.key === '3') setMode('stopwatch');
+    else if (e.key === '4') setMode('countdown');
+    else if (e.key === '5') setMode('pomodoro');
+    else if (e.key === '6') setMode('alarm');
+    else if (e.key === '7') setMode('world');
+    else if (e.key === 'Escape') { els.settings.classList.remove('open'); closeModal('alarmModal'); closeModal('cityModal'); }
+  });
+
+  /* ══════ 启动 ══════ */
+  applyTheme();
+  setMode('clock');
+})();
+</script>
+<script src="auth-widget.js"></script>
+</body>
+</html>
